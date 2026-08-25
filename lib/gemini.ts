@@ -44,8 +44,6 @@ export async function generateContent(
 
   const data = await res.json();
   const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (!text) {
-    throw new Error(`Gemini returned an empty response: ${JSON.stringify(data)}`);
-  }
+  if (!text) throw new Error("Gemini returned an empty response.");
   return text;
 }
