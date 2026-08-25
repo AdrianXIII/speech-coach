@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { AnalyzeSpeechResponse } from "@/types/speechAnalysis";
+import { IdealVersionCard } from "@/components/IdealVersionCard";
 
 interface DashboardResultsProps {
   data: AnalyzeSpeechResponse;
@@ -17,7 +18,7 @@ export function DashboardResults({ data }: DashboardResultsProps) {
     <div className="flex flex-col gap-6">
       {data.mocked && (
         <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-          Showing mock results — set <code className="font-mono">OPENAI_API_KEY</code> to see real
+          Showing mock results — set <code className="font-mono">GEMINI_API_KEY</code> to see real
           transcription and coaching feedback.
         </div>
       )}
@@ -38,6 +39,8 @@ export function DashboardResults({ data }: DashboardResultsProps) {
       </div>
 
       <TranscriptCard transcript={data.transcript} fillerWords={fillerWords} />
+
+      <IdealVersionCard transcript={data.transcript} />
 
       <div className="grid gap-4 sm:grid-cols-2">
         <FeedbackList
