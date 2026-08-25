@@ -2,6 +2,8 @@
 export interface AnalyzeSpeechResponse {
   transcript: string;
   durationSeconds: number;
+  /** 0-100, derived from pace + filler-word rate — see lib/scoreSpeech.ts. */
+  overallScore: number;
   metrics: {
     wordsPerMinute: number;
     fillerWordCount: number;

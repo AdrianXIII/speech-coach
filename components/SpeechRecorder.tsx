@@ -3,11 +3,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMediaRecorder } from "@/hooks/useMediaRecorder";
 import { formatDuration } from "@/lib/audio";
+import { DashboardResults } from "@/components/DashboardResults";
+import type { AnalyzeSpeechResponse } from "@/types/speechAnalysis";
 
 /**
  * Self-contained recording widget: big start/stop button, a live timer,
  * an audio playback preview once stopped, and an "Analyze Speech" button
- * that ships the recorded blob to /api/analyze-speech.
+ * that ships the recorded blob to /api/analyze-speech and renders the
+ * resulting DashboardResults.
  */
 export function SpeechRecorder() {
   const { isRecording, recordedBlob, start, stop, reset, error } = useMediaRecorder(false);
@@ -15,6 +18,7 @@ export function SpeechRecorder() {
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analyzeError, setAnalyzeError] = useState<string | null>(null);
+  const [results, setResults] = useState<AnalyzeSpeechResponse | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Derived, not stored state: the playback URL is just a function of
@@ -60,10 +64,8 @@ export function SpeechRecorder() {
       const res = await fetch("/api/analyze-speech", { method: "POST", body: formData });
       if (!res.ok) throw new Error(`Analysis request failed (${res.status}).`);
 
-      const result = await res.json();
-      // TODO: surface `result` in the UI (transcript, filler words, score…)
-      // once /api/analyze-speech returns real data instead of the stub.
-      console.log("Analysis result:", result);
+      const result: AnalyzeSpeechResponse = await res.json();
+      setResults(result);
     } catch (err) {
       setAnalyzeError(err instanceof Error ? err.message : "Something went wrong.");
     } finally {
@@ -75,9 +77,11 @@ export function SpeechRecorder() {
     reset();
     setElapsedSeconds(0);
     setAnalyzeError(null);
+    setResults(null);
   }
 
   return (
+    <div className="flex flex-col gap-6">
     <div className="flex flex-col items-center gap-6 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
       {/* Timer */}
       <div className="font-mono text-4xl font-bold tabular-nums text-slate-800">
@@ -139,6 +143,9 @@ export function SpeechRecorder() {
           {analyzeError && <p className="text-sm text-red-600">{analyzeError}</p>}
         </div>
       )}
+    </div>
+
+      {results && <DashboardResults data={results} />}
     </div>
   );
 }

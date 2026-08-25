@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { transcribeAudio } from "@/lib/transcribeAudio";
 import { analyzeSpeechMetrics } from "@/lib/speechMetrics";
 import { generateCoachFeedback } from "@/lib/coachFeedback";
+import { calculateOverallScore } from "@/lib/scoreSpeech";
 import type { AnalyzeSpeechResponse } from "@/types/speechAnalysis";
 
 /**
@@ -41,6 +42,7 @@ export async function POST(req: NextRequest) {
     const response: AnalyzeSpeechResponse = {
       transcript: transcription.transcript,
       durationSeconds: transcription.durationSeconds,
+      overallScore: calculateOverallScore(metrics),
       metrics: {
         wordsPerMinute: metrics.wordsPerMinute,
         fillerWordCount: metrics.fillerWords.total,
