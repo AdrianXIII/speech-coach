@@ -60,6 +60,7 @@ export function SpeechRecorder() {
     try {
       const formData = new FormData();
       formData.append("audio", recordedBlob, "speech.webm");
+      formData.append("durationSeconds", String(elapsedSeconds));
 
       const res = await fetch("/api/analyze-speech", { method: "POST", body: formData });
       if (!res.ok) throw new Error(`Analysis request failed (${res.status}).`);

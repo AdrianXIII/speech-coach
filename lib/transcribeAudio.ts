@@ -1,8 +1,7 @@
-import { getOpenAI, hasOpenAIKey } from "@/lib/openai";
+import { generateContent, hasGeminiKey } from "@/lib/gemini";
 
 export interface TranscriptionResult {
   transcript: string;
-  durationSeconds: number;
   mocked: boolean;
 }
 
@@ -11,27 +10,29 @@ const MOCK_TRANSCRIPT =
   "You know, it's a skill that, um, basically everyone needs, whether you're, like, " +
   "presenting to a small team or, uh, speaking at a big conference. So, yeah, let's get into it.";
 
+const TRANSCRIBE_PROMPT =
+  "Transcribe this audio recording of someone practicing a speech, exactly word for word, " +
+  "in the language spoken. Include filler words like 'um', 'uh', 'like' if you hear them — " +
+  "do not clean them up. Return only the transcript text, with no preamble or labels.";
+
 /**
- * Transcribes an audio recording via OpenAI's Whisper API. Falls back to a
- * mock transcript (with a realistic mix of filler words) when
- * OPENAI_API_KEY isn't set, so the rest of the pipeline stays testable
- * without real credentials.
+ * Transcribes an audio recording via Gemini (which reads audio directly,
+ * no separate speech-to-text step needed). Falls back to a mock transcript
+ * (with a realistic mix of filler words) when GEMINI_API_KEY isn't set, so
+ * the rest of the pipeline stays testable without real credentials.
  */
 export async function transcribeAudio(audio: File): Promise<TranscriptionResult> {
-  if (!hasOpenAIKey()) {
-    return { transcript: MOCK_TRANSCRIPT, durationSeconds: 42, mocked: true };
+  if (!hasGeminiKey()) {
+    return { transcript: MOCK_TRANSCRIPT, mocked: true };
   }
 
-  const openai = getOpenAI();
-  const result = await openai.audio.transcriptions.create({
-    file: audio,
-    model: "whisper-1",
-    response_format: "verbose_json",
-  });
+  const buffer = await audio.arrayBuffer();
+  const base64 = Buffer.from(buffer).toString("base64");
 
-  return {
-    transcript: result.text,
-    durationSeconds: result.duration ?? 0,
-    mocked: false,
-  };
+  const transcript = await generateContent([
+    { text: TRANSCRIBE_PROMPT },
+    { inlineData: { mimeType: audio.type || "audio/webm", data: base64 } },
+  ]);
+
+  return { transcript: transcript.trim(), mocked: false };
 }

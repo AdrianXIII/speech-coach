@@ -1,4 +1,4 @@
-import { getOpenAI, hasOpenAIKey } from "@/lib/openai";
+import { generateContent, hasGeminiKey } from "@/lib/gemini";
 import type { SpeechMetrics } from "@/lib/speechMetrics";
 
 export interface CoachFeedback {
@@ -24,23 +24,23 @@ Rules:
 - Be honest but encouraging.`;
 
 /**
- * Sends the transcript + metrics to GPT-4o for coaching feedback. Falls
+ * Sends the transcript + metrics to Gemini for coaching feedback. Falls
  * back to a mock response (that still reflects the real metrics) when
- * OPENAI_API_KEY isn't set.
+ * GEMINI_API_KEY isn't set.
  */
 export async function generateCoachFeedback(
   transcript: string,
   metrics: SpeechMetrics,
 ): Promise<CoachFeedback> {
-  if (!hasOpenAIKey()) {
+  if (!hasGeminiKey()) {
     return {
       strengths: [
-        "Mock mode: set OPENAI_API_KEY to get real GPT-4o coaching feedback here.",
+        "Mock mode: set GEMINI_API_KEY to get real AI coaching feedback here.",
         "Your transcript was captured and run through the filler-word and pacing analysis successfully.",
         "The full pipeline (record → transcribe → analyze → coach) is wired up end-to-end.",
       ],
       tips: [
-        "Add OPENAI_API_KEY to your environment to replace this mock with real AI coaching.",
+        "Add GEMINI_API_KEY to your environment to replace this mock with real AI coaching.",
         `You used ${metrics.fillerWords.total} filler word(s) in this recording — try pausing silently instead of filling the gap.`,
         `Your pace was ${metrics.wordsPerMinute} words/minute — a natural conversational pace is roughly 120-160 wpm.`,
       ],
@@ -48,7 +48,6 @@ export async function generateCoachFeedback(
     };
   }
 
-  const openai = getOpenAI();
   const userPrompt = [
     `Transcript:\n"""${transcript}"""`,
     "",
@@ -57,17 +56,10 @@ export async function generateCoachFeedback(
     `- Filler words: ${metrics.fillerWords.total} total — ${JSON.stringify(metrics.fillerWords.byWord)}`,
   ].join("\n");
 
-  const completion = await openai.chat.completions.create({
-    model: "gpt-4o",
-    messages: [
-      { role: "system", content: SYSTEM_PROMPT },
-      { role: "user", content: userPrompt },
-    ],
-    response_format: { type: "json_object" },
-  });
-
-  const raw = completion.choices[0]?.message?.content;
-  if (!raw) throw new Error("GPT-4o returned an empty response.");
+  const raw = await generateContent(
+    [{ text: `${SYSTEM_PROMPT}\n\n${userPrompt}` }],
+    { responseMimeType: "application/json" },
+  );
 
   const parsed = JSON.parse(raw) as { strengths?: string[]; tips?: string[] };
 

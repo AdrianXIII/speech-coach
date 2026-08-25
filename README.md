@@ -8,9 +8,9 @@ audience with a teleprompter.
 
 **Record & Analyze** (`/`)
 Record yourself speaking (audio-only), then send it for analysis:
-1. Transcribed with **OpenAI Whisper**
+1. Transcribed with **Google Gemini** (reads the audio directly)
 2. Scanned for filler words ("um", "uh", "ah", "like", "you know", "so"…) and speaking pace (words per minute)
-3. Sent to **GPT-4o**, acting as an expert public speaking coach, for 3 strengths and 3 actionable tips
+3. Sent back to **Gemini**, acting as an expert public speaking coach, for 3 strengths and 3 actionable tips
 4. Results shown on a dashboard: an overall score (0–100), pace/filler-word badges, the transcript with every filler word highlighted inline, and the coach's feedback
 
 **Virtual Stage** (`/stage`)
@@ -41,7 +41,7 @@ To get real transcription and coaching feedback:
 ```bash
 cp .env.example .env.local
 # then add your key:
-# OPENAI_API_KEY=sk-...
+# GEMINI_API_KEY=...
 ```
 
 ## Tech stack
@@ -56,7 +56,7 @@ app/
   page.tsx                 Record & Analyze home page
   stage/page.tsx            Virtual Stage page
   api/
-    analyze-speech/         Whisper -> filler-word/pace analysis -> GPT-4o coaching
+    analyze-speech/         Gemini transcription -> filler-word/pace analysis -> Gemini coaching
     transcribe/, analyze/, feedback/   (earlier separate-step endpoints, superseded by analyze-speech)
 components/
   SpeechRecorder.tsx         Record/stop/playback + "Analyze Speech"
@@ -67,7 +67,7 @@ components/
     AudienceGrid.tsx         Animated audience (pure CSS, no 3D library)
     Teleprompter.tsx         Notes editor / auto-scrolling overlay
 lib/
-  transcribeAudio.ts, speechMetrics.ts, scoreSpeech.ts, coachFeedback.ts, fillerWords.ts, openai.ts, audio.ts
+  transcribeAudio.ts, speechMetrics.ts, scoreSpeech.ts, coachFeedback.ts, fillerWords.ts, gemini.ts, audio.ts
 types/
   speechAnalysis.ts, session.ts, analysis.ts, feedback.ts
 ```
