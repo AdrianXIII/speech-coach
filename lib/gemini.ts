@@ -15,6 +15,11 @@ interface GeminiPart {
  * Calls Gemini's generateContent endpoint directly over fetch (no SDK
  * dependency, same pattern as Memory Atlas's ai-proxy edge function).
  * Only call this after checking hasGeminiKey().
+ *
+ * Thinking is disabled by default: these are direct extraction tasks
+ * (transcribe, produce JSON feedback), not reasoning tasks, and 2.5
+ * Flash's thinking mode can otherwise spend its whole token budget on
+ * internal reasoning and return a response with no actual text part.
  */
 export async function generateContent(
   parts: GeminiPart[],
@@ -25,9 +30,10 @@ export async function generateContent(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       contents: [{ parts }],
-      ...(options?.responseMimeType && {
-        generationConfig: { responseMimeType: options.responseMimeType },
-      }),
+      generationConfig: {
+        thinkingConfig: { thinkingBudget: 0 },
+        ...(options?.responseMimeType && { responseMimeType: options.responseMimeType }),
+      },
     }),
   });
 
