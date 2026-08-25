@@ -1,8 +1,9 @@
 # Speech Coach
 
 An AI-powered public speaking practice app: record a speech, get instant
-feedback on pace and filler words, and rehearse in front of a virtual
-audience with a teleprompter.
+feedback on pace and filler words, rehearse in front of a virtual audience
+with a teleprompter, get AI help writing what to say, and train your
+pronunciation of individual words.
 
 ## What it does
 
@@ -20,6 +21,17 @@ you start — once you hit Record, they scroll automatically (adjustable
 speed) as an overlay on your live camera preview. Stop to review your
 recorded video.
 
+Includes a **Script Assistant**: describe a topic, paste rough notes, or
+drop in a draft, and Gemini writes a polished, speakable version — load it
+straight into the teleprompter with one click to test whether it sounds
+better out loud.
+
+**Pronunciation Trainer** (`/pronunciation`)
+Type a word or short phrase, hear it spoken via your browser's built-in
+text-to-speech, record yourself saying it, then get Gemini's qualitative
+feedback on how close it is to a native pronunciation — which sounds are
+off and a concrete tip to fix them.
+
 ## Running it locally
 
 ```bash
@@ -32,11 +44,11 @@ on the Virtual Stage, camera) permission — allow it.
 
 ## AI features (optional)
 
-Without any setup, `/api/analyze-speech` runs in **mock mode**: a
-realistic sample transcript and feedback that still reflects your
-recording's actual length, so the whole app works out of the box.
+Without any setup, the AI-backed endpoints run in **mock mode**: realistic
+placeholder responses (still reflecting your recording's actual length,
+where relevant) so the whole app works out of the box.
 
-To get real transcription and coaching feedback:
+To get real transcription, coaching, script writing, and pronunciation feedback:
 
 ```bash
 cp .env.example .env.local
@@ -53,21 +65,26 @@ recordings and results live only in the browser for the current session.
 
 ```
 app/
-  page.tsx                 Record & Analyze home page
-  stage/page.tsx            Virtual Stage page
+  page.tsx                        Record & Analyze home page
+  stage/page.tsx                  Virtual Stage page
+  pronunciation/page.tsx          Pronunciation Trainer page
   api/
-    analyze-speech/         Gemini transcription -> filler-word/pace analysis -> Gemini coaching
-    transcribe/, analyze/, feedback/   (earlier separate-step endpoints, superseded by analyze-speech)
+    analyze-speech/               Gemini transcription -> filler-word/pace analysis -> Gemini coaching
+    generate-script/              Topic/draft -> Gemini-polished speakable script
+    pronunciation-feedback/       Word + recording -> Gemini pronunciation feedback
 components/
-  SpeechRecorder.tsx         Record/stop/playback + "Analyze Speech"
-  DashboardResults.tsx       Score ring, metric badges, highlighted transcript, feedback
-  VirtualStage.tsx           Webcam recorder + teleprompter + audience
+  SpeechRecorder.tsx               Record/stop/playback + "Analyze Speech"
+  DashboardResults.tsx             Score ring, metric badges, highlighted transcript, feedback
+  VirtualStage.tsx                 Webcam recorder + teleprompter + audience
+  ScriptAssistant.tsx              AI script suggestions, feeds into the teleprompter
+  PronunciationTrainer.tsx         Listen / record / AI feedback loop for one word at a time
   NavBar.tsx
   stage/
-    AudienceGrid.tsx         Animated audience (pure CSS, no 3D library)
-    Teleprompter.tsx         Notes editor / auto-scrolling overlay
+    AudienceGrid.tsx               Animated audience (pure CSS, no 3D library)
+    Teleprompter.tsx               Notes editor / auto-scrolling overlay
 lib/
-  transcribeAudio.ts, speechMetrics.ts, scoreSpeech.ts, coachFeedback.ts, fillerWords.ts, gemini.ts, audio.ts
+  transcribeAudio.ts, speechMetrics.ts, scoreSpeech.ts, coachFeedback.ts,
+  generateScript.ts, pronunciationFeedback.ts, fillerWords.ts, gemini.ts, audio.ts
 types/
-  speechAnalysis.ts, session.ts, analysis.ts, feedback.ts
+  speechAnalysis.ts
 ```
