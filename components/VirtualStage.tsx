@@ -5,6 +5,7 @@ import { useMediaRecorder } from "@/hooks/useMediaRecorder";
 import { formatDuration } from "@/lib/audio";
 import { AudienceGrid } from "@/components/stage/AudienceGrid";
 import { Teleprompter } from "@/components/stage/Teleprompter";
+import { ScriptAssistant } from "@/components/ScriptAssistant";
 
 /**
  * Practice view: a webcam recorder with a live "audience" that reacts
@@ -138,8 +139,13 @@ export function VirtualStage() {
         <AudienceGrid engaged={isRecording} />
       </div>
 
-      {/* Notes editor — shown whenever we're not actively recording (setup or review). */}
-      {!isRecording && <Teleprompter text={notes} onTextChange={setNotes} isScrolling={false} />}
+      {/* Notes editor + AI script help — shown whenever we're not actively recording. */}
+      {!isRecording && (
+        <div className="flex flex-col gap-4">
+          <Teleprompter text={notes} onTextChange={setNotes} isScrolling={false} />
+          <ScriptAssistant onScriptReady={setNotes} />
+        </div>
+      )}
     </div>
   );
 }
