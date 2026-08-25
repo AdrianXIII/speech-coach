@@ -3,6 +3,7 @@ import type { FillerWordHit, FillerWordStats } from "@/types/analysis";
 export const DEFAULT_FILLER_WORDS = [
   "um",
   "uh",
+  "ah",
   "like",
   "you know",
   "so",
