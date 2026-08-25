@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Speech Coach
 
-## Getting Started
+An AI-powered public speaking practice app: record a speech, get instant
+feedback on pace and filler words, and rehearse in front of a virtual
+audience with a teleprompter.
 
-First, run the development server:
+## What it does
+
+**Record & Analyze** (`/`)
+Record yourself speaking (audio-only), then send it for analysis:
+1. Transcribed with **OpenAI Whisper**
+2. Scanned for filler words ("um", "uh", "ah", "like", "you know", "so"…) and speaking pace (words per minute)
+3. Sent to **GPT-4o**, acting as an expert public speaking coach, for 3 strengths and 3 actionable tips
+4. Results shown on a dashboard: an overall score (0–100), pace/filler-word badges, the transcript with every filler word highlighted inline, and the coach's feedback
+
+**Virtual Stage** (`/stage`)
+Practice with your webcam in front of an animated "audience" that watches
+and reacts while you speak. Paste your notes into the teleprompter before
+you start — once you hit Record, they scroll automatically (adjustable
+speed) as an overlay on your live camera preview. Stop to review your
+recorded video.
+
+## Running it locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000. Your browser will ask for microphone (and,
+on the Virtual Stage, camera) permission — allow it.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## AI features (optional)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Without any setup, `/api/analyze-speech` runs in **mock mode**: a
+realistic sample transcript and feedback that still reflects your
+recording's actual length, so the whole app works out of the box.
 
-## Learn More
+To get real transcription and coaching feedback:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+cp .env.example .env.local
+# then add your key:
+# OPENAI_API_KEY=sk-...
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Tech stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Next.js (App Router) + TypeScript + Tailwind CSS. No database yet —
+recordings and results live only in the browser for the current session.
 
-## Deploy on Vercel
+## Project structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+app/
+  page.tsx                 Record & Analyze home page
+  stage/page.tsx            Virtual Stage page
+  api/
+    analyze-speech/         Whisper -> filler-word/pace analysis -> GPT-4o coaching
+    transcribe/, analyze/, feedback/   (earlier separate-step endpoints, superseded by analyze-speech)
+components/
+  SpeechRecorder.tsx         Record/stop/playback + "Analyze Speech"
+  DashboardResults.tsx       Score ring, metric badges, highlighted transcript, feedback
+  VirtualStage.tsx           Webcam recorder + teleprompter + audience
+  NavBar.tsx
+  stage/
+    AudienceGrid.tsx         Animated audience (pure CSS, no 3D library)
+    Teleprompter.tsx         Notes editor / auto-scrolling overlay
+lib/
+  transcribeAudio.ts, speechMetrics.ts, scoreSpeech.ts, coachFeedback.ts, fillerWords.ts, openai.ts, audio.ts
+types/
+  speechAnalysis.ts, session.ts, analysis.ts, feedback.ts
+```
