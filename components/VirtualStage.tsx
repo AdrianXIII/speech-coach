@@ -6,6 +6,8 @@ import { formatDuration } from "@/lib/audio";
 import { AudienceGrid } from "@/components/stage/AudienceGrid";
 import { Teleprompter } from "@/components/stage/Teleprompter";
 import { ScriptAssistant } from "@/components/ScriptAssistant";
+import { DashboardResults } from "@/components/DashboardResults";
+import type { AnalyzeSpeechResponse } from "@/types/speechAnalysis";
 
 /**
  * Practice view: a webcam recorder with a live "audience" that reacts
@@ -20,6 +22,10 @@ export function VirtualStage() {
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const livePreviewRef = useRef<HTMLVideoElement>(null);
+
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analyzeError, setAnalyzeError] = useState<string | null>(null);
+  const [results, setResults] = useState<AnalyzeSpeechResponse | null>(null);
 
   // Bind the live camera stream to the preview <video> element.
   useEffect(() => {
@@ -56,6 +62,29 @@ export function VirtualStage() {
   function handlePracticeAgain() {
     reset();
     setElapsedSeconds(0);
+    setAnalyzeError(null);
+    setResults(null);
+  }
+
+  async function handleAnalyze() {
+    if (!recordedBlob) return;
+    setIsAnalyzing(true);
+    setAnalyzeError(null);
+    try {
+      const formData = new FormData();
+      formData.append("audio", recordedBlob, "practice.webm");
+      formData.append("durationSeconds", String(elapsedSeconds));
+
+      const res = await fetch("/api/analyze-speech", { method: "POST", body: formData });
+      if (!res.ok) throw new Error(`Analysis request failed (${res.status}).`);
+
+      const result: AnalyzeSpeechResponse = await res.json();
+      setResults(result);
+    } catch (err) {
+      setAnalyzeError(err instanceof Error ? err.message : "Something went wrong.");
+    } finally {
+      setIsAnalyzing(false);
+    }
   }
 
   const showLiveStage = isRecording;
@@ -125,14 +154,26 @@ export function VirtualStage() {
               </button>
             )}
             {showReview && (
-              <button
-                onClick={handlePracticeAgain}
-                className="rounded-lg bg-slate-200 px-6 py-3 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-300"
-              >
-                Practice Again
-              </button>
+              <>
+                <button
+                  onClick={handleAnalyze}
+                  disabled={isAnalyzing}
+                  className="rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500 disabled:opacity-50"
+                >
+                  {isAnalyzing ? "Analyzing…" : "Analyze Speech"}
+                </button>
+                <button
+                  onClick={handlePracticeAgain}
+                  disabled={isAnalyzing}
+                  className="rounded-lg bg-slate-200 px-6 py-3 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-300 disabled:opacity-50"
+                >
+                  Practice Again
+                </button>
+              </>
             )}
           </div>
+
+          {analyzeError && <p className="text-center text-sm text-red-600">{analyzeError}</p>}
         </div>
 
         {/* Audience */}
@@ -146,6 +187,8 @@ export function VirtualStage() {
           <ScriptAssistant onScriptReady={setNotes} />
         </div>
       )}
+
+      {results && <DashboardResults data={results} />}
     </div>
   );
 }

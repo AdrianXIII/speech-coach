@@ -11,15 +11,18 @@ const MOCK_TRANSCRIPT =
   "presenting to a small team or, uh, speaking at a big conference. So, yeah, let's get into it.";
 
 const TRANSCRIBE_PROMPT =
-  "Transcribe this audio recording of someone practicing a speech, exactly word for word, " +
-  "in the language spoken. Include filler words like 'um', 'uh', 'like' if you hear them — " +
-  "do not clean them up. Return only the transcript text, with no preamble or labels.";
+  "Transcribe the speech in this recording, exactly word for word, in the language spoken " +
+  "(ignore any video and focus only on what's said). Include filler words like 'um', 'uh', " +
+  "'like' if you hear them — do not clean them up. Return only the transcript text, with no " +
+  "preamble or labels.";
 
 /**
- * Transcribes an audio recording via Gemini (which reads audio directly,
- * no separate speech-to-text step needed). Falls back to a mock transcript
- * (with a realistic mix of filler words) when GEMINI_API_KEY isn't set, so
- * the rest of the pipeline stays testable without real credentials.
+ * Transcribes an audio or video recording via Gemini (which reads it
+ * directly, no separate speech-to-text step needed) — used by both the
+ * audio-only Record & Analyze flow and Virtual Stage's video recordings.
+ * Falls back to a mock transcript (with a realistic mix of filler words)
+ * when GEMINI_API_KEY isn't set, so the rest of the pipeline stays
+ * testable without real credentials.
  */
 export async function transcribeAudio(audio: File): Promise<TranscriptionResult> {
   if (!hasGeminiKey()) {
