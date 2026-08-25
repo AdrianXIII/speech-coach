@@ -1,4 +1,14 @@
-import type { FillerWordHit, FillerWordStats } from "@/types/analysis";
+export interface FillerWordHit {
+  word: string;
+  timestampSeconds: number;
+}
+
+export interface FillerWordStats {
+  total: number;
+  perMinute: number;
+  byWord: Record<string, number>;
+  hits: FillerWordHit[];
+}
 
 export const DEFAULT_FILLER_WORDS = [
   "um",

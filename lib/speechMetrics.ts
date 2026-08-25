@@ -1,5 +1,5 @@
 import { DEFAULT_FILLER_WORDS, detectFillerWords } from "@/lib/fillerWords";
-import type { FillerWordStats } from "@/types/analysis";
+import type { FillerWordStats } from "@/lib/fillerWords";
 
 export interface SpeechMetrics {
   wordsPerMinute: number;
