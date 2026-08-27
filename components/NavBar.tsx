@@ -7,6 +7,7 @@ const LINKS = [
   { href: "/", label: "Record & Analyze" },
   { href: "/stage", label: "Virtual Stage" },
   { href: "/pronunciation", label: "Pronunciation" },
+  { href: "/improv", label: "60s Improv" },
 ];
 
 export function NavBar() {
