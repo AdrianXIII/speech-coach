@@ -15,7 +15,7 @@ import type { AnalyzeSpeechResponse } from "@/types/speechAnalysis";
  * captures video + audio simultaneously via useMediaRecorder(true).
  */
 export function VirtualStage() {
-  const { isRecording, recordedBlob, stream, start, stop, reset, error } =
+  const { isRecording, recordedBlob, audioBlob, stream, start, stop, reset, error } =
     useMediaRecorder(true);
 
   const [notes, setNotes] = useState("");
@@ -67,16 +67,19 @@ export function VirtualStage() {
   }
 
   async function handleAnalyze() {
-    if (!recordedBlob) return;
+    if (!audioBlob) return;
     setIsAnalyzing(true);
     setAnalyzeError(null);
     try {
       const formData = new FormData();
-      formData.append("audio", recordedBlob, "practice.webm");
+      formData.append("audio", audioBlob, "practice.webm");
       formData.append("durationSeconds", String(elapsedSeconds));
 
       const res = await fetch("/api/analyze-speech", { method: "POST", body: formData });
-      if (!res.ok) throw new Error(`Analysis request failed (${res.status}).`);
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error(body?.error || `Analysis request failed (${res.status}).`);
+      }
 
       const result: AnalyzeSpeechResponse = await res.json();
       setResults(result);
@@ -157,7 +160,7 @@ export function VirtualStage() {
               <>
                 <button
                   onClick={handleAnalyze}
-                  disabled={isAnalyzing}
+                  disabled={isAnalyzing || !audioBlob}
                   className="rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500 disabled:opacity-50"
                 >
                   {isAnalyzing ? "Analyzing…" : "Analyze Speech"}

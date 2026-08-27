@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateScript } from "@/lib/generateScript";
+import { geminiErrorResponse } from "@/lib/gemini";
 
 /**
  * POST /api/generate-script
@@ -24,10 +25,6 @@ export async function POST(req: NextRequest) {
     const result = await generateScript(input);
     return NextResponse.json(result);
   } catch (err) {
-    console.error("generate-script failed:", err);
-    return NextResponse.json(
-      { error: err instanceof Error ? err.message : "Script generation failed." },
-      { status: 500 },
-    );
+    return geminiErrorResponse(err, "Script generation failed.");
   }
 }

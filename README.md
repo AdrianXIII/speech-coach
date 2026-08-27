@@ -28,9 +28,18 @@ better out loud.
 
 **Pronunciation Trainer** (`/pronunciation`)
 Type a word or short phrase, hear it spoken via your browser's built-in
-text-to-speech, record yourself saying it, then get Gemini's qualitative
-feedback on how close it is to a native pronunciation — which sounds are
-off and a concrete tip to fix them.
+text-to-speech, record yourself saying it, then:
+1. An instant, local **stress check** (no AI call): looks up the word's
+   syllables and correct stress position in the CMU Pronouncing Dictionary,
+   measures loudness/pitch per syllable in your recording via the Web Audio
+   API, and shows which syllable actually came out strongest vs. which one
+   should have — approximate, but immediate and free.
+2. Optionally, **Get AI Feedback** for a deeper Gemini-written explanation.
+
+Any AI answer in the app (coaching feedback, pronunciation feedback, script
+suggestions) has a **follow-up chat** underneath it — ask a clarifying
+question and Gemini answers using the original context, text-only (no
+audio re-sent), so it stays cheap even after several questions.
 
 ## Running it locally
 
@@ -69,22 +78,27 @@ app/
   stage/page.tsx                  Virtual Stage page
   pronunciation/page.tsx          Pronunciation Trainer page
   api/
-    analyze-speech/               Gemini transcription -> filler-word/pace analysis -> Gemini coaching
+    analyze-speech/               Gemini transcription+coaching (one call) -> filler-word/pace analysis
     generate-script/              Topic/draft -> Gemini-polished speakable script
     pronunciation-feedback/       Word + recording -> Gemini pronunciation feedback
+    word-stress/                  Word -> syllable count + expected stress index (CMU dict lookup)
+    chat/                         Text-only follow-up chat, seeded with any of the above
 components/
   SpeechRecorder.tsx               Record/stop/playback + "Analyze Speech"
   DashboardResults.tsx             Score ring, metric badges, highlighted transcript, feedback
   VirtualStage.tsx                 Webcam recorder + teleprompter + audience
   ScriptAssistant.tsx              AI script suggestions, feeds into the teleprompter
-  PronunciationTrainer.tsx         Listen / record / AI feedback loop for one word at a time
+  PronunciationTrainer.tsx         Listen / record / stress check / AI feedback for one word at a time
+  StressMeter.tsx                  Instant local per-syllable loudness/pitch stress check (no AI call)
+  FollowUpChat.tsx                 Reusable "ask a follow-up" thread under any AI feedback panel
   NavBar.tsx
   stage/
     AudienceGrid.tsx               Animated audience (pure CSS, no 3D library)
     Teleprompter.tsx               Notes editor / auto-scrolling overlay
 lib/
-  transcribeAudio.ts, speechMetrics.ts, scoreSpeech.ts, coachFeedback.ts,
-  generateScript.ts, pronunciationFeedback.ts, fillerWords.ts, gemini.ts, audio.ts
+  analyzeSpeech.ts, speechMetrics.ts, scoreSpeech.ts, generateScript.ts,
+  pronunciationFeedback.ts, fillerWords.ts, chat.ts, wordStress.ts,
+  audioStress.ts, gemini.ts, audio.ts
 types/
   speechAnalysis.ts
 ```

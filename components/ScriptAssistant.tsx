@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { FollowUpChat } from "@/components/FollowUpChat";
 
 interface ScriptAssistantProps {
   onScriptReady: (script: string) => void;
@@ -14,6 +15,7 @@ interface ScriptAssistantProps {
 export function ScriptAssistant({ onScriptReady }: ScriptAssistantProps) {
   const [input, setInput] = useState("");
   const [script, setScript] = useState<string | null>(null);
+  const [scriptInput, setScriptInput] = useState("");
   const [mocked, setMocked] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -28,9 +30,13 @@ export function ScriptAssistant({ onScriptReady }: ScriptAssistantProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ input }),
       });
-      if (!res.ok) throw new Error(`Script generation failed (${res.status}).`);
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error(body?.error || `Script generation failed (${res.status}).`);
+      }
       const data: { script: string; mocked: boolean } = await res.json();
       setScript(data.script);
+      setScriptInput(input);
       setMocked(data.mocked);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
@@ -82,6 +88,11 @@ export function ScriptAssistant({ onScriptReady }: ScriptAssistantProps) {
           >
             Use this script
           </button>
+
+          <FollowUpChat
+            context={`Write a polished, speakable script based on this input: """${scriptInput}"""`}
+            initialAnswer={script}
+          />
         </div>
       )}
     </div>

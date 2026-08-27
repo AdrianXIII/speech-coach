@@ -63,7 +63,10 @@ export function SpeechRecorder() {
       formData.append("durationSeconds", String(elapsedSeconds));
 
       const res = await fetch("/api/analyze-speech", { method: "POST", body: formData });
-      if (!res.ok) throw new Error(`Analysis request failed (${res.status}).`);
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error(body?.error || `Analysis request failed (${res.status}).`);
+      }
 
       const result: AnalyzeSpeechResponse = await res.json();
       setResults(result);

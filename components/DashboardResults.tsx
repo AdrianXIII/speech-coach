@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import type { AnalyzeSpeechResponse } from "@/types/speechAnalysis";
 import { IdealVersionCard } from "@/components/IdealVersionCard";
+import { FollowUpChat } from "@/components/FollowUpChat";
 
 interface DashboardResultsProps {
   data: AnalyzeSpeechResponse;
@@ -52,6 +53,24 @@ export function DashboardResults({ data }: DashboardResultsProps) {
           title="Areas to Improve"
           items={data.feedback.tips}
           tone="improve"
+        />
+      </div>
+
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <FollowUpChat
+          context={[
+            `Here is a transcript of my practice speech:\n"""${data.transcript}"""`,
+            "",
+            `Metrics: ${data.metrics.wordsPerMinute} words per minute, ${data.metrics.fillerWordCount} filler words.`,
+            "I asked for coaching feedback on my delivery.",
+          ].join("\n")}
+          initialAnswer={[
+            "Strengths:",
+            ...data.feedback.strengths.map((s) => `- ${s}`),
+            "",
+            "Areas to improve:",
+            ...data.feedback.tips.map((t) => `- ${t}`),
+          ].join("\n")}
         />
       </div>
     </div>

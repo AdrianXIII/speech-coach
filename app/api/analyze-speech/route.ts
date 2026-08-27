@@ -1,21 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { transcribeAudio } from "@/lib/transcribeAudio";
-import { analyzeSpeechMetrics } from "@/lib/speechMetrics";
-import { generateCoachFeedback } from "@/lib/coachFeedback";
+import { analyzeSpeech } from "@/lib/analyzeSpeech";
 import { calculateOverallScore } from "@/lib/scoreSpeech";
+import { geminiErrorResponse } from "@/lib/gemini";
 import type { AnalyzeSpeechResponse } from "@/types/speechAnalysis";
 
 /**
  * POST /api/analyze-speech
  * Accepts a recorded audio blob (multipart/form-data, field name "audio",
- * plus a "durationSeconds" field, as sent by components/SpeechRecorder.tsx)
- * and runs the full coaching pipeline:
+ * plus a "durationSeconds" field, as sent by components/SpeechRecorder.tsx
+ * and components/VirtualStage.tsx) and runs the coaching pipeline:
  *
- *   1. Transcribe the audio with Gemini (mocked if GEMINI_API_KEY isn't
- *      set, so the rest of the pipeline stays testable without it).
- *   2. Analyze the transcript for pace (wpm) and filler-word usage.
- *   3. Send the transcript + metrics to Gemini, acting as an expert public
- *      speaking coach, for 3 strengths and 3 actionable tips.
+ *   1. Transcribe the audio and generate coaching feedback in a single
+ *      Gemini call (mocked if GEMINI_API_KEY isn't set, so the rest of the
+ *      pipeline stays testable without it).
+ *   2. Analyze the transcript locally for pace (wpm) and filler-word usage.
  */
 export async function POST(req: NextRequest) {
   let formData: FormData;
@@ -36,32 +34,26 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const transcription = await transcribeAudio(audio as File);
-    const metrics = analyzeSpeechMetrics(transcription.transcript, durationSeconds);
-    const feedback = await generateCoachFeedback(transcription.transcript, metrics);
+    const analysis = await analyzeSpeech(audio as File, durationSeconds);
 
     const response: AnalyzeSpeechResponse = {
-      transcript: transcription.transcript,
+      transcript: analysis.transcript,
       durationSeconds,
-      overallScore: calculateOverallScore(metrics),
+      overallScore: calculateOverallScore(analysis.metrics),
       metrics: {
-        wordsPerMinute: metrics.wordsPerMinute,
-        fillerWordCount: metrics.fillerWords.total,
-        fillerWordBreakdown: metrics.fillerWords.byWord,
+        wordsPerMinute: analysis.metrics.wordsPerMinute,
+        fillerWordCount: analysis.metrics.fillerWords.total,
+        fillerWordBreakdown: analysis.metrics.fillerWords.byWord,
       },
       feedback: {
-        strengths: feedback.strengths,
-        tips: feedback.tips,
+        strengths: analysis.strengths,
+        tips: analysis.tips,
       },
-      mocked: transcription.mocked || feedback.mocked,
+      mocked: analysis.mocked,
     };
 
     return NextResponse.json(response);
   } catch (err) {
-    console.error("analyze-speech failed:", err);
-    return NextResponse.json(
-      { error: err instanceof Error ? err.message : "Analysis failed." },
-      { status: 500 },
-    );
+    return geminiErrorResponse(err, "Analysis failed.");
   }
 }

@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMediaRecorder } from "@/hooks/useMediaRecorder";
 import { formatDuration } from "@/lib/audio";
+import { FollowUpChat } from "@/components/FollowUpChat";
+import { StressMeter } from "@/components/StressMeter";
 
 interface FeedbackState {
   text: string;
@@ -26,6 +28,9 @@ export function PronunciationTrainer() {
   const [feedback, setFeedback] = useState<FeedbackState | null>(null);
   const [isFetchingFeedback, setIsFetchingFeedback] = useState(false);
   const [feedbackError, setFeedbackError] = useState<string | null>(null);
+  // Bumped on every new recording so <StressMeter> remounts fresh instead of
+  // reusing state from a previous attempt.
+  const [attempt, setAttempt] = useState(0);
 
   const audioUrl = useMemo(
     () => (recordedBlob ? URL.createObjectURL(recordedBlob) : null),
@@ -58,6 +63,7 @@ export function PronunciationTrainer() {
     setElapsedSeconds(0);
     setFeedback(null);
     setFeedbackError(null);
+    setAttempt((a) => a + 1);
     start();
   }
 
@@ -78,7 +84,10 @@ export function PronunciationTrainer() {
       formData.append("word", word.trim());
 
       const res = await fetch("/api/pronunciation-feedback", { method: "POST", body: formData });
-      if (!res.ok) throw new Error(`Feedback request failed (${res.status}).`);
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error(body?.error || `Feedback request failed (${res.status}).`);
+      }
 
       const data: { feedback: string; mocked: boolean } = await res.json();
       setFeedback({ text: data.feedback, mocked: data.mocked });
@@ -155,6 +164,9 @@ export function PronunciationTrainer() {
         {audioUrl && !isRecording && (
           <div className="flex w-full flex-col items-center gap-4">
             <audio src={audioUrl} controls className="w-full max-w-sm" />
+
+            {recordedBlob && <StressMeter key={attempt} word={word.trim()} audioBlob={recordedBlob} />}
+
             <div className="flex flex-wrap justify-center gap-3">
               <button
                 onClick={handleGetFeedback}
@@ -184,6 +196,11 @@ export function PronunciationTrainer() {
             </p>
           )}
           <p className="text-sm leading-relaxed text-slate-700">{feedback.text}</p>
+
+          <FollowUpChat
+            context={`I practiced saying the word/phrase "${word.trim()}" out loud and asked for pronunciation feedback.`}
+            initialAnswer={feedback.text}
+          />
         </div>
       )}
     </div>
