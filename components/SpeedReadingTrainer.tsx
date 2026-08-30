@@ -19,12 +19,12 @@ import {
   saveReadingResult,
   type ReadingSessionResult,
 } from "@/lib/readingHistory";
-import { LANGUAGES, type LanguageCode } from "@/lib/languages";
+import { useLanguage } from "@/components/LanguageProvider";
+import { getLanguage, type LanguageCode } from "@/lib/languages";
 
 const WORDS_PER_MID_CHECK = 150;
 const MIN_WORDS = 30;
 const MID_CHECK_LOOKBACK_WORDS = 25;
-const LANGUAGE_STORAGE_KEY = "speedReadingLanguage";
 
 type Phase = "setup" | "reading" | "midcheck" | "quiz" | "results";
 
@@ -60,28 +60,13 @@ export function SpeedReadingTrainer() {
 
   const [result, setResult] = useState<SessionResult | null>(null);
   const [history, setHistory] = useState<ReadingSessionResult[]>([]);
-  const [language, setLanguage] = useState<LanguageCode>("en");
+  const { language } = useLanguage();
   useEffect(() => {
     // localStorage doesn't exist during SSR, so this has to be a client-only
     // effect — same deliberate pattern as the random pickers elsewhere.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setHistory(loadReadingHistory());
-    try {
-      const saved = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
-      if (LANGUAGES.some((l) => l.code === saved)) setLanguage(saved as LanguageCode);
-    } catch {
-      // Private browsing / storage disabled — fall back to English.
-    }
   }, []);
-
-  function handleLanguageChange(newLanguage: LanguageCode) {
-    setLanguage(newLanguage);
-    try {
-      window.localStorage.setItem(LANGUAGE_STORAGE_KEY, newLanguage);
-    } catch {
-      // Ignore — the choice just won't persist across visits.
-    }
-  }
 
   const allWordsRef = useRef<string[]>([]);
   const chunksRef = useRef<string[][]>([]);
@@ -259,7 +244,6 @@ export function SpeedReadingTrainer() {
           levelId={levelId}
           onLevelChange={setLevelId}
           language={language}
-          onLanguageChange={handleLanguageChange}
           onStart={handleStart}
         />
       )}
@@ -318,7 +302,6 @@ function SetupPanel({
   levelId,
   onLevelChange,
   language,
-  onLanguageChange,
   onStart,
 }: {
   text: string;
@@ -327,36 +310,16 @@ function SetupPanel({
   levelId: ReadingLevel["id"];
   onLevelChange: (id: ReadingLevel["id"]) => void;
   language: LanguageCode;
-  onLanguageChange: (l: LanguageCode) => void;
   onStart: () => void;
 }) {
   const tooShort = wordCount < MIN_WORDS;
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="flex flex-wrap items-center gap-2">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-          Text language
-        </p>
-        <div className="flex flex-wrap gap-1.5">
-          {LANGUAGES.map((l) => (
-            <button
-              key={l.code}
-              onClick={() => onLanguageChange(l.code)}
-              className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
-                language === l.code
-                  ? "bg-indigo-600 text-white"
-                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-              }`}
-            >
-              {l.name}
-            </button>
-          ))}
-        </div>
-        <p className="w-full text-xs text-slate-400">
-          Used to build the comprehension quiz correctly — paste text in this language.
-        </p>
-      </div>
+      <p className="text-xs text-slate-400">
+        Paste text in <span className="font-semibold text-slate-600">{getLanguage(language).name}</span> —
+        change the language from the picker in the nav bar above.
+      </p>
 
       <div>
         <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Text</p>

@@ -4,9 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useMediaRecorder } from "@/hooks/useMediaRecorder";
 import { measureSyllableStress, type StressMeasurement } from "@/lib/audioStress";
 import { randomContrastiveExercise, type ContrastiveExercise } from "@/lib/contrastiveStress";
-import { LANGUAGES, type LanguageCode } from "@/lib/languages";
-
-const LANGUAGE_STORAGE_KEY = "contrastiveStressLanguage";
+import { useLanguage } from "@/components/LanguageProvider";
 
 /**
  * Contrastive stress drill: same word-count-based sentence, different word
@@ -16,29 +14,13 @@ const LANGUAGE_STORAGE_KEY = "contrastiveStressLanguage";
  * words are exactly that — N segments — same as a word's syllables. No AI
  * call, no cost, same local Web Audio API analysis already validated there.
  *
- * Content is per-language (English, German, French, Spanish, Swedish) —
- * the first feature in the app to use the shared `lib/languages.ts` list.
+ * Content is per-language (English, German, French, Spanish, Swedish),
+ * driven by the app-wide language picker in the nav bar (LanguageProvider)
+ * rather than its own local selector.
  */
 export function ContrastiveStressTrainer() {
-  const [language, setLanguage] = useState<LanguageCode>("en");
+  const { language } = useLanguage();
   const [exercise, setExercise] = useState<ContrastiveExercise | null>(null);
-
-  // Client-only: reads localStorage and picks the first exercise. Both are
-  // unavoidably client-only (no localStorage during SSR, and a value
-  // picked during the initial render would differ between SSR and
-  // hydration), so they're combined into one effect run once on mount.
-  useEffect(() => {
-    let initialLanguage: LanguageCode = "en";
-    try {
-      const saved = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
-      if (LANGUAGES.some((l) => l.code === saved)) initialLanguage = saved as LanguageCode;
-    } catch {
-      // Private browsing / storage disabled — fall back to English.
-    }
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setLanguage(initialLanguage);
-    setExercise(randomContrastiveExercise(initialLanguage));
-  }, []);
 
   const { isRecording, recordedBlob, start, stop, reset, error: recordError } =
     useMediaRecorder(false);
@@ -74,18 +56,17 @@ export function ContrastiveStressTrainer() {
     };
   }, [recordedBlob, exercise]);
 
-  function handleLanguageChange(newLanguage: LanguageCode) {
-    setLanguage(newLanguage);
-    setExercise(randomContrastiveExercise(newLanguage));
+  // Re-roll whenever the app-wide language changes (including the very
+  // first time it settles, from LanguageProvider's own localStorage load).
+  // This responds to an external dependency changing, not a mount-only
+  // hack — the sanctioned use of setState-in-effect.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setExercise(randomContrastiveExercise(language));
     reset();
     setMeasurement(null);
     setMeasureError(null);
-    try {
-      window.localStorage.setItem(LANGUAGE_STORAGE_KEY, newLanguage);
-    } catch {
-      // Ignore — the choice just won't persist across visits.
-    }
-  }
+  }, [language, reset]);
 
   function handleRetry() {
     reset();
@@ -116,27 +97,6 @@ export function ContrastiveStressTrainer() {
 
   return (
     <div className="flex flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-      {showSetup && (
-        <div className="flex flex-wrap items-center gap-2">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Language</p>
-          <div className="flex flex-wrap gap-1.5">
-            {LANGUAGES.map((l) => (
-              <button
-                key={l.code}
-                onClick={() => handleLanguageChange(l.code)}
-                className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
-                  language === l.code
-                    ? "bg-indigo-600 text-white"
-                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                }`}
-              >
-                {l.name}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
       <div>
         <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Sentence</p>
         <p className="mt-2 text-xl leading-relaxed text-slate-900">

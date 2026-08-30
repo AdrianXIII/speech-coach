@@ -5,9 +5,8 @@ import { useMediaRecorder } from "@/hooks/useMediaRecorder";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
 import { passagesForLanguage, randomPassage, type ComprehensionPassage } from "@/lib/comprehensionContent";
 import { analyzeRichness, type RichnessScore } from "@/lib/languageRichness";
-import { LANGUAGES, getLanguage, type LanguageCode } from "@/lib/languages";
-
-const LANGUAGE_STORAGE_KEY = "comprehensionLanguage";
+import { getLanguage, type LanguageCode } from "@/lib/languages";
+import { useLanguage } from "@/components/LanguageProvider";
 
 type Phase = "setup" | "listening" | "ready" | "responding" | "results";
 
@@ -19,28 +18,12 @@ type Phase = "setup" | "listening" | "ready" | "responding" | "results";
  * captured, how advanced/diverse your vocabulary was, whether you used
  * professional connectives, and how quickly you responded — all computed
  * locally from the transcript (Web Speech API, free) against the passage's
- * own key points and vocabulary, no AI call.
+ * own key points and vocabulary, no AI call. Passage language follows the
+ * app-wide picker in the nav bar (LanguageProvider).
  */
 export function ComprehensionTrainer() {
-  const [language, setLanguage] = useState<LanguageCode>("en");
+  const { language } = useLanguage();
   const [passage, setPassage] = useState<ComprehensionPassage | null>(null);
-
-  // Client-only: localStorage + the initial random pick both need to wait
-  // for the client (see ContrastiveStressTrainer for why), so they're
-  // combined into one effect run once on mount.
-  useEffect(() => {
-    let initialLanguage: LanguageCode = "en";
-    try {
-      const saved = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
-      if (LANGUAGES.some((l) => l.code === saved)) initialLanguage = saved as LanguageCode;
-    } catch {
-      // Private browsing / storage disabled — fall back to English.
-    }
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setLanguage(initialLanguage);
-    setPassage(randomPassage(initialLanguage));
-  }, []);
-
   const [phase, setPhase] = useState<Phase>("setup");
   const [score, setScore] = useState<RichnessScore | null>(null);
   const [isFinalizing, setIsFinalizing] = useState(false);
@@ -48,6 +31,17 @@ export function ComprehensionTrainer() {
   const { recordedBlob, start: startRecorder, stop: stopRecorder, reset: resetRecorder } =
     useMediaRecorder(false);
   const recognition = useSpeechRecognition(getLanguage(language).speechLang);
+
+  // Re-roll whenever the app-wide language changes (including the very
+  // first time it settles, from LanguageProvider's own localStorage load).
+  // Also bails back to "setup" in case the switch happens mid-exercise —
+  // a passage/transcript in the old language shouldn't carry over.
+  useEffect(() => {
+    window.speechSynthesis.cancel();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setPassage(randomPassage(language));
+    setPhase("setup");
+  }, [language]);
 
   const audioEndTimeRef = useRef(0);
   const latencySecondsRef = useRef(0);
@@ -86,16 +80,6 @@ export function ComprehensionTrainer() {
       setIsFinalizing(false);
     }
   }, [isFinalizing, recognition.isListening, recognition.transcript, passage, language]);
-
-  function handleLanguageChange(newLanguage: LanguageCode) {
-    setLanguage(newLanguage);
-    setPassage(randomPassage(newLanguage));
-    try {
-      window.localStorage.setItem(LANGUAGE_STORAGE_KEY, newLanguage);
-    } catch {
-      // Ignore — the choice just won't persist across visits.
-    }
-  }
 
   function handlePickPassage(p: ComprehensionPassage) {
     setPassage(p);
@@ -191,7 +175,6 @@ export function ComprehensionTrainer() {
       {phase === "setup" && (
         <SetupPanel
           language={language}
-          onLanguageChange={handleLanguageChange}
           passage={passage}
           onPick={handlePickPassage}
           onShuffle={handleShufflePassage}
@@ -273,7 +256,6 @@ export function ComprehensionTrainer() {
 
 function SetupPanel({
   language,
-  onLanguageChange,
   passage,
   onPick,
   onShuffle,
@@ -281,7 +263,6 @@ function SetupPanel({
   disabled,
 }: {
   language: LanguageCode;
-  onLanguageChange: (l: LanguageCode) => void;
   passage: ComprehensionPassage;
   onPick: (p: ComprehensionPassage) => void;
   onShuffle: () => void;
@@ -292,25 +273,6 @@ function SetupPanel({
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="flex flex-wrap items-center gap-2">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Language</p>
-        <div className="flex flex-wrap gap-1.5">
-          {LANGUAGES.map((l) => (
-            <button
-              key={l.code}
-              onClick={() => onLanguageChange(l.code)}
-              className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
-                language === l.code
-                  ? "bg-indigo-600 text-white"
-                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-              }`}
-            >
-              {l.name}
-            </button>
-          ))}
-        </div>
-      </div>
-
       <div className="flex items-center justify-between">
         <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Topic</p>
         <button

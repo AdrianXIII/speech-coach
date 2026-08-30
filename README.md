@@ -5,6 +5,19 @@ feedback on pace and filler words, rehearse in front of a virtual audience
 with a teleprompter, get AI help writing what to say, and train your
 pronunciation of individual words.
 
+## Language picker
+
+One global language switch lives in the nav bar (next to "Speech Coach"),
+not a separate control per feature. Picking English, German, French,
+Spanish, or Swedish there both translates the nav labels and swaps the
+content in every multi-language trainer (Improv, Contrastive Stress,
+Listening & Summary, Executive Phrasing, Speed Reading) — implemented
+once in `components/LanguageProvider.tsx` (React context + one
+localStorage key) rather than each trainer managing its own. Record &
+Analyze, Virtual Stage, and Pronunciation aren't wired to it: the first
+two work in whatever language you speak already (Gemini handles that),
+and Pronunciation Trainer is still English-only (see its section below).
+
 ## What it does
 
 **Record & Analyze** (`/`)
@@ -51,7 +64,7 @@ divides the minute by that model's steps while you record. A one-tap
 
 **Contrastive Stress** (`/emphasis`)
 Multi-language contrastive-stress drill (English, German, French, Spanish,
-Swedish — pick with the language pills, remembered across visits): the
+Swedish — follows the global language picker in the nav): the
 same sentence can mean different things depending on which word you
 stress. Say it with the stress on the word you're given, and a local audio
 analysis (loudness + pitch per word, via the Web Audio API — the same

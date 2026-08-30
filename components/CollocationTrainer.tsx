@@ -5,9 +5,8 @@ import { useMediaRecorder } from "@/hooks/useMediaRecorder";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
 import { pickSession, type CollocationChallenge, type CollocationOption } from "@/lib/collocationContent";
 import { checkCollocationUsage, type CollocationUsage } from "@/lib/collocationCheck";
-import { LANGUAGES, getLanguage, type LanguageCode } from "@/lib/languages";
-
-const LANGUAGE_STORAGE_KEY = "collocationLanguage";
+import { getLanguage } from "@/lib/languages";
+import { useLanguage } from "@/components/LanguageProvider";
 
 type Phase = "quiz" | "quizFeedback" | "speakPrompt" | "speaking" | "speakFeedback" | "summary";
 
@@ -35,25 +34,12 @@ function shuffle<T>(items: T[]): T[] {
  * out loud. The multiple-choice round is pure local content, no AI or
  * speech needed; the spoken round reuses the same Web Speech API hook as
  * Listening & Summary to check whether the verb and noun actually landed
- * together in what was said.
+ * together in what was said. Content language follows the app-wide picker
+ * in the nav bar (LanguageProvider).
  */
 export function CollocationTrainer() {
-  const [language, setLanguage] = useState<LanguageCode>("en");
+  const { language } = useLanguage();
   const [session, setSession] = useState<CollocationChallenge[] | null>(null);
-
-  useEffect(() => {
-    let initialLanguage: LanguageCode = "en";
-    try {
-      const saved = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
-      if (LANGUAGES.some((l) => l.code === saved)) initialLanguage = saved as LanguageCode;
-    } catch {
-      // Private browsing / storage disabled — fall back to English.
-    }
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setLanguage(initialLanguage);
-    setSession(pickSession(initialLanguage, 5));
-  }, []);
-
   const [index, setIndex] = useState(0);
   const [phase, setPhase] = useState<Phase>("quiz");
   const [selectedOption, setSelectedOption] = useState<CollocationOption | null>(null);
@@ -148,21 +134,19 @@ export function CollocationTrainer() {
     setSession(pickSession(language, 5));
   }
 
-  function handleLanguageChange(newLanguage: LanguageCode) {
-    setLanguage(newLanguage);
+  // Re-roll whenever the app-wide language changes (including the very
+  // first time it settles, from LanguageProvider's own localStorage load).
+  useEffect(() => {
     resetRecorder();
     recognition.reset();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedOption(null);
     setResults([]);
     setIndex(0);
     setPhase("quiz");
-    setSession(pickSession(newLanguage, 5));
-    try {
-      window.localStorage.setItem(LANGUAGE_STORAGE_KEY, newLanguage);
-    } catch {
-      // Ignore — the choice just won't persist across visits.
-    }
-  }
+    setSession(pickSession(language, 5));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [language]);
 
   if (!session || !challenge) {
     return (
@@ -181,25 +165,6 @@ export function CollocationTrainer() {
           exercise.
         </div>
       )}
-
-      <div className="flex flex-wrap items-center gap-2">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Language</p>
-        <div className="flex flex-wrap gap-1.5">
-          {LANGUAGES.map((l) => (
-            <button
-              key={l.code}
-              onClick={() => handleLanguageChange(l.code)}
-              className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
-                language === l.code
-                  ? "bg-indigo-600 text-white"
-                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-              }`}
-            >
-              {l.name}
-            </button>
-          ))}
-        </div>
-      </div>
 
       {phase !== "summary" && (
         <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">

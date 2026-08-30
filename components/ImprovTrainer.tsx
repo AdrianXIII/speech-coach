@@ -10,10 +10,9 @@ import {
   activePhaseIndex,
   type StructureModel,
 } from "@/lib/structureModels";
-import { LANGUAGES, type LanguageCode } from "@/lib/languages";
+import { useLanguage } from "@/components/LanguageProvider";
 
 const EXERCISE_SECONDS = 60;
-const LANGUAGE_STORAGE_KEY = "improvLanguage";
 
 /**
  * 60-second improv drill: a random everyday word plus a rhetorical
@@ -21,32 +20,17 @@ const LANGUAGE_STORAGE_KEY = "improvLanguage";
  * phase timer shows which part of the structure to be in as the clock
  * runs; recording is local-only with a one-tap discard so failing costs
  * nothing. No AI involved — this is pure practice, not feedback.
+ *
+ * Word list and structure models are per-language, driven by the app-wide
+ * language picker in the nav bar (LanguageProvider).
  */
 export function ImprovTrainer() {
-  const [language, setLanguage] = useState<LanguageCode>("en");
+  const { language } = useLanguage();
   // Picked client-side only (in an effect below): a random initial value
   // here would be computed once during SSR and again on the client during
   // hydration, and Math.random() obviously won't agree with itself.
   const [word, setWord] = useState<string | null>(null);
   const [model, setModel] = useState<StructureModel | null>(null);
-
-  useEffect(() => {
-    let initialLanguage: LanguageCode = "en";
-    try {
-      const saved = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
-      if (LANGUAGES.some((l) => l.code === saved)) initialLanguage = saved as LanguageCode;
-    } catch {
-      // Private browsing / storage disabled — fall back to English.
-    }
-    // Deliberate client-only setState: this is the standard fix for a
-    // Math.random() hydration mismatch (start null on both server and
-    // client, fill in the random value only after mount), not something
-    // to lift into render.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setLanguage(initialLanguage);
-    setWord(randomImprovWord(initialLanguage));
-    setModel(randomStructureModel(initialLanguage));
-  }, []);
 
   const { isRecording, recordedBlob, start, stop, reset, error: recordError } =
     useMediaRecorder(false);
@@ -76,18 +60,15 @@ export function ImprovTrainer() {
     if (isRecording && elapsedSeconds >= EXERCISE_SECONDS) stop();
   }, [isRecording, elapsedSeconds, stop]);
 
-  function handleLanguageChange(newLanguage: LanguageCode) {
-    setLanguage(newLanguage);
-    setWord(randomImprovWord(newLanguage));
-    setModel(randomStructureModel(newLanguage));
+  // Re-roll whenever the app-wide language changes (including the very
+  // first time it settles, from LanguageProvider's own localStorage load).
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setWord(randomImprovWord(language));
+    setModel(randomStructureModel(language));
     reset();
     setElapsedSeconds(0);
-    try {
-      window.localStorage.setItem(LANGUAGE_STORAGE_KEY, newLanguage);
-    } catch {
-      // Ignore — the choice just won't persist across visits.
-    }
-  }
+  }, [language, reset]);
 
   function handleNewWord() {
     setWord(randomImprovWord(language));
@@ -130,27 +111,6 @@ export function ImprovTrainer() {
 
   return (
     <div className="flex flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-      {showSetup && (
-        <div className="flex flex-wrap items-center gap-2">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Language</p>
-          <div className="flex flex-wrap gap-1.5">
-            {LANGUAGES.map((l) => (
-              <button
-                key={l.code}
-                onClick={() => handleLanguageChange(l.code)}
-                className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
-                  language === l.code
-                    ? "bg-indigo-600 text-white"
-                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                }`}
-              >
-                {l.name}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* Word */}
       <div>
         <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Word</p>
