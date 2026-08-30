@@ -9,6 +9,7 @@ const LINKS = [
   { href: "/pronunciation", label: "Pronunciation" },
   { href: "/improv", label: "60s Improv" },
   { href: "/emphasis", label: "Betoning" },
+  { href: "/speed-reading", label: "Snabbläsning" },
 ];
 
 export function NavBar() {

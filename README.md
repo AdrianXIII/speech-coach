@@ -55,6 +55,19 @@ via the Web Audio API — the same technique as the Pronunciation Trainer's
 stress check, just applied to words instead of syllables) shows which word
 actually came out strongest. No AI call, no cost.
 
+**Snabbläsning** (`/speed-reading`)
+Paste a text and pick a level — an RSVP (rapid serial visual presentation)
+reader flashes it word-by-word (level 1), 1–2 words at a time (level 2), or
+3–4-word chunks (level 3, 500+ wpm) with a fixed focus marker so your eyes
+don't have to move. Every ~150 words a quick recall question pauses the
+flow and nudges the speed up or down depending on whether you catch it.
+When you stop (or the text ends), a short comprehension quiz checks whether
+you actually absorbed what you read, and shows WPM next to comprehension %
+so a higher speed can be told apart from just skimming. Chunking, the
+recall checks, and the quiz are all generated straight from the pasted
+text — word-order and word-presence questions, no AI call. Session history
+lives in your browser (localStorage) so repeat attempts are comparable.
+
 ## Running it locally
 
 ```bash
@@ -93,6 +106,7 @@ app/
   pronunciation/page.tsx          Pronunciation Trainer page
   improv/page.tsx                 60-Second Improv page
   emphasis/page.tsx               Kontrastiv Betoning page
+  speed-reading/page.tsx          Snabbläsning (RSVP speed reading) page
   api/
     analyze-speech/               Gemini transcription+coaching (one call) -> filler-word/pace analysis
     generate-script/              Topic/draft -> Gemini-polished speakable script
@@ -108,6 +122,7 @@ components/
   StressMeter.tsx                  Instant local per-syllable loudness/pitch stress check (no AI call)
   ImprovTrainer.tsx                60-second word + structure-model improv drill with phase timer
   ContrastiveStressTrainer.tsx     Kontrastiv betoning drill (local per-word stress check, no AI call)
+  SpeedReadingTrainer.tsx          RSVP speed reader: leveled chunking, recall checks, comprehension quiz
   FollowUpChat.tsx                 Reusable "ask a follow-up" thread under any AI feedback panel
   NavBar.tsx
   stage/
@@ -117,6 +132,7 @@ lib/
   analyzeSpeech.ts, speechMetrics.ts, scoreSpeech.ts, generateScript.ts,
   pronunciationFeedback.ts, fillerWords.ts, chat.ts, wordStress.ts,
   audioStress.ts, improvWords.ts, structureModels.ts, contrastiveStress.ts,
+  speedReadingLevels.ts, readingComprehension.ts, readingHistory.ts,
   gemini.ts, audio.ts
 types/
   speechAnalysis.ts
