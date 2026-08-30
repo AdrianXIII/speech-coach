@@ -35,7 +35,7 @@ function shuffle<T>(items: T[]): T[] {
 }
 
 /**
- * Executive Phrasing drill: for each round, pick the correctly "upgraded"
+ * Elite Phrasing drill: for each round, pick the correctly "upgraded"
  * professional collocation among plausible-but-wrong options (still-basic,
  * or a grammatically fine but mismatched pairing — the "mitigate risk" vs
  * "mitigate resources" trap), then say a sentence using that exact pairing

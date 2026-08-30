@@ -79,11 +79,11 @@ export const NAV_LINKS: NavLink[] = [
   {
     href: "/collocations",
     labels: {
-      en: "Executive Phrasing",
-      de: "Gehobene Ausdrucksweise",
-      fr: "Expression exécutive",
-      es: "Expresión ejecutiva",
-      sv: "Executive-uttryck",
+      en: "Elite Phrasing",
+      de: "Elite-Ausdrucksweise",
+      fr: "Expression d'élite",
+      es: "Expresión de élite",
+      sv: "Elituttryck",
     },
   },
 ];

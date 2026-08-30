@@ -11,7 +11,7 @@ One global language switch lives in the nav bar (next to "Speech Coach"),
 not a separate control per feature. Picking English, German, French,
 Spanish, or Swedish there both translates the nav labels and swaps the
 content in every multi-language trainer (Improv, Contrastive Stress,
-Listening & Summary, Executive Phrasing, Speed Reading) — implemented
+Listening & Summary, Elite Phrasing, Speed Reading) — implemented
 once in `components/LanguageProvider.tsx` (React context + one
 localStorage key) rather than each trainer managing its own. Record &
 Analyze, Virtual Stage, and Pronunciation aren't wired to it: the first
@@ -102,7 +102,7 @@ call — this is deliberately the free-first version of the idea; an
 LLM-generated "here's how to phrase that more like a native speaker" rewrite
 is the natural next step if the free scoring turns out not to be enough.
 
-**Executive Phrasing** (`/collocations`)
+**Elite Phrasing** (`/collocations`)
 Targets *collocation* specifically — the "feels right" pairing of verbs,
 nouns, and adjectives that separates fluent professional English from
 merely-correct English ("mitigate risk" sounds right; "mitigate resources"
@@ -167,7 +167,7 @@ app/
   emphasis/page.tsx               Contrastive Stress page (multi-language)
   speed-reading/page.tsx          Snabbläsning (RSVP speed reading) page
   comprehension/page.tsx          Listening & Summary page
-  collocations/page.tsx           Executive Phrasing page
+  collocations/page.tsx           Elite Phrasing page
   api/
     analyze-speech/               Gemini transcription+coaching (one call) -> filler-word/pace analysis
     generate-script/              Topic/draft -> Gemini-polished speakable script

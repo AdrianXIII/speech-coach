@@ -18,7 +18,7 @@ const LanguageContext = createContext<LanguageContextValue>({
 /**
  * One global language choice for the whole app — the nav labels and every
  * multi-language trainer (Improv, Contrastive Stress, Listening & Summary,
- * Executive Phrasing, Speed Reading) all read from this instead of each
+ * Elite Phrasing, Speed Reading) all read from this instead of each
  * managing its own language picker and localStorage key.
  */
 export function LanguageProvider({ children }: { children: ReactNode }) {
