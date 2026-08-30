@@ -4,22 +4,40 @@ import { useEffect, useMemo, useState } from "react";
 import { useMediaRecorder } from "@/hooks/useMediaRecorder";
 import { measureSyllableStress, type StressMeasurement } from "@/lib/audioStress";
 import { randomContrastiveExercise, type ContrastiveExercise } from "@/lib/contrastiveStress";
+import { LANGUAGES, type LanguageCode } from "@/lib/languages";
+
+const LANGUAGE_STORAGE_KEY = "contrastiveStressLanguage";
 
 /**
- * Kontrastiv betoning drill: same word-count-based sentence, different word
+ * Contrastive stress drill: same word-count-based sentence, different word
  * stressed each time — say it so the stress lands on the target word.
  * Reuses measureSyllableStress from the Pronunciation Trainer unchanged:
  * it just measures loudness/pitch across N audio segments, and a sentence's
  * words are exactly that — N segments — same as a word's syllables. No AI
  * call, no cost, same local Web Audio API analysis already validated there.
+ *
+ * Content is per-language (English, German, French, Spanish, Swedish) —
+ * the first feature in the app to use the shared `lib/languages.ts` list.
  */
 export function ContrastiveStressTrainer() {
-  // Client-only random pick (see ImprovTrainer for why: a value picked
-  // during the initial render would differ between SSR and hydration).
+  const [language, setLanguage] = useState<LanguageCode>("en");
   const [exercise, setExercise] = useState<ContrastiveExercise | null>(null);
+
+  // Client-only: reads localStorage and picks the first exercise. Both are
+  // unavoidably client-only (no localStorage during SSR, and a value
+  // picked during the initial render would differ between SSR and
+  // hydration), so they're combined into one effect run once on mount.
   useEffect(() => {
+    let initialLanguage: LanguageCode = "en";
+    try {
+      const saved = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
+      if (LANGUAGES.some((l) => l.code === saved)) initialLanguage = saved as LanguageCode;
+    } catch {
+      // Private browsing / storage disabled — fall back to English.
+    }
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setExercise(randomContrastiveExercise());
+    setLanguage(initialLanguage);
+    setExercise(randomContrastiveExercise(initialLanguage));
   }, []);
 
   const { isRecording, recordedBlob, start, stop, reset, error: recordError } =
@@ -49,12 +67,25 @@ export function ContrastiveStressTrainer() {
         if (!cancelled) setMeasurement(result);
       })
       .catch(() => {
-        if (!cancelled) setMeasureError("Kunde inte mäta betoningen i den inspelningen.");
+        if (!cancelled) setMeasureError("Couldn't measure the stress in that recording.");
       });
     return () => {
       cancelled = true;
     };
   }, [recordedBlob, exercise]);
+
+  function handleLanguageChange(newLanguage: LanguageCode) {
+    setLanguage(newLanguage);
+    setExercise(randomContrastiveExercise(newLanguage));
+    reset();
+    setMeasurement(null);
+    setMeasureError(null);
+    try {
+      window.localStorage.setItem(LANGUAGE_STORAGE_KEY, newLanguage);
+    } catch {
+      // Ignore — the choice just won't persist across visits.
+    }
+  }
 
   function handleRetry() {
     reset();
@@ -66,13 +97,13 @@ export function ContrastiveStressTrainer() {
     reset();
     setMeasurement(null);
     setMeasureError(null);
-    setExercise(randomContrastiveExercise());
+    setExercise(randomContrastiveExercise(language));
   }
 
   if (!exercise) {
     return (
       <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-        <p className="text-sm text-slate-400">Laddar…</p>
+        <p className="text-sm text-slate-400">Loading…</p>
       </div>
     );
   }
@@ -85,8 +116,29 @@ export function ContrastiveStressTrainer() {
 
   return (
     <div className="flex flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+      {showSetup && (
+        <div className="flex flex-wrap items-center gap-2">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Language</p>
+          <div className="flex flex-wrap gap-1.5">
+            {LANGUAGES.map((l) => (
+              <button
+                key={l.code}
+                onClick={() => handleLanguageChange(l.code)}
+                className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
+                  language === l.code
+                    ? "bg-indigo-600 text-white"
+                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                }`}
+              >
+                {l.name}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Mening</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Sentence</p>
         <p className="mt-2 text-xl leading-relaxed text-slate-900">
           {sentence.words.map((word, i) => (
             <span
@@ -102,7 +154,7 @@ export function ContrastiveStressTrainer() {
 
       <div className="rounded-lg bg-indigo-50 p-4">
         <p className="text-sm text-slate-700">
-          Säg meningen med betoning på <span className="font-bold text-indigo-700">{targetWord}</span>.
+          Say the sentence with stress on <span className="font-bold text-indigo-700">{targetWord}</span>.
         </p>
         <p className="mt-1 text-xs text-slate-500">{variant.meaning}</p>
       </div>
@@ -123,7 +175,7 @@ export function ContrastiveStressTrainer() {
         <div className="flex flex-col items-center gap-3">
           <span className="flex items-center gap-2 text-sm font-semibold text-red-600">
             <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-red-500" />
-            Spelar in…
+            Recording…
           </span>
           <button
             onClick={stop}
@@ -139,7 +191,7 @@ export function ContrastiveStressTrainer() {
         <div className="flex flex-col items-center gap-4">
           <audio src={audioUrl ?? undefined} controls className="w-full max-w-sm" />
 
-          {isMeasuring && <p className="text-sm text-slate-400">Mäter betoning…</p>}
+          {isMeasuring && <p className="text-sm text-slate-400">Measuring stress…</p>}
           {measureError && <p className="text-sm text-red-600">{measureError}</p>}
           {measurement && (
             <StressResult sentence={sentence} variant={variant} measurement={measurement} />
@@ -150,13 +202,13 @@ export function ContrastiveStressTrainer() {
               onClick={handleRetry}
               className="rounded-lg bg-slate-200 px-6 py-3 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-300"
             >
-              Försök igen
+              Try again
             </button>
             <button
               onClick={handleNewExercise}
               className="rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500"
             >
-              🎲 Ny övning
+              🎲 New sentence
             </button>
           </div>
         </div>
@@ -189,7 +241,7 @@ function StressResult({
 
           return (
             <div key={i} className="flex w-14 shrink-0 flex-col items-center gap-1">
-              {isTarget && <span className="text-[9px] font-semibold text-indigo-500">mål</span>}
+              {isTarget && <span className="text-[9px] font-semibold text-indigo-500">target</span>}
               <div className="flex h-16 w-full items-end justify-center rounded-md bg-slate-100">
                 <div
                   className={`w-6 rounded-t-md transition-all ${
@@ -211,11 +263,11 @@ function StressResult({
 
       <p className={`text-center text-sm font-medium ${isCorrect ? "text-emerald-700" : "text-amber-700"}`}>
         {isCorrect
-          ? `✅ Rätt! Du betonade "${targetWord}" starkast.`
-          : `❌ Du betonade "${measuredWord}" starkast — testa att lägga mer tryck på "${targetWord}".`}
+          ? `✅ Correct! You stressed "${targetWord}" the most.`
+          : `❌ You stressed "${measuredWord}" the most — try emphasizing "${targetWord}" more.`}
       </p>
       <p className="text-center text-[11px] text-slate-400">
-        Ungefärlig mätning baserad på volym och tonhöjd, inte facit-exakt.
+        Approximate measurement based on volume and pitch, not an exact answer key.
       </p>
     </div>
   );

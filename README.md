@@ -47,12 +47,14 @@ Randomize (or pick) an everyday word and a rhetorical structure model
 minute by that model's steps while you record. A one-tap "Kasta
 inspelningen" discards the take instantly. No AI involved.
 
-**Kontrastiv Betoning** (`/emphasis`)
-Swedish contrastive-stress drill: the same sentence can mean different
-things depending on which word you stress. Say it with the stress on the
-word you're given, and a local audio analysis (loudness + pitch per word,
-via the Web Audio API — the same technique as the Pronunciation Trainer's
-stress check, just applied to words instead of syllables) shows which word
+**Contrastive Stress** (`/emphasis`)
+Multi-language contrastive-stress drill (English, German, French, Spanish,
+Swedish — pick with the language pills, remembered across visits): the
+same sentence can mean different things depending on which word you
+stress. Say it with the stress on the word you're given, and a local audio
+analysis (loudness + pitch per word, via the Web Audio API — the same
+technique as the Pronunciation Trainer's stress check, just applied to
+words instead of syllables) shows which word
 actually came out strongest. No AI call, no cost.
 
 **Snabbläsning** (`/speed-reading`)
@@ -132,7 +134,7 @@ app/
   stage/page.tsx                  Virtual Stage page
   pronunciation/page.tsx          Pronunciation Trainer page
   improv/page.tsx                 60-Second Improv page
-  emphasis/page.tsx               Kontrastiv Betoning page
+  emphasis/page.tsx               Contrastive Stress page (multi-language)
   speed-reading/page.tsx          Snabbläsning (RSVP speed reading) page
   comprehension/page.tsx          Listening & Summary page
   collocations/page.tsx           Executive Phrasing page
@@ -150,7 +152,7 @@ components/
   PronunciationTrainer.tsx         Listen / record / stress check / AI feedback for one word at a time
   StressMeter.tsx                  Instant local per-syllable loudness/pitch stress check (no AI call)
   ImprovTrainer.tsx                60-second word + structure-model improv drill with phase timer
-  ContrastiveStressTrainer.tsx     Kontrastiv betoning drill (local per-word stress check, no AI call)
+  ContrastiveStressTrainer.tsx     Contrastive stress drill, 5 languages (local per-word stress check, no AI call)
   SpeedReadingTrainer.tsx          RSVP speed reader: leveled chunking, recall checks, comprehension quiz
   ComprehensionTrainer.tsx         Listen (TTS) -> spoken summary (Web Speech API) -> local richness scoring
   CollocationTrainer.tsx           Upgrade-the-phrase quiz + spoken collocation-usage check
@@ -163,6 +165,7 @@ lib/
   analyzeSpeech.ts, speechMetrics.ts, scoreSpeech.ts, generateScript.ts,
   pronunciationFeedback.ts, fillerWords.ts, chat.ts, wordStress.ts,
   audioStress.ts, improvWords.ts, structureModels.ts, contrastiveStress.ts,
+  languages.ts,
   speedReadingLevels.ts, readingComprehension.ts, readingHistory.ts,
   comprehensionContent.ts, languageRichness.ts, collocationContent.ts,
   collocationCheck.ts, gemini.ts, audio.ts

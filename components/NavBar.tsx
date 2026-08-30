@@ -8,7 +8,7 @@ const LINKS = [
   { href: "/stage", label: "Virtual Stage" },
   { href: "/pronunciation", label: "Pronunciation" },
   { href: "/improv", label: "60s Improv" },
-  { href: "/emphasis", label: "Betoning" },
+  { href: "/emphasis", label: "Contrastive Stress" },
   { href: "/speed-reading", label: "Snabbläsning" },
   { href: "/comprehension", label: "Listening & Summary" },
   { href: "/collocations", label: "Executive Phrasing" },
