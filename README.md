@@ -117,15 +117,18 @@ you said.
 
 A **profile** picker (separate from the language picker) switches which
 professional register you're drilling: **Executive** (strategic business
-language — multi-language: English, German, French, Spanish, Swedish,
-each with its own idiomatic collocations, not translations of the English
-set), **Politician** (persuasive/diplomatic — "reach across the aisle",
-"hold accountable"), or **Lawyer** (precise, adversarial — "burden of
-proof", "breach of contract"). The three were picked from actual research
-on which professions rank highest for public-speaking centrality — not
-guessed — and Politician/Lawyer are English-only for now; switching the
-global language while one of those is selected falls back to English
-content with a small notice, rather than silently mixing languages.
+language — "mitigate risk", "drive growth"), **Politician** (persuasive/
+diplomatic — "reach across the aisle", "hold accountable"), or **Lawyer**
+(precise, adversarial — "burden of proof", "breach of contract"). The
+three were picked from actual research on which professions rank highest
+for public-speaking centrality — not guessed. All three profiles are
+multi-language (English, German, French, Spanish, Swedish), each with its
+own idiomatic collocations per language rather than translations of the
+English set — political and legal idiom don't transfer word-for-word any
+more than business collocations do. (The lookup still falls back to
+English with a small notice if a profile/language combination is ever
+missing, but with all 15 combinations filled in that path shouldn't
+trigger today.)
 
 ## Running it locally
 

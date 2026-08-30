@@ -499,11 +499,6 @@ const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, Collocation
   ],
 };
 
-/**
- * Politician and Lawyer profiles are English-only for now — adding the
- * other 4 languages per profile is real idiomatic-content work (not a
- * translation pass), left for later if these profiles prove useful.
- */
 const POLITICIAN_CHALLENGES_EN: CollocationChallenge[] = [
   {
     id: "reach-aisle",
@@ -573,6 +568,298 @@ const POLITICIAN_CHALLENGES_EN: CollocationChallenge[] = [
       { phrase: "We are committed to mitigating trust and delivering on our promises.", correct: false, explanation: "Trust isn't a negative to lessen — \"mitigate\" reverses the intended meaning." },
       { phrase: "We promise to make things better and be honest.", correct: false, explanation: "Vague — \"make things better\" carries no specific commitment." },
       { phrase: "We are committed to allocating trust and delivering on our promises.", correct: false, explanation: "\"Allocate\" doesn't fit an abstract quality like trust." },
+    ],
+  },
+];
+
+const POLITICIAN_CHALLENGES_DE: CollocationChallenge[] = [
+  {
+    id: "kompromiss-such",
+    category: "Bipartisanship",
+    weakPhrase: "Wir müssen mit der anderen Partei zusammenarbeiten.",
+    targetVerbStem: "such",
+    targetNounStem: "kompromiss",
+    scenario: "Sie sprechen vor einem gespaltenen Parlament über ein umstrittenes Gesetz.",
+    options: [
+      { phrase: "Wir müssen parteiübergreifend Kompromisse suchen.", correct: true, explanation: "\"Parteiübergreifend\" plus \"Kompromisse suchen\" ist die klassische politische Formulierung für Zusammenarbeit über Parteigrenzen hinweg." },
+      { phrase: "Wir müssen parteiübergreifend Kompromisse mindern.", correct: false, explanation: "\"Mindern\" passt nicht zu \"suchen\" — Kompromisse werden gefunden, nicht gemindert." },
+      { phrase: "Wir müssen mit der anderen Partei zusammenarbeiten.", correct: false, explanation: "Bleibt im Basisregister — keine politische Rhetorik." },
+      { phrase: "Wir müssen parteiübergreifend Kompromisse zuteilen.", correct: false, explanation: "\"Zuteilen\" passt nicht zu Kompromissen, die verhandelt, nicht verteilt werden." },
+    ],
+  },
+  {
+    id: "basisunterstuetzung",
+    category: "Campaigning",
+    weakPhrase: "Viele Menschen vor Ort unterstützen unsere Kampagne.",
+    targetVerbStem: "erleb",
+    targetNounStem: "basisunterstützung",
+    scenario: "Sie mobilisieren Freiwillige vor einer Wahl.",
+    options: [
+      { phrase: "Wir erleben eine breite Basisunterstützung für unsere Kampagne.", correct: true, explanation: "\"Basisunterstützung\" ist der feste Begriff für organisierte Unterstützung von der Basis." },
+      { phrase: "Wir erleben eine breite Basiszuteilung für unsere Kampagne.", correct: false, explanation: "\"Zuteilung\" impliziert etwas von oben Verteiltes — das Gegenteil von Basisunterstützung." },
+      { phrase: "Viele Menschen unterstützen unsere Kampagne.", correct: false, explanation: "Verliert die spezifische Bedeutung von organisierter Unterstützung an der Basis." },
+      { phrase: "Wir erleben ein breites Basismandat für unsere Kampagne.", correct: false, explanation: "Ein \"Mandat\" wird nach einer Wahl von den Wählern erteilt — nicht vorher von der Basis." },
+    ],
+  },
+  {
+    id: "rechenschaft",
+    category: "Governance",
+    weakPhrase: "Wir müssen dafür sorgen, dass Politiker für ihr Handeln geradestehen.",
+    targetVerbStem: "zieh",
+    targetNounStem: "rechenschaft",
+    scenario: "Sie reagieren auf einen Skandal um einen Regierungsbeamten.",
+    options: [
+      { phrase: "Wir müssen unsere Politiker zur Rechenschaft ziehen.", correct: true, explanation: "\"Zur Rechenschaft ziehen\" ist die feste politische Redewendung für Verantwortlichkeit einfordern." },
+      { phrase: "Wir müssen unsere Politiker zur Rechenschaft mindern.", correct: false, explanation: "Grammatisch und semantisch falsch — man zieht zur Rechenschaft, man mindert sie nicht." },
+      { phrase: "Politiker müssen für ihr Handeln geradestehen.", correct: false, explanation: "Korrekte Bedeutung, aber ohne die feste politische Formulierung." },
+      { phrase: "Wir müssen unsere Politiker zur Rechenschaft zuteilen.", correct: false, explanation: "\"Zuteilen\" passt grammatisch nicht zu dieser Redewendung." },
+    ],
+  },
+  {
+    id: "zusammensteh",
+    category: "National Address",
+    weakPhrase: "Alle im Land müssen jetzt zusammenhalten.",
+    targetVerbStem: "zusammensteh",
+    targetNounStem: "nation",
+    scenario: "Sie halten eine Rede nach einer nationalen Krise.",
+    options: [
+      { phrase: "Jetzt, mehr denn je, muss unsere Nation zusammenstehen.", correct: true, explanation: "\"Zusammenstehen\" ist die klassische Formulierung für nationale Einheit in Reden." },
+      { phrase: "Jetzt, mehr denn je, muss unsere Nation zusammenmindern.", correct: false, explanation: "Keine reale Kollokation — grammatisch und semantisch unsinnig." },
+      { phrase: "Alle im Land müssen jetzt zusammenhalten.", correct: false, explanation: "Korrekte Bedeutung, aber ohne das erhöhte Register einer nationalen Ansprache." },
+      { phrase: "Jetzt, mehr denn je, muss unsere Nation zusammenzuteilen.", correct: false, explanation: "Grammatisch fehlerhaft und keine reale Formulierung." },
+    ],
+  },
+  {
+    id: "vertrauen-wiederherstell",
+    category: "Campaigning",
+    weakPhrase: "Wir versprechen, die Dinge besser zu machen und ehrlich zu den Wählern zu sein.",
+    targetVerbStem: "wiederherstell",
+    targetNounStem: "vertrauen",
+    scenario: "Sie beenden eine Wahlkampfrede kurz vor dem Wahltag.",
+    options: [
+      { phrase: "Wir setzen uns dafür ein, das Vertrauen der Bürger wiederherzustellen.", correct: true, explanation: "\"Vertrauen wiederherstellen\" ist die feste Formulierung für Wahlkampfrhetorik." },
+      { phrase: "Wir setzen uns dafür ein, das Vertrauen der Bürger zu mindern.", correct: false, explanation: "\"Mindern\" kehrt die beabsichtigte Bedeutung um." },
+      { phrase: "Wir versprechen, die Dinge besser zu machen.", correct: false, explanation: "Vage — kein konkretes Versprechen." },
+      { phrase: "Wir setzen uns dafür ein, das Vertrauen der Bürger zuzuteilen.", correct: false, explanation: "\"Zuteilen\" passt nicht zu einer abstrakten Eigenschaft wie Vertrauen." },
+    ],
+  },
+];
+
+const POLITICIAN_CHALLENGES_FR: CollocationChallenge[] = [
+  {
+    id: "tendre-opposition",
+    category: "Bipartisanship",
+    weakPhrase: "Nous devons travailler avec l'autre parti.",
+    targetVerbStem: "tend",
+    targetNounStem: "opposition",
+    scenario: "Vous vous adressez à une assemblée divisée sur un projet de loi controversé.",
+    options: [
+      { phrase: "Nous devons tendre la main à l'opposition pour trouver un compromis.", correct: true, explanation: "\"Tendre la main\" à l'opposition est l'expression politique classique pour la coopération bipartisane." },
+      { phrase: "Nous devons atténuer l'opposition pour trouver un compromis.", correct: false, explanation: "\"Atténuer\" ne s'associe pas à \"opposition\" dans ce sens." },
+      { phrase: "Nous devons travailler avec l'autre parti.", correct: false, explanation: "Reste au registre basique — aucune rhétorique politique." },
+      { phrase: "Nous devons allouer l'opposition pour trouver un compromis.", correct: false, explanation: "\"Allouer\" ne convient pas — on ne répartit pas l'opposition." },
+    ],
+  },
+  {
+    id: "soutien-base",
+    category: "Campaigning",
+    weakPhrase: "Beaucoup de gens au niveau local soutiennent notre campagne.",
+    targetVerbStem: "constat",
+    targetNounStem: "base",
+    scenario: "Vous mobilisez des bénévoles avant une élection.",
+    options: [
+      { phrase: "Nous constatons un fort soutien de la base pour notre campagne.", correct: true, explanation: "\"Soutien de la base\" est le terme standard pour l'appui populaire organisé localement." },
+      { phrase: "Nous constatons une forte répartition de la base pour notre campagne.", correct: false, explanation: "\"Répartition\" implique quelque chose distribué d'en haut — l'inverse du soutien de base." },
+      { phrase: "Beaucoup de gens soutiennent notre campagne.", correct: false, explanation: "Perd le sens spécifique d'un soutien organisé localement." },
+      { phrase: "Nous constatons un fort mandat de la base pour notre campagne.", correct: false, explanation: "Un \"mandat\" est obtenu après une élection, pas avant, de la base." },
+    ],
+  },
+  {
+    id: "tenir-responsable",
+    category: "Governance",
+    weakPhrase: "Nous devons nous assurer que les dirigeants répondent de leurs actes.",
+    targetVerbStem: "ten",
+    targetNounStem: "responsable",
+    scenario: "Vous réagissez à un scandale impliquant un responsable gouvernemental.",
+    options: [
+      { phrase: "Nous devons tenir nos dirigeants responsables de leurs actes.", correct: true, explanation: "\"Tenir responsable\" est l'expression fixe pour exiger des comptes." },
+      { phrase: "Nous devons atténuer nos dirigeants responsables de leurs actes.", correct: false, explanation: "\"Atténuer\" ne s'associe pas grammaticalement à cette expression." },
+      { phrase: "Les dirigeants doivent répondre de leurs actes.", correct: false, explanation: "Bonne signification, mais sans l'expression politique fixe." },
+      { phrase: "Nous devons allouer nos dirigeants responsables de leurs actes.", correct: false, explanation: "\"Allouer\" ne convient pas grammaticalement ici." },
+    ],
+  },
+  {
+    id: "rester-unie",
+    category: "National Address",
+    weakPhrase: "Tout le monde dans le pays doit s'unir maintenant.",
+    targetVerbStem: "rest",
+    targetNounStem: "uni",
+    scenario: "Vous prononcez un discours après une crise nationale.",
+    options: [
+      { phrase: "Aujourd'hui plus que jamais, notre nation doit rester unie.", correct: true, explanation: "\"Rester uni\" est l'expression classique pour l'unité nationale dans un discours." },
+      { phrase: "Aujourd'hui plus que jamais, notre nation doit atténuer unie.", correct: false, explanation: "N'est pas une collocation réelle — grammaticalement incohérent." },
+      { phrase: "Tout le monde doit s'unir maintenant.", correct: false, explanation: "Bonne signification, mais sans le registre élevé attendu dans une adresse nationale." },
+      { phrase: "Aujourd'hui plus que jamais, notre nation doit allouer unie.", correct: false, explanation: "Grammaticalement incorrect et sans sens." },
+    ],
+  },
+  {
+    id: "restaurer-confiance",
+    category: "Campaigning",
+    weakPhrase: "Nous promettons de faire mieux et d'être honnêtes envers les électeurs.",
+    targetVerbStem: "restaur",
+    targetNounStem: "confiance",
+    scenario: "Vous concluez un discours de campagne avant le jour du scrutin.",
+    options: [
+      { phrase: "Nous nous engageons à restaurer la confiance et à tenir nos promesses.", correct: true, explanation: "\"Restaurer la confiance\" est l'expression fixe de la rhétorique de campagne." },
+      { phrase: "Nous nous engageons à atténuer la confiance et à tenir nos promesses.", correct: false, explanation: "\"Atténuer\" inverse le sens voulu." },
+      { phrase: "Nous promettons de faire mieux et d'être honnêtes.", correct: false, explanation: "Vague — aucun engagement spécifique." },
+      { phrase: "Nous nous engageons à allouer la confiance et à tenir nos promesses.", correct: false, explanation: "\"Allouer\" ne convient pas à une qualité abstraite comme la confiance." },
+    ],
+  },
+];
+
+const POLITICIAN_CHALLENGES_ES: CollocationChallenge[] = [
+  {
+    id: "tender-puentes",
+    category: "Bipartisanship",
+    weakPhrase: "Necesitamos trabajar con el otro partido.",
+    targetVerbStem: "tend",
+    targetNounStem: "puentes",
+    scenario: "Te diriges a un parlamento dividido sobre un proyecto de ley polémico.",
+    options: [
+      { phrase: "Debemos tender puentes con la oposición para encontrar un acuerdo.", correct: true, explanation: "\"Tender puentes\" es la expresión política clásica para la cooperación entre partidos." },
+      { phrase: "Debemos mitigar puentes con la oposición para encontrar un acuerdo.", correct: false, explanation: "\"Mitigar\" no encaja con \"puentes\" — no son algo negativo que reducir." },
+      { phrase: "Necesitamos trabajar con el otro partido.", correct: false, explanation: "Se queda en el registro básico — sin retórica política." },
+      { phrase: "Debemos asignar puentes con la oposición para encontrar un acuerdo.", correct: false, explanation: "\"Asignar\" no encaja — los puentes se tienden, no se asignan." },
+    ],
+  },
+  {
+    id: "respaldo-base",
+    category: "Campaigning",
+    weakPhrase: "Mucha gente a nivel local apoya nuestra campaña.",
+    targetVerbStem: "respald",
+    targetNounStem: "base",
+    scenario: "Estás movilizando voluntarios antes de una elección.",
+    options: [
+      { phrase: "Estamos viendo un fuerte respaldo de base para nuestra campaña.", correct: true, explanation: "\"Respaldo de base\" es el término estándar para el apoyo popular organizado localmente." },
+      { phrase: "Estamos viendo una fuerte asignación de base para nuestra campaña.", correct: false, explanation: "\"Asignación\" implica algo distribuido desde arriba — lo opuesto al respaldo de base." },
+      { phrase: "Mucha gente apoya nuestra campaña.", correct: false, explanation: "Pierde el significado específico de apoyo organizado a nivel local." },
+      { phrase: "Estamos viendo un fuerte mandato de base para nuestra campaña.", correct: false, explanation: "Un \"mandato\" se obtiene después de una elección, no antes, desde la base." },
+    ],
+  },
+  {
+    id: "exigir-cuentas",
+    category: "Governance",
+    weakPhrase: "Debemos asegurarnos de que los líderes respondan por sus actos.",
+    targetVerbStem: "exig",
+    targetNounStem: "cuentas",
+    scenario: "Estás respondiendo a un escándalo que involucra a un funcionario del gobierno.",
+    options: [
+      { phrase: "Debemos exigir cuentas a nuestros líderes por sus actos.", correct: true, explanation: "\"Exigir cuentas\" es la expresión fija en español para pedir responsabilidad." },
+      { phrase: "Debemos mitigar cuentas a nuestros líderes por sus actos.", correct: false, explanation: "\"Mitigar\" no se combina gramaticalmente con esta expresión." },
+      { phrase: "Los líderes deben responder por sus actos.", correct: false, explanation: "Buen significado, pero sin la expresión política fija." },
+      { phrase: "Debemos asignar cuentas a nuestros líderes por sus actos.", correct: false, explanation: "\"Asignar\" no transmite la idea de exigir responsabilidad." },
+    ],
+  },
+  {
+    id: "permanecer-unida",
+    category: "National Address",
+    weakPhrase: "Todos en el país deben unirse ahora.",
+    targetVerbStem: "permanec",
+    targetNounStem: "unida",
+    scenario: "Estás dando un discurso tras una crisis nacional.",
+    options: [
+      { phrase: "Ahora, más que nunca, nuestra nación debe permanecer unida.", correct: true, explanation: "\"Permanecer unida\" es la expresión clásica para la unidad nacional en un discurso." },
+      { phrase: "Ahora, más que nunca, nuestra nación debe mitigar unida.", correct: false, explanation: "No es una colocación real — incoherente gramaticalmente." },
+      { phrase: "Todos deben unirse ahora.", correct: false, explanation: "Buen significado, pero sin el registro elevado de un discurso nacional." },
+      { phrase: "Ahora, más que nunca, nuestra nación debe asignar unida.", correct: false, explanation: "Gramaticalmente incorrecto y sin sentido." },
+    ],
+  },
+  {
+    id: "restaurar-confianza",
+    category: "Campaigning",
+    weakPhrase: "Prometemos mejorar las cosas y ser honestos con los votantes.",
+    targetVerbStem: "restaur",
+    targetNounStem: "confianza",
+    scenario: "Estás cerrando un discurso de campaña antes del día de las elecciones.",
+    options: [
+      { phrase: "Nos comprometemos a restaurar la confianza y cumplir nuestras promesas.", correct: true, explanation: "\"Restaurar la confianza\" es la expresión fija de la retórica de campaña." },
+      { phrase: "Nos comprometemos a mitigar la confianza y cumplir nuestras promesas.", correct: false, explanation: "\"Mitigar\" invierte el sentido pretendido." },
+      { phrase: "Prometemos mejorar las cosas y ser honestos.", correct: false, explanation: "Vago — ningún compromiso específico." },
+      { phrase: "Nos comprometemos a asignar la confianza y cumplir nuestras promesas.", correct: false, explanation: "\"Asignar\" no encaja con una cualidad abstracta como la confianza." },
+    ],
+  },
+];
+
+const POLITICIAN_CHALLENGES_SV: CollocationChallenge[] = [
+  {
+    id: "bygga-broar",
+    category: "Bipartisanship",
+    weakPhrase: "Vi måste samarbeta med det andra partiet.",
+    targetVerbStem: "bygg",
+    targetNounStem: "broar",
+    scenario: "Du talar inför en splittrad riksdag om ett omstritt lagförslag.",
+    options: [
+      { phrase: "Vi måste bygga broar över partigränserna för att hitta en kompromiss.", correct: true, explanation: "\"Bygga broar\" är det klassiska svenska politiska uttrycket för att samarbeta över partigränser." },
+      { phrase: "Vi måste begränsa broar över partigränserna för att hitta en kompromiss.", correct: false, explanation: "\"Begränsa\" passar inte — broar byggs, de begränsas inte." },
+      { phrase: "Vi måste samarbeta med det andra partiet.", correct: false, explanation: "Stannar i basregistret — ingen politisk retorik." },
+      { phrase: "Vi måste fördela broar över partigränserna för att hitta en kompromiss.", correct: false, explanation: "\"Fördela\" passar inte ihop med \"broar\" i den här betydelsen." },
+    ],
+  },
+  {
+    id: "grasrotsstod",
+    category: "Campaigning",
+    weakPhrase: "Många människor lokalt stödjer vår kampanj.",
+    targetVerbStem: "gräsrot",
+    targetNounStem: "stöd",
+    scenario: "Du mobiliserar volontärer inför ett val.",
+    options: [
+      { phrase: "Vi ser ett starkt gräsrotsstöd för vår kampanj.", correct: true, explanation: "\"Gräsrotsstöd\" är den fasta termen för organiserat stöd underifrån." },
+      { phrase: "Vi ser en stark gräsrotsfördelning för vår kampanj.", correct: false, explanation: "\"Fördelning\" antyder något uppifrån utdelat — motsatsen till gräsrotsstöd." },
+      { phrase: "Många människor stödjer vår kampanj.", correct: false, explanation: "Tappar den specifika betydelsen av organiserat lokalt stöd." },
+      { phrase: "Vi ser ett starkt gräsrotsmandat för vår kampanj.", correct: false, explanation: "Ett \"mandat\" ges av väljarna efter ett val, inte innan av gräsrötterna." },
+    ],
+  },
+  {
+    id: "stalla-till-svars",
+    category: "Governance",
+    weakPhrase: "Vi måste se till att ledare svarar för sina handlingar.",
+    targetVerbStem: "ställ",
+    targetNounStem: "svars",
+    scenario: "Du bemöter en skandal som involverar en regeringstjänsteman.",
+    options: [
+      { phrase: "Vi måste ställa våra ledare till svars för sina handlingar.", correct: true, explanation: "\"Ställa till svars\" är det fasta svenska uttrycket för att kräva ansvar." },
+      { phrase: "Vi måste begränsa våra ledare till svars för sina handlingar.", correct: false, explanation: "\"Begränsa\" passar inte grammatiskt in i det här uttrycket." },
+      { phrase: "Ledare måste svara för sina handlingar.", correct: false, explanation: "Rätt betydelse, men utan det fasta politiska uttrycket." },
+      { phrase: "Vi måste fördela våra ledare till svars för sina handlingar.", correct: false, explanation: "\"Fördela\" passar inte grammatiskt här." },
+    ],
+  },
+  {
+    id: "sta-enad",
+    category: "National Address",
+    weakPhrase: "Alla i landet måste hålla ihop nu.",
+    targetVerbStem: "stå",
+    targetNounStem: "enad",
+    scenario: "Du håller ett tal efter en nationell kris.",
+    options: [
+      { phrase: "Nu, mer än någonsin, måste vår nation stå enad.", correct: true, explanation: "\"Stå enad\" är det klassiska uttrycket för nationell enighet i tal." },
+      { phrase: "Nu, mer än någonsin, måste vår nation begränsa enad.", correct: false, explanation: "Ingen verklig kollokation — grammatiskt osammanhängande." },
+      { phrase: "Alla måste hålla ihop nu.", correct: false, explanation: "Rätt betydelse, men utan det upphöjda register som förväntas i ett nationellt tal." },
+      { phrase: "Nu, mer än någonsin, måste vår nation fördela enad.", correct: false, explanation: "Grammatiskt felaktigt och betydelselöst." },
+    ],
+  },
+  {
+    id: "atterupprata-fortroende",
+    category: "Campaigning",
+    weakPhrase: "Vi lovar att göra saker bättre och vara ärliga mot väljarna.",
+    targetVerbStem: "återupprätt",
+    targetNounStem: "förtroende",
+    scenario: "Du avslutar ett kampanjtal inför valdagen.",
+    options: [
+      { phrase: "Vi är fast beslutna att återupprätta förtroendet och hålla våra löften.", correct: true, explanation: "\"Återupprätta förtroendet\" är det fasta uttrycket i kampanjretorik." },
+      { phrase: "Vi är fast beslutna att begränsa förtroendet och hålla våra löften.", correct: false, explanation: "\"Begränsa\" vänder på den avsedda innebörden." },
+      { phrase: "Vi lovar att göra saker bättre och vara ärliga.", correct: false, explanation: "Vagt — inget specifikt åtagande." },
+      { phrase: "Vi är fast beslutna att fördela förtroendet och hålla våra löften.", correct: false, explanation: "\"Fördela\" passar inte en abstrakt kvalitet som förtroende." },
     ],
   },
 ];
@@ -650,13 +937,317 @@ const LAWYER_CHALLENGES_EN: CollocationChallenge[] = [
   },
 ];
 
+const LAWYER_CHALLENGES_DE: CollocationChallenge[] = [
+  {
+    id: "beweislast-erfuell",
+    category: "Trial Advocacy",
+    weakPhrase: "Wir glauben, die Gegenseite hat ihren Fall nicht ausreichend bewiesen.",
+    targetVerbStem: "erfüll",
+    targetNounStem: "beweislast",
+    scenario: "Sie halten ein Schlussplädoyer vor den Geschworenen.",
+    options: [
+      { phrase: "Die Staatsanwaltschaft konnte die Beweislast nicht erfüllen.", correct: true, explanation: "\"Die Beweislast erfüllen\" ist der feste juristische Begriff für den erforderlichen Beweisstandard." },
+      { phrase: "Die Staatsanwaltschaft konnte die Beweislast nicht mindern.", correct: false, explanation: "Eine Beweislast wird erfüllt oder nicht erfüllt — nicht \"gemindert\"." },
+      { phrase: "Die Gegenseite hat ihren Fall nicht ausreichend bewiesen.", correct: false, explanation: "Korrekte Bedeutung, aber nicht die feste juristische Terminologie." },
+      { phrase: "Die Staatsanwaltschaft konnte die Beweislast nicht zuteilen.", correct: false, explanation: "Die Beweislast wird gesetzlich zugewiesen, nicht im Plädoyer \"zugeteilt\"." },
+    ],
+  },
+  {
+    id: "vertragsverletzung",
+    category: "Civil Litigation",
+    weakPhrase: "Mein Mandant hat den Vertrag nicht gebrochen.",
+    targetVerbStem: "haft",
+    targetNounStem: "vertragsverletzung",
+    scenario: "Sie verteidigen einen Mandanten in einem zivilrechtlichen Streit.",
+    options: [
+      { phrase: "Mein Mandant haftet nicht für eine Vertragsverletzung.", correct: true, explanation: "\"Vertragsverletzung\" plus \"haften\" ist präzise juristische Terminologie, nicht nur \"den Vertrag gebrochen\"." },
+      { phrase: "Mein Mandant haftet nicht für eine Vertragsminderung.", correct: false, explanation: "\"Vertragsminderung\" ist ein anderer Rechtsbegriff — hier passt \"Vertragsverletzung\"." },
+      { phrase: "Mein Mandant hat den Vertrag nicht gebrochen.", correct: false, explanation: "Die einfache Version — keine juristische Präzision." },
+      { phrase: "Mein Mandant haftet nicht für eine Vertragszuteilung.", correct: false, explanation: "\"Vertragszuteilung\" ist kein juristischer Begriff — korrekt ist \"Vertragsverletzung\"." },
+    ],
+  },
+  {
+    id: "zweifelsfrei",
+    category: "Trial Advocacy",
+    weakPhrase: "Wir sind sicher, dass er es getan hat, wegen all der Beweise.",
+    targetVerbStem: "begründ",
+    targetNounStem: "zweifelsfrei",
+    scenario: "Sie fassen den Fall der Anklage vor den Geschworenen zusammen.",
+    options: [
+      { phrase: "Die Beweise begründen die Schuld zweifelsfrei.", correct: true, explanation: "\"Schuld zweifelsfrei begründen\" ist der exakte strafrechtliche Beweisstandard." },
+      { phrase: "Die Beweise mindern die Schuld zweifelsfrei.", correct: false, explanation: "\"Mindern\" würde die Schuld verringern, nicht beweisen — kehrt den Sinn um." },
+      { phrase: "Wir sind sicher, dass er es getan hat, wegen der Beweise.", correct: false, explanation: "Umgangssprachlich — nicht der gesetzlich geforderte Beweisstandard." },
+      { phrase: "Die Beweise zuteilen die Schuld zweifelsfrei.", correct: false, explanation: "Grammatisch und semantisch unsinnig — Schuld wird begründet, nicht zugeteilt." },
+    ],
+  },
+  {
+    id: "unzulaessig-ausschliess",
+    category: "Trial Procedure",
+    weakPhrase: "Ich denke nicht, dass dieser Beweis zugelassen werden sollte.",
+    targetVerbStem: "ausschließ",
+    targetNounStem: "unzulässig",
+    scenario: "Sie erheben Einspruch gegen einen Beweis während der Verhandlung.",
+    options: [
+      { phrase: "Ich beantrage, diesen Beweis als unzulässig auszuschließen.", correct: true, explanation: "\"Als unzulässig ausschließen\" ist die formelle prozessuale Formulierung für diesen Einspruch." },
+      { phrase: "Ich beantrage, diesen Beweis als unzulässig zu mindern.", correct: false, explanation: "Man schließt unzulässige Beweise aus — man \"mindert\" sie nicht." },
+      { phrase: "Ich denke nicht, dass dieser Beweis zugelassen werden sollte.", correct: false, explanation: "Umgangssprachlich — nicht die formelle Antragssprache vor Gericht." },
+      { phrase: "Ich beantrage, diesen Beweis als unzulässig zuzuteilen.", correct: false, explanation: "\"Zuteilen\" passt grammatisch nicht zu diesem Verfahrensantrag." },
+    ],
+  },
+  {
+    id: "schiedsverfahren",
+    category: "Negotiation",
+    weakPhrase: "Wir wollen das ohne Gericht klären.",
+    targetVerbStem: "klär",
+    targetNounStem: "schiedsverfahren",
+    scenario: "Sie verhandeln einen Vergleich vor dem Prozess.",
+    options: [
+      { phrase: "Wir schlagen vor, diese Angelegenheit im Schiedsverfahren zu klären.", correct: true, explanation: "\"Im Schiedsverfahren klären\" ist die Standardformulierung für alternative Streitbeilegung." },
+      { phrase: "Wir schlagen vor, diese Angelegenheit im Schiedsverfahren zu mindern.", correct: false, explanation: "Ein Schiedsverfahren klärt einen Streit — es \"mindert\" ihn nicht." },
+      { phrase: "Wir wollen das ohne Gericht klären.", correct: false, explanation: "Einfache Sprache — korrekt, aber nicht das formelle Register juristischer Korrespondenz." },
+      { phrase: "Wir schlagen vor, diese Angelegenheit im Schiedsverfahren zuzuteilen.", correct: false, explanation: "\"Zuteilen\" passt nicht zu einem Rechtsstreit — korrekt ist \"klären\"." },
+    ],
+  },
+];
+
+const LAWYER_CHALLENGES_FR: CollocationChallenge[] = [
+  {
+    id: "charge-preuve",
+    category: "Trial Advocacy",
+    weakPhrase: "Nous pensons que l'autre partie n'a pas suffisamment prouvé son cas.",
+    targetVerbStem: "acquitt",
+    targetNounStem: "preuve",
+    scenario: "Vous prononcez une plaidoirie finale devant le jury.",
+    options: [
+      { phrase: "L'accusation n'a pas réussi à s'acquitter de la charge de la preuve.", correct: true, explanation: "\"S'acquitter de la charge de la preuve\" est le terme juridique exact pour cette norme de preuve." },
+      { phrase: "L'accusation n'a pas réussi à atténuer la charge de la preuve.", correct: false, explanation: "On s'acquitte d'une charge de la preuve — on ne l'\"atténue\" pas." },
+      { phrase: "L'autre partie n'a pas suffisamment prouvé son cas.", correct: false, explanation: "Bonne signification, mais sans la terminologie juridique précise." },
+      { phrase: "L'accusation n'a pas réussi à allouer la charge de la preuve.", correct: false, explanation: "\"Allouer\" ne convient pas — la charge de la preuve est fixée par la loi, pas allouée." },
+    ],
+  },
+  {
+    id: "rupture-contrat",
+    category: "Civil Litigation",
+    weakPhrase: "Mon client n'a pas rompu le contrat.",
+    targetVerbStem: "respons",
+    targetNounStem: "rupture",
+    scenario: "Vous défendez un client dans un litige civil.",
+    options: [
+      { phrase: "Mon client n'est pas responsable d'une rupture de contrat.", correct: true, explanation: "\"Rupture de contrat\" plus \"responsable\" est la terminologie juridique précise." },
+      { phrase: "Mon client n'est pas responsable d'une atténuation de contrat.", correct: false, explanation: "\"Atténuation de contrat\" n'est pas un terme juridique — le terme correct est \"rupture\"." },
+      { phrase: "Mon client n'a pas rompu le contrat.", correct: false, explanation: "La version simple — aucune précision juridique." },
+      { phrase: "Mon client n'est pas responsable d'une allocation de contrat.", correct: false, explanation: "\"Allocation de contrat\" n'existe pas en droit — le terme correct est \"rupture\"." },
+    ],
+  },
+  {
+    id: "doute-raisonnable",
+    category: "Trial Advocacy",
+    weakPhrase: "Nous sommes sûrs qu'il l'a fait à cause de toutes les preuves.",
+    targetVerbStem: "établi",
+    targetNounStem: "doute",
+    scenario: "Vous résumez le dossier de l'accusation devant le jury.",
+    options: [
+      { phrase: "Les preuves établissent la culpabilité au-delà de tout doute raisonnable.", correct: true, explanation: "\"Établir la culpabilité au-delà de tout doute raisonnable\" est la norme de preuve exacte en droit pénal." },
+      { phrase: "Les preuves atténuent la culpabilité au-delà de tout doute raisonnable.", correct: false, explanation: "\"Atténuer\" réduirait la culpabilité au lieu de la prouver — inverse le sens." },
+      { phrase: "Nous sommes sûrs qu'il l'a fait à cause des preuves.", correct: false, explanation: "Familier — pas la norme de preuve exigée par la loi." },
+      { phrase: "Les preuves allouent la culpabilité au-delà de tout doute raisonnable.", correct: false, explanation: "\"Allouer\" ne convient pas — la culpabilité est établie, pas allouée." },
+    ],
+  },
+  {
+    id: "exclure-irrecevable",
+    category: "Trial Procedure",
+    weakPhrase: "Je ne pense pas que cette preuve devrait être autorisée.",
+    targetVerbStem: "exclu",
+    targetNounStem: "irrecevable",
+    scenario: "Vous vous opposez à une preuve pendant le procès.",
+    options: [
+      { phrase: "Je demande à exclure cette preuve comme irrecevable.", correct: true, explanation: "\"Exclure ... comme irrecevable\" est la formulation formelle de cette objection au tribunal." },
+      { phrase: "Je demande à atténuer cette preuve comme irrecevable.", correct: false, explanation: "On exclut une preuve irrecevable — on ne l'\"atténue\" pas." },
+      { phrase: "Je ne pense pas que cette preuve devrait être autorisée.", correct: false, explanation: "Familier — pas le langage formel qu'un tribunal attend." },
+      { phrase: "Je demande à allouer cette preuve comme irrecevable.", correct: false, explanation: "\"Allouer\" ne convient pas grammaticalement à cette requête." },
+    ],
+  },
+  {
+    id: "resoudre-arbitrage",
+    category: "Negotiation",
+    weakPhrase: "Nous voulons régler cela sans aller au tribunal.",
+    targetVerbStem: "résoud",
+    targetNounStem: "arbitrage",
+    scenario: "Vous négociez un règlement avant le procès.",
+    options: [
+      { phrase: "Nous proposons de résoudre cette affaire par voie d'arbitrage.", correct: true, explanation: "\"Résoudre par voie d'arbitrage\" est le langage standard pour un mode alternatif de résolution des conflits." },
+      { phrase: "Nous proposons d'atténuer cette affaire par voie d'arbitrage.", correct: false, explanation: "L'arbitrage résout un litige — il ne l'\"atténue\" pas." },
+      { phrase: "Nous voulons régler cela sans aller au tribunal.", correct: false, explanation: "Langage simple — correct, mais pas le registre formel utilisé en négociation." },
+      { phrase: "Nous proposons d'allouer cette affaire par voie d'arbitrage.", correct: false, explanation: "\"Allouer\" ne convient pas à un litige — le verbe correct est \"résoudre\"." },
+    ],
+  },
+];
+
+const LAWYER_CHALLENGES_ES: CollocationChallenge[] = [
+  {
+    id: "carga-prueba",
+    category: "Trial Advocacy",
+    weakPhrase: "Creemos que la otra parte no probó su caso lo suficiente.",
+    targetVerbStem: "cumpl",
+    targetNounStem: "carga",
+    scenario: "Estás presentando un alegato final ante el jurado.",
+    options: [
+      { phrase: "La fiscalía no ha logrado cumplir con la carga de la prueba.", correct: true, explanation: "\"Cumplir con la carga de la prueba\" es el término jurídico exacto para este estándar probatorio." },
+      { phrase: "La fiscalía no ha logrado mitigar la carga de la prueba.", correct: false, explanation: "Se cumple o no se cumple con la carga de la prueba — no se \"mitiga\"." },
+      { phrase: "La otra parte no probó su caso lo suficiente.", correct: false, explanation: "Buen significado, pero sin la terminología jurídica precisa." },
+      { phrase: "La fiscalía no ha logrado asignar la carga de la prueba.", correct: false, explanation: "La carga de la prueba la asigna la ley, no se \"asigna\" en el alegato." },
+    ],
+  },
+  {
+    id: "incumplimiento-contrato",
+    category: "Civil Litigation",
+    weakPhrase: "Mi cliente no rompió el contrato.",
+    targetVerbStem: "respons",
+    targetNounStem: "incumplimiento",
+    scenario: "Estás defendiendo a un cliente en una disputa civil.",
+    options: [
+      { phrase: "Mi cliente no es responsable de un incumplimiento de contrato.", correct: true, explanation: "\"Incumplimiento de contrato\" plus \"responsable\" es terminología jurídica precisa." },
+      { phrase: "Mi cliente no es responsable de una mitigación de contrato.", correct: false, explanation: "\"Mitigación de contrato\" no es el término correcto — es \"incumplimiento\"." },
+      { phrase: "Mi cliente no rompió el contrato.", correct: false, explanation: "La versión simple — sin precisión jurídica." },
+      { phrase: "Mi cliente no es responsable de una asignación de contrato.", correct: false, explanation: "\"Asignación de contrato\" no es un término jurídico real." },
+    ],
+  },
+  {
+    id: "duda-razonable",
+    category: "Trial Advocacy",
+    weakPhrase: "Estamos seguros de que lo hizo por todas las pruebas.",
+    targetVerbStem: "establec",
+    targetNounStem: "duda",
+    scenario: "Estás resumiendo el caso de la fiscalía ante el jurado.",
+    options: [
+      { phrase: "Las pruebas establecen la culpabilidad más allá de toda duda razonable.", correct: true, explanation: "\"Establecer la culpabilidad más allá de toda duda razonable\" es el estándar probatorio exacto en derecho penal." },
+      { phrase: "Las pruebas mitigan la culpabilidad más allá de toda duda razonable.", correct: false, explanation: "\"Mitigar\" reduciría la culpabilidad en vez de probarla — invierte el sentido." },
+      { phrase: "Estamos seguros de que lo hizo por las pruebas.", correct: false, explanation: "Coloquial — no el estándar probatorio exigido por la ley." },
+      { phrase: "Las pruebas asignan la culpabilidad más allá de toda duda razonable.", correct: false, explanation: "\"Asignar\" no encaja — la culpabilidad se establece, no se asigna." },
+    ],
+  },
+  {
+    id: "excluir-inadmisible",
+    category: "Trial Procedure",
+    weakPhrase: "No creo que esa prueba deba permitirse.",
+    targetVerbStem: "exclu",
+    targetNounStem: "inadmisible",
+    scenario: "Te opones a una prueba durante el juicio.",
+    options: [
+      { phrase: "Solicito excluir esta prueba por ser inadmisible.", correct: true, explanation: "\"Excluir ... inadmisible\" es la formulación formal de esta objeción en el tribunal." },
+      { phrase: "Solicito mitigar esta prueba por ser inadmisible.", correct: false, explanation: "Se excluye una prueba inadmisible — no se \"mitiga\"." },
+      { phrase: "No creo que esa prueba deba permitirse.", correct: false, explanation: "Coloquial — no el lenguaje formal de una moción judicial." },
+      { phrase: "Solicito asignar esta prueba por ser inadmisible.", correct: false, explanation: "\"Asignar\" no encaja gramaticalmente con esta moción." },
+    ],
+  },
+  {
+    id: "resolver-arbitraje",
+    category: "Negotiation",
+    weakPhrase: "Queremos resolver esto sin ir a juicio.",
+    targetVerbStem: "resolv",
+    targetNounStem: "arbitraje",
+    scenario: "Estás negociando un acuerdo antes del juicio.",
+    options: [
+      { phrase: "Proponemos resolver este asunto mediante arbitraje.", correct: true, explanation: "\"Resolver mediante arbitraje\" es el lenguaje estándar para la resolución alternativa de conflictos." },
+      { phrase: "Proponemos mitigar este asunto mediante arbitraje.", correct: false, explanation: "El arbitraje resuelve una disputa — no la \"mitiga\"." },
+      { phrase: "Queremos resolver esto sin ir a juicio.", correct: false, explanation: "Lenguaje simple — correcto, pero no el registro formal usado en negociaciones." },
+      { phrase: "Proponemos asignar este asunto mediante arbitraje.", correct: false, explanation: "\"Asignar\" no encaja con una disputa legal — el verbo correcto es \"resolver\"." },
+    ],
+  },
+];
+
+const LAWYER_CHALLENGES_SV: CollocationChallenge[] = [
+  {
+    id: "bevisborda-uppfyll",
+    category: "Trial Advocacy",
+    weakPhrase: "Vi tycker att motparten inte bevisade sin sak tillräckligt.",
+    targetVerbStem: "uppfyll",
+    targetNounStem: "bevisbörd",
+    scenario: "Du håller ett slutplädering inför juryn.",
+    options: [
+      { phrase: "Åklagaren har misslyckats med att uppfylla bevisbördan.", correct: true, explanation: "\"Uppfylla bevisbördan\" är den fasta juridiska termen för det beviskrav som gäller." },
+      { phrase: "Åklagaren har misslyckats med att begränsa bevisbördan.", correct: false, explanation: "Bevisbördan uppfylls eller uppfylls inte — den \"begränsas\" inte." },
+      { phrase: "Motparten bevisade inte sin sak tillräckligt.", correct: false, explanation: "Rätt betydelse, men utan den precisa juridiska terminologin." },
+      { phrase: "Åklagaren har misslyckats med att fördela bevisbördan.", correct: false, explanation: "Bevisbördan är lagreglerad, inte något som \"fördelas\" i pläderingen." },
+    ],
+  },
+  {
+    id: "avtalsbrott",
+    category: "Civil Litigation",
+    weakPhrase: "Min klient bröt inte mot avtalet.",
+    targetVerbStem: "ansvar",
+    targetNounStem: "avtalsbrott",
+    scenario: "Du försvarar en klient i en civilrättslig tvist.",
+    options: [
+      { phrase: "Min klient är inte ansvarig för avtalsbrott.", correct: true, explanation: "\"Avtalsbrott\" plus \"ansvarig\" är precis juridisk terminologi." },
+      { phrase: "Min klient är inte ansvarig för avtalsbegränsning.", correct: false, explanation: "\"Avtalsbegränsning\" är inte rätt term — korrekt är \"avtalsbrott\"." },
+      { phrase: "Min klient bröt inte mot avtalet.", correct: false, explanation: "Den enkla versionen — ingen juridisk precision." },
+      { phrase: "Min klient är inte ansvarig för avtalsfördelning.", correct: false, explanation: "\"Avtalsfördelning\" är inte en juridisk term — korrekt är \"avtalsbrott\"." },
+    ],
+  },
+  {
+    id: "bortom-rimligt-tvivel",
+    category: "Trial Advocacy",
+    weakPhrase: "Vi är säkra på att han gjorde det på grund av alla bevis.",
+    targetVerbStem: "fastställ",
+    targetNounStem: "tvivel",
+    scenario: "Du sammanfattar åklagarens fall inför juryn.",
+    options: [
+      { phrase: "Bevisningen fastställer skuld bortom rimligt tvivel.", correct: true, explanation: "\"Fastställa skuld bortom rimligt tvivel\" är den exakta beviströskeln i brottmål." },
+      { phrase: "Bevisningen begränsar skuld bortom rimligt tvivel.", correct: false, explanation: "\"Begränsa\" skulle minska skulden istället för att bevisa den — vänder på innebörden." },
+      { phrase: "Vi är säkra på att han gjorde det på grund av bevisen.", correct: false, explanation: "Vardagligt — inte det beviskrav lagen ställer." },
+      { phrase: "Bevisningen fördelar skuld bortom rimligt tvivel.", correct: false, explanation: "\"Fördela\" passar inte — skuld fastställs, den fördelas inte." },
+    ],
+  },
+  {
+    id: "otillaten-uteslut",
+    category: "Trial Procedure",
+    weakPhrase: "Jag tycker inte att den bevisningen ska tillåtas.",
+    targetVerbStem: "uteslut",
+    targetNounStem: "otillåten",
+    scenario: "Du invänder mot bevisning under rättegången.",
+    options: [
+      { phrase: "Jag yrkar på att utesluta denna bevisning som otillåten.", correct: true, explanation: "\"Utesluta ... som otillåten\" är den formella processuella formuleringen för denna invändning." },
+      { phrase: "Jag yrkar på att begränsa denna bevisning som otillåten.", correct: false, explanation: "Otillåten bevisning utesluts — den \"begränsas\" inte." },
+      { phrase: "Jag tycker inte att den bevisningen ska tillåtas.", correct: false, explanation: "Vardagligt — inte det formella yrkandespråk domstolen förväntar sig." },
+      { phrase: "Jag yrkar på att fördela denna bevisning som otillåten.", correct: false, explanation: "\"Fördela\" passar grammatiskt inte till detta processuella yrkande." },
+    ],
+  },
+  {
+    id: "skiljeforfarande",
+    category: "Negotiation",
+    weakPhrase: "Vi vill lösa det här utan att gå till domstol.",
+    targetVerbStem: "lös",
+    targetNounStem: "skiljeförfarande",
+    scenario: "Du förhandlar om en förlikning före rättegången.",
+    options: [
+      { phrase: "Vi föreslår att lösa denna fråga genom skiljeförfarande.", correct: true, explanation: "\"Lösa genom skiljeförfarande\" är standarduttrycket för alternativ tvistlösning." },
+      { phrase: "Vi föreslår att begränsa denna fråga genom skiljeförfarande.", correct: false, explanation: "Ett skiljeförfarande löser en tvist — det \"begränsar\" den inte." },
+      { phrase: "Vi vill lösa det här utan att gå till domstol.", correct: false, explanation: "Enkelt språk — korrekt, men inte det formella register som används i förhandlingar." },
+      { phrase: "Vi föreslår att fördela denna fråga genom skiljeförfarande.", correct: false, explanation: "\"Fördela\" passar inte en rättstvist — rätt verb är \"lösa\"." },
+    ],
+  },
+];
+
 const CHALLENGES_BY_PROFILE_AND_LANGUAGE: Record<
   ProfileId,
   Partial<Record<LanguageCode, CollocationChallenge[]>>
 > = {
   executive: EXECUTIVE_CHALLENGES_BY_LANGUAGE,
-  politician: { en: POLITICIAN_CHALLENGES_EN },
-  lawyer: { en: LAWYER_CHALLENGES_EN },
+  politician: {
+    en: POLITICIAN_CHALLENGES_EN,
+    de: POLITICIAN_CHALLENGES_DE,
+    fr: POLITICIAN_CHALLENGES_FR,
+    es: POLITICIAN_CHALLENGES_ES,
+    sv: POLITICIAN_CHALLENGES_SV,
+  },
+  lawyer: {
+    en: LAWYER_CHALLENGES_EN,
+    de: LAWYER_CHALLENGES_DE,
+    fr: LAWYER_CHALLENGES_FR,
+    es: LAWYER_CHALLENGES_ES,
+    sv: LAWYER_CHALLENGES_SV,
+  },
 };
 
 export interface CollocationSession {
