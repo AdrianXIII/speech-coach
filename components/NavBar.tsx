@@ -10,6 +10,7 @@ const LINKS = [
   { href: "/improv", label: "60s Improv" },
   { href: "/emphasis", label: "Betoning" },
   { href: "/speed-reading", label: "Snabbläsning" },
+  { href: "/comprehension", label: "Listening & Summary" },
 ];
 
 export function NavBar() {

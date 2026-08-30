@@ -68,6 +68,20 @@ recall checks, and the quiz are all generated straight from the pasted
 text — word-order and word-presence questions, no AI call. Session history
 lives in your browser (localStorage) so repeat attempts are comparable.
 
+**Listening & Summary** (`/comprehension`)
+Aimed at professionals polishing a second language for work: hear a short
+business-register passage (browser text-to-speech, text stays hidden), then
+summarize it out loud, in your own words. Your spoken answer is transcribed
+live via the browser's built-in Web Speech API (free — Chrome/Edge only,
+not Firefox/Safari) and scored purely from that transcript against the
+passage's own key points and vocabulary: content coverage, vocabulary
+diversity (type-token ratio), how much of the passage's advanced
+terminology you echoed, use of professional connectives ("consequently",
+"whereas", "as a result"), and how quickly you started responding. No AI
+call — this is deliberately the free-first version of the idea; an
+LLM-generated "here's how to phrase that more like a native speaker" rewrite
+is the natural next step if the free scoring turns out not to be enough.
+
 ## Running it locally
 
 ```bash
@@ -107,6 +121,7 @@ app/
   improv/page.tsx                 60-Second Improv page
   emphasis/page.tsx               Kontrastiv Betoning page
   speed-reading/page.tsx          Snabbläsning (RSVP speed reading) page
+  comprehension/page.tsx          Listening & Summary page
   api/
     analyze-speech/               Gemini transcription+coaching (one call) -> filler-word/pace analysis
     generate-script/              Topic/draft -> Gemini-polished speakable script
@@ -123,6 +138,7 @@ components/
   ImprovTrainer.tsx                60-second word + structure-model improv drill with phase timer
   ContrastiveStressTrainer.tsx     Kontrastiv betoning drill (local per-word stress check, no AI call)
   SpeedReadingTrainer.tsx          RSVP speed reader: leveled chunking, recall checks, comprehension quiz
+  ComprehensionTrainer.tsx         Listen (TTS) -> spoken summary (Web Speech API) -> local richness scoring
   FollowUpChat.tsx                 Reusable "ask a follow-up" thread under any AI feedback panel
   NavBar.tsx
   stage/
@@ -133,7 +149,9 @@ lib/
   pronunciationFeedback.ts, fillerWords.ts, chat.ts, wordStress.ts,
   audioStress.ts, improvWords.ts, structureModels.ts, contrastiveStress.ts,
   speedReadingLevels.ts, readingComprehension.ts, readingHistory.ts,
-  gemini.ts, audio.ts
+  comprehensionContent.ts, languageRichness.ts, gemini.ts, audio.ts
+hooks/
+  useMediaRecorder.ts, useSpeechRecognition.ts
 types/
   speechAnalysis.ts
 ```
