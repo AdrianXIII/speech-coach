@@ -11,6 +11,7 @@ const LINKS = [
   { href: "/emphasis", label: "Betoning" },
   { href: "/speed-reading", label: "Snabbläsning" },
   { href: "/comprehension", label: "Listening & Summary" },
+  { href: "/collocations", label: "Executive Phrasing" },
 ];
 
 export function NavBar() {

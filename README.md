@@ -82,6 +82,19 @@ call — this is deliberately the free-first version of the idea; an
 LLM-generated "here's how to phrase that more like a native speaker" rewrite
 is the natural next step if the free scoring turns out not to be enough.
 
+**Executive Phrasing** (`/collocations`)
+Targets *collocation* specifically — the "feels right" pairing of verbs,
+nouns, and adjectives that separates fluent professional English from
+merely-correct English ("mitigate risk" sounds right; "mitigate resources"
+doesn't, even though it's grammatical). Each round: pick the correctly
+upgraded version of a weak, basic-register phrase from options that include
+a still-basic option and a "weak collocation" trap (right grammar, wrong
+pairing) — then say a sentence using that exact phrase out loud. The
+multiple-choice round is a hand-curated local database, no AI; the spoken
+round reuses the Web Speech API hook from Listening & Summary to check
+whether the target verb and noun actually landed near each other in what
+you said.
+
 ## Running it locally
 
 ```bash
@@ -122,6 +135,7 @@ app/
   emphasis/page.tsx               Kontrastiv Betoning page
   speed-reading/page.tsx          Snabbläsning (RSVP speed reading) page
   comprehension/page.tsx          Listening & Summary page
+  collocations/page.tsx           Executive Phrasing page
   api/
     analyze-speech/               Gemini transcription+coaching (one call) -> filler-word/pace analysis
     generate-script/              Topic/draft -> Gemini-polished speakable script
@@ -139,6 +153,7 @@ components/
   ContrastiveStressTrainer.tsx     Kontrastiv betoning drill (local per-word stress check, no AI call)
   SpeedReadingTrainer.tsx          RSVP speed reader: leveled chunking, recall checks, comprehension quiz
   ComprehensionTrainer.tsx         Listen (TTS) -> spoken summary (Web Speech API) -> local richness scoring
+  CollocationTrainer.tsx           Upgrade-the-phrase quiz + spoken collocation-usage check
   FollowUpChat.tsx                 Reusable "ask a follow-up" thread under any AI feedback panel
   NavBar.tsx
   stage/
@@ -149,7 +164,8 @@ lib/
   pronunciationFeedback.ts, fillerWords.ts, chat.ts, wordStress.ts,
   audioStress.ts, improvWords.ts, structureModels.ts, contrastiveStress.ts,
   speedReadingLevels.ts, readingComprehension.ts, readingHistory.ts,
-  comprehensionContent.ts, languageRichness.ts, gemini.ts, audio.ts
+  comprehensionContent.ts, languageRichness.ts, collocationContent.ts,
+  collocationCheck.ts, gemini.ts, audio.ts
 hooks/
   useMediaRecorder.ts, useSpeechRecognition.ts
 types/
