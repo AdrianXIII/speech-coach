@@ -41,6 +41,20 @@ suggestions) has a **follow-up chat** underneath it — ask a clarifying
 question and Gemini answers using the original context, text-only (no
 audio re-sent), so it stays cheap even after several questions.
 
+**60-Second Improv** (`/improv`)
+Randomize (or pick) an everyday word and a rhetorical structure model
+(PREP, NUPP, Treklangen), then a 60-second phase timer visually divides the
+minute by that model's steps while you record. A one-tap "Kasta
+inspelningen" discards the take instantly. No AI involved.
+
+**Kontrastiv Betoning** (`/emphasis`)
+Swedish contrastive-stress drill: the same sentence can mean different
+things depending on which word you stress. Say it with the stress on the
+word you're given, and a local audio analysis (loudness + pitch per word,
+via the Web Audio API — the same technique as the Pronunciation Trainer's
+stress check, just applied to words instead of syllables) shows which word
+actually came out strongest. No AI call, no cost.
+
 ## Running it locally
 
 ```bash
@@ -77,6 +91,8 @@ app/
   page.tsx                        Record & Analyze home page
   stage/page.tsx                  Virtual Stage page
   pronunciation/page.tsx          Pronunciation Trainer page
+  improv/page.tsx                 60-Second Improv page
+  emphasis/page.tsx               Kontrastiv Betoning page
   api/
     analyze-speech/               Gemini transcription+coaching (one call) -> filler-word/pace analysis
     generate-script/              Topic/draft -> Gemini-polished speakable script
@@ -90,6 +106,8 @@ components/
   ScriptAssistant.tsx              AI script suggestions, feeds into the teleprompter
   PronunciationTrainer.tsx         Listen / record / stress check / AI feedback for one word at a time
   StressMeter.tsx                  Instant local per-syllable loudness/pitch stress check (no AI call)
+  ImprovTrainer.tsx                60-second word + structure-model improv drill with phase timer
+  ContrastiveStressTrainer.tsx     Kontrastiv betoning drill (local per-word stress check, no AI call)
   FollowUpChat.tsx                 Reusable "ask a follow-up" thread under any AI feedback panel
   NavBar.tsx
   stage/
@@ -98,7 +116,8 @@ components/
 lib/
   analyzeSpeech.ts, speechMetrics.ts, scoreSpeech.ts, generateScript.ts,
   pronunciationFeedback.ts, fillerWords.ts, chat.ts, wordStress.ts,
-  audioStress.ts, gemini.ts, audio.ts
+  audioStress.ts, improvWords.ts, structureModels.ts, contrastiveStress.ts,
+  gemini.ts, audio.ts
 types/
   speechAnalysis.ts
 ```

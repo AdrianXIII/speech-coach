@@ -8,6 +8,7 @@ const LINKS = [
   { href: "/stage", label: "Virtual Stage" },
   { href: "/pronunciation", label: "Pronunciation" },
   { href: "/improv", label: "60s Improv" },
+  { href: "/emphasis", label: "Betoning" },
 ];
 
 export function NavBar() {
