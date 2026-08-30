@@ -5,6 +5,9 @@ import { useMediaRecorder } from "@/hooks/useMediaRecorder";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
 import { pickSession, type CollocationChallenge, type CollocationOption } from "@/lib/collocationContent";
 import { checkCollocationUsage, type CollocationUsage } from "@/lib/collocationCheck";
+import { LANGUAGES, getLanguage, type LanguageCode } from "@/lib/languages";
+
+const LANGUAGE_STORAGE_KEY = "collocationLanguage";
 
 type Phase = "quiz" | "quizFeedback" | "speakPrompt" | "speaking" | "speakFeedback" | "summary";
 
@@ -35,10 +38,20 @@ function shuffle<T>(items: T[]): T[] {
  * together in what was said.
  */
 export function CollocationTrainer() {
+  const [language, setLanguage] = useState<LanguageCode>("en");
   const [session, setSession] = useState<CollocationChallenge[] | null>(null);
+
   useEffect(() => {
+    let initialLanguage: LanguageCode = "en";
+    try {
+      const saved = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
+      if (LANGUAGES.some((l) => l.code === saved)) initialLanguage = saved as LanguageCode;
+    } catch {
+      // Private browsing / storage disabled — fall back to English.
+    }
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSession(pickSession(5));
+    setLanguage(initialLanguage);
+    setSession(pickSession(initialLanguage, 5));
   }, []);
 
   const [index, setIndex] = useState(0);
@@ -48,7 +61,7 @@ export function CollocationTrainer() {
 
   const { recordedBlob, start: startRecorder, stop: stopRecorder, reset: resetRecorder } =
     useMediaRecorder(false);
-  const recognition = useSpeechRecognition("en-US");
+  const recognition = useSpeechRecognition(getLanguage(language).speechLang);
   const [isFinalizingSpeech, setIsFinalizingSpeech] = useState(false);
 
   const challenge = session?.[index] ?? null;
@@ -132,13 +145,29 @@ export function CollocationTrainer() {
     setResults([]);
     setIndex(0);
     setPhase("quiz");
-    setSession(pickSession(5));
+    setSession(pickSession(language, 5));
+  }
+
+  function handleLanguageChange(newLanguage: LanguageCode) {
+    setLanguage(newLanguage);
+    resetRecorder();
+    recognition.reset();
+    setSelectedOption(null);
+    setResults([]);
+    setIndex(0);
+    setPhase("quiz");
+    setSession(pickSession(newLanguage, 5));
+    try {
+      window.localStorage.setItem(LANGUAGE_STORAGE_KEY, newLanguage);
+    } catch {
+      // Ignore — the choice just won't persist across visits.
+    }
   }
 
   if (!session || !challenge) {
     return (
       <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-        <p className="text-sm text-slate-400">Laddar…</p>
+        <p className="text-sm text-slate-400">Loading…</p>
       </div>
     );
   }
@@ -152,6 +181,25 @@ export function CollocationTrainer() {
           exercise.
         </div>
       )}
+
+      <div className="flex flex-wrap items-center gap-2">
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Language</p>
+        <div className="flex flex-wrap gap-1.5">
+          {LANGUAGES.map((l) => (
+            <button
+              key={l.code}
+              onClick={() => handleLanguageChange(l.code)}
+              className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
+                language === l.code
+                  ? "bg-indigo-600 text-white"
+                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+              }`}
+            >
+              {l.name}
+            </button>
+          ))}
+        </div>
+      </div>
 
       {phase !== "summary" && (
         <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">

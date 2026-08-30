@@ -9,7 +9,7 @@ const LINKS = [
   { href: "/pronunciation", label: "Pronunciation" },
   { href: "/improv", label: "60s Improv" },
   { href: "/emphasis", label: "Contrastive Stress" },
-  { href: "/speed-reading", label: "Snabbläsning" },
+  { href: "/speed-reading", label: "Speed Reading" },
   { href: "/comprehension", label: "Listening & Summary" },
   { href: "/collocations", label: "Executive Phrasing" },
 ];

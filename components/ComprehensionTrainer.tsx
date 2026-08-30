@@ -3,8 +3,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMediaRecorder } from "@/hooks/useMediaRecorder";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
-import { COMPREHENSION_PASSAGES, randomPassage, type ComprehensionPassage } from "@/lib/comprehensionContent";
+import { passagesForLanguage, randomPassage, type ComprehensionPassage } from "@/lib/comprehensionContent";
 import { analyzeRichness, type RichnessScore } from "@/lib/languageRichness";
+import { LANGUAGES, getLanguage, type LanguageCode } from "@/lib/languages";
+
+const LANGUAGE_STORAGE_KEY = "comprehensionLanguage";
 
 type Phase = "setup" | "listening" | "ready" | "responding" | "results";
 
@@ -19,10 +22,23 @@ type Phase = "setup" | "listening" | "ready" | "responding" | "results";
  * own key points and vocabulary, no AI call.
  */
 export function ComprehensionTrainer() {
+  const [language, setLanguage] = useState<LanguageCode>("en");
   const [passage, setPassage] = useState<ComprehensionPassage | null>(null);
+
+  // Client-only: localStorage + the initial random pick both need to wait
+  // for the client (see ContrastiveStressTrainer for why), so they're
+  // combined into one effect run once on mount.
   useEffect(() => {
+    let initialLanguage: LanguageCode = "en";
+    try {
+      const saved = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
+      if (LANGUAGES.some((l) => l.code === saved)) initialLanguage = saved as LanguageCode;
+    } catch {
+      // Private browsing / storage disabled — fall back to English.
+    }
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setPassage(randomPassage());
+    setLanguage(initialLanguage);
+    setPassage(randomPassage(initialLanguage));
   }, []);
 
   const [phase, setPhase] = useState<Phase>("setup");
@@ -31,7 +47,7 @@ export function ComprehensionTrainer() {
 
   const { recordedBlob, start: startRecorder, stop: stopRecorder, reset: resetRecorder } =
     useMediaRecorder(false);
-  const recognition = useSpeechRecognition("en-US");
+  const recognition = useSpeechRecognition(getLanguage(language).speechLang);
 
   const audioEndTimeRef = useRef(0);
   const latencySecondsRef = useRef(0);
@@ -59,19 +75,34 @@ export function ComprehensionTrainer() {
   // arrive slightly after stop() is called.
   useEffect(() => {
     if (isFinalizing && !recognition.isListening && passage) {
-      const result = analyzeRichness(recognition.transcript, passage, latencySecondsRef.current);
+      const result = analyzeRichness(
+        recognition.transcript,
+        passage,
+        latencySecondsRef.current,
+        language,
+      );
       setScore(result);
       setPhase("results");
       setIsFinalizing(false);
     }
-  }, [isFinalizing, recognition.isListening, recognition.transcript, passage]);
+  }, [isFinalizing, recognition.isListening, recognition.transcript, passage, language]);
+
+  function handleLanguageChange(newLanguage: LanguageCode) {
+    setLanguage(newLanguage);
+    setPassage(randomPassage(newLanguage));
+    try {
+      window.localStorage.setItem(LANGUAGE_STORAGE_KEY, newLanguage);
+    } catch {
+      // Ignore — the choice just won't persist across visits.
+    }
+  }
 
   function handlePickPassage(p: ComprehensionPassage) {
     setPassage(p);
   }
 
   function handleShufflePassage() {
-    setPassage((current) => randomPassage(current?.id));
+    setPassage((current) => randomPassage(language, current?.id));
   }
 
   function handleListen() {
@@ -89,7 +120,7 @@ export function ComprehensionTrainer() {
     };
 
     const utterance = new SpeechSynthesisUtterance(passage.text);
-    utterance.lang = "en-US";
+    utterance.lang = getLanguage(language).speechLang;
     utterance.rate = 0.95;
     utterance.onend = finishListening;
     // A missing/failed voice (some browsers/OSes ship with none) must not
@@ -137,13 +168,13 @@ export function ComprehensionTrainer() {
     recognition.reset();
     setScore(null);
     setPhase("setup");
-    setPassage((current) => randomPassage(current?.id));
+    setPassage((current) => randomPassage(language, current?.id));
   }
 
   if (!passage) {
     return (
       <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-        <p className="text-sm text-slate-400">Laddar…</p>
+        <p className="text-sm text-slate-400">Loading…</p>
       </div>
     );
   }
@@ -159,6 +190,8 @@ export function ComprehensionTrainer() {
 
       {phase === "setup" && (
         <SetupPanel
+          language={language}
+          onLanguageChange={handleLanguageChange}
           passage={passage}
           onPick={handlePickPassage}
           onShuffle={handleShufflePassage}
@@ -239,20 +272,45 @@ export function ComprehensionTrainer() {
 /* ─────────────────────────── Setup ─────────────────────────── */
 
 function SetupPanel({
+  language,
+  onLanguageChange,
   passage,
   onPick,
   onShuffle,
   onListen,
   disabled,
 }: {
+  language: LanguageCode;
+  onLanguageChange: (l: LanguageCode) => void;
   passage: ComprehensionPassage;
   onPick: (p: ComprehensionPassage) => void;
   onShuffle: () => void;
   onListen: () => void;
   disabled: boolean;
 }) {
+  const passages = passagesForLanguage(language);
+
   return (
     <div className="flex flex-col gap-5">
+      <div className="flex flex-wrap items-center gap-2">
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Language</p>
+        <div className="flex flex-wrap gap-1.5">
+          {LANGUAGES.map((l) => (
+            <button
+              key={l.code}
+              onClick={() => onLanguageChange(l.code)}
+              className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
+                language === l.code
+                  ? "bg-indigo-600 text-white"
+                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+              }`}
+            >
+              {l.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className="flex items-center justify-between">
         <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Topic</p>
         <button
@@ -264,7 +322,7 @@ function SetupPanel({
       </div>
 
       <div className="grid gap-2 sm:grid-cols-3">
-        {COMPREHENSION_PASSAGES.map((p) => (
+        {passages.map((p) => (
           <button
             key={p.id}
             onClick={() => onPick(p)}

@@ -11,8 +11,8 @@ export interface ReadingLevel {
 export const READING_LEVELS: ReadingLevel[] = [
   {
     id: "beginner",
-    name: "Nivå 1 – Nybörjare",
-    description: "150–200 ord/min, ett ord i taget.",
+    name: "Level 1 – Beginner",
+    description: "150–200 wpm, one word at a time.",
     wpmMin: 150,
     wpmMax: 200,
     maxWordsPerChunk: 1,
@@ -20,8 +20,8 @@ export const READING_LEVELS: ReadingLevel[] = [
   },
   {
     id: "intermediate",
-    name: "Nivå 2 – Medel",
-    description: "300–400 ord/min, 1–2 ord i taget.",
+    name: "Level 2 – Intermediate",
+    description: "300–400 wpm, 1–2 words at a time.",
     wpmMin: 300,
     wpmMax: 400,
     maxWordsPerChunk: 2,
@@ -29,8 +29,8 @@ export const READING_LEVELS: ReadingLevel[] = [
   },
   {
     id: "advanced",
-    name: "Nivå 3 – Avancerad (Chunking)",
-    description: "500+ ord/min, 3–4 ord i en chunk.",
+    name: "Level 3 – Advanced (Chunking)",
+    description: "500+ wpm, 3–4 words per chunk.",
     wpmMin: 500,
     wpmMax: 650,
     maxWordsPerChunk: 4,

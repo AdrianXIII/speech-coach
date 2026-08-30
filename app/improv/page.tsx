@@ -7,7 +7,7 @@ export default function ImprovPage() {
         <header className="text-center">
           <h1 className="text-2xl font-bold text-slate-900">60-Second Improv</h1>
           <p className="mt-1 text-sm text-slate-500">
-            Ett slumpat ord, en retorisk struktur, 60 sekunder — spela in och våga misslyckas.
+            A random word, a rhetorical structure, 60 seconds — record and dare to fail.
           </p>
         </header>
 

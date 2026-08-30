@@ -5,22 +5,25 @@ import { useMediaRecorder } from "@/hooks/useMediaRecorder";
 import { formatDuration } from "@/lib/audio";
 import { randomImprovWord } from "@/lib/improvWords";
 import {
-  STRUCTURE_MODELS,
+  modelsForLanguage,
   randomStructureModel,
   activePhaseIndex,
   type StructureModel,
 } from "@/lib/structureModels";
+import { LANGUAGES, type LanguageCode } from "@/lib/languages";
 
 const EXERCISE_SECONDS = 60;
+const LANGUAGE_STORAGE_KEY = "improvLanguage";
 
 /**
  * 60-second improv drill: a random everyday word plus a rhetorical
- * structure model (PREP / NUPP / Treklangen) to hang the answer on. A
- * segmented phase timer shows which part of the structure to be in as the
- * clock runs; recording is local-only with a one-tap discard so failing
- * costs nothing. No AI involved — this is pure practice, not feedback.
+ * structure model (PREP / NUPP / Triad) to hang the answer on. A segmented
+ * phase timer shows which part of the structure to be in as the clock
+ * runs; recording is local-only with a one-tap discard so failing costs
+ * nothing. No AI involved — this is pure practice, not feedback.
  */
 export function ImprovTrainer() {
+  const [language, setLanguage] = useState<LanguageCode>("en");
   // Picked client-side only (in an effect below): a random initial value
   // here would be computed once during SSR and again on the client during
   // hydration, and Math.random() obviously won't agree with itself.
@@ -28,13 +31,21 @@ export function ImprovTrainer() {
   const [model, setModel] = useState<StructureModel | null>(null);
 
   useEffect(() => {
+    let initialLanguage: LanguageCode = "en";
+    try {
+      const saved = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
+      if (LANGUAGES.some((l) => l.code === saved)) initialLanguage = saved as LanguageCode;
+    } catch {
+      // Private browsing / storage disabled — fall back to English.
+    }
     // Deliberate client-only setState: this is the standard fix for a
     // Math.random() hydration mismatch (start null on both server and
     // client, fill in the random value only after mount), not something
     // to lift into render.
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setWord(randomImprovWord());
-    setModel(randomStructureModel());
+    setLanguage(initialLanguage);
+    setWord(randomImprovWord(initialLanguage));
+    setModel(randomStructureModel(initialLanguage));
   }, []);
 
   const { isRecording, recordedBlob, start, stop, reset, error: recordError } =
@@ -65,12 +76,25 @@ export function ImprovTrainer() {
     if (isRecording && elapsedSeconds >= EXERCISE_SECONDS) stop();
   }, [isRecording, elapsedSeconds, stop]);
 
+  function handleLanguageChange(newLanguage: LanguageCode) {
+    setLanguage(newLanguage);
+    setWord(randomImprovWord(newLanguage));
+    setModel(randomStructureModel(newLanguage));
+    reset();
+    setElapsedSeconds(0);
+    try {
+      window.localStorage.setItem(LANGUAGE_STORAGE_KEY, newLanguage);
+    } catch {
+      // Ignore — the choice just won't persist across visits.
+    }
+  }
+
   function handleNewWord() {
-    setWord(randomImprovWord());
+    setWord(randomImprovWord(language));
   }
 
   function handleNewModel() {
-    setModel(randomStructureModel());
+    setModel(randomStructureModel(language));
   }
 
   function handleStart() {
@@ -86,8 +110,8 @@ export function ImprovTrainer() {
   function handleNewPrompt() {
     reset();
     setElapsedSeconds(0);
-    setWord(randomImprovWord());
-    setModel(randomStructureModel());
+    setWord(randomImprovWord(language));
+    setModel(randomStructureModel(language));
   }
 
   const showSetup = !isRecording && !recordedBlob;
@@ -97,7 +121,7 @@ export function ImprovTrainer() {
   if (!word || !model) {
     return (
       <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-        <p className="text-sm text-slate-400">Laddar…</p>
+        <p className="text-sm text-slate-400">Loading…</p>
       </div>
     );
   }
@@ -106,9 +130,30 @@ export function ImprovTrainer() {
 
   return (
     <div className="flex flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+      {showSetup && (
+        <div className="flex flex-wrap items-center gap-2">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Language</p>
+          <div className="flex flex-wrap gap-1.5">
+            {LANGUAGES.map((l) => (
+              <button
+                key={l.code}
+                onClick={() => handleLanguageChange(l.code)}
+                className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
+                  language === l.code
+                    ? "bg-indigo-600 text-white"
+                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                }`}
+              >
+                {l.name}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Word */}
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Ord</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Word</p>
         <div className="mt-2 flex items-center gap-3">
           <p className="text-2xl font-bold text-slate-900">{word}</p>
           {showSetup && (
@@ -116,7 +161,7 @@ export function ImprovTrainer() {
               onClick={handleNewWord}
               className="rounded-lg bg-slate-100 px-3 py-1.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-200"
             >
-              🎲 Slumpa ord
+              🎲 New word
             </button>
           )}
         </div>
@@ -127,18 +172,18 @@ export function ImprovTrainer() {
         <div>
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-              Struktur
+              Structure
             </p>
             <button
               onClick={handleNewModel}
               className="rounded-lg bg-slate-100 px-3 py-1.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-200"
             >
-              🎲 Slumpa modell
+              🎲 New model
             </button>
           </div>
 
           <div className="mt-2 grid gap-2 sm:grid-cols-3">
-            {STRUCTURE_MODELS.map((m) => (
+            {modelsForLanguage(language).map((m) => (
               <button
                 key={m.id}
                 onClick={() => setModel(m)}
@@ -186,7 +231,7 @@ export function ImprovTrainer() {
               onClick={stop}
               className="rounded-lg bg-slate-800 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-slate-700"
             >
-              Avsluta nu
+              Finish now
             </button>
           )}
 
@@ -198,13 +243,13 @@ export function ImprovTrainer() {
                   onClick={handleDiscard}
                   className="rounded-lg bg-red-50 px-6 py-3 text-sm font-semibold text-red-700 transition-colors hover:bg-red-100"
                 >
-                  🗑️ Kasta inspelningen
+                  🗑️ Discard recording
                 </button>
                 <button
                   onClick={handleNewPrompt}
                   className="rounded-lg bg-slate-200 px-6 py-3 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-300"
                 >
-                  🎲 Nytt ord & modell
+                  🎲 New word & model
                 </button>
               </div>
             </div>
@@ -217,7 +262,7 @@ export function ImprovTrainer() {
           onClick={handleStart}
           className="self-center rounded-lg bg-indigo-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500"
         >
-          Starta (60 sek)
+          Start (60 sec)
         </button>
       )}
     </div>

@@ -16,7 +16,9 @@ export function checkCollocationUsage(
   verbStem: string,
   nounStem: string,
 ): CollocationUsage {
-  const words = transcript.toLowerCase().match(/[a-zA-Z']+/g) ?? [];
+  // À-ÿ covers the accented Latin-1 letters (é, ä, ö, ñ, ü, ß…) that a
+  // plain a-z regex would silently strip from German/French/Spanish/Swedish.
+  const words = transcript.toLowerCase().match(/[a-zA-ZÀ-ÿ']+/g) ?? [];
   const verbIndices = words
     .map((w, i) => (w.includes(verbStem.toLowerCase()) ? i : -1))
     .filter((i) => i !== -1);

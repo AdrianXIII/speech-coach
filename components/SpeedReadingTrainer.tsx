@@ -19,10 +19,12 @@ import {
   saveReadingResult,
   type ReadingSessionResult,
 } from "@/lib/readingHistory";
+import { LANGUAGES, type LanguageCode } from "@/lib/languages";
 
 const WORDS_PER_MID_CHECK = 150;
 const MIN_WORDS = 30;
 const MID_CHECK_LOOKBACK_WORDS = 25;
+const LANGUAGE_STORAGE_KEY = "speedReadingLanguage";
 
 type Phase = "setup" | "reading" | "midcheck" | "quiz" | "results";
 
@@ -58,12 +60,28 @@ export function SpeedReadingTrainer() {
 
   const [result, setResult] = useState<SessionResult | null>(null);
   const [history, setHistory] = useState<ReadingSessionResult[]>([]);
+  const [language, setLanguage] = useState<LanguageCode>("en");
   useEffect(() => {
     // localStorage doesn't exist during SSR, so this has to be a client-only
     // effect — same deliberate pattern as the random pickers elsewhere.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setHistory(loadReadingHistory());
+    try {
+      const saved = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
+      if (LANGUAGES.some((l) => l.code === saved)) setLanguage(saved as LanguageCode);
+    } catch {
+      // Private browsing / storage disabled — fall back to English.
+    }
   }, []);
+
+  function handleLanguageChange(newLanguage: LanguageCode) {
+    setLanguage(newLanguage);
+    try {
+      window.localStorage.setItem(LANGUAGE_STORAGE_KEY, newLanguage);
+    } catch {
+      // Ignore — the choice just won't persist across visits.
+    }
+  }
 
   const allWordsRef = useRef<string[]>([]);
   const chunksRef = useRef<string[][]>([]);
@@ -117,7 +135,7 @@ export function SpeedReadingTrainer() {
       Math.max(0, wordsShownRef.current - MID_CHECK_LOOKBACK_WORDS),
       wordsShownRef.current,
     );
-    const question = generateRecallCheck(recent, allWordsRef.current.join(" "));
+    const question = generateRecallCheck(recent, allWordsRef.current.join(" "), language);
     if (!question) {
       runNext();
       return;
@@ -148,7 +166,7 @@ export function SpeedReadingTrainer() {
     }
     const elapsedSeconds = (performance.now() - startTimeRef.current) / 1000;
     const wordsRead = allWordsRef.current.slice(0, wordsShownRef.current);
-    const quiz = generateComprehensionQuiz(wordsRead.join(" "), 4);
+    const quiz = generateComprehensionQuiz(wordsRead.join(" "), language, 4);
 
     setQuizQuestions(quiz);
     setQuizAnswers(new Array(quiz.length).fill(null));
@@ -240,6 +258,8 @@ export function SpeedReadingTrainer() {
           wordCount={wordCount}
           levelId={levelId}
           onLevelChange={setLevelId}
+          language={language}
+          onLanguageChange={handleLanguageChange}
           onStart={handleStart}
         />
       )}
@@ -253,7 +273,7 @@ export function SpeedReadingTrainer() {
                 onClick={handleFinishNow}
                 className="rounded-lg bg-slate-200 px-6 py-2.5 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-300"
               >
-                Klar
+                Done
               </button>
             </>
           )}
@@ -297,6 +317,8 @@ function SetupPanel({
   wordCount,
   levelId,
   onLevelChange,
+  language,
+  onLanguageChange,
   onStart,
 }: {
   text: string;
@@ -304,26 +326,52 @@ function SetupPanel({
   wordCount: number;
   levelId: ReadingLevel["id"];
   onLevelChange: (id: ReadingLevel["id"]) => void;
+  language: LanguageCode;
+  onLanguageChange: (l: LanguageCode) => void;
   onStart: () => void;
 }) {
   const tooShort = wordCount < MIN_WORDS;
 
   return (
     <div className="flex flex-col gap-5">
+      <div className="flex flex-wrap items-center gap-2">
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+          Text language
+        </p>
+        <div className="flex flex-wrap gap-1.5">
+          {LANGUAGES.map((l) => (
+            <button
+              key={l.code}
+              onClick={() => onLanguageChange(l.code)}
+              className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
+                language === l.code
+                  ? "bg-indigo-600 text-white"
+                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+              }`}
+            >
+              {l.name}
+            </button>
+          ))}
+        </div>
+        <p className="w-full text-xs text-slate-400">
+          Used to build the comprehension quiz correctly — paste text in this language.
+        </p>
+      </div>
+
       <div>
         <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Text</p>
         <textarea
           value={text}
           onChange={(e) => onTextChange(e.target.value)}
-          placeholder="Klistra in en text att träna på (minst ~30 ord)…"
+          placeholder="Paste a text to practice on (at least ~30 words)…"
           rows={8}
           className="mt-2 w-full resize-none rounded-lg border border-slate-200 p-3 text-sm text-slate-800 placeholder:text-slate-400 focus:border-indigo-400 focus:outline-none"
         />
-        <p className="mt-1 text-xs text-slate-400">{wordCount} ord</p>
+        <p className="mt-1 text-xs text-slate-400">{wordCount} words</p>
       </div>
 
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Nivå</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Level</p>
         <div className="mt-2 grid gap-2 sm:grid-cols-3">
           {READING_LEVELS.map((level) => (
             <button
@@ -347,7 +395,7 @@ function SetupPanel({
         disabled={tooShort}
         className="self-center rounded-lg bg-indigo-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-40"
       >
-        Starta läsning
+        Start reading
       </button>
     </div>
   );
@@ -415,7 +463,7 @@ function MidCheckPanel({
 }) {
   return (
     <div className="flex w-full flex-col items-center gap-4 rounded-xl border border-indigo-200 bg-indigo-50 p-6">
-      <p className="text-xs font-semibold uppercase tracking-wide text-indigo-500">Snabbkoll</p>
+      <p className="text-xs font-semibold uppercase tracking-wide text-indigo-500">Quick check</p>
       <p className="text-center text-base font-medium text-slate-800">{question.prompt}</p>
       <div className="grid w-full max-w-sm grid-cols-2 gap-2">
         {question.options.map((option, i) => {
@@ -465,10 +513,10 @@ function QuizPanel({
     <div className="flex flex-col gap-5">
       <div>
         <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-          Förståelsefrågor
+          Comprehension questions
         </p>
         <p className="mt-1 text-sm text-slate-500">
-          Baserat på texten du precis läste — inget facit du kan slå upp, bara det du faktiskt tog in.
+          Based on the text you just read — nothing to look up, just what you actually absorbed.
         </p>
       </div>
 
@@ -498,7 +546,7 @@ function QuizPanel({
         disabled={!allAnswered}
         className="self-center rounded-lg bg-indigo-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-40"
       >
-        Se resultat
+        See results
       </button>
     </div>
   );
@@ -532,12 +580,12 @@ function ResultsPanel({
     <div className="flex flex-col gap-6">
       <div className="grid grid-cols-2 gap-4">
         <div className="rounded-xl border border-slate-200 bg-slate-50 p-5 text-center">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Hastighet</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Speed</p>
           <p className="mt-1 text-3xl font-extrabold text-slate-900">{result.wpm}</p>
-          <p className="text-xs text-slate-500">ord/minut</p>
+          <p className="text-xs text-slate-500">words/minute</p>
         </div>
         <div className="rounded-xl border border-slate-200 bg-slate-50 p-5 text-center">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Förståelse</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Comprehension</p>
           <p
             className={`mt-1 text-3xl font-extrabold ${
               result.comprehensionPct >= 75 ? "text-emerald-600" : result.comprehensionPct >= 50 ? "text-amber-600" : "text-red-600"
@@ -546,13 +594,13 @@ function ResultsPanel({
             {result.comprehensionPct}%
           </p>
           <p className="text-xs text-slate-500">
-            {result.correctCount}/{result.totalQuestions} rätt
+            {result.correctCount}/{result.totalQuestions} correct
           </p>
         </div>
       </div>
 
       <p className="text-center text-xs text-slate-400">
-        {result.wordCount} ord på {formatDuration(Math.round(result.elapsedSeconds))}
+        {result.wordCount} words in {formatDuration(Math.round(result.elapsedSeconds))}
       </p>
 
       {previousAtLevel && (
@@ -562,21 +610,21 @@ function ResultsPanel({
           }`}
         >
           {improved
-            ? `📈 Snabbare än förra försöket (${previousAtLevel.wpm} → ${result.wpm} ord/min) utan att förståelsen sjönk — du läser faktiskt snabbare, inte bara skummar.`
-            : `Förra försöket på den här nivån: ${previousAtLevel.wpm} ord/min, ${previousAtLevel.comprehensionPct}% förståelse.`}
+            ? `📈 Faster than last attempt (${previousAtLevel.wpm} → ${result.wpm} wpm) without comprehension dropping — you're actually reading faster, not just skimming.`
+            : `Last attempt at this level: ${previousAtLevel.wpm} wpm, ${previousAtLevel.comprehensionPct}% comprehension.`}
         </p>
       )}
 
       {history.length > 1 && (
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Historik</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">History</p>
           <div className="mt-2 flex flex-col gap-1">
             {[...history].reverse().slice(0, 6).map((h, i) => (
               <div key={i} className="flex justify-between text-xs text-slate-500">
-                <span>{new Date(h.date).toLocaleDateString("sv-SE")}</span>
+                <span>{new Date(h.date).toLocaleDateString("en-US")}</span>
                 <span>{h.levelId}</span>
-                <span>{h.wpm} ord/min</span>
-                <span>{h.comprehensionPct}% rätt</span>
+                <span>{h.wpm} wpm</span>
+                <span>{h.comprehensionPct}% correct</span>
               </div>
             ))}
           </div>
@@ -588,13 +636,13 @@ function ResultsPanel({
           onClick={onReadAgain}
           className="rounded-lg bg-slate-200 px-6 py-3 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-300"
         >
-          Läs samma text igen
+          Read the same text again
         </button>
         <button
           onClick={onNewText}
           className="rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500"
         >
-          Ny text
+          New text
         </button>
       </div>
     </div>

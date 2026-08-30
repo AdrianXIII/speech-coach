@@ -42,10 +42,12 @@ question and Gemini answers using the original context, text-only (no
 audio re-sent), so it stays cheap even after several questions.
 
 **60-Second Improv** (`/improv`)
-Randomize (or pick) an everyday word and a rhetorical structure model
-(PREP, NUPP, Treklangen), then a 60-second phase timer visually divides the
-minute by that model's steps while you record. A one-tap "Kasta
-inspelningen" discards the take instantly. No AI involved.
+Multi-language (English, German, French, Spanish, Swedish). Randomize (or
+pick) an everyday word and a rhetorical structure model (PREP, NUPP, and
+Triad — a translated per-language framework; Swedish additionally keeps
+its original Treklangen naming), then a 60-second phase timer visually
+divides the minute by that model's steps while you record. A one-tap
+"Discard recording" drops the take instantly. No AI involved.
 
 **Contrastive Stress** (`/emphasis`)
 Multi-language contrastive-stress drill (English, German, French, Spanish,
@@ -57,8 +59,10 @@ technique as the Pronunciation Trainer's stress check, just applied to
 words instead of syllables) shows which word
 actually came out strongest. No AI call, no cost.
 
-**Snabbläsning** (`/speed-reading`)
-Paste a text and pick a level — an RSVP (rapid serial visual presentation)
+**Speed Reading** (`/speed-reading`)
+Works with pasted text in any of the 5 supported languages — pick which
+one you're pasting so the local comprehension quiz can tell real words
+from filler in that language. An RSVP (rapid serial visual presentation)
 reader flashes it word-by-word (level 1), 1–2 words at a time (level 2), or
 3–4-word chunks (level 3, 500+ wpm) with a fixed focus marker so your eyes
 don't have to move. Every ~150 words a quick recall question pauses the
@@ -71,7 +75,8 @@ text — word-order and word-presence questions, no AI call. Session history
 lives in your browser (localStorage) so repeat attempts are comparable.
 
 **Listening & Summary** (`/comprehension`)
-Aimed at professionals polishing a second language for work: hear a short
+Multi-language (English, German, French, Spanish, Swedish). Aimed at
+professionals polishing a second language for work: hear a short
 business-register passage (browser text-to-speech, text stays hidden), then
 summarize it out loud, in your own words. Your spoken answer is transcribed
 live via the browser's built-in Web Speech API (free — Chrome/Edge only,
@@ -85,7 +90,9 @@ LLM-generated "here's how to phrase that more like a native speaker" rewrite
 is the natural next step if the free scoring turns out not to be enough.
 
 **Executive Phrasing** (`/collocations`)
-Targets *collocation* specifically — the "feels right" pairing of verbs,
+Multi-language (English, German, French, Spanish, Swedish — each with its
+own idiomatic collocations, not word-for-word translations of the English
+set). Targets *collocation* specifically — the "feels right" pairing of verbs,
 nouns, and adjectives that separates fluent professional English from
 merely-correct English ("mitigate risk" sounds right; "mitigate resources"
 doesn't, even though it's grammatical). Each round: pick the correctly
