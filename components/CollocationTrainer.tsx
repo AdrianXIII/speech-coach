@@ -3,10 +3,18 @@
 import { useEffect, useMemo, useState } from "react";
 import { useMediaRecorder } from "@/hooks/useMediaRecorder";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
-import { pickSession, type CollocationChallenge, type CollocationOption } from "@/lib/collocationContent";
+import {
+  pickSession,
+  COLLOCATION_PROFILES,
+  type CollocationChallenge,
+  type CollocationOption,
+  type ProfileId,
+} from "@/lib/collocationContent";
 import { checkCollocationUsage, type CollocationUsage } from "@/lib/collocationCheck";
-import { getLanguage } from "@/lib/languages";
+import { getLanguage, type LanguageCode } from "@/lib/languages";
 import { useLanguage } from "@/components/LanguageProvider";
+
+const PROFILE_STORAGE_KEY = "collocationProfile";
 
 type Phase = "quiz" | "quizFeedback" | "speakPrompt" | "speaking" | "speakFeedback" | "summary";
 
@@ -39,7 +47,12 @@ function shuffle<T>(items: T[]): T[] {
  */
 export function CollocationTrainer() {
   const { language } = useLanguage();
+  const [profile, setProfile] = useState<ProfileId>("executive");
   const [session, setSession] = useState<CollocationChallenge[] | null>(null);
+  // The language actually in use for the current session — falls back to
+  // English when the chosen profile doesn't have content in `language` yet
+  // (Politician/Lawyer are English-only for now).
+  const [usedLanguage, setUsedLanguage] = useState<LanguageCode>("en");
   const [index, setIndex] = useState(0);
   const [phase, setPhase] = useState<Phase>("quiz");
   const [selectedOption, setSelectedOption] = useState<CollocationOption | null>(null);
@@ -47,8 +60,31 @@ export function CollocationTrainer() {
 
   const { recordedBlob, start: startRecorder, stop: stopRecorder, reset: resetRecorder } =
     useMediaRecorder(false);
-  const recognition = useSpeechRecognition(getLanguage(language).speechLang);
+  const recognition = useSpeechRecognition(getLanguage(usedLanguage).speechLang);
   const [isFinalizingSpeech, setIsFinalizingSpeech] = useState(false);
+
+  // Load the saved profile once on mount — client-only, since localStorage
+  // doesn't exist during SSR.
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem(PROFILE_STORAGE_KEY);
+      if (COLLOCATION_PROFILES.some((p) => p.id === saved)) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setProfile(saved as ProfileId);
+      }
+    } catch {
+      // Private browsing / storage disabled — stick with the default.
+    }
+  }, []);
+
+  function handleProfileChange(newProfile: ProfileId) {
+    setProfile(newProfile);
+    try {
+      window.localStorage.setItem(PROFILE_STORAGE_KEY, newProfile);
+    } catch {
+      // Ignore — the choice just won't persist across visits.
+    }
+  }
 
   const challenge = session?.[index] ?? null;
   const shuffledOptions = useMemo(
@@ -131,11 +167,14 @@ export function CollocationTrainer() {
     setResults([]);
     setIndex(0);
     setPhase("quiz");
-    setSession(pickSession(language, 5));
+    const picked = pickSession(profile, language, 5);
+    setSession(picked.challenges);
+    setUsedLanguage(picked.usedLanguage);
   }
 
-  // Re-roll whenever the app-wide language changes (including the very
-  // first time it settles, from LanguageProvider's own localStorage load).
+  // Re-roll whenever the app-wide language or the chosen profile changes
+  // (including the very first time language settles, from
+  // LanguageProvider's own localStorage load).
   useEffect(() => {
     resetRecorder();
     recognition.reset();
@@ -144,9 +183,11 @@ export function CollocationTrainer() {
     setResults([]);
     setIndex(0);
     setPhase("quiz");
-    setSession(pickSession(language, 5));
+    const picked = pickSession(profile, language, 5);
+    setSession(picked.challenges);
+    setUsedLanguage(picked.usedLanguage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [language]);
+  }, [language, profile]);
 
   if (!session || !challenge) {
     return (
@@ -158,6 +199,33 @@ export function CollocationTrainer() {
 
   return (
     <div className="flex flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+      <div className="flex flex-wrap items-center gap-2">
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Profile</p>
+        <div className="flex flex-wrap gap-1.5">
+          {COLLOCATION_PROFILES.map((p) => (
+            <button
+              key={p.id}
+              onClick={() => handleProfileChange(p.id)}
+              title={p.description}
+              className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
+                profile === p.id
+                  ? "bg-indigo-600 text-white"
+                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+              }`}
+            >
+              {p.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {usedLanguage !== language && (
+        <p className="text-xs text-amber-600">
+          {COLLOCATION_PROFILES.find((p) => p.id === profile)?.name} is English-only for now —
+          showing English content instead of {getLanguage(language).name}.
+        </p>
+      )}
+
       {!recognition.isSupported && phase !== "summary" && (
         <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
           Your browser doesn&rsquo;t support speech recognition — you&rsquo;ll still get the

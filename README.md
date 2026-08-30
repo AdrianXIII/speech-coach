@@ -103,9 +103,7 @@ LLM-generated "here's how to phrase that more like a native speaker" rewrite
 is the natural next step if the free scoring turns out not to be enough.
 
 **Executive Phrasing** (`/collocations`)
-Multi-language (English, German, French, Spanish, Swedish — each with its
-own idiomatic collocations, not word-for-word translations of the English
-set). Targets *collocation* specifically — the "feels right" pairing of verbs,
+Targets *collocation* specifically — the "feels right" pairing of verbs,
 nouns, and adjectives that separates fluent professional English from
 merely-correct English ("mitigate risk" sounds right; "mitigate resources"
 doesn't, even though it's grammatical). Each round: pick the correctly
@@ -116,6 +114,18 @@ multiple-choice round is a hand-curated local database, no AI; the spoken
 round reuses the Web Speech API hook from Listening & Summary to check
 whether the target verb and noun actually landed near each other in what
 you said.
+
+A **profile** picker (separate from the language picker) switches which
+professional register you're drilling: **Executive** (strategic business
+language — multi-language: English, German, French, Spanish, Swedish,
+each with its own idiomatic collocations, not translations of the English
+set), **Politician** (persuasive/diplomatic — "reach across the aisle",
+"hold accountable"), or **Lawyer** (precise, adversarial — "burden of
+proof", "breach of contract"). The three were picked from actual research
+on which professions rank highest for public-speaking centrality — not
+guessed — and Politician/Lawyer are English-only for now; switching the
+global language while one of those is selected falls back to English
+content with a small notice, rather than silently mixing languages.
 
 ## Running it locally
 

@@ -1,5 +1,40 @@
 import type { LanguageCode } from "@/lib/languages";
 
+export type ProfileId = "executive" | "politician" | "lawyer";
+
+export interface CollocationProfile {
+  id: ProfileId;
+  name: string;
+  description: string;
+}
+
+/**
+ * The three professions chosen (via web research, not guesswork) for how
+ * central public speaking is to the job and how distinct their register
+ * is from the others: politicians and executives consistently top
+ * "most public speaking" rankings, and legal-profession sources describe
+ * public speaking as a lawyer's "stock-in-trade." A sociologist/academic
+ * option was considered and dropped — it didn't rank as a top
+ * public-speaking profession the way these three did.
+ */
+export const COLLOCATION_PROFILES: CollocationProfile[] = [
+  {
+    id: "executive",
+    name: "Executive",
+    description: "Strategic business language for boardrooms and leadership.",
+  },
+  {
+    id: "politician",
+    name: "Politician",
+    description: "Persuasive, diplomatic language for public office and policy.",
+  },
+  {
+    id: "lawyer",
+    name: "Lawyer",
+    description: "Precise, adversarial language for courtrooms and negotiations.",
+  },
+];
+
 export interface CollocationOption {
   phrase: string;
   correct: boolean;
@@ -31,7 +66,7 @@ export interface CollocationChallenge {
  * the English ones — English has more challenges since it was the
  * original target skill.
  */
-const CHALLENGES_BY_LANGUAGE: Record<LanguageCode, CollocationChallenge[]> = {
+const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, CollocationChallenge[]>> = {
   en: [
     {
       id: "lower-risk",
@@ -464,8 +499,177 @@ const CHALLENGES_BY_LANGUAGE: Record<LanguageCode, CollocationChallenge[]> = {
   ],
 };
 
-export function pickSession(language: LanguageCode, size = 5): CollocationChallenge[] {
-  const all = CHALLENGES_BY_LANGUAGE[language];
+/**
+ * Politician and Lawyer profiles are English-only for now — adding the
+ * other 4 languages per profile is real idiomatic-content work (not a
+ * translation pass), left for later if these profiles prove useful.
+ */
+const POLITICIAN_CHALLENGES_EN: CollocationChallenge[] = [
+  {
+    id: "reach-aisle",
+    category: "Bipartisanship",
+    weakPhrase: "We need to work together with the other party.",
+    targetVerbStem: "reach",
+    targetNounStem: "aisle",
+    scenario: "You're addressing a divided legislature on a contentious bill.",
+    options: [
+      { phrase: "We must reach across the aisle to find common ground.", correct: true, explanation: "\"Reach across the aisle\" is the standard political idiom for bipartisan cooperation." },
+      { phrase: "We must mitigate across the aisle to find common ground.", correct: false, explanation: "\"Mitigate\" doesn't pair with \"aisle\" — it needs a negative like risk or damage." },
+      { phrase: "We need to work with the other party.", correct: false, explanation: "Direct but flat — none of the rhetorical weight expected in a political address." },
+      { phrase: "We must allocate across the aisle to find common ground.", correct: false, explanation: "\"Allocate\" needs a distributable object (budget, seats) — it doesn't fit this idiom." },
+    ],
+  },
+  {
+    id: "grassroots-support",
+    category: "Campaigning",
+    weakPhrase: "People at the local level are supporting our campaign.",
+    targetVerbStem: "grassroot",
+    targetNounStem: "support",
+    scenario: "You're rallying volunteers ahead of an election.",
+    options: [
+      { phrase: "We are seeing strong grassroots support for our campaign.", correct: true, explanation: "\"Grassroots\" plus \"support\" is the standard term for organic, local-level backing." },
+      { phrase: "We are seeing strong grassroots allocation for our campaign.", correct: false, explanation: "\"Allocation\" implies something distributed from above — the opposite of grassroots." },
+      { phrase: "People are supporting our campaign.", correct: false, explanation: "Loses the specific \"organized at the local level\" meaning \"grassroots\" carries." },
+      { phrase: "We are seeing strong grassroots mandate for our campaign.", correct: false, explanation: "A \"mandate\" is won after an election, from voters broadly — it doesn't pair with \"grassroots\" this way." },
+    ],
+  },
+  {
+    id: "hold-accountable",
+    category: "Governance",
+    weakPhrase: "We need to make sure leaders answer for their actions.",
+    targetVerbStem: "hold",
+    targetNounStem: "accountable",
+    scenario: "You're responding to a scandal involving a government official.",
+    options: [
+      { phrase: "We must hold our leaders accountable for their actions.", correct: true, explanation: "\"Hold accountable\" is the fixed political phrase for demanding answerability." },
+      { phrase: "We must mitigate our leaders accountable for their actions.", correct: false, explanation: "\"Mitigate\" doesn't combine grammatically with \"accountable\" this way." },
+      { phrase: "We need leaders to answer for their actions.", correct: false, explanation: "Says the same thing but without the fixed, forceful political phrasing." },
+      { phrase: "We must allocate our leaders accountable for their actions.", correct: false, explanation: "\"Allocate\" doesn't fit — it needs a distributable object, not an adjective like \"accountable\"." },
+    ],
+  },
+  {
+    id: "stand-united",
+    category: "National Address",
+    weakPhrase: "Everyone in the country needs to come together now.",
+    targetVerbStem: "stand",
+    targetNounStem: "united",
+    scenario: "You're delivering a speech after a national crisis.",
+    options: [
+      { phrase: "Now, more than ever, our nation must stand united.", correct: true, explanation: "\"Stand united\" is a classic collocation for national-address rhetoric." },
+      { phrase: "Now, more than ever, our nation must mitigate united.", correct: false, explanation: "Not a real collocation — \"mitigate\" needs a negative noun object." },
+      { phrase: "Everyone in the country needs to come together.", correct: false, explanation: "Correct meaning, but lacks the elevated register expected in a national address." },
+      { phrase: "Now, more than ever, our nation must allocate united.", correct: false, explanation: "Grammatically broken — \"allocate\" needs a distributable object." },
+    ],
+  },
+  {
+    id: "restore-trust",
+    category: "Campaigning",
+    weakPhrase: "We promise to make things better and be honest with voters.",
+    targetVerbStem: "restor",
+    targetNounStem: "trust",
+    scenario: "You're closing a campaign speech ahead of election day.",
+    options: [
+      { phrase: "We are committed to restoring trust and delivering on our promises.", correct: true, explanation: "\"Restore trust\" and \"deliver on promises\" are both standard campaign-rhetoric collocations." },
+      { phrase: "We are committed to mitigating trust and delivering on our promises.", correct: false, explanation: "Trust isn't a negative to lessen — \"mitigate\" reverses the intended meaning." },
+      { phrase: "We promise to make things better and be honest.", correct: false, explanation: "Vague — \"make things better\" carries no specific commitment." },
+      { phrase: "We are committed to allocating trust and delivering on our promises.", correct: false, explanation: "\"Allocate\" doesn't fit an abstract quality like trust." },
+    ],
+  },
+];
+
+const LAWYER_CHALLENGES_EN: CollocationChallenge[] = [
+  {
+    id: "burden-of-proof",
+    category: "Trial Advocacy",
+    weakPhrase: "We think the other side did not prove their case enough.",
+    targetVerbStem: "meet",
+    targetNounStem: "burden",
+    scenario: "You're delivering a closing argument to the jury.",
+    options: [
+      { phrase: "The prosecution has failed to meet the burden of proof.", correct: true, explanation: "\"Meet the burden of proof\" is the standard legal phrase for the evidentiary standard being satisfied (or not)." },
+      { phrase: "The prosecution has failed to mitigate the burden of proof.", correct: false, explanation: "You don't \"mitigate\" a burden of proof — you meet or fail to meet it." },
+      { phrase: "The other side did not prove their case enough.", correct: false, explanation: "Correct meaning, but not the fixed legal terminology a jury expects from counsel." },
+      { phrase: "The prosecution has failed to allocate the burden of proof.", correct: false, explanation: "The burden of proof is assigned by law, not something either side \"allocates\" in argument." },
+    ],
+  },
+  {
+    id: "breach-of-contract",
+    category: "Civil Litigation",
+    weakPhrase: "My client did not break the contract.",
+    targetVerbStem: "breach",
+    targetNounStem: "contract",
+    scenario: "You're defending a client in a civil dispute.",
+    options: [
+      { phrase: "My client is not liable for any breach of contract.", correct: true, explanation: "\"Breach of contract\" plus \"liable\" is precise legal terminology, not just \"broke the contract\"." },
+      { phrase: "My client is not liable for any mitigation of contract.", correct: false, explanation: "\"Mitigation\" is a separate legal concept (reducing damages) — it doesn't replace \"breach\" here." },
+      { phrase: "My client did not break the contract.", correct: false, explanation: "This is the plain, basic version — no legal precision at all." },
+      { phrase: "My client is not liable for any allocation of contract.", correct: false, explanation: "\"Allocation of contract\" isn't a legal term — the correct term is \"breach\"." },
+    ],
+  },
+  {
+    id: "beyond-reasonable-doubt",
+    category: "Trial Advocacy",
+    weakPhrase: "We are sure he did it because of all the proof.",
+    targetVerbStem: "establish",
+    targetNounStem: "doubt",
+    scenario: "You're summarizing the prosecution's case to the jury.",
+    options: [
+      { phrase: "The evidence establishes guilt beyond a reasonable doubt.", correct: true, explanation: "\"Establish guilt beyond a reasonable doubt\" is the exact standard of proof in criminal law." },
+      { phrase: "The evidence mitigates guilt beyond a reasonable doubt.", correct: false, explanation: "\"Mitigate\" would lessen guilt, not prove it — this reverses the intended meaning." },
+      { phrase: "We are sure he did it because of the proof.", correct: false, explanation: "Casual and imprecise — not the fixed evidentiary standard the law requires." },
+      { phrase: "The evidence allocates guilt beyond a reasonable doubt.", correct: false, explanation: "\"Allocate\" doesn't fit — guilt is established or proven, not allocated." },
+    ],
+  },
+  {
+    id: "exclude-inadmissible",
+    category: "Trial Procedure",
+    weakPhrase: "I don't think that evidence should be allowed.",
+    targetVerbStem: "exclud",
+    targetNounStem: "inadmissible",
+    scenario: "You're objecting to evidence during a trial.",
+    options: [
+      { phrase: "I move to exclude this evidence as inadmissible.", correct: true, explanation: "\"Move to exclude\" plus \"inadmissible\" is the formal courtroom phrasing for this objection." },
+      { phrase: "I move to mitigate this evidence as inadmissible.", correct: false, explanation: "You exclude inadmissible evidence — you don't \"mitigate\" it." },
+      { phrase: "I don't think that evidence should be allowed.", correct: false, explanation: "Conversational — not the formal motion language a court expects." },
+      { phrase: "I move to allocate this evidence as inadmissible.", correct: false, explanation: "\"Allocate\" doesn't fit — the correct verb for this legal motion is \"exclude\"." },
+    ],
+  },
+  {
+    id: "resolve-arbitration",
+    category: "Negotiation",
+    weakPhrase: "We want to settle this without going to court.",
+    targetVerbStem: "resolv",
+    targetNounStem: "arbitration",
+    scenario: "You're negotiating a settlement before trial.",
+    options: [
+      { phrase: "We propose to resolve this matter through arbitration.", correct: true, explanation: "\"Resolve through arbitration\" is standard language for alternative dispute resolution." },
+      { phrase: "We propose to mitigate this matter through arbitration.", correct: false, explanation: "\"Mitigate\" doesn't fit — arbitration resolves a dispute, it doesn't lessen it." },
+      { phrase: "We want to settle this without going to court.", correct: false, explanation: "Plain language — accurate, but not the formal register used in negotiation correspondence." },
+      { phrase: "We propose to allocate this matter through arbitration.", correct: false, explanation: "\"Allocate\" doesn't fit a legal dispute — the correct verb is \"resolve\"." },
+    ],
+  },
+];
+
+const CHALLENGES_BY_PROFILE_AND_LANGUAGE: Record<
+  ProfileId,
+  Partial<Record<LanguageCode, CollocationChallenge[]>>
+> = {
+  executive: EXECUTIVE_CHALLENGES_BY_LANGUAGE,
+  politician: { en: POLITICIAN_CHALLENGES_EN },
+  lawyer: { en: LAWYER_CHALLENGES_EN },
+};
+
+export interface CollocationSession {
+  challenges: CollocationChallenge[];
+  /** The language actually used — falls back to English if the chosen
+   * profile doesn't have content in the requested language yet. */
+  usedLanguage: LanguageCode;
+}
+
+export function pickSession(profile: ProfileId, language: LanguageCode, size = 5): CollocationSession {
+  const byLanguage = CHALLENGES_BY_PROFILE_AND_LANGUAGE[profile];
+  const usedLanguage: LanguageCode = byLanguage[language] ? language : "en";
+  const all = byLanguage[usedLanguage] ?? [];
   const shuffled = [...all].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, Math.min(size, shuffled.length));
+  return { challenges: shuffled.slice(0, Math.min(size, shuffled.length)), usedLanguage };
 }
