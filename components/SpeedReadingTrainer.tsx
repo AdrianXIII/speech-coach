@@ -390,7 +390,7 @@ export function SpeedReadingTrainer() {
   const wordCount = text.trim() ? text.trim().split(/\s+/).filter(Boolean).length : 0;
 
   return (
-    <div className="flex flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+    <div className="flex flex-col gap-6 rounded-2xl border border-hairline bg-surface p-8 shadow-sm">
       {phase === "setup" && (
         <SetupPanel
           t={t}
@@ -411,7 +411,7 @@ export function SpeedReadingTrainer() {
               <RsvpDisplay words={displayChunk} />
               <button
                 onClick={handleFinishNow}
-                className="rounded-lg bg-slate-200 px-6 py-2.5 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-300"
+                className="rounded-lg bg-surface-2 px-6 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-hairline"
               >
                 {t.done}
               </button>
@@ -478,22 +478,22 @@ function SetupPanel({
 
   return (
     <div className="flex flex-col gap-5">
-      <p className="text-xs text-slate-400">{t.pasteInstruction(getLanguage(language).name)}</p>
+      <p className="text-xs text-ink-muted">{t.pasteInstruction(getLanguage(language).name)}</p>
 
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">{t.text}</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{t.text}</p>
         <textarea
           value={text}
           onChange={(e) => onTextChange(e.target.value)}
           placeholder={t.placeholder}
           rows={8}
-          className="mt-2 w-full resize-none rounded-lg border border-slate-200 p-3 text-sm text-slate-800 placeholder:text-slate-400 focus:border-indigo-400 focus:outline-none"
+          className="mt-2 w-full resize-none rounded-lg border border-hairline p-3 text-sm text-ink placeholder:text-ink-muted focus:border-brass focus:outline-none"
         />
-        <p className="mt-1 text-xs text-slate-400">{t.wordsCount(wordCount)}</p>
+        <p className="mt-1 text-xs text-ink-muted">{t.wordsCount(wordCount)}</p>
       </div>
 
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">{t.level}</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{t.level}</p>
         <div className="mt-2 grid gap-2 sm:grid-cols-3">
           {READING_LEVELS.map((level) => (
             <button
@@ -501,12 +501,12 @@ function SetupPanel({
               onClick={() => onLevelChange(level.id)}
               className={`rounded-lg border p-3 text-left transition-colors ${
                 levelId === level.id
-                  ? "border-indigo-400 bg-indigo-50"
-                  : "border-slate-200 bg-white hover:bg-slate-50"
+                  ? "border-brass bg-surface-2"
+                  : "border-hairline bg-surface hover:bg-surface-2"
               }`}
             >
-              <p className="text-sm font-bold text-slate-900">{level.name[language]}</p>
-              <p className="mt-0.5 text-xs text-slate-500">{level.description[language]}</p>
+              <p className="text-sm font-bold text-ink">{level.name[language]}</p>
+              <p className="mt-0.5 text-xs text-ink-muted">{level.description[language]}</p>
             </button>
           ))}
         </div>
@@ -515,7 +515,7 @@ function SetupPanel({
       <button
         onClick={onStart}
         disabled={tooShort}
-        className="self-center rounded-lg bg-indigo-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-40"
+        className="self-center rounded-lg bg-navy px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800 disabled:cursor-not-allowed disabled:opacity-40"
       >
         {t.startReading}
       </button>
@@ -562,7 +562,7 @@ function RsvpDisplay({ words }: { words: string[] }) {
 
 function FocusBox({ children }: { children: ReactNode }) {
   return (
-    <div className="relative flex h-40 w-full flex-col items-center justify-center rounded-xl bg-slate-900">
+    <div className="relative flex h-40 w-full flex-col items-center justify-center rounded-xl bg-navy">
       <div className="absolute top-3 h-3 w-0.5 rounded-full bg-red-500" />
       <div className="flex w-full items-baseline justify-center px-4 font-mono text-3xl font-bold text-white sm:text-4xl">
         {children}
@@ -586,21 +586,21 @@ function MidCheckPanel({
   onAnswer: (index: number) => void;
 }) {
   return (
-    <div className="flex w-full flex-col items-center gap-4 rounded-xl border border-indigo-200 bg-indigo-50 p-6">
-      <p className="text-xs font-semibold uppercase tracking-wide text-indigo-500">{t.quickCheck}</p>
-      <p className="text-center text-base font-medium text-slate-800">{question.prompt}</p>
+    <div className="flex w-full flex-col items-center gap-4 rounded-xl border border-brass/40 bg-surface-2 p-6">
+      <p className="text-xs font-semibold uppercase tracking-wide text-brass-text">{t.quickCheck}</p>
+      <p className="text-center text-base font-medium text-ink">{question.prompt}</p>
       <div className="grid w-full max-w-sm grid-cols-2 gap-2">
         {question.options.map((option, i) => {
           const isSelected = selected === i;
           const isCorrect = i === question.correctIndex;
           const showFeedback = selected !== null;
           const colorClasses = !showFeedback
-            ? "border-slate-200 bg-white hover:bg-slate-50"
+            ? "border-hairline bg-surface hover:bg-surface-2"
             : isCorrect
               ? "border-emerald-400 bg-emerald-100 text-emerald-800"
               : isSelected
                 ? "border-red-400 bg-red-100 text-red-800"
-                : "border-slate-200 bg-white opacity-60";
+                : "border-hairline bg-surface opacity-60";
 
           return (
             <button
@@ -638,15 +638,15 @@ function QuizPanel({
   return (
     <div className="flex flex-col gap-5">
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+        <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
           {t.comprehensionQuestions}
         </p>
-        <p className="mt-1 text-sm text-slate-500">{t.comprehensionSubtitle}</p>
+        <p className="mt-1 text-sm text-ink-muted">{t.comprehensionSubtitle}</p>
       </div>
 
       {questions.map((q, qi) => (
-        <div key={qi} className="rounded-lg border border-slate-200 p-4">
-          <p className="text-sm font-semibold text-slate-800">{q.prompt}</p>
+        <div key={qi} className="rounded-lg border border-hairline p-4">
+          <p className="text-sm font-semibold text-ink">{q.prompt}</p>
           <div className="mt-2 grid grid-cols-2 gap-2">
             {q.options.map((option, oi) => (
               <button
@@ -654,8 +654,8 @@ function QuizPanel({
                 onClick={() => onSelect(qi, oi)}
                 className={`rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
                   answers[qi] === oi
-                    ? "border-indigo-400 bg-indigo-50 text-indigo-700"
-                    : "border-slate-200 bg-white hover:bg-slate-50 text-slate-700"
+                    ? "border-brass bg-surface-2 text-brass-text"
+                    : "border-hairline bg-surface hover:bg-surface-2 text-ink"
                 }`}
               >
                 {option}
@@ -668,7 +668,7 @@ function QuizPanel({
       <button
         onClick={onSubmit}
         disabled={!allAnswered}
-        className="self-center rounded-lg bg-indigo-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-40"
+        className="self-center rounded-lg bg-navy px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800 disabled:cursor-not-allowed disabled:opacity-40"
       >
         {t.seeResults}
       </button>
@@ -707,13 +707,13 @@ function ResultsPanel({
   return (
     <div className="flex flex-col gap-6">
       <div className="grid grid-cols-2 gap-4">
-        <div className="rounded-xl border border-slate-200 bg-slate-50 p-5 text-center">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">{t.speed}</p>
-          <p className="mt-1 text-3xl font-extrabold text-slate-900">{result.wpm}</p>
-          <p className="text-xs text-slate-500">{t.wordsPerMinute}</p>
+        <div className="rounded-xl border border-hairline bg-surface-2 p-5 text-center">
+          <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{t.speed}</p>
+          <p className="mt-1 text-3xl font-extrabold text-ink">{result.wpm}</p>
+          <p className="text-xs text-ink-muted">{t.wordsPerMinute}</p>
         </div>
-        <div className="rounded-xl border border-slate-200 bg-slate-50 p-5 text-center">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">{t.comprehension}</p>
+        <div className="rounded-xl border border-hairline bg-surface-2 p-5 text-center">
+          <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{t.comprehension}</p>
           <p
             className={`mt-1 text-3xl font-extrabold ${
               result.comprehensionPct >= 75 ? "text-emerald-600" : result.comprehensionPct >= 50 ? "text-amber-600" : "text-red-600"
@@ -721,20 +721,20 @@ function ResultsPanel({
           >
             {result.comprehensionPct}%
           </p>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-ink-muted">
             {t.correctOf(result.correctCount, result.totalQuestions)}
           </p>
         </div>
       </div>
 
-      <p className="text-center text-xs text-slate-400">
+      <p className="text-center text-xs text-ink-muted">
         {t.wordsInDuration(result.wordCount, formatDuration(Math.round(result.elapsedSeconds)))}
       </p>
 
       {previousAtLevel && (
         <p
           className={`rounded-lg p-3 text-center text-sm ${
-            improved ? "bg-emerald-50 text-emerald-700" : "bg-slate-50 text-slate-600"
+            improved ? "bg-emerald-50 text-emerald-700" : "bg-surface-2 text-ink-muted"
           }`}
         >
           {improved
@@ -745,10 +745,10 @@ function ResultsPanel({
 
       {history.length > 1 && (
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">{t.history}</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{t.history}</p>
           <div className="mt-2 flex flex-col gap-1">
             {[...history].reverse().slice(0, 6).map((h, i) => (
-              <div key={i} className="flex justify-between text-xs text-slate-500">
+              <div key={i} className="flex justify-between text-xs text-ink-muted">
                 <span>{new Date(h.date).toLocaleDateString(language)}</span>
                 <span>{t.levelShortNames[h.levelId as "beginner" | "intermediate" | "advanced"]}</span>
                 <span>{h.wpm} {t.wordsPerMinute}</span>
@@ -762,13 +762,13 @@ function ResultsPanel({
       <div className="flex flex-wrap justify-center gap-3">
         <button
           onClick={onReadAgain}
-          className="rounded-lg bg-slate-200 px-6 py-3 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-300"
+          className="rounded-lg bg-surface-2 px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-hairline"
         >
           {t.readAgain}
         </button>
         <button
           onClick={onNewText}
-          className="rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500"
+          className="rounded-lg bg-navy px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800"
         >
           {t.newText}
         </button>

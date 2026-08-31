@@ -11,19 +11,21 @@ export function NavBar() {
   const { language, setLanguage } = useLanguage();
 
   return (
-    <nav className="border-b border-slate-200 bg-white">
+    <nav className="border-b border-navy-800 bg-navy">
       <div className="mx-auto flex max-w-4xl flex-col gap-2 px-4 py-3 sm:px-8">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <span className="text-sm font-bold whitespace-nowrap text-slate-900">Speech Coach</span>
+          <span className="font-display text-base font-semibold tracking-wide whitespace-nowrap text-cream">
+            Speech Coach
+          </span>
           <div className="flex flex-wrap gap-1">
             {LANGUAGES.map((l) => (
               <button
                 key={l.code}
                 onClick={() => setLanguage(l.code)}
-                className={`rounded-full px-2.5 py-1 text-xs font-semibold transition-colors ${
+                className={`rounded-full border px-2.5 py-1 text-xs font-semibold transition-colors ${
                   language === l.code
-                    ? "bg-indigo-600 text-white"
-                    : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+                    ? "border-brass bg-brass text-navy"
+                    : "border-navy-800 text-cream-muted hover:border-brass/60 hover:text-cream"
                 }`}
               >
                 {l.name}
@@ -41,8 +43,8 @@ export function NavBar() {
                 href={link.href}
                 className={`whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
                   active
-                    ? "bg-indigo-50 text-indigo-700"
-                    : "text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+                    ? "bg-navy-800 text-brass-soft"
+                    : "text-cream-muted hover:bg-navy-800 hover:text-cream"
                 }`}
               >
                 {link.labels[language]}

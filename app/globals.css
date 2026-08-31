@@ -1,28 +1,53 @@
 @import "tailwindcss";
 
+/*
+ * "The Chancery" — the app's visual identity: navy + brass, structured and
+ * institutional, aimed at the executives/politicians/lawyers the app
+ * coaches. Deliberately a single committed look rather than light/dark
+ * themes — see the "Boardroom Look" design exploration this was chosen
+ * from.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-paper: #faf9f6;
+  --color-surface: #ffffff;
+  --color-surface-2: #f1eee7;
+  --color-navy: #10233f;
+  --color-navy-800: #0b1a30;
+  --color-cream: #f4ede0;
+  --color-cream-muted: #9fb0c9;
+  --color-brass: #a9832f;
+  --color-brass-soft: #c9a54f;
+  --color-brass-text: #8a6a24;
+  --color-ink: #1a2333;
+  --color-ink-muted: #5b6478;
+  --color-hairline: #d7dce2;
+  --color-good: #2f6b4f;
+  --color-bad: #a5352e;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-paper: var(--color-paper);
+  --color-surface: var(--color-surface);
+  --color-surface-2: var(--color-surface-2);
+  --color-navy: var(--color-navy);
+  --color-navy-800: var(--color-navy-800);
+  --color-cream: var(--color-cream);
+  --color-cream-muted: var(--color-cream-muted);
+  --color-brass: var(--color-brass);
+  --color-brass-soft: var(--color-brass-soft);
+  --color-brass-text: var(--color-brass-text);
+  --color-ink: var(--color-ink);
+  --color-ink-muted: var(--color-ink-muted);
+  --color-hairline: var(--color-hairline);
+  --color-good: var(--color-good);
+  --color-bad: var(--color-bad);
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-paper);
+  color: var(--color-ink);
 }
 
 /* Virtual Stage: idle audience sway — staggered via each avatar's own

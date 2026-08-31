@@ -46,10 +46,10 @@ export function ScriptAssistant({ onScriptReady }: ScriptAssistantProps) {
   }
 
   return (
-    <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div className="flex flex-col gap-3 rounded-2xl border border-hairline bg-surface p-5 shadow-sm">
       <div>
-        <h3 className="text-sm font-semibold text-slate-900">Script Assistant</h3>
-        <p className="mt-0.5 text-xs text-slate-500">
+        <h3 className="text-sm font-semibold text-ink">Script Assistant</h3>
+        <p className="mt-0.5 text-xs text-ink-muted">
           Describe a topic, paste rough notes, or drop in a draft — get back a polished script to
           test in the teleprompter.
         </p>
@@ -60,14 +60,14 @@ export function ScriptAssistant({ onScriptReady }: ScriptAssistantProps) {
         onChange={(e) => setInput(e.target.value)}
         placeholder="e.g. 'a 2-minute toast for my friend's wedding' or paste a rough draft…"
         rows={3}
-        className="w-full resize-none rounded-lg border border-slate-200 p-3 text-sm text-slate-800 placeholder:text-slate-400 focus:border-indigo-400 focus:outline-none"
+        className="w-full resize-none rounded-lg border border-hairline p-3 text-sm text-ink placeholder:text-ink-muted focus:border-brass focus:outline-none"
       />
 
       <div className="flex items-center gap-3">
         <button
           onClick={handleGenerate}
           disabled={isGenerating || !input.trim()}
-          className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-indigo-500 disabled:opacity-50"
+          className="rounded-lg bg-navy px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-navy-800 disabled:opacity-50"
         >
           {isGenerating ? "Writing…" : "Get AI script"}
         </button>
@@ -75,16 +75,16 @@ export function ScriptAssistant({ onScriptReady }: ScriptAssistantProps) {
       </div>
 
       {script && (
-        <div className="flex flex-col gap-3 rounded-lg border border-slate-200 bg-slate-50 p-4">
+        <div className="flex flex-col gap-3 rounded-lg border border-hairline bg-surface-2 p-4">
           {mocked && (
             <p className="rounded-md bg-amber-100 px-2 py-1 text-xs font-medium text-amber-800">
               Mock mode — set GEMINI_API_KEY for a real AI-written script.
             </p>
           )}
-          <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700">{script}</p>
+          <p className="whitespace-pre-wrap text-sm leading-relaxed text-ink">{script}</p>
           <button
             onClick={() => onScriptReady(script)}
-            className="self-start rounded-lg bg-slate-800 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-slate-700"
+            className="self-start rounded-lg bg-navy px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-navy-800"
           >
             Use this script
           </button>

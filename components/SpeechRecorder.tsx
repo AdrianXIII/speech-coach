@@ -86,9 +86,9 @@ export function SpeechRecorder() {
 
   return (
     <div className="flex flex-col gap-6">
-    <div className="flex flex-col items-center gap-6 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+    <div className="flex flex-col items-center gap-6 rounded-2xl border border-hairline bg-surface p-8 shadow-sm">
       {/* Timer */}
-      <div className="font-mono text-4xl font-bold tabular-nums text-slate-800">
+      <div className="font-mono text-4xl font-bold tabular-nums text-ink">
         {formatDuration(elapsedSeconds)}
       </div>
 
@@ -100,19 +100,19 @@ export function SpeechRecorder() {
           className="flex h-24 w-24 items-center justify-center rounded-full bg-red-600 text-white shadow-lg transition-transform hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
           aria-label="Start Recording"
         >
-          <span className="h-7 w-7 rounded-full bg-white" />
+          <span className="h-7 w-7 rounded-full bg-surface" />
         </button>
       ) : (
         <button
           onClick={stop}
-          className="flex h-24 w-24 items-center justify-center rounded-full bg-slate-800 text-white shadow-lg transition-transform hover:scale-105"
+          className="flex h-24 w-24 items-center justify-center rounded-full bg-navy text-white shadow-lg transition-transform hover:scale-105"
           aria-label="Stop Recording"
         >
-          <span className="h-7 w-7 rounded-md bg-white" />
+          <span className="h-7 w-7 rounded-md bg-surface" />
         </button>
       )}
 
-      <p className="text-sm font-semibold text-slate-500">
+      <p className="text-sm font-semibold text-ink-muted">
         {isRecording
           ? "Recording…"
           : recordedBlob
@@ -131,14 +131,14 @@ export function SpeechRecorder() {
             <button
               onClick={handleAnalyze}
               disabled={isAnalyzing}
-              className="rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500 disabled:opacity-50"
+              className="rounded-lg bg-navy px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800 disabled:opacity-50"
             >
               {isAnalyzing ? "Analyzing…" : "Analyze Speech"}
             </button>
             <button
               onClick={handleRecordAgain}
               disabled={isAnalyzing}
-              className="rounded-lg bg-slate-200 px-6 py-3 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-300 disabled:opacity-50"
+              className="rounded-lg bg-surface-2 px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-hairline disabled:opacity-50"
             >
               Record Again
             </button>

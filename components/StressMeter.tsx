@@ -53,17 +53,17 @@ export function StressMeter({ word, audioBlob }: StressMeterProps) {
   }, [word, audioBlob]);
 
   if (status === "loading") {
-    return <p className="text-sm text-slate-400">Measuring stress…</p>;
+    return <p className="text-sm text-ink-muted">Measuring stress…</p>;
   }
   if (status === "unsupported") {
     return (
-      <p className="text-sm text-slate-400">
+      <p className="text-sm text-ink-muted">
         No stress data for this word/phrase — try &ldquo;Get AI Feedback&rdquo; below instead.
       </p>
     );
   }
   if (status === "error" || !wordStress || !measurement) {
-    return <p className="text-sm text-slate-400">Couldn&rsquo;t measure stress for that recording.</p>;
+    return <p className="text-sm text-ink-muted">Couldn&rsquo;t measure stress for that recording.</p>;
   }
 
   const expected = wordStress.stressedSyllableIndex;
@@ -71,8 +71,8 @@ export function StressMeter({ word, audioBlob }: StressMeterProps) {
   const isCorrect = expected === measured;
 
   return (
-    <div className="flex flex-col gap-4 rounded-lg border border-slate-200 bg-white p-4">
-      <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Stress check</p>
+    <div className="flex flex-col gap-4 rounded-lg border border-hairline bg-surface p-4">
+      <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Stress check</p>
 
       <div className="flex items-end justify-center gap-3">
         {wordStress.syllables.map((syllable, i) => {
@@ -83,17 +83,17 @@ export function StressMeter({ word, audioBlob }: StressMeterProps) {
 
           return (
             <div key={i} className="flex w-16 flex-col items-center gap-1.5">
-              {isExpected && <span className="text-[10px] font-semibold text-indigo-500">should stress</span>}
-              <div className="flex h-20 w-full items-end justify-center rounded-md bg-slate-100">
+              {isExpected && <span className="text-[10px] font-semibold text-brass-text">should stress</span>}
+              <div className="flex h-20 w-full items-end justify-center rounded-md bg-surface-2">
                 <div
                   className={`w-8 rounded-t-md transition-all ${
-                    isMeasured ? (isCorrect ? "bg-emerald-500" : "bg-amber-500") : "bg-slate-300"
+                    isMeasured ? (isCorrect ? "bg-emerald-500" : "bg-amber-500") : "bg-hairline"
                   }`}
                   style={{ height: `${heightPct}%` }}
                 />
               </div>
               <span
-                className={`text-sm font-semibold ${isExpected ? "text-indigo-600" : "text-slate-600"}`}
+                className={`text-sm font-semibold ${isExpected ? "text-brass-text" : "text-ink-muted"}`}
               >
                 {syllable}
               </span>
@@ -108,7 +108,7 @@ export function StressMeter({ word, audioBlob }: StressMeterProps) {
           : `Try emphasizing "${wordStress.syllables[expected]}" more — right now "${wordStress.syllables[measured]}" is coming out strongest.`}
       </p>
 
-      <p className="text-center text-[11px] text-slate-400">
+      <p className="text-center text-[11px] text-ink-muted">
         Approximate — based on volume and pitch, not lab-grade phonetic analysis.
       </p>
     </div>

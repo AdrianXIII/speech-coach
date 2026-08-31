@@ -47,16 +47,16 @@ export function Teleprompter({ text, onTextChange, isScrolling }: TeleprompterPr
 
   if (!isScrolling) {
     return (
-      <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-        <h3 className="text-sm font-semibold text-slate-700">Teleprompter notes</h3>
+      <div className="flex flex-col gap-3 rounded-2xl border border-hairline bg-surface p-5 shadow-sm">
+        <h3 className="text-sm font-semibold text-ink">Teleprompter notes</h3>
         <textarea
           value={text}
           onChange={(e) => onTextChange(e.target.value)}
           placeholder="Paste or write your speech notes here — they'll scroll automatically once you start recording."
           rows={7}
-          className="w-full resize-none rounded-lg border border-slate-200 p-3 text-sm text-slate-700 focus:border-indigo-400 focus:outline-none"
+          className="w-full resize-none rounded-lg border border-hairline p-3 text-sm text-ink focus:border-brass focus:outline-none"
         />
-        <label className="flex items-center gap-3 text-xs text-slate-500">
+        <label className="flex items-center gap-3 text-xs text-ink-muted">
           Scroll speed
           <input
             type="range"
@@ -64,9 +64,9 @@ export function Teleprompter({ text, onTextChange, isScrolling }: TeleprompterPr
             max={MAX_SPEED}
             value={speed}
             onChange={(e) => setSpeed(Number(e.target.value))}
-            className="flex-1 accent-indigo-600"
+            className="flex-1 accent-navy"
           />
-          <span className="w-8 text-right font-medium text-slate-700">{speed}</span>
+          <span className="w-8 text-right font-medium text-ink">{speed}</span>
         </label>
       </div>
     );

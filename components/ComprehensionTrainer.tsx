@@ -312,14 +312,14 @@ export function ComprehensionTrainer() {
 
   if (!passage) {
     return (
-      <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-        <p className="text-sm text-slate-400">{t.loading}</p>
+      <div className="rounded-2xl border border-hairline bg-surface p-8 shadow-sm">
+        <p className="text-sm text-ink-muted">{t.loading}</p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+    <div className="flex flex-col gap-6 rounded-2xl border border-hairline bg-surface p-8 shadow-sm">
       {!recognition.isSupported && (
         <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
           {t.noSpeechSupport}
@@ -340,14 +340,14 @@ export function ComprehensionTrainer() {
 
       {phase === "listening" && (
         <div className="flex flex-col items-center gap-3 py-10">
-          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-2xl">
+          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-surface-2 text-2xl">
             🔊
           </span>
-          <p className="text-sm font-semibold text-indigo-600">{t.listening}</p>
-          <p className="text-xs text-slate-400">({passage.topic})</p>
+          <p className="text-sm font-semibold text-brass-text">{t.listening}</p>
+          <p className="text-xs text-ink-muted">({passage.topic})</p>
           <button
             onClick={handleSkipListening}
-            className="text-xs font-semibold text-slate-400 underline underline-offset-2 hover:text-slate-600"
+            className="text-xs font-semibold text-ink-muted underline underline-offset-2 hover:text-ink-muted"
           >
             {t.skipAhead}
           </button>
@@ -356,12 +356,12 @@ export function ComprehensionTrainer() {
 
       {phase === "ready" && (
         <div className="flex flex-col items-center gap-4 py-6">
-          <p className="text-center text-base font-medium text-slate-800">
+          <p className="text-center text-base font-medium text-ink">
             {t.summarizePrompt}
           </p>
           <button
             onClick={handleListen}
-            className="text-xs font-semibold text-indigo-600 underline underline-offset-2"
+            className="text-xs font-semibold text-brass-text underline underline-offset-2"
           >
             {t.listenAgain}
           </button>
@@ -370,7 +370,7 @@ export function ComprehensionTrainer() {
             className="flex h-20 w-20 items-center justify-center rounded-full bg-red-600 text-white shadow-lg transition-transform hover:scale-105"
             aria-label="Start Recording"
           >
-            <span className="h-6 w-6 rounded-full bg-white" />
+            <span className="h-6 w-6 rounded-full bg-surface" />
           </button>
         </div>
       )}
@@ -381,15 +381,15 @@ export function ComprehensionTrainer() {
             <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-red-500" />
             {t.recording}
           </span>
-          <p className="min-h-[3rem] max-w-md text-center text-sm text-slate-500">
+          <p className="min-h-[3rem] max-w-md text-center text-sm text-ink-muted">
             {recognition.transcript || "…"}
           </p>
           <button
             onClick={handleStopResponse}
-            className="flex h-20 w-20 items-center justify-center rounded-full bg-slate-800 text-white shadow-lg transition-transform hover:scale-105"
+            className="flex h-20 w-20 items-center justify-center rounded-full bg-navy text-white shadow-lg transition-transform hover:scale-105"
             aria-label="Stop Recording"
           >
-            <span className="h-6 w-6 rounded-md bg-white" />
+            <span className="h-6 w-6 rounded-md bg-surface" />
           </button>
         </div>
       )}
@@ -432,10 +432,10 @@ function SetupPanel({
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center justify-between">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">{t.topic}</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{t.topic}</p>
         <button
           onClick={onShuffle}
-          className="rounded-lg bg-slate-100 px-3 py-1.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-200"
+          className="rounded-lg bg-surface-2 px-3 py-1.5 text-sm font-semibold text-ink transition-colors hover:bg-hairline"
         >
           {t.shuffle}
         </button>
@@ -448,24 +448,24 @@ function SetupPanel({
             onClick={() => onPick(p)}
             className={`rounded-lg border p-3 text-left transition-colors ${
               passage.id === p.id
-                ? "border-indigo-400 bg-indigo-50"
-                : "border-slate-200 bg-white hover:bg-slate-50"
+                ? "border-brass bg-surface-2"
+                : "border-hairline bg-surface hover:bg-surface-2"
             }`}
           >
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-indigo-500">
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-brass-text">
               {p.topic}
             </p>
-            <p className="mt-0.5 text-sm font-bold text-slate-900">{p.title}</p>
+            <p className="mt-0.5 text-sm font-bold text-ink">{p.title}</p>
           </button>
         ))}
       </div>
 
-      <p className="text-center text-sm text-slate-500">{t.setupInstruction}</p>
+      <p className="text-center text-sm text-ink-muted">{t.setupInstruction}</p>
 
       <button
         onClick={onListen}
         disabled={disabled}
-        className="self-center rounded-lg bg-indigo-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-40"
+        className="self-center rounded-lg bg-navy px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800 disabled:cursor-not-allowed disabled:opacity-40"
       >
         {t.listenButton}
       </button>
@@ -494,8 +494,8 @@ function ResultsPanel({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 p-6 text-center">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+      <div className="flex flex-col items-center gap-2 rounded-xl border border-hairline bg-surface-2 p-6 text-center">
+        <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
           {t.overallScore}
         </p>
         <p
@@ -520,20 +520,20 @@ function ResultsPanel({
 
       <div className="flex flex-col gap-2">
         {score.feedback.map((note, i) => (
-          <p key={i} className="rounded-lg bg-indigo-50 px-3 py-2 text-sm text-indigo-800">
+          <p key={i} className="rounded-lg bg-surface-2 px-3 py-2 text-sm text-brass-text">
             {note}
           </p>
         ))}
       </div>
 
       {score.missedKeyPoints.length > 0 && (
-        <div className="rounded-lg border border-slate-200 p-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+        <div className="rounded-lg border border-hairline p-4">
+          <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
             {t.keyPointsMissed}
           </p>
           <ul className="mt-2 flex flex-col gap-1">
             {score.missedKeyPoints.map((kp) => (
-              <li key={kp} className="text-sm text-slate-600">
+              <li key={kp} className="text-sm text-ink-muted">
                 • {kp}
               </li>
             ))}
@@ -541,11 +541,11 @@ function ResultsPanel({
         </div>
       )}
 
-      <div className="rounded-lg border border-slate-200 p-4">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+      <div className="rounded-lg border border-hairline p-4">
+        <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
           {t.whatWeHeard}
         </p>
-        <p className="mt-2 text-sm italic text-slate-600">
+        <p className="mt-2 text-sm italic text-ink-muted">
           {score.transcript ? `“${score.transcript}”` : t.noSpeechDetected}
         </p>
         {audioUrl && <audio src={audioUrl} controls className="mt-3 w-full max-w-sm" />}
@@ -554,12 +554,12 @@ function ResultsPanel({
       <div>
         <button
           onClick={() => setShowOriginal((v) => !v)}
-          className="text-xs font-semibold text-indigo-600 underline underline-offset-2"
+          className="text-xs font-semibold text-brass-text underline underline-offset-2"
         >
           {showOriginal ? t.hideOriginal : t.showOriginal}
         </button>
         {showOriginal && (
-          <p className="mt-2 rounded-lg bg-slate-50 p-3 text-sm leading-relaxed text-slate-600">
+          <p className="mt-2 rounded-lg bg-surface-2 p-3 text-sm leading-relaxed text-ink-muted">
             {passage.text}
           </p>
         )}
@@ -568,13 +568,13 @@ function ResultsPanel({
       <div className="flex flex-wrap justify-center gap-3">
         <button
           onClick={onRetry}
-          className="rounded-lg bg-slate-200 px-6 py-3 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-300"
+          className="rounded-lg bg-surface-2 px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-hairline"
         >
           {t.tryAgain}
         </button>
         <button
           onClick={onNewPassage}
-          className="rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500"
+          className="rounded-lg bg-navy px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800"
         >
           {t.newPassage}
         </button>
@@ -585,9 +585,9 @@ function ResultsPanel({
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-3 text-center">
-      <p className="text-lg font-bold text-slate-900">{value}</p>
-      <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">{label}</p>
+    <div className="rounded-lg border border-hairline bg-surface p-3 text-center">
+      <p className="text-lg font-bold text-ink">{value}</p>
+      <p className="text-[10px] font-semibold uppercase tracking-wide text-ink-muted">{label}</p>
     </div>
   );
 }

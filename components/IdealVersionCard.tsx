@@ -55,11 +55,11 @@ export function IdealVersionCard({ transcript }: IdealVersionCardProps) {
   }
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <div className="rounded-2xl border border-hairline bg-surface p-6 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h3 className="text-sm font-semibold text-slate-900">Hear an Ideal Version</h3>
-          <p className="mt-0.5 text-xs text-slate-500">
+          <h3 className="text-sm font-semibold text-ink">Hear an Ideal Version</h3>
+          <p className="mt-0.5 text-xs text-ink-muted">
             A polished rewrite of what you said — listen to it and try to match its pacing and
             phrasing next time.
           </p>
@@ -68,7 +68,7 @@ export function IdealVersionCard({ transcript }: IdealVersionCardProps) {
           <button
             onClick={handleGenerate}
             disabled={isGenerating}
-            className="whitespace-nowrap rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-indigo-500 disabled:opacity-50"
+            className="whitespace-nowrap rounded-lg bg-navy px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-navy-800 disabled:opacity-50"
           >
             {isGenerating ? "Writing…" : "Generate ideal version"}
           </button>
@@ -78,18 +78,18 @@ export function IdealVersionCard({ transcript }: IdealVersionCardProps) {
       {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
 
       {idealVersion && (
-        <div className="mt-4 flex flex-col gap-3 rounded-lg border border-slate-200 bg-slate-50 p-4">
+        <div className="mt-4 flex flex-col gap-3 rounded-lg border border-hairline bg-surface-2 p-4">
           {mocked && (
             <p className="rounded-md bg-amber-100 px-2 py-1 text-xs font-medium text-amber-800">
               Mock mode — set GEMINI_API_KEY for a real AI-polished version.
             </p>
           )}
-          <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700">
+          <p className="whitespace-pre-wrap text-sm leading-relaxed text-ink">
             {idealVersion}
           </p>
           <button
             onClick={isSpeaking ? handleStop : handleListen}
-            className="self-start rounded-lg bg-slate-800 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-slate-700"
+            className="self-start rounded-lg bg-navy px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-navy-800"
           >
             {isSpeaking ? "⏹ Stop" : "🔊 Listen"}
           </button>

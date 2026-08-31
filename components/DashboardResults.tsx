@@ -56,7 +56,7 @@ export function DashboardResults({ data }: DashboardResultsProps) {
         />
       </div>
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="rounded-2xl border border-hairline bg-surface p-6 shadow-sm">
         <FollowUpChat
           context={[
             `Here is a transcript of my practice speech:\n"""${data.transcript}"""`,
@@ -81,13 +81,13 @@ export function DashboardResults({ data }: DashboardResultsProps) {
 
 function SummaryCard({ score }: { score: number }) {
   return (
-    <div className="flex flex-col items-center gap-6 rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-8 shadow-sm sm:flex-row sm:justify-between">
+    <div className="flex flex-col items-center gap-6 rounded-2xl border border-hairline bg-gradient-to-br from-surface to-surface-2 p-8 shadow-sm sm:flex-row sm:justify-between">
       <div className="flex flex-col items-center text-center sm:items-start sm:text-left">
-        <p className="text-xs font-semibold uppercase tracking-widest text-indigo-500">
+        <p className="text-xs font-semibold uppercase tracking-widest text-brass-text">
           Session Score
         </p>
-        <h2 className="mt-1 text-lg font-bold text-slate-900">{scoreLabel(score)}</h2>
-        <p className="mt-1 max-w-xs text-sm text-slate-500">
+        <h2 className="mt-1 text-lg font-bold text-ink">{scoreLabel(score)}</h2>
+        <p className="mt-1 max-w-xs text-sm text-ink-muted">
           Based on your pace and how often filler words showed up in this recording.
         </p>
       </div>
@@ -112,7 +112,7 @@ function ScoreRing({ score }: { score: number }) {
           r={radius}
           fill="none"
           strokeWidth="10"
-          className="stroke-slate-100"
+          className="stroke-surface-2"
         />
         <circle
           cx="60"
@@ -127,8 +127,8 @@ function ScoreRing({ score }: { score: number }) {
         />
       </svg>
       <div className="absolute flex flex-col items-center">
-        <span className="text-3xl font-extrabold tabular-nums text-slate-900">{score}</span>
-        <span className="text-xs font-medium text-slate-400">/ 100</span>
+        <span className="text-3xl font-extrabold tabular-nums text-ink">{score}</span>
+        <span className="text-xs font-medium text-ink-muted">/ 100</span>
       </div>
     </div>
   );
@@ -146,15 +146,15 @@ function scoreLabel(score: number): string {
 
 function MetricBadge({ icon, label, value }: { icon: ReactNode; label: string; value: string }) {
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3.5 shadow-sm">
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+    <div className="flex items-center gap-3 rounded-xl border border-hairline bg-surface px-4 py-3.5 shadow-sm">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-surface-2 text-brass-text">
         {icon}
       </div>
       <div className="min-w-0">
-        <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+        <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">
           {label}
         </p>
-        <p className="truncate text-lg font-bold text-slate-900">{value}</p>
+        <p className="truncate text-lg font-bold text-ink">{value}</p>
       </div>
     </div>
   );
@@ -185,13 +185,13 @@ function FillerIcon() {
 
 function TranscriptCard({ transcript, fillerWords }: { transcript: string; fillerWords: string[] }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h3 className="mb-3 text-sm font-semibold text-slate-700">Transcript</h3>
-      <p className="text-[15px] leading-relaxed text-slate-600">
+    <div className="rounded-2xl border border-hairline bg-surface p-6 shadow-sm">
+      <h3 className="mb-3 text-sm font-semibold text-ink">Transcript</h3>
+      <p className="text-[15px] leading-relaxed text-ink-muted">
         {highlightFillerWords(transcript, fillerWords)}
       </p>
       {fillerWords.length > 0 && (
-        <p className="mt-4 flex items-center gap-1.5 text-xs text-slate-400">
+        <p className="mt-4 flex items-center gap-1.5 text-xs text-ink-muted">
           <span className="inline-block h-2.5 w-2.5 rounded-sm bg-amber-200" />
           Filler words highlighted above
         </p>
@@ -238,11 +238,11 @@ function FeedbackList({
       : { title: "text-amber-700", bullet: "bg-amber-500" };
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <div className="rounded-2xl border border-hairline bg-surface p-6 shadow-sm">
       <h3 className={`mb-3 text-sm font-semibold ${toneClasses.title}`}>{title}</h3>
       <ul className="space-y-2.5">
         {items.map((item) => (
-          <li key={item} className="flex items-start gap-2.5 text-sm text-slate-600">
+          <li key={item} className="flex items-start gap-2.5 text-sm text-ink-muted">
             <span className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full ${toneClasses.bullet}`} />
             {item}
           </li>

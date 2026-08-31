@@ -4,7 +4,7 @@ const ROWS = 3;
 const COLS = 8;
 
 const AVATAR_COLORS = [
-  "bg-indigo-400",
+  "bg-navy-800",
   "bg-sky-400",
   "bg-violet-400",
   "bg-rose-400",
@@ -26,14 +26,14 @@ export function AudienceGrid({ engaged }: AudienceGridProps) {
   const seats = Array.from({ length: ROWS * COLS }, (_, i) => i);
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-slate-900 p-6 shadow-sm">
+    <div className="rounded-2xl border border-hairline bg-navy p-6 shadow-sm">
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-400">
+        <h3 className="text-xs font-semibold uppercase tracking-widest text-cream-muted">
           Audience
         </h3>
         <span
           className={`flex items-center gap-1.5 text-xs font-medium transition-colors ${
-            engaged ? "text-emerald-400" : "text-slate-500"
+            engaged ? "text-emerald-400" : "text-cream-muted"
           }`}
         >
           <span

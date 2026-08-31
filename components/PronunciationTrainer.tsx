@@ -99,9 +99,9 @@ export function PronunciationTrainer() {
   }
 
   return (
-    <div className="flex flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+    <div className="flex flex-col gap-6 rounded-2xl border border-hairline bg-surface p-8 shadow-sm">
       <div>
-        <label htmlFor="pronunciation-word" className="text-sm font-semibold text-slate-900">
+        <label htmlFor="pronunciation-word" className="text-sm font-semibold text-ink">
           Word or phrase to practice
         </label>
         <div className="mt-2 flex gap-2">
@@ -113,20 +113,20 @@ export function PronunciationTrainer() {
               handleTryAgain();
             }}
             placeholder="e.g. 'entrepreneur' or 'particularly'"
-            className="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:border-indigo-400 focus:outline-none"
+            className="flex-1 rounded-lg border border-hairline px-3 py-2 text-sm text-ink placeholder:text-ink-muted focus:border-brass focus:outline-none"
           />
           <button
             onClick={handleListen}
             disabled={!word.trim()}
-            className="whitespace-nowrap rounded-lg bg-slate-800 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-slate-700 disabled:opacity-40"
+            className="whitespace-nowrap rounded-lg bg-navy px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-navy-800 disabled:opacity-40"
           >
             🔊 Listen
           </button>
         </div>
       </div>
 
-      <div className="flex flex-col items-center gap-4 border-t border-slate-100 pt-6">
-        <div className="font-mono text-2xl font-bold tabular-nums text-slate-800">
+      <div className="flex flex-col items-center gap-4 border-t border-hairline pt-6">
+        <div className="font-mono text-2xl font-bold tabular-nums text-ink">
           {formatDuration(elapsedSeconds)}
         </div>
 
@@ -137,19 +137,19 @@ export function PronunciationTrainer() {
             className="flex h-16 w-16 items-center justify-center rounded-full bg-red-600 text-white shadow-lg transition-transform hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
             aria-label="Start Recording"
           >
-            <span className="h-5 w-5 rounded-full bg-white" />
+            <span className="h-5 w-5 rounded-full bg-surface" />
           </button>
         ) : (
           <button
             onClick={stop}
-            className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-800 text-white shadow-lg transition-transform hover:scale-105"
+            className="flex h-16 w-16 items-center justify-center rounded-full bg-navy text-white shadow-lg transition-transform hover:scale-105"
             aria-label="Stop Recording"
           >
-            <span className="h-5 w-5 rounded-md bg-white" />
+            <span className="h-5 w-5 rounded-md bg-surface" />
           </button>
         )}
 
-        <p className="text-sm font-semibold text-slate-500">
+        <p className="text-sm font-semibold text-ink-muted">
           {!word.trim()
             ? "Type a word above to get started"
             : isRecording
@@ -171,14 +171,14 @@ export function PronunciationTrainer() {
               <button
                 onClick={handleGetFeedback}
                 disabled={isFetchingFeedback}
-                className="rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500 disabled:opacity-50"
+                className="rounded-lg bg-navy px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800 disabled:opacity-50"
               >
                 {isFetchingFeedback ? "Listening…" : "Get AI Feedback"}
               </button>
               <button
                 onClick={handleTryAgain}
                 disabled={isFetchingFeedback}
-                className="rounded-lg bg-slate-200 px-6 py-3 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-300 disabled:opacity-50"
+                className="rounded-lg bg-surface-2 px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-hairline disabled:opacity-50"
               >
                 Try Again
               </button>
@@ -189,13 +189,13 @@ export function PronunciationTrainer() {
       </div>
 
       {feedback && (
-        <div className="flex flex-col gap-2 rounded-lg border border-slate-200 bg-slate-50 p-4">
+        <div className="flex flex-col gap-2 rounded-lg border border-hairline bg-surface-2 p-4">
           {feedback.mocked && (
             <p className="rounded-md bg-amber-100 px-2 py-1 text-xs font-medium text-amber-800">
               Mock mode — set GEMINI_API_KEY for real pronunciation feedback.
             </p>
           )}
-          <p className="text-sm leading-relaxed text-slate-700">{feedback.text}</p>
+          <p className="text-sm leading-relaxed text-ink">{feedback.text}</p>
 
           <FollowUpChat
             context={`I practiced saying the word/phrase "${word.trim()}" out loud and asked for pronunciation feedback.`}

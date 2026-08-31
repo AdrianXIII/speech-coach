@@ -179,8 +179,8 @@ export function ContrastiveStressTrainer() {
 
   if (!exercise) {
     return (
-      <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-        <p className="text-sm text-slate-400">{t.loading}</p>
+      <div className="rounded-2xl border border-hairline bg-surface p-8 shadow-sm">
+        <p className="text-sm text-ink-muted">{t.loading}</p>
       </div>
     );
   }
@@ -192,14 +192,14 @@ export function ContrastiveStressTrainer() {
   const isMeasuring = showReview && !measurement && !measureError;
 
   return (
-    <div className="flex flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+    <div className="flex flex-col gap-6 rounded-2xl border border-hairline bg-surface p-8 shadow-sm">
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">{t.sentence}</p>
-        <p className="mt-2 text-xl leading-relaxed text-slate-900">
+        <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{t.sentence}</p>
+        <p className="mt-2 text-xl leading-relaxed text-ink">
           {sentence.words.map((word, i) => (
             <span
               key={i}
-              className={i === variant.targetWordIndex ? "font-extrabold text-indigo-600" : ""}
+              className={i === variant.targetWordIndex ? "font-extrabold text-brass-text" : ""}
             >
               {word}
               {i < sentence.words.length - 1 ? " " : "."}
@@ -208,11 +208,11 @@ export function ContrastiveStressTrainer() {
         </p>
       </div>
 
-      <div className="rounded-lg bg-indigo-50 p-4">
-        <p className="text-sm text-slate-700">
-          {t.stressPromptBefore} <span className="font-bold text-indigo-700">{targetWord}</span>{t.stressPromptAfter}
+      <div className="rounded-lg bg-surface-2 p-4">
+        <p className="text-sm text-ink">
+          {t.stressPromptBefore} <span className="font-bold text-brass-text">{targetWord}</span>{t.stressPromptAfter}
         </p>
-        <p className="mt-1 text-xs text-slate-500">{variant.meaning}</p>
+        <p className="mt-1 text-xs text-ink-muted">{variant.meaning}</p>
       </div>
 
       {recordError && <p className="text-sm text-red-600">{recordError}</p>}
@@ -223,7 +223,7 @@ export function ContrastiveStressTrainer() {
           className="flex h-20 w-20 items-center justify-center self-center rounded-full bg-red-600 text-white shadow-lg transition-transform hover:scale-105"
           aria-label="Start Recording"
         >
-          <span className="h-6 w-6 rounded-full bg-white" />
+          <span className="h-6 w-6 rounded-full bg-surface" />
         </button>
       )}
 
@@ -235,10 +235,10 @@ export function ContrastiveStressTrainer() {
           </span>
           <button
             onClick={stop}
-            className="flex h-20 w-20 items-center justify-center rounded-full bg-slate-800 text-white shadow-lg transition-transform hover:scale-105"
+            className="flex h-20 w-20 items-center justify-center rounded-full bg-navy text-white shadow-lg transition-transform hover:scale-105"
             aria-label="Stop Recording"
           >
-            <span className="h-6 w-6 rounded-md bg-white" />
+            <span className="h-6 w-6 rounded-md bg-surface" />
           </button>
         </div>
       )}
@@ -247,7 +247,7 @@ export function ContrastiveStressTrainer() {
         <div className="flex flex-col items-center gap-4">
           <audio src={audioUrl ?? undefined} controls className="w-full max-w-sm" />
 
-          {isMeasuring && <p className="text-sm text-slate-400">{t.measuringStress}</p>}
+          {isMeasuring && <p className="text-sm text-ink-muted">{t.measuringStress}</p>}
           {measureError && <p className="text-sm text-red-600">{measureError}</p>}
           {measurement && (
             <StressResult t={t} sentence={sentence} variant={variant} measurement={measurement} />
@@ -256,13 +256,13 @@ export function ContrastiveStressTrainer() {
           <div className="flex flex-wrap justify-center gap-3">
             <button
               onClick={handleRetry}
-              className="rounded-lg bg-slate-200 px-6 py-3 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-300"
+              className="rounded-lg bg-surface-2 px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-hairline"
             >
               {t.tryAgain}
             </button>
             <button
               onClick={handleNewExercise}
-              className="rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500"
+              className="rounded-lg bg-navy px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800"
             >
               {t.newSentence}
             </button>
@@ -289,7 +289,7 @@ function StressResult({
   const targetWord = sentence.words[variant.targetWordIndex];
 
   return (
-    <div className="flex w-full flex-col gap-3 rounded-lg border border-slate-200 p-4">
+    <div className="flex w-full flex-col gap-3 rounded-lg border border-hairline p-4">
       <div className="flex items-end justify-center gap-2 overflow-x-auto">
         {sentence.words.map((word, i) => {
           const m = measurement.syllables[i];
@@ -299,17 +299,17 @@ function StressResult({
 
           return (
             <div key={i} className="flex w-14 shrink-0 flex-col items-center gap-1">
-              {isTarget && <span className="text-[9px] font-semibold text-indigo-500">{t.target}</span>}
-              <div className="flex h-16 w-full items-end justify-center rounded-md bg-slate-100">
+              {isTarget && <span className="text-[9px] font-semibold text-brass-text">{t.target}</span>}
+              <div className="flex h-16 w-full items-end justify-center rounded-md bg-surface-2">
                 <div
                   className={`w-6 rounded-t-md transition-all ${
-                    isMeasured ? (isCorrect ? "bg-emerald-500" : "bg-amber-500") : "bg-slate-300"
+                    isMeasured ? (isCorrect ? "bg-emerald-500" : "bg-amber-500") : "bg-hairline"
                   }`}
                   style={{ height: `${heightPct}%` }}
                 />
               </div>
               <span
-                className={`truncate text-xs font-semibold ${isTarget ? "text-indigo-600" : "text-slate-600"}`}
+                className={`truncate text-xs font-semibold ${isTarget ? "text-brass-text" : "text-ink-muted"}`}
                 title={word}
               >
                 {word}
@@ -322,7 +322,7 @@ function StressResult({
       <p className={`text-center text-sm font-medium ${isCorrect ? "text-emerald-700" : "text-amber-700"}`}>
         {isCorrect ? t.correctVerdict(targetWord) : t.wrongVerdict(measuredWord, targetWord)}
       </p>
-      <p className="text-center text-[11px] text-slate-400">
+      <p className="text-center text-[11px] text-ink-muted">
         {t.approximateNote}
       </p>
     </div>

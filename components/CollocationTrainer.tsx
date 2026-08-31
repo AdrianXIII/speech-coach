@@ -340,16 +340,16 @@ export function CollocationTrainer() {
 
   if (!session || !challenge) {
     return (
-      <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-        <p className="text-sm text-slate-400">{t.loading}</p>
+      <div className="rounded-2xl border border-hairline bg-surface p-8 shadow-sm">
+        <p className="text-sm text-ink-muted">{t.loading}</p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+    <div className="flex flex-col gap-6 rounded-2xl border border-hairline bg-surface p-8 shadow-sm">
       <div className="flex flex-wrap items-center gap-2">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">{t.profile}</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{t.profile}</p>
         <div className="flex flex-wrap gap-1.5">
           {COLLOCATION_PROFILES.map((p) => (
             <button
@@ -358,8 +358,8 @@ export function CollocationTrainer() {
               title={p.description[language]}
               className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
                 profile === p.id
-                  ? "bg-indigo-600 text-white"
-                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  ? "bg-navy text-white"
+                  : "bg-surface-2 text-ink-muted hover:bg-hairline"
               }`}
             >
               {p.name[language]}
@@ -384,7 +384,7 @@ export function CollocationTrainer() {
       )}
 
       {phase !== "summary" && (
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+        <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
           {t.round(index + 1, session.length, challenge.category)}
         </p>
       )}
@@ -411,15 +411,15 @@ export function CollocationTrainer() {
             <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-red-500" />
             {t.recording}
           </span>
-          <p className="min-h-[2.5rem] max-w-md text-center text-sm text-slate-500">
+          <p className="min-h-[2.5rem] max-w-md text-center text-sm text-ink-muted">
             {recognition.transcript || "…"}
           </p>
           <button
             onClick={handleStopSpeaking}
-            className="flex h-20 w-20 items-center justify-center rounded-full bg-slate-800 text-white shadow-lg transition-transform hover:scale-105"
+            className="flex h-20 w-20 items-center justify-center rounded-full bg-navy text-white shadow-lg transition-transform hover:scale-105"
             aria-label="Stop Recording"
           >
-            <span className="h-6 w-6 rounded-md bg-white" />
+            <span className="h-6 w-6 rounded-md bg-surface" />
           </button>
         </div>
       )}
@@ -463,11 +463,11 @@ function QuizStep({
 }) {
   return (
     <div className="flex flex-col gap-4">
-      <div className="rounded-lg bg-slate-50 p-4">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+      <div className="rounded-lg bg-surface-2 p-4">
+        <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
           {t.upgradeThis}
         </p>
-        <p className="mt-1 text-base font-medium text-slate-800">&ldquo;{challenge.weakPhrase}&rdquo;</p>
+        <p className="mt-1 text-base font-medium text-ink">&ldquo;{challenge.weakPhrase}&rdquo;</p>
       </div>
 
       <div className="flex flex-col gap-2">
@@ -475,12 +475,12 @@ function QuizStep({
           const isSelected = selected === option;
           const showFeedback = selected !== null;
           const colorClasses = !showFeedback
-            ? "border-slate-200 bg-white hover:bg-slate-50"
+            ? "border-hairline bg-surface hover:bg-surface-2"
             : option.correct
               ? "border-emerald-400 bg-emerald-50"
               : isSelected
                 ? "border-red-400 bg-red-50"
-                : "border-slate-200 bg-white opacity-50";
+                : "border-hairline bg-surface opacity-50";
 
           return (
             <div key={i}>
@@ -507,7 +507,7 @@ function QuizStep({
       {selected && (
         <button
           onClick={onContinue}
-          className="self-center rounded-lg bg-indigo-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500"
+          className="self-center rounded-lg bg-navy px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800"
         >
           {canSpeak ? t.nowSayIt : t.nextRound}
         </button>
@@ -530,8 +530,8 @@ function SpeakPromptStep({
   const correctPhrase = challenge.options.find((o) => o.correct)?.phrase ?? "";
   return (
     <div className="flex flex-col items-center gap-4 py-4 text-center">
-      <p className="text-sm text-slate-500">{challenge.scenario}</p>
-      <p className="rounded-lg bg-indigo-50 px-4 py-3 text-base font-semibold text-indigo-700">
+      <p className="text-sm text-ink-muted">{challenge.scenario}</p>
+      <p className="rounded-lg bg-surface-2 px-4 py-3 text-base font-semibold text-brass-text">
         {t.useInSentence(correctPhrase)}
       </p>
       <button
@@ -539,7 +539,7 @@ function SpeakPromptStep({
         className="flex h-20 w-20 items-center justify-center rounded-full bg-red-600 text-white shadow-lg transition-transform hover:scale-105"
         aria-label="Start Recording"
       >
-        <span className="h-6 w-6 rounded-full bg-white" />
+        <span className="h-6 w-6 rounded-full bg-surface" />
       </button>
     </div>
   );
@@ -576,16 +576,16 @@ function SpeakFeedbackStep({
       ) : (
         <p className="text-lg font-semibold text-red-600">{t.missedVerdict}</p>
       )}
-      <p className="max-w-md text-sm italic text-slate-500">
+      <p className="max-w-md text-sm italic text-ink-muted">
         {transcript ? `"${transcript}"` : t.noSpeechDetected}
       </p>
       {audioUrl && <audio src={audioUrl} controls className="w-full max-w-sm" />}
-      <p className="text-xs text-slate-400">
+      <p className="text-xs text-ink-muted">
         {t.target} {challenge.options.find((o) => o.correct)?.phrase}
       </p>
       <button
         onClick={onContinue}
-        className="rounded-lg bg-indigo-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500"
+        className="rounded-lg bg-navy px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800"
       >
         {t.nextRound}
       </button>
@@ -613,23 +613,23 @@ function SummaryStep({
   return (
     <div className="flex flex-col gap-6">
       <div className="grid grid-cols-2 gap-4">
-        <div className="rounded-xl border border-slate-200 bg-slate-50 p-5 text-center">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+        <div className="rounded-xl border border-hairline bg-surface-2 p-5 text-center">
+          <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
             {t.recognition}
           </p>
-          <p className="mt-1 text-3xl font-extrabold text-slate-900">
+          <p className="mt-1 text-3xl font-extrabold text-ink">
             {quizCorrectCount}/{session.length}
           </p>
-          <p className="text-xs text-slate-500">{t.correctUpgradesPicked}</p>
+          <p className="text-xs text-ink-muted">{t.correctUpgradesPicked}</p>
         </div>
-        <div className="rounded-xl border border-slate-200 bg-slate-50 p-5 text-center">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+        <div className="rounded-xl border border-hairline bg-surface-2 p-5 text-center">
+          <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
             {t.production}
           </p>
-          <p className="mt-1 text-3xl font-extrabold text-slate-900">
+          <p className="mt-1 text-3xl font-extrabold text-ink">
             {spokenAttempted.length > 0 ? `${spokenCorrectCount}/${spokenAttempted.length}` : "—"}
           </p>
-          <p className="text-xs text-slate-500">{t.usedCorrectlyOutLoud}</p>
+          <p className="text-xs text-ink-muted">{t.usedCorrectlyOutLoud}</p>
         </div>
       </div>
 
@@ -637,8 +637,8 @@ function SummaryStep({
         {session.map((c, i) => {
           const r = results[i];
           return (
-            <div key={c.id} className="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-sm">
-              <span className="text-slate-600">{c.category}</span>
+            <div key={c.id} className="flex items-center justify-between rounded-lg border border-hairline px-3 py-2 text-sm">
+              <span className="text-ink-muted">{c.category}</span>
               <span>
                 {r?.quizCorrect ? "✅" : "❌"} {t.pick}
                 {r?.spoken && <span className="ml-2">{r.spoken.usedTogether ? "✅" : "❌"} {t.speak}</span>}
@@ -650,7 +650,7 @@ function SummaryStep({
 
       <button
         onClick={onNewSession}
-        className="self-center rounded-lg bg-indigo-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500"
+        className="self-center rounded-lg bg-navy px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800"
       >
         {t.newSession}
       </button>

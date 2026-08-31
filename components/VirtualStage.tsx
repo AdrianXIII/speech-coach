@@ -96,8 +96,9 @@ export function VirtualStage() {
   return (
     <div className="flex flex-col gap-6">
       <header>
-        <h1 className="text-2xl font-bold text-slate-900">Virtual Stage</h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <h1 className="font-display text-2xl font-semibold text-ink">Virtual Stage</h1>
+        <div className="mt-3 h-px w-10 bg-brass" />
+        <p className="mt-3 text-sm text-ink-muted">
           Practice in front of a live audience, with your notes scrolling as you speak.
         </p>
       </header>
@@ -105,7 +106,7 @@ export function VirtualStage() {
       <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
         {/* Stage: webcam preview / recorded playback + teleprompter overlay */}
         <div className="flex flex-col gap-4">
-          <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-950 shadow-sm">
+          <div className="relative overflow-hidden rounded-2xl border border-hairline bg-navy-800 shadow-sm">
             {showLiveStage ? (
               <video
                 ref={livePreviewRef}
@@ -117,7 +118,7 @@ export function VirtualStage() {
             ) : showReview ? (
               <video src={playbackUrl ?? undefined} controls className="aspect-video w-full" />
             ) : (
-              <div className="flex aspect-video w-full items-center justify-center text-sm text-slate-500">
+              <div className="flex aspect-video w-full items-center justify-center text-sm text-cream-muted">
                 Your camera preview will appear here once you start
               </div>
             )}
@@ -143,7 +144,7 @@ export function VirtualStage() {
             {!isRecording && !recordedBlob && (
               <button
                 onClick={handleStart}
-                className="rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500"
+                className="rounded-lg bg-navy px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800"
               >
                 Start Practice
               </button>
@@ -151,7 +152,7 @@ export function VirtualStage() {
             {isRecording && (
               <button
                 onClick={stop}
-                className="rounded-lg bg-slate-800 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-slate-700"
+                className="rounded-lg bg-navy px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800"
               >
                 Stop
               </button>
@@ -161,14 +162,14 @@ export function VirtualStage() {
                 <button
                   onClick={handleAnalyze}
                   disabled={isAnalyzing || !audioBlob}
-                  className="rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500 disabled:opacity-50"
+                  className="rounded-lg bg-navy px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800 disabled:opacity-50"
                 >
                   {isAnalyzing ? "Analyzing…" : "Analyze Speech"}
                 </button>
                 <button
                   onClick={handlePracticeAgain}
                   disabled={isAnalyzing}
-                  className="rounded-lg bg-slate-200 px-6 py-3 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-300 disabled:opacity-50"
+                  className="rounded-lg bg-surface-2 px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-hairline disabled:opacity-50"
                 >
                   Practice Again
                 </button>

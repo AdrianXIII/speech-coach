@@ -171,8 +171,8 @@ export function ImprovTrainer() {
 
   if (!word || !model) {
     return (
-      <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-        <p className="text-sm text-slate-400">{t.loading}</p>
+      <div className="rounded-2xl border border-hairline bg-surface p-8 shadow-sm">
+        <p className="text-sm text-ink-muted">{t.loading}</p>
       </div>
     );
   }
@@ -180,16 +180,16 @@ export function ImprovTrainer() {
   const currentPhase = activePhaseIndex(model, elapsedSeconds);
 
   return (
-    <div className="flex flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+    <div className="flex flex-col gap-6 rounded-2xl border border-hairline bg-surface p-8 shadow-sm">
       {/* Word */}
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">{t.word}</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{t.word}</p>
         <div className="mt-2 flex items-center gap-3">
-          <p className="text-2xl font-bold text-slate-900">{word}</p>
+          <p className="text-2xl font-bold text-ink">{word}</p>
           {showSetup && (
             <button
               onClick={handleNewWord}
-              className="rounded-lg bg-slate-100 px-3 py-1.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-200"
+              className="rounded-lg bg-surface-2 px-3 py-1.5 text-sm font-semibold text-ink transition-colors hover:bg-hairline"
             >
               {t.newWord}
             </button>
@@ -201,12 +201,12 @@ export function ImprovTrainer() {
       {showSetup && (
         <div>
           <div className="flex items-center justify-between">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+            <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
               {t.structure}
             </p>
             <button
               onClick={handleNewModel}
-              className="rounded-lg bg-slate-100 px-3 py-1.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-200"
+              className="rounded-lg bg-surface-2 px-3 py-1.5 text-sm font-semibold text-ink transition-colors hover:bg-hairline"
             >
               {t.newModel}
             </button>
@@ -219,12 +219,12 @@ export function ImprovTrainer() {
                 onClick={() => setModel(m)}
                 className={`rounded-lg border p-3 text-left transition-colors ${
                   model.id === m.id
-                    ? "border-indigo-400 bg-indigo-50"
-                    : "border-slate-200 bg-white hover:bg-slate-50"
+                    ? "border-brass bg-surface-2"
+                    : "border-hairline bg-surface hover:bg-surface-2"
                 }`}
               >
-                <p className="text-sm font-bold text-slate-900">{m.name}</p>
-                <p className="mt-0.5 text-xs text-slate-500">{m.fullName}</p>
+                <p className="text-sm font-bold text-ink">{m.name}</p>
+                <p className="mt-0.5 text-xs text-ink-muted">{m.fullName}</p>
               </button>
             ))}
           </div>
@@ -235,7 +235,7 @@ export function ImprovTrainer() {
 
       {/* Live phase timer + recording */}
       {(showLive || showReview) && (
-        <div className="flex flex-col items-center gap-4 border-t border-slate-100 pt-6">
+        <div className="flex flex-col items-center gap-4 border-t border-hairline pt-6">
           <PhaseBar
             model={model}
             activeIndex={showLive ? currentPhase : -1}
@@ -244,10 +244,10 @@ export function ImprovTrainer() {
 
           {showLive && (
             <>
-              <p className="text-lg font-bold text-indigo-600">
+              <p className="text-lg font-bold text-brass-text">
                 {model.phases[currentPhase].label}
               </p>
-              <div className="flex items-center gap-2 font-mono text-4xl font-bold tabular-nums text-slate-800">
+              <div className="flex items-center gap-2 font-mono text-4xl font-bold tabular-nums text-ink">
                 <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-red-500" />
                 {formatDuration(EXERCISE_SECONDS - elapsedSeconds)}
               </div>
@@ -259,7 +259,7 @@ export function ImprovTrainer() {
           {showLive && (
             <button
               onClick={stop}
-              className="rounded-lg bg-slate-800 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-slate-700"
+              className="rounded-lg bg-navy px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800"
             >
               {t.finishNow}
             </button>
@@ -277,7 +277,7 @@ export function ImprovTrainer() {
                 </button>
                 <button
                   onClick={handleNewPrompt}
-                  className="rounded-lg bg-slate-200 px-6 py-3 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-300"
+                  className="rounded-lg bg-surface-2 px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-hairline"
                 >
                   {t.newWordAndModel}
                 </button>
@@ -290,7 +290,7 @@ export function ImprovTrainer() {
       {showSetup && (
         <button
           onClick={handleStart}
-          className="self-center rounded-lg bg-indigo-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500"
+          className="self-center rounded-lg bg-navy px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800"
         >
           {t.startButton}
         </button>
@@ -338,17 +338,17 @@ function PhaseBar({
             className="flex flex-col gap-1"
             style={{ flexGrow: phase.seconds, flexBasis: 0 }}
           >
-            <div className="h-2.5 overflow-hidden rounded-full bg-slate-100">
+            <div className="h-2.5 overflow-hidden rounded-full bg-surface-2">
               <div
                 className={`h-full rounded-full transition-all ${
-                  isActive ? "bg-indigo-500" : isPast ? "bg-indigo-300" : "bg-slate-200"
+                  isActive ? "bg-navy-800" : isPast ? "bg-brass-soft" : "bg-surface-2"
                 }`}
                 style={{ width: `${progressInPhase * 100}%` }}
               />
             </div>
             <p
               className={`truncate text-center text-[11px] font-semibold ${
-                isActive ? "text-indigo-600" : "text-slate-400"
+                isActive ? "text-brass-text" : "text-ink-muted"
               }`}
               title={phase.label}
             >

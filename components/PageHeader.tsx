@@ -17,8 +17,9 @@ export function PageHeader({ title, subtitle }: PageHeaderProps) {
   const { language } = useLanguage();
   return (
     <header className="text-center">
-      <h1 className="text-2xl font-bold text-slate-900">{title[language]}</h1>
-      <p className="mt-1 text-sm text-slate-500">{subtitle[language]}</p>
+      <h1 className="font-display text-2xl font-semibold text-ink">{title[language]}</h1>
+      <div className="mx-auto mt-3 h-px w-10 bg-brass" />
+      <p className="mt-3 text-sm text-ink-muted">{subtitle[language]}</p>
     </header>
   );
 }

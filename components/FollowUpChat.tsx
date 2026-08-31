@@ -58,8 +58,8 @@ export function FollowUpChat({ context, initialAnswer }: FollowUpChatProps) {
   }
 
   return (
-    <div className="flex flex-col gap-3 border-t border-slate-200 pt-4">
-      <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+    <div className="flex flex-col gap-3 border-t border-hairline pt-4">
+      <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
         Ask a follow-up
       </p>
 
@@ -70,15 +70,15 @@ export function FollowUpChat({ context, initialAnswer }: FollowUpChatProps) {
               key={i}
               className={
                 message.role === "user"
-                  ? "max-w-[85%] self-end rounded-lg bg-indigo-600 px-3 py-2 text-sm text-white"
-                  : "max-w-[85%] self-start rounded-lg bg-slate-100 px-3 py-2 text-sm text-slate-700"
+                  ? "max-w-[85%] self-end rounded-lg bg-navy px-3 py-2 text-sm text-white"
+                  : "max-w-[85%] self-start rounded-lg bg-surface-2 px-3 py-2 text-sm text-ink"
               }
             >
               {message.text}
             </div>
           ))}
           {isSending && (
-            <div className="max-w-[85%] self-start rounded-lg bg-slate-100 px-3 py-2 text-sm text-slate-400">
+            <div className="max-w-[85%] self-start rounded-lg bg-surface-2 px-3 py-2 text-sm text-ink-muted">
               …
             </div>
           )}
@@ -94,12 +94,12 @@ export function FollowUpChat({ context, initialAnswer }: FollowUpChatProps) {
           }}
           placeholder="Ask for a clearer or more specific answer…"
           disabled={isSending}
-          className="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:border-indigo-400 focus:outline-none disabled:opacity-60"
+          className="flex-1 rounded-lg border border-hairline px-3 py-2 text-sm text-ink placeholder:text-ink-muted focus:border-brass focus:outline-none disabled:opacity-60"
         />
         <button
           onClick={handleSend}
           disabled={isSending || !input.trim()}
-          className="whitespace-nowrap rounded-lg bg-slate-800 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-slate-700 disabled:opacity-40"
+          className="whitespace-nowrap rounded-lg bg-navy px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-navy-800 disabled:opacity-40"
         >
           Ask
         </button>
