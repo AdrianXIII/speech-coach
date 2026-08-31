@@ -116,7 +116,7 @@ const PASSAGES_BY_LANGUAGE: Record<LanguageCode, ComprehensionPassage[]> = {
       id: "marktkorrektur",
       topic: "Wirtschaft",
       title: "Marktkorrektur",
-      text: "Im vergangenen Quartal fiel der Aktienkurs des Unternehmens deutlich, nachdem das Management mehrere strategische Fehleinschätzungen getroffen hatte. Analysten wiesen auf eine übermäßige Abhängigkeit von einer einzigen Umsatzquelle hin, die das Unternehmen anfällig machte, als sich die Nachfrage der Verbraucher unerwartet änderte. Zudem erhöhten steigende Zinssätze die Finanzierungskosten und schmälerten die Gewinnmargen weiter. Daraufhin leitete der Vorstand einen umfassenden Restrukturierungsplan ein, diversifizierte das Portfolio des Unternehmens und kürzte nicht wesentliche Ausgaben.",
+      text: "Im vergangenen Quartal fiel der Aktienkurs des Unternehmens deutlich, nachdem das Management mehrere strategische Fehleinschätzungen getroffen hatte. Analysten wiesen auf eine übermäßige Abhängigkeit von einer einzigen Umsatzquelle hin, die das Unternehmen anfällig machte, als sich die Nachfrage der Verbraucher unerwartet änderte. Zudem erhöhten steigende Zinssätze die Finanzierungskosten und schmälerten die Gewinnmargen weiter. Daraufhin leitete der Vorstand einen umfassenden Restrukturierungsplan ein, diversifizierte das Portfolio des Unternehmens und kürzte unwesentliche Ausgaben.",
       advancedTerms: [
         "strategische Fehleinschätzungen", "übermäßige Abhängigkeit", "Umsatzquelle",
         "Gewinnmargen", "Restrukturierungsplan", "diversifizierte",
@@ -132,7 +132,7 @@ const PASSAGES_BY_LANGUAGE: Record<LanguageCode, ComprehensionPassage[]> = {
       title: "Fernarbeitskultur",
       text: "Als das Unternehmen vollständig auf Fernarbeit umstellte, erkannte die Führungsebene schnell, dass traditionelle Managementmethoden nicht mehr wirksam waren. Folglich verlagerten Führungskräfte ihren Fokus von der Kontrolle der Arbeitsstunden auf die Bewertung messbarer Ergebnisse. Dieser kulturelle Wandel erforderte erhebliche Investitionen in Vertrauen und transparente Kommunikation auf allen Ebenen der Hierarchie. Einige Mitarbeiter hatten anfangs Schwierigkeiten mit dem Mangel an Struktur, während andere unter der neu gewonnenen Autonomie aufblühten.",
       advancedTerms: [
-        "umstellte", "messbarer Ergebnisse", "kultureller Wandel",
+        "umstellte", "messbarer Ergebnisse", "kulturelle Wandel",
         "transparente Kommunikation", "Hierarchie", "Autonomie",
       ],
       keyPoints: [
@@ -144,13 +144,13 @@ const PASSAGES_BY_LANGUAGE: Record<LanguageCode, ComprehensionPassage[]> = {
       id: "ki-einfuehrung",
       topic: "Technologie",
       title: "KI-Einführung",
-      text: "Als Werkzeuge der künstlichen Intelligenz zunehmend ausgereifter wurden, begann das Fertigungsunternehmen, automatisierte Systeme in seine Produktionslinie zu integrieren. Zunächst äußerten die Mitarbeiter Bedenken und befürchteten, dass die Technologie ihre Aufgaben überflüssig machen würde. Das Management betonte jedoch, dass das Ziel darin bestehe, menschliche Fähigkeiten zu ergänzen und nicht vollständig zu ersetzen. Die Arbeiter wurden umgeschult, um die automatisierten Prozesse zu überwachen und zu optimieren, wodurch sich ihre Aufgaben in Richtung höherwertiger Tätigkeiten verschoben.",
+      text: "Als Werkzeuge der künstlichen Intelligenz zunehmend ausgereifter wurden, begann das Fertigungsunternehmen, automatisierte Systeme in seine Produktionslinie zu integrieren. Zunächst äußerten die Mitarbeiter Bedenken und befürchteten, überflüssig zu werden. Das Management betonte jedoch, dass das Ziel darin bestehe, menschliche Fähigkeiten zu ergänzen und nicht vollständig zu ersetzen. Die Arbeiter wurden umgeschult, um die automatisierten Prozesse zu überwachen und zu optimieren, wodurch sich ihre Aufgaben in Richtung höherwertiger Tätigkeiten verschoben.",
       advancedTerms: [
         "ausgereifter", "integrieren", "überflüssig", "ergänzen",
         "umgeschult", "höherwertiger Tätigkeiten",
       ],
       keyPoints: [
-        "KI-Integration in der Fertigung", "Mitarbeiter befürchteten Überflüssigkeit",
+        "KI-Integration in der Fertigung", "Mitarbeiter befürchteten, überflüssig zu werden",
         "ergänzen statt ersetzen", "Arbeiter umgeschult",
       ],
     },
@@ -188,14 +188,14 @@ const PASSAGES_BY_LANGUAGE: Record<LanguageCode, ComprehensionPassage[]> = {
       id: "adoption-ia",
       topic: "Technologie",
       title: "Adoption de l'IA",
-      text: "Alors que les outils d'intelligence artificielle devenaient de plus en plus sophistiqués, l'entreprise manufacturière a commencé à intégrer des systèmes automatisés dans sa chaîne de production. Au départ, les employés ont exprimé des inquiétudes, craignant que la technologie ne rende leurs postes obsolètes. Cependant, la direction a souligné que l'objectif était d'augmenter les capacités humaines plutôt que de les remplacer entièrement. Les travailleurs ont été reformés pour superviser et affiner les processus automatisés, orientant leurs responsabilités vers des tâches à plus forte valeur ajoutée.",
+      text: "Alors que les outils d'intelligence artificielle devenaient de plus en plus sophistiqués, l'entreprise manufacturière a commencé à intégrer des systèmes automatisés dans sa chaîne de production. Au départ, les employés ont exprimé des inquiétudes, craignant que la technologie ne rende leurs postes obsolètes. Cependant, la direction a souligné que l'objectif était d'augmenter les capacités humaines plutôt que de les remplacer entièrement. Les travailleurs ont été reconvertis pour superviser et affiner les processus automatisés, orientant leurs responsabilités vers des tâches à plus forte valeur ajoutée.",
       advancedTerms: [
         "sophistiqués", "intégrer", "obsolètes", "augmenter",
-        "reformés", "valeur ajoutée",
+        "reconvertis", "valeur ajoutée",
       ],
       keyPoints: [
         "intégration de l'IA dans la fabrication", "employés craignaient l'obsolescence",
-        "augmenter plutôt que remplacer", "travailleurs reformés",
+        "augmenter plutôt que remplacer", "travailleurs reconvertis",
       ],
     },
   ],
@@ -232,14 +232,14 @@ const PASSAGES_BY_LANGUAGE: Record<LanguageCode, ComprehensionPassage[]> = {
       id: "adopcion-ia",
       topic: "Tecnología",
       title: "Adopción de la IA",
-      text: "A medida que las herramientas de inteligencia artificial se volvían cada vez más sofisticadas, la empresa manufacturera comenzó a integrar sistemas automatizados en su línea de producción. Al principio, los empleados expresaron aprensión, temiendo que la tecnología volviera obsoletos sus puestos. Sin embargo, la dirección enfatizó que el objetivo era aumentar las capacidades humanas en lugar de reemplazarlas por completo. Los trabajadores fueron recapacitados para supervisar y ajustar los procesos automatizados, desplazando sus responsabilidades hacia tareas de mayor valor.",
+      text: "A medida que las herramientas de inteligencia artificial se volvían cada vez más sofisticadas, la empresa manufacturera comenzó a integrar sistemas automatizados en su línea de producción. Al principio, los empleados expresaron aprensión, temiendo que la tecnología volviera obsoletos sus puestos. Sin embargo, la dirección enfatizó que el objetivo era aumentar las capacidades humanas en lugar de reemplazarlas por completo. Los trabajadores fueron reentrenados para supervisar y ajustar los procesos automatizados, desplazando sus responsabilidades hacia tareas de mayor valor.",
       advancedTerms: [
         "sofisticadas", "integrar", "aprensión", "obsoletos",
-        "aumentar", "recapacitados", "mayor valor",
+        "aumentar", "reentrenados", "mayor valor",
       ],
       keyPoints: [
         "integración de IA en manufactura", "empleados temían obsolescencia",
-        "aumentar en lugar de reemplazar", "trabajadores recapacitados",
+        "aumentar en lugar de reemplazar", "trabajadores reentrenados",
       ],
     },
   ],
@@ -248,7 +248,7 @@ const PASSAGES_BY_LANGUAGE: Record<LanguageCode, ComprehensionPassage[]> = {
       id: "marknadskorrigering",
       topic: "Ekonomi",
       title: "Marknadskorrigering",
-      text: "Förra kvartalet föll företagets aktiekurs kraftigt efter en rad strategiska felbedömningar av företagsledningen. Analytiker pekade på ett överdrivet beroende av en enda intäktskälla, vilket gjorde företaget sårbart när konsumenternas efterfrågan förändrades oväntat. Dessutom ökade stigande räntor lånekostnaderna, vilket pressade vinstmarginalerna ytterligare. Som svar inledde styrelsen en omfattande omstruktureringsplan, diversifierade företagets portfölj och skar ner på icke nödvändiga utgifter.",
+      text: "Förra kvartalet föll företagets aktiekurs kraftigt efter en rad strategiska felbedömningar av företagsledningen. Analytiker pekade på ett överdrivet beroende av en enda intäktskälla, vilket gjorde företaget sårbart när konsumenternas efterfrågan förändrades oväntat. Dessutom ökade stigande räntor lånekostnaderna, vilket pressade vinstmarginalerna ytterligare. Som svar inledde styrelsen en omfattande omstruktureringsplan, diversifierade företagets portfölj och skar ner på onödiga utgifter.",
       advancedTerms: [
         "strategiska felbedömningar", "överdrivet beroende", "intäktskälla",
         "vinstmarginalerna", "omstruktureringsplan", "diversifierade",
@@ -262,7 +262,7 @@ const PASSAGES_BY_LANGUAGE: Record<LanguageCode, ComprehensionPassage[]> = {
       id: "distansarbetskultur",
       topic: "Ledarskap",
       title: "Distansarbetskultur",
-      text: "När organisationen övergick till en helt distansbaserad modell insåg ledningen snabbt att traditionella ledningsmetoder inte längre fungerade. Följaktligen flyttade cheferna sitt fokus från att övervaka arbetade timmar till att utvärdera mätbara resultat. Denna kulturella förändring krävde en betydande investering i förtroende och transparent kommunikation på alla nivåer i hierarkin. Vissa medarbetare kämpade inledningsvis med bristen på struktur, medan andra frodades med den nyvunna autonomin.",
+      text: "När organisationen övergick till en helt distansbaserad modell insåg ledningen snabbt att traditionella ledningsmetoder inte längre fungerade. Följaktligen flyttade cheferna sitt fokus från att övervaka arbetade timmar till att utvärdera mätbara resultat. Denna kulturella förändring krävde en betydande investering i förtroende och transparent kommunikation på alla nivåer i hierarkin. Vissa medarbetare kämpade inledningsvis med bristen på struktur, medan andra frodades under den nyvunna autonomin.",
       advancedTerms: [
         "övergick", "mätbara resultat", "kulturella förändring",
         "transparent kommunikation", "hierarkin", "autonomin",
@@ -276,7 +276,7 @@ const PASSAGES_BY_LANGUAGE: Record<LanguageCode, ComprehensionPassage[]> = {
       id: "ai-implementering",
       topic: "Teknik",
       title: "AI-implementering",
-      text: "I takt med att AI-verktyg blev alltmer sofistikerade började tillverkningsföretaget integrera automatiserade system i sin produktionslinje. Till en början uttryckte medarbetarna oro och befarade att tekniken skulle göra deras roller överflödiga. Ledningen betonade dock att målet var att förstärka mänsklig förmåga snarare än att helt ersätta den. Arbetarna omskolades för att övervaka och finjustera de automatiserade processerna, vilket skiftade deras ansvar mot mer värdeskapande uppgifter.",
+      text: "I takt med att AI-verktyg blev alltmer sofistikerade började tillverkningsföretaget integrera automatiserade system i sin produktionslinje. Till en början uttryckte medarbetarna oro och befarade att tekniken skulle göra deras roller överflödiga. Ledningen betonade dock att målet var att förstärka mänsklig förmåga snarare än att helt ersätta den. Arbetarna omskolades för att övervaka och finjustera de automatiserade processerna, vilket förde deras ansvar mot mer värdeskapande uppgifter.",
       advancedTerms: [
         "sofistikerade", "integrera", "överflödiga", "förstärka",
         "omskolades", "värdeskapande uppgifter",

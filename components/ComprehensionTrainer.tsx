@@ -65,7 +65,7 @@ const T: Record<LanguageCode, {
     setupInstruction: "Du hörst eine kurze Passage — der Text bleibt verborgen. Danach fasst du sie laut in eigenen Worten zusammen.",
     listenButton: "🔊 Anhören",
     listening: "Hört zu…",
-    skipAhead: "Weiter überspringen",
+    skipAhead: "Überspringen",
     summarizePrompt: "Fasse jetzt zusammen, was du gerade gehört hast, in eigenen Worten — laut.",
     listenAgain: "🔁 Erneut anhören",
     recording: "Aufnahme läuft…",

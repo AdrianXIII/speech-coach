@@ -35,7 +35,7 @@ export const COLLOCATION_PROFILES: CollocationProfile[] = [
     description: {
       en: "Persuasive, diplomatic language for public office and policy.",
       de: "Überzeugende, diplomatische Sprache für öffentliche Ämter und Politik.",
-      fr: "Langage persuasif et diplomatique pour la fonction publique et les politiques.",
+      fr: "Langage persuasif et diplomatique pour la fonction publique et les politiques publiques.",
       es: "Lenguaje persuasivo y diplomático para cargos públicos y políticas.",
       sv: "Övertygande, diplomatiskt språk för offentliga uppdrag och politik.",
     },
@@ -47,7 +47,7 @@ export const COLLOCATION_PROFILES: CollocationProfile[] = [
       en: "Precise, adversarial language for courtrooms and negotiations.",
       de: "Präzise, kontradiktorische Sprache für Gerichtssäle und Verhandlungen.",
       fr: "Langage précis et contradictoire pour les tribunaux et les négociations.",
-      es: "Lenguaje preciso y contradictorio para tribunales y negociaciones.",
+      es: "Lenguaje preciso y contencioso para tribunales y negociaciones.",
       sv: "Precist, motstridigt språk för rättssalar och förhandlingar.",
     },
   },
@@ -237,7 +237,7 @@ const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, Collocation
       scenario: "Sie beraten den Vorstand zu einem riskanten Markteintritt.",
       options: [
         { phrase: "Wir müssen das Risiko minimieren, bevor wir skalieren.", correct: true, explanation: "\"Minimieren\" wird fast immer mit \"Risiko\" gepaart — eine starke, natürliche Kollokation." },
-        { phrase: "Wir müssen die Ressourcen minimieren, bevor wir skalieren.", correct: false, explanation: "Ressourcen minimiert man nicht — man setzt sie \"optimiert\" oder \"gezielt\" ein." },
+        { phrase: "Wir müssen die Ressourcen minimieren, bevor wir skalieren.", correct: false, explanation: "Ressourcen minimiert man nicht — man optimiert sie oder setzt sie gezielt ein." },
         { phrase: "Wir müssen das Risiko reparieren, bevor wir wachsen.", correct: false, explanation: "\"Reparieren\" ist ein schwaches, unpassendes Verb für strategisches Risikomanagement." },
         { phrase: "Wir müssen das Risiko antreiben, bevor wir wachsen.", correct: false, explanation: "\"Antreiben\" passt zu Dingen, die wachsen sollen — nicht zu Risiko, das man reduzieren will." },
       ],
@@ -248,7 +248,7 @@ const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, Collocation
       weakPhrase: "Wir wollen den Plan besser machen.",
       targetVerbStem: "optimier",
       targetNounStem: "rahmen",
-      scenario: "Sie präsentieren eine überarbeitete Strategie der Führungsebene.",
+      scenario: "Sie präsentieren der Führungsebene eine überarbeitete Strategie.",
       options: [
         { phrase: "Wir wollen den Rahmen optimieren.", correct: true, explanation: "\"Optimieren\" plus \"Rahmen\" ist präzise und formell — eine klare Aufwertung von \"Plan\"." },
         { phrase: "Wir wollen den Rahmen minimieren.", correct: false, explanation: "Ein Rahmen ist nichts Negatives — \"minimieren\" passt hier nicht." },
@@ -260,7 +260,7 @@ const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, Collocation
       id: "geld-vorsichtig",
       category: "Finanzen",
       weakPhrase: "Das Geld muss vorsichtig ausgegeben werden.",
-      targetVerbStem: "eingesetzt",
+      targetVerbStem: "einsetz",
       targetNounStem: "kapital",
       scenario: "Sie erklären eine Kostensenkung dem Finanzteam.",
       options: [
@@ -286,9 +286,9 @@ const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, Collocation
     },
     {
       id: "chef-lob",
-      category: "Führung & Compliance",
+      category: "Führung & Anerkennung",
       weakPhrase: "Der Chef sagte, die Arbeit des Mitarbeiters war gut.",
-      targetVerbStem: "gewürdigt",
+      targetVerbStem: "würdig",
       targetNounStem: "leistung",
       scenario: "Sie geben einem Teammitglied nach einem erfolgreichen Projekt Feedback.",
       options: [
@@ -311,7 +311,7 @@ const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, Collocation
         { phrase: "Nous devons atténuer le risque avant de nous développer.", correct: true, explanation: "\"Atténuer\" est presque toujours associé à \"risque\" — une collocation forte et naturelle." },
         { phrase: "Nous devons atténuer les ressources avant de nous développer.", correct: false, explanation: "\"Atténuer\" ne s'applique pas aux ressources — on les \"optimise\" ou on les \"alloue\"." },
         { phrase: "Nous devons réparer le risque avant de grandir.", correct: false, explanation: "\"Réparer\" est un verbe faible et ne convient pas à la gestion stratégique du risque." },
-        { phrase: "Nous devons conduire le risque avant de grandir.", correct: false, explanation: "\"Conduire\" s'associe à la croissance, pas au risque, que l'on cherche à réduire." },
+        { phrase: "Nous devons stimuler le risque avant de grandir.", correct: false, explanation: "\"Stimuler\" s'associe à la croissance, pas au risque, que l'on cherche à réduire." },
       ],
     },
     {
@@ -452,7 +452,7 @@ const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, Collocation
       targetNounStem: "risk",
       scenario: "Du rådger styrelsen om en riskfylld marknadsetablering.",
       options: [
-        { phrase: "Vi måste begränsa risken innan vi skalar upp.", correct: true, explanation: "\"Begränsa\" pairas nästan alltid med \"risk\" — en stark, naturlig kollokation." },
+        { phrase: "Vi måste begränsa risken innan vi skalar upp.", correct: true, explanation: "\"Begränsa\" paras nästan alltid ihop med \"risk\" — en stark, naturlig kollokation." },
         { phrase: "Vi måste begränsa resurserna innan vi skalar upp.", correct: false, explanation: "\"Begränsa resurserna\" betyder något annat (mindre resurser) — inte vad som avses här." },
         { phrase: "Vi måste fixa risken innan vi växer.", correct: false, explanation: "\"Fixa\" är ett svagt, informellt verb för strategisk riskhantering." },
         { phrase: "Vi måste driva risken innan vi växer.", correct: false, explanation: "\"Driva\" passar sådant man vill öka — inte risk, som man vill minska." },
@@ -708,7 +708,7 @@ const POLITICIAN_CHALLENGES_FR: CollocationChallenge[] = [
   },
   {
     id: "rester-unie",
-    category: "Discours à la Nation",
+    category: "Discours à la nation",
     weakPhrase: "Tout le monde dans le pays doit s'unir maintenant.",
     targetVerbStem: "rest",
     targetNounStem: "uni",
@@ -979,7 +979,7 @@ const LAWYER_CHALLENGES_DE: CollocationChallenge[] = [
     scenario: "Sie verteidigen einen Mandanten in einem zivilrechtlichen Streit.",
     options: [
       { phrase: "Mein Mandant haftet nicht für eine Vertragsverletzung.", correct: true, explanation: "\"Vertragsverletzung\" plus \"haften\" ist präzise juristische Terminologie, nicht nur \"den Vertrag gebrochen\"." },
-      { phrase: "Mein Mandant haftet nicht für eine Vertragsminderung.", correct: false, explanation: "\"Vertragsminderung\" ist ein anderer Rechtsbegriff — hier passt \"Vertragsverletzung\"." },
+      { phrase: "Mein Mandant haftet nicht für eine Minderung.", correct: false, explanation: "\"Minderung\" ist ein anderer Rechtsbegriff — hier passt \"Vertragsverletzung\"." },
       { phrase: "Mein Mandant hat den Vertrag nicht gebrochen.", correct: false, explanation: "Die einfache Version — keine juristische Präzision." },
       { phrase: "Mein Mandant haftet nicht für eine Vertragszuteilung.", correct: false, explanation: "\"Vertragszuteilung\" ist kein juristischer Begriff — korrekt ist \"Vertragsverletzung\"." },
     ],
@@ -995,7 +995,7 @@ const LAWYER_CHALLENGES_DE: CollocationChallenge[] = [
       { phrase: "Die Beweise begründen die Schuld zweifelsfrei.", correct: true, explanation: "\"Schuld zweifelsfrei begründen\" ist der exakte strafrechtliche Beweisstandard." },
       { phrase: "Die Beweise mindern die Schuld zweifelsfrei.", correct: false, explanation: "\"Mindern\" würde die Schuld verringern, nicht beweisen — kehrt den Sinn um." },
       { phrase: "Wir sind sicher, dass er es getan hat, wegen der Beweise.", correct: false, explanation: "Umgangssprachlich — nicht der gesetzlich geforderte Beweisstandard." },
-      { phrase: "Die Beweise zuteilen die Schuld zweifelsfrei.", correct: false, explanation: "Grammatisch und semantisch unsinnig — Schuld wird begründet, nicht zugeteilt." },
+      { phrase: "Die Beweise teilen die Schuld zweifelsfrei zu.", correct: false, explanation: "\"Zuteilen\" passt semantisch nicht — Schuld wird begründet, nicht zugeteilt." },
     ],
   },
   {
@@ -1079,7 +1079,7 @@ const LAWYER_CHALLENGES_FR: CollocationChallenge[] = [
     targetNounStem: "irrecevable",
     scenario: "Vous vous opposez à une preuve pendant le procès.",
     options: [
-      { phrase: "Je demande à exclure cette preuve comme irrecevable.", correct: true, explanation: "\"Exclure ... comme irrecevable\" est la formulation formelle de cette objection au tribunal." },
+      { phrase: "Je demande l'exclusion de cette preuve comme irrecevable.", correct: true, explanation: "\"Exclusion ... comme irrecevable\" est la formulation formelle de cette objection au tribunal." },
       { phrase: "Je demande à atténuer cette preuve comme irrecevable.", correct: false, explanation: "On exclut une preuve irrecevable — on ne l'\"atténue\" pas." },
       { phrase: "Je ne pense pas que cette preuve devrait être autorisée.", correct: false, explanation: "Familier — pas le langage formel qu'un tribunal attend." },
       { phrase: "Je demande à allouer cette preuve comme irrecevable.", correct: false, explanation: "\"Allouer\" ne convient pas grammaticalement à cette requête." },
@@ -1177,11 +1177,11 @@ const LAWYER_CHALLENGES_ES: CollocationChallenge[] = [
 const LAWYER_CHALLENGES_SV: CollocationChallenge[] = [
   {
     id: "bevisborda-uppfyll",
-    category: "Pläderande",
+    category: "Plädering",
     weakPhrase: "Vi tycker att motparten inte bevisade sin sak tillräckligt.",
     targetVerbStem: "uppfyll",
     targetNounStem: "bevisbörd",
-    scenario: "Du håller ett slutplädering inför juryn.",
+    scenario: "Du håller en slutplädering inför juryn.",
     options: [
       { phrase: "Åklagaren har misslyckats med att uppfylla bevisbördan.", correct: true, explanation: "\"Uppfylla bevisbördan\" är den fasta juridiska termen för det beviskrav som gäller." },
       { phrase: "Åklagaren har misslyckats med att begränsa bevisbördan.", correct: false, explanation: "Bevisbördan uppfylls eller uppfylls inte — den \"begränsas\" inte." },
@@ -1205,11 +1205,11 @@ const LAWYER_CHALLENGES_SV: CollocationChallenge[] = [
   },
   {
     id: "bortom-rimligt-tvivel",
-    category: "Pläderande",
+    category: "Plädering",
     weakPhrase: "Vi är säkra på att han gjorde det på grund av alla bevis.",
     targetVerbStem: "fastställ",
     targetNounStem: "tvivel",
-    scenario: "Du sammanfattar åklagarens fall inför juryn.",
+    scenario: "Du sammanfattar åklagarens sak inför juryn.",
     options: [
       { phrase: "Bevisningen fastställer skuld bortom rimligt tvivel.", correct: true, explanation: "\"Fastställa skuld bortom rimligt tvivel\" är den exakta beviströskeln i brottmål." },
       { phrase: "Bevisningen begränsar skuld bortom rimligt tvivel.", correct: false, explanation: "\"Begränsa\" skulle minska skulden istället för att bevisa den — vänder på innebörden." },

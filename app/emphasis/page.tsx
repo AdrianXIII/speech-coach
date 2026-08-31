@@ -5,7 +5,7 @@ const TITLE = {
   en: "Contrastive Stress",
   de: "Kontrastive Betonung",
   fr: "Accentuation contrastive",
-  es: "Acento contrastivo",
+  es: "Énfasis contrastivo",
   sv: "Kontrastiv betoning",
 };
 

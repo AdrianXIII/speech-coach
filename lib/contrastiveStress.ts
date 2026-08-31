@@ -109,7 +109,7 @@ const SENTENCES_BY_LANGUAGE: Record<LanguageCode, ContrastiveSentence[]> = {
       words: ["Wir", "fliegen", "morgen", "nach", "Paris"],
       variants: [
         { targetWordIndex: 0, meaning: "Wir sind es, nicht sie, die fliegen." },
-        { targetWordIndex: 1, meaning: "Wir fliegen wirklich — nicht fahren mit dem Auto oder Zug." },
+        { targetWordIndex: 1, meaning: "Wir fliegen wirklich — nicht mit dem Auto oder Zug fahren." },
         { targetWordIndex: 2, meaning: "Es ist morgen, nicht ein anderer Tag, an dem wir fliegen." },
         { targetWordIndex: 4, meaning: "Es ist Paris, nicht eine andere Stadt, wohin wir fliegen." },
       ],
@@ -151,8 +151,8 @@ const SENTENCES_BY_LANGUAGE: Record<LanguageCode, ContrastiveSentence[]> = {
       words: ["Nous", "allons", "à", "Paris", "demain"],
       variants: [
         { targetWordIndex: 0, meaning: "C'est nous, pas eux, qui y allons." },
-        { targetWordIndex: 1, meaning: "Nous y allons vraiment — ce n'est pas juste un projet." },
-        { targetWordIndex: 3, meaning: "C'est Paris, pas une autre ville, notre destination." },
+        { targetWordIndex: 1, meaning: "Nous y allons vraiment — ce n'est pas seulement un projet." },
+        { targetWordIndex: 3, meaning: "C'est Paris, pas une autre ville, qui est notre destination." },
         { targetWordIndex: 4, meaning: "C'est demain, pas un autre jour, que nous partons." },
       ],
     },
@@ -161,7 +161,7 @@ const SENTENCES_BY_LANGUAGE: Record<LanguageCode, ContrastiveSentence[]> = {
       words: ["Le", "professeur", "a", "félicité", "l'élève"],
       variants: [
         { targetWordIndex: 1, meaning: "C'est le professeur, pas quelqu'un d'autre, qui a félicité." },
-        { targetWordIndex: 3, meaning: "Le professeur a vraiment félicité — pas juste reconnu." },
+        { targetWordIndex: 3, meaning: "Le professeur a vraiment félicité — pas seulement reconnu." },
         { targetWordIndex: 4, meaning: "C'est cet élève, pas un autre, qui a été félicité." },
       ],
     },
@@ -170,7 +170,7 @@ const SENTENCES_BY_LANGUAGE: Record<LanguageCode, ContrastiveSentence[]> = {
       words: ["Le", "chat", "dort", "sur", "le", "canapé"],
       variants: [
         { targetWordIndex: 1, meaning: "C'est le chat, pas le chien, qui dort là." },
-        { targetWordIndex: 2, meaning: "Le chat dort vraiment — il ne se repose pas juste." },
+        { targetWordIndex: 2, meaning: "Le chat dort vraiment — il ne fait pas que se reposer." },
         { targetWordIndex: 5, meaning: "Le chat dort sur le canapé — pas dans son panier." },
       ],
     },
@@ -269,7 +269,7 @@ const SENTENCES_BY_LANGUAGE: Record<LanguageCode, ContrastiveSentence[]> = {
       words: ["Läraren", "gav", "eleven", "beröm"],
       variants: [
         { targetWordIndex: 0, meaning: "Det var läraren, inte t.ex. rektorn, som gav beröm." },
-        { targetWordIndex: 1, meaning: "Läraren gav faktiskt beröm — lovade det inte bara." },
+        { targetWordIndex: 1, meaning: "Läraren gav faktiskt beröm — inte bara lovade det." },
         { targetWordIndex: 2, meaning: "Det var just den eleven, inte en annan, som fick beröm." },
         { targetWordIndex: 3, meaning: "Det var beröm, inte kritik, läraren gav." },
       ],
@@ -279,7 +279,7 @@ const SENTENCES_BY_LANGUAGE: Record<LanguageCode, ContrastiveSentence[]> = {
       words: ["Katten", "sover", "på", "soffan"],
       variants: [
         { targetWordIndex: 0, meaning: "Det är katten, inte hunden, som sover där." },
-        { targetWordIndex: 1, meaning: "Katten faktiskt sover — vilar eller leker inte." },
+        { targetWordIndex: 1, meaning: "Katten sover faktiskt — den vilar eller leker inte." },
         { targetWordIndex: 3, meaning: "Katten sover på soffan — inte i sin korg." },
       ],
     },
@@ -289,7 +289,7 @@ const SENTENCES_BY_LANGUAGE: Record<LanguageCode, ContrastiveSentence[]> = {
       variants: [
         { targetWordIndex: 0, meaning: "Det är du, inte någon annan, som måste prata med chefen." },
         { targetWordIndex: 1, meaning: "Det är ett krav — inte ett förslag." },
-        { targetWordIndex: 4, meaning: "Det är chefen, inte en kollega, du ska prata med." },
+        { targetWordIndex: 4, meaning: "Det är chefen, inte en kollega, du måste prata med." },
         { targetWordIndex: 5, meaning: "Det måste ske idag — inte imorgon." },
       ],
     },

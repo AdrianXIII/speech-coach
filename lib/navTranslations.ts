@@ -43,7 +43,7 @@ export const NAV_LINKS: NavLink[] = [
       de: "60-Sek-Impro",
       fr: "Impro de 60 s",
       es: "Impro de 60 s",
-      sv: "60s Improv",
+      sv: "60 sek improv",
     },
   },
   {
@@ -51,8 +51,8 @@ export const NAV_LINKS: NavLink[] = [
     labels: {
       en: "Contrastive Stress",
       de: "Kontrastive Betonung",
-      fr: "Accent contrastif",
-      es: "Acento contrastivo",
+      fr: "Accentuation contrastive",
+      es: "Énfasis contrastivo",
       sv: "Kontrastiv betoning",
     },
   },

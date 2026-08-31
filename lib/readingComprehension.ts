@@ -80,6 +80,7 @@ const STOPWORDS_BY_LANGUAGE: Record<LanguageCode, Set<string>> = {
     "dónde", "aquí", "qué", "cómo", "todo", "todos", "también", "solo", "muy",
     "realmente", "bien", "sobre", "después", "antes", "porque", "entonces",
     "allí", "será", "sería", "puede", "podría", "debería", "debe",
+    "quién", "quien", "cuando", "donde", "como", "cual",
   ]),
   sv: new Set([
     "och", "det", "att", "som", "en", "ett", "på", "i", "av", "för", "med",
@@ -106,7 +107,7 @@ const QUIZ_STRINGS: Record<LanguageCode, {
     recall: "Which of these words appeared in the text you just read?",
   },
   de: {
-    wordAfter: (word) => `Welches Wort kam im Text direkt nach „${word}"?`,
+    wordAfter: (word) => `Welches Wort kam im Text direkt nach „${word}“?`,
     presence: "Welches dieser Wörter kam im gelesenen Text vor?",
     absence: "Welches dieser Wörter kam NICHT im gelesenen Text vor?",
     recall: "Welches dieser Wörter kam im Text vor, den du gerade gelesen hast?",

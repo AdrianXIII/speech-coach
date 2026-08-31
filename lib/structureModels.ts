@@ -183,11 +183,11 @@ const MODELS_BY_LANGUAGE: Record<LanguageCode, StructureModel[]> = {
     {
       id: "treklang",
       name: "Treklangen",
-      fullName: "Vad är det? – Vad påminner det om? – Vad tycker jag?",
+      fullName: "Vad är det? – Vad påminner det om? – Vad tycker du?",
       phases: [
         { label: "Vad är det?", seconds: 20 },
         { label: "Vad påminner det om?", seconds: 20 },
-        { label: "Vad tycker jag?", seconds: 20 },
+        { label: "Vad tycker du?", seconds: 20 },
       ],
     },
   ],

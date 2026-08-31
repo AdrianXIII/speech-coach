@@ -76,6 +76,8 @@ const COMMON_WORDS_BY_LANGUAGE: Record<LanguageCode, Set<string>> = {
     "malo", "grande", "pequeño", "agradable", "cosa", "cosas", "obtener",
     "hecho", "ir", "va", "iba", "dijo", "decir", "mucho", "muchos", "más",
     "muy", "realmente", "bien", "también", "solo",
+    "quien", "cuando", "donde", "cual",
+    "tengo", "tienes", "tiene", "tenemos", "tienen", "tenía", "tuvo",
   ]),
   sv: new Set([
     "en", "ett", "den", "det", "är", "var", "har", "hade", "till", "av",
@@ -101,9 +103,9 @@ const CONNECTIVES_BY_LANGUAGE: Record<LanguageCode, string[]> = {
   ],
   de: [
     "folglich", "außerdem", "darüber hinaus", "dennoch", "trotzdem",
-    "während", "im gegensatz", "andererseits", "infolgedessen",
-    "angesichts", "bemerkenswert", "anschließend", "dementsprechend",
-    "somit", "daher", "zusätzlich", "das heißt",
+    "während", "im gegensatz dazu", "andererseits", "infolgedessen",
+    "angesichts", "bemerkenswerterweise", "anschließend", "dementsprechend",
+    "somit", "daher", "zusätzlich", "allerdings",
   ],
   fr: [
     "par conséquent", "de plus", "en outre", "néanmoins", "cependant",
@@ -256,7 +258,7 @@ const FEEDBACK_STRINGS: Record<LanguageCode, {
     missedPoints: "Vous avez manqué plusieurs points clés — réécoutez et concentrez-vous sur les faits principaux.",
     basicVocab: "Vous vous êtes appuyé sur un vocabulaire basique (« bon », « mauvais », « chose »...). Essayez d'intégrer des termes plus précis.",
     goodVocab: "Bon usage d'un vocabulaire précis et professionnel.",
-    noConnectives: "Aucun connecteur professionnel utilisé (par ex. « par conséquent », « alors que », « ainsi ») — ils rendent les résumés oraux plus structurés et plus percutants.",
+    noConnectives: "Aucun connecteur professionnel utilisé (par ex. « par conséquent », « alors que », « ainsi ») — ce type d'expression rend les résumés oraux plus structurés et plus percutants.",
     goodFlow: (used) => `Beau fil conducteur — vous avez utilisé : ${used}.`,
     tryTerms: (terms) => `Termes du passage que vous pourriez essayer d'utiliser la prochaine fois : ${terms}.`,
   },
@@ -276,9 +278,9 @@ const FEEDBACK_STRINGS: Record<LanguageCode, {
     missedPoints: "Du missade flera kärnpunkter — lyssna igen och fokusera på huvudfakta.",
     basicVocab: "Du lutade dig mot enkelt ordförråd (\"bra\", \"dålig\", \"sak\"...). Försök väva in mer precisa termer.",
     goodVocab: "Bra användning av precist, professionellt ordförråd.",
-    noConnectives: "Inga professionella konnektiver användes (t.ex. \"följaktligen\", \"medan\", \"som ett resultat\") — de får muntliga sammanfattningar att låta mer strukturerade och ledande.",
+    noConnectives: "Inga professionella konnektiver användes (t.ex. \"följaktligen\", \"medan\", \"som ett resultat\") — de får muntliga sammanfattningar att låta mer strukturerade och auktoritativa.",
     goodFlow: (used) => `Snyggt strukturellt flöde — du använde: ${used}.`,
-    tryTerms: (terms) => `Termer från avsnittet du kan prova använda nästa gång: ${terms}.`,
+    tryTerms: (terms) => `Termer från avsnittet du kan prova att använda nästa gång: ${terms}.`,
   },
 };
 
