@@ -8,6 +8,160 @@ import { analyzeRichness, type RichnessScore } from "@/lib/languageRichness";
 import { getLanguage, type LanguageCode } from "@/lib/languages";
 import { useLanguage } from "@/components/LanguageProvider";
 
+const T: Record<LanguageCode, {
+  noSpeechSupport: string;
+  topic: string;
+  shuffle: string;
+  setupInstruction: string;
+  listenButton: string;
+  listening: string;
+  skipAhead: string;
+  summarizePrompt: string;
+  listenAgain: string;
+  recording: string;
+  overallScore: string;
+  contentCovered: string;
+  vocabularyDiversity: string;
+  advancedWords: string;
+  responseTime: string;
+  keyPointsMissed: string;
+  whatWeHeard: string;
+  noSpeechDetected: string;
+  showOriginal: string;
+  hideOriginal: string;
+  tryAgain: string;
+  newPassage: string;
+  loading: string;
+}> = {
+  en: {
+    noSpeechSupport: "Your browser doesn't support speech recognition (Web Speech API) — try Chrome or Edge to use this exercise.",
+    topic: "Topic",
+    shuffle: "🎲 Shuffle",
+    setupInstruction: "You'll hear a short passage — the text stays hidden. Afterward, summarize it out loud in your own words.",
+    listenButton: "🔊 Listen",
+    listening: "Listening…",
+    skipAhead: "Skip ahead",
+    summarizePrompt: "Now summarize what you just heard, in your own words — out loud.",
+    listenAgain: "🔁 Listen again",
+    recording: "Recording…",
+    overallScore: "Overall Score",
+    contentCovered: "Content covered",
+    vocabularyDiversity: "Vocabulary diversity",
+    advancedWords: "Advanced words",
+    responseTime: "Response time",
+    keyPointsMissed: "Key points you missed",
+    whatWeHeard: "What we heard",
+    noSpeechDetected: "(no speech detected)",
+    showOriginal: "Show original passage",
+    hideOriginal: "Hide original passage",
+    tryAgain: "Try again",
+    newPassage: "🎲 New passage",
+    loading: "Loading…",
+  },
+  de: {
+    noSpeechSupport: "Dein Browser unterstützt keine Spracherkennung (Web Speech API) — probiere Chrome oder Edge für diese Übung.",
+    topic: "Thema",
+    shuffle: "🎲 Zufällig",
+    setupInstruction: "Du hörst eine kurze Passage — der Text bleibt verborgen. Danach fasst du sie laut in eigenen Worten zusammen.",
+    listenButton: "🔊 Anhören",
+    listening: "Hört zu…",
+    skipAhead: "Weiter überspringen",
+    summarizePrompt: "Fasse jetzt zusammen, was du gerade gehört hast, in eigenen Worten — laut.",
+    listenAgain: "🔁 Erneut anhören",
+    recording: "Aufnahme läuft…",
+    overallScore: "Gesamtpunktzahl",
+    contentCovered: "Inhalt abgedeckt",
+    vocabularyDiversity: "Wortschatzvielfalt",
+    advancedWords: "Fortgeschrittene Wörter",
+    responseTime: "Reaktionszeit",
+    keyPointsMissed: "Verpasste Kernpunkte",
+    whatWeHeard: "Was wir gehört haben",
+    noSpeechDetected: "(keine Sprache erkannt)",
+    showOriginal: "Original anzeigen",
+    hideOriginal: "Original ausblenden",
+    tryAgain: "Erneut versuchen",
+    newPassage: "🎲 Neue Passage",
+    loading: "Wird geladen…",
+  },
+  fr: {
+    noSpeechSupport: "Votre navigateur ne prend pas en charge la reconnaissance vocale (Web Speech API) — essayez Chrome ou Edge pour cet exercice.",
+    topic: "Sujet",
+    shuffle: "🎲 Mélanger",
+    setupInstruction: "Vous entendrez un court passage — le texte reste caché. Ensuite, résumez-le à voix haute avec vos propres mots.",
+    listenButton: "🔊 Écouter",
+    listening: "Écoute en cours…",
+    skipAhead: "Passer",
+    summarizePrompt: "Résumez maintenant ce que vous venez d'entendre, avec vos propres mots — à voix haute.",
+    listenAgain: "🔁 Réécouter",
+    recording: "Enregistrement…",
+    overallScore: "Score global",
+    contentCovered: "Contenu couvert",
+    vocabularyDiversity: "Diversité du vocabulaire",
+    advancedWords: "Mots avancés",
+    responseTime: "Temps de réponse",
+    keyPointsMissed: "Points clés manqués",
+    whatWeHeard: "Ce que nous avons entendu",
+    noSpeechDetected: "(aucune parole détectée)",
+    showOriginal: "Afficher le passage original",
+    hideOriginal: "Masquer le passage original",
+    tryAgain: "Réessayer",
+    newPassage: "🎲 Nouveau passage",
+    loading: "Chargement…",
+  },
+  es: {
+    noSpeechSupport: "Tu navegador no admite reconocimiento de voz (Web Speech API) — prueba Chrome o Edge para este ejercicio.",
+    topic: "Tema",
+    shuffle: "🎲 Mezclar",
+    setupInstruction: "Escucharás un breve pasaje — el texto permanece oculto. Después, resúmelo en voz alta con tus propias palabras.",
+    listenButton: "🔊 Escuchar",
+    listening: "Escuchando…",
+    skipAhead: "Adelantar",
+    summarizePrompt: "Ahora resume lo que acabas de escuchar, con tus propias palabras — en voz alta.",
+    listenAgain: "🔁 Escuchar de nuevo",
+    recording: "Grabando…",
+    overallScore: "Puntuación general",
+    contentCovered: "Contenido cubierto",
+    vocabularyDiversity: "Diversidad de vocabulario",
+    advancedWords: "Palabras avanzadas",
+    responseTime: "Tiempo de respuesta",
+    keyPointsMissed: "Puntos clave que te perdiste",
+    whatWeHeard: "Lo que escuchamos",
+    noSpeechDetected: "(no se detectó voz)",
+    showOriginal: "Mostrar pasaje original",
+    hideOriginal: "Ocultar pasaje original",
+    tryAgain: "Intentar de nuevo",
+    newPassage: "🎲 Nuevo pasaje",
+    loading: "Cargando…",
+  },
+  sv: {
+    noSpeechSupport: "Din webbläsare stöder inte taligenkänning (Web Speech API) — prova Chrome eller Edge för den här övningen.",
+    topic: "Ämne",
+    shuffle: "🎲 Blanda",
+    setupInstruction: "Du får höra ett kort avsnitt — texten hålls dold. Efteråt sammanfattar du det högt med egna ord.",
+    listenButton: "🔊 Lyssna",
+    listening: "Lyssnar…",
+    skipAhead: "Hoppa vidare",
+    summarizePrompt: "Sammanfatta nu det du just hörde, med egna ord — högt.",
+    listenAgain: "🔁 Lyssna igen",
+    recording: "Spelar in…",
+    overallScore: "Totalpoäng",
+    contentCovered: "Innehåll täckt",
+    vocabularyDiversity: "Ordförrådsvariation",
+    advancedWords: "Avancerade ord",
+    responseTime: "Svarstid",
+    keyPointsMissed: "Kärnpunkter du missade",
+    whatWeHeard: "Vad vi hörde",
+    noSpeechDetected: "(inget tal upptäcktes)",
+    showOriginal: "Visa originalavsnitt",
+    hideOriginal: "Dölj originalavsnitt",
+    tryAgain: "Försök igen",
+    newPassage: "🎲 Nytt avsnitt",
+    loading: "Laddar…",
+  },
+};
+
+type Translations = (typeof T)[LanguageCode];
+
 type Phase = "setup" | "listening" | "ready" | "responding" | "results";
 
 /**
@@ -23,6 +177,7 @@ type Phase = "setup" | "listening" | "ready" | "responding" | "results";
  */
 export function ComprehensionTrainer() {
   const { language } = useLanguage();
+  const t = T[language];
   const [passage, setPassage] = useState<ComprehensionPassage | null>(null);
   const [phase, setPhase] = useState<Phase>("setup");
   const [score, setScore] = useState<RichnessScore | null>(null);
@@ -158,7 +313,7 @@ export function ComprehensionTrainer() {
   if (!passage) {
     return (
       <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-        <p className="text-sm text-slate-400">Loading…</p>
+        <p className="text-sm text-slate-400">{t.loading}</p>
       </div>
     );
   }
@@ -167,13 +322,13 @@ export function ComprehensionTrainer() {
     <div className="flex flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
       {!recognition.isSupported && (
         <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-          Your browser doesn&rsquo;t support speech recognition (Web Speech API) — try Chrome or
-          Edge to use this exercise.
+          {t.noSpeechSupport}
         </div>
       )}
 
       {phase === "setup" && (
         <SetupPanel
+          t={t}
           language={language}
           passage={passage}
           onPick={handlePickPassage}
@@ -188,13 +343,13 @@ export function ComprehensionTrainer() {
           <span className="flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-2xl">
             🔊
           </span>
-          <p className="text-sm font-semibold text-indigo-600">Listening…</p>
+          <p className="text-sm font-semibold text-indigo-600">{t.listening}</p>
           <p className="text-xs text-slate-400">({passage.topic})</p>
           <button
             onClick={handleSkipListening}
             className="text-xs font-semibold text-slate-400 underline underline-offset-2 hover:text-slate-600"
           >
-            Skip ahead
+            {t.skipAhead}
           </button>
         </div>
       )}
@@ -202,13 +357,13 @@ export function ComprehensionTrainer() {
       {phase === "ready" && (
         <div className="flex flex-col items-center gap-4 py-6">
           <p className="text-center text-base font-medium text-slate-800">
-            Now summarize what you just heard, in your own words — out loud.
+            {t.summarizePrompt}
           </p>
           <button
             onClick={handleListen}
             className="text-xs font-semibold text-indigo-600 underline underline-offset-2"
           >
-            🔁 Listen again
+            {t.listenAgain}
           </button>
           <button
             onClick={handleStartResponse}
@@ -224,7 +379,7 @@ export function ComprehensionTrainer() {
         <div className="flex flex-col items-center gap-4 py-6">
           <span className="flex items-center gap-2 text-sm font-semibold text-red-600">
             <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-red-500" />
-            Recording…
+            {t.recording}
           </span>
           <p className="min-h-[3rem] max-w-md text-center text-sm text-slate-500">
             {recognition.transcript || "…"}
@@ -241,6 +396,7 @@ export function ComprehensionTrainer() {
 
       {phase === "results" && score && (
         <ResultsPanel
+          t={t}
           score={score}
           passage={passage}
           audioUrl={audioUrl}
@@ -255,6 +411,7 @@ export function ComprehensionTrainer() {
 /* ─────────────────────────── Setup ─────────────────────────── */
 
 function SetupPanel({
+  t,
   language,
   passage,
   onPick,
@@ -262,6 +419,7 @@ function SetupPanel({
   onListen,
   disabled,
 }: {
+  t: Translations;
   language: LanguageCode;
   passage: ComprehensionPassage;
   onPick: (p: ComprehensionPassage) => void;
@@ -274,12 +432,12 @@ function SetupPanel({
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center justify-between">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Topic</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">{t.topic}</p>
         <button
           onClick={onShuffle}
           className="rounded-lg bg-slate-100 px-3 py-1.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-200"
         >
-          🎲 Shuffle
+          {t.shuffle}
         </button>
       </div>
 
@@ -302,17 +460,14 @@ function SetupPanel({
         ))}
       </div>
 
-      <p className="text-center text-sm text-slate-500">
-        You&rsquo;ll hear a short passage — the text stays hidden. Afterward, summarize it out
-        loud in your own words.
-      </p>
+      <p className="text-center text-sm text-slate-500">{t.setupInstruction}</p>
 
       <button
         onClick={onListen}
         disabled={disabled}
         className="self-center rounded-lg bg-indigo-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-40"
       >
-        🔊 Listen
+        {t.listenButton}
       </button>
     </div>
   );
@@ -321,12 +476,14 @@ function SetupPanel({
 /* ─────────────────────────── Results ─────────────────────────── */
 
 function ResultsPanel({
+  t,
   score,
   passage,
   audioUrl,
   onRetry,
   onNewPassage,
 }: {
+  t: Translations;
   score: RichnessScore;
   passage: ComprehensionPassage;
   audioUrl: string | null;
@@ -339,7 +496,7 @@ function ResultsPanel({
     <div className="flex flex-col gap-6">
       <div className="flex flex-col items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 p-6 text-center">
         <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-          Overall Score
+          {t.overallScore}
         </p>
         <p
           className={`text-4xl font-extrabold ${
@@ -355,10 +512,10 @@ function ResultsPanel({
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <Stat label="Content covered" value={`${score.coveredKeyPoints.length}/${score.coveredKeyPoints.length + score.missedKeyPoints.length}`} />
-        <Stat label="Vocabulary diversity" value={`${Math.round(score.ttr * 100)}%`} />
-        <Stat label="Advanced words" value={`${Math.round(score.advancedVocabRatio * 100)}%`} />
-        <Stat label="Response time" value={`${score.responseLatencySeconds.toFixed(1)}s`} />
+        <Stat label={t.contentCovered} value={`${score.coveredKeyPoints.length}/${score.coveredKeyPoints.length + score.missedKeyPoints.length}`} />
+        <Stat label={t.vocabularyDiversity} value={`${Math.round(score.ttr * 100)}%`} />
+        <Stat label={t.advancedWords} value={`${Math.round(score.advancedVocabRatio * 100)}%`} />
+        <Stat label={t.responseTime} value={`${score.responseLatencySeconds.toFixed(1)}s`} />
       </div>
 
       <div className="flex flex-col gap-2">
@@ -372,7 +529,7 @@ function ResultsPanel({
       {score.missedKeyPoints.length > 0 && (
         <div className="rounded-lg border border-slate-200 p-4">
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-            Key points you missed
+            {t.keyPointsMissed}
           </p>
           <ul className="mt-2 flex flex-col gap-1">
             {score.missedKeyPoints.map((kp) => (
@@ -386,10 +543,10 @@ function ResultsPanel({
 
       <div className="rounded-lg border border-slate-200 p-4">
         <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-          What we heard
+          {t.whatWeHeard}
         </p>
         <p className="mt-2 text-sm italic text-slate-600">
-          {score.transcript ? `“${score.transcript}”` : "(no speech detected)"}
+          {score.transcript ? `“${score.transcript}”` : t.noSpeechDetected}
         </p>
         {audioUrl && <audio src={audioUrl} controls className="mt-3 w-full max-w-sm" />}
       </div>
@@ -399,7 +556,7 @@ function ResultsPanel({
           onClick={() => setShowOriginal((v) => !v)}
           className="text-xs font-semibold text-indigo-600 underline underline-offset-2"
         >
-          {showOriginal ? "Hide" : "Show"} original passage
+          {showOriginal ? t.hideOriginal : t.showOriginal}
         </button>
         {showOriginal && (
           <p className="mt-2 rounded-lg bg-slate-50 p-3 text-sm leading-relaxed text-slate-600">
@@ -413,13 +570,13 @@ function ResultsPanel({
           onClick={onRetry}
           className="rounded-lg bg-slate-200 px-6 py-3 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-300"
         >
-          Try again
+          {t.tryAgain}
         </button>
         <button
           onClick={onNewPassage}
           className="rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500"
         >
-          🎲 New passage
+          {t.newPassage}
         </button>
       </div>
     </div>

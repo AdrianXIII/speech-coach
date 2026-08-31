@@ -93,6 +93,44 @@ const STOPWORDS_BY_LANGUAGE: Record<LanguageCode, Set<string>> = {
   ]),
 };
 
+const QUIZ_STRINGS: Record<LanguageCode, {
+  wordAfter: (word: string) => string;
+  presence: string;
+  absence: string;
+  recall: string;
+}> = {
+  en: {
+    wordAfter: (word) => `Which word came directly after "${word}" in the text?`,
+    presence: "Which of these words appeared in the text you read?",
+    absence: "Which of these words did NOT appear in the text you read?",
+    recall: "Which of these words appeared in the text you just read?",
+  },
+  de: {
+    wordAfter: (word) => `Welches Wort kam im Text direkt nach „${word}"?`,
+    presence: "Welches dieser Wörter kam im gelesenen Text vor?",
+    absence: "Welches dieser Wörter kam NICHT im gelesenen Text vor?",
+    recall: "Welches dieser Wörter kam im Text vor, den du gerade gelesen hast?",
+  },
+  fr: {
+    wordAfter: (word) => `Quel mot venait juste après « ${word} » dans le texte ?`,
+    presence: "Lequel de ces mots apparaissait dans le texte que vous avez lu ?",
+    absence: "Lequel de ces mots n'apparaissait PAS dans le texte que vous avez lu ?",
+    recall: "Lequel de ces mots apparaissait dans le texte que vous venez de lire ?",
+  },
+  es: {
+    wordAfter: (word) => `¿Qué palabra venía justo después de "${word}" en el texto?`,
+    presence: "¿Cuál de estas palabras apareció en el texto que leíste?",
+    absence: "¿Cuál de estas palabras NO apareció en el texto que leíste?",
+    recall: "¿Cuál de estas palabras apareció en el texto que acabas de leer?",
+  },
+  sv: {
+    wordAfter: (word) => `Vilket ord kom direkt efter "${word}" i texten?`,
+    presence: "Vilket av dessa ord fanns med i texten du läste?",
+    absence: "Vilket av dessa ord fanns INTE med i texten du läste?",
+    recall: "Vilket av dessa ord fanns med i texten du precis läste?",
+  },
+};
+
 /** À-ÿ covers the accented Latin-1 letters used across German/French/Spanish/Swedish. */
 function normalize(word: string): string {
   return word.toLowerCase().replace(/^[^a-zA-ZÀ-ÿ0-9]+|[^a-zA-ZÀ-ÿ0-9]+$/g, "");
@@ -130,6 +168,7 @@ function buildOrderQuestions(
   normalizedWords: string[],
   count: number,
   stopwords: Set<string>,
+  language: LanguageCode,
 ): ComprehensionQuestion[] {
   const frequency = new Map<string, number>();
   for (const word of normalizedWords) frequency.set(word, (frequency.get(word) ?? 0) + 1);
@@ -156,7 +195,7 @@ function buildOrderQuestions(
     const distractors = sample(distractorPool, 3);
     const options = shuffle([next, ...distractors]).map(displayForm);
     return {
-      prompt: `Which word came directly after "${displayForm(anchor)}" in the text?`,
+      prompt: QUIZ_STRINGS[language].wordAfter(displayForm(anchor)),
       options,
       correctIndex: options.indexOf(displayForm(next)),
     };
@@ -168,6 +207,7 @@ function buildPresenceQuestion(
   normalizedWords: string[],
   stopwords: Set<string>,
   distractorPool: string[],
+  language: LanguageCode,
 ): ComprehensionQuestion | null {
   const eligible = [...new Set(normalizedWords.filter((w) => isEligibleWord(w, stopwords)))];
   if (eligible.length === 0) return null;
@@ -180,7 +220,7 @@ function buildPresenceQuestion(
   const options = shuffle([correct, ...distractors]).map(displayForm);
 
   return {
-    prompt: "Which of these words appeared in the text you read?",
+    prompt: QUIZ_STRINGS[language].presence,
     options,
     correctIndex: options.indexOf(displayForm(correct)),
   };
@@ -191,6 +231,7 @@ function buildAbsenceQuestion(
   normalizedWords: string[],
   stopwords: Set<string>,
   distractorPool: string[],
+  language: LanguageCode,
 ): ComprehensionQuestion | null {
   const eligible = [...new Set(normalizedWords.filter((w) => isEligibleWord(w, stopwords)))];
   const available = distractorPool.filter((w) => !eligible.includes(w));
@@ -201,7 +242,7 @@ function buildAbsenceQuestion(
   const options = shuffle([notInText, ...realWords]).map(displayForm);
 
   return {
-    prompt: "Which of these words did NOT appear in the text you read?",
+    prompt: QUIZ_STRINGS[language].absence,
     options,
     correctIndex: options.indexOf(displayForm(notInText)),
   };
@@ -222,12 +263,12 @@ export function generateComprehensionQuiz(
   const distractorPool = DISTRACTOR_POOL_BY_LANGUAGE[language];
   const normalizedWords = text.split(/\s+/).map(normalize).filter(Boolean);
 
-  const orderQuestions = buildOrderQuestions(normalizedWords, Math.ceil(count / 2), stopwords);
+  const orderQuestions = buildOrderQuestions(normalizedWords, Math.ceil(count / 2), stopwords, language);
   const questions = [...orderQuestions];
 
   const fillers = [
-    () => buildPresenceQuestion(normalizedWords, stopwords, distractorPool),
-    () => buildAbsenceQuestion(normalizedWords, stopwords, distractorPool),
+    () => buildPresenceQuestion(normalizedWords, stopwords, distractorPool, language),
+    () => buildAbsenceQuestion(normalizedWords, stopwords, distractorPool, language),
   ];
   let fillerIndex = 0;
   while (questions.length < count && fillerIndex < count * 3) {
@@ -267,7 +308,7 @@ export function generateRecallCheck(
   const options = shuffle([correct, ...distractors]).map(displayForm);
 
   return {
-    prompt: "Which of these words appeared in the text you just read?",
+    prompt: QUIZ_STRINGS[language].recall,
     options,
     correctIndex: options.indexOf(displayForm(correct)),
   };

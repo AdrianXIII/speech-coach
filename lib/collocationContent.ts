@@ -4,8 +4,8 @@ export type ProfileId = "executive" | "politician" | "lawyer";
 
 export interface CollocationProfile {
   id: ProfileId;
-  name: string;
-  description: string;
+  name: Record<LanguageCode, string>;
+  description: Record<LanguageCode, string>;
 }
 
 /**
@@ -20,18 +20,36 @@ export interface CollocationProfile {
 export const COLLOCATION_PROFILES: CollocationProfile[] = [
   {
     id: "executive",
-    name: "Executive",
-    description: "Strategic business language for boardrooms and leadership.",
+    name: { en: "Executive", de: "Führungskraft", fr: "Dirigeant", es: "Ejecutivo", sv: "Chef" },
+    description: {
+      en: "Strategic business language for boardrooms and leadership.",
+      de: "Strategische Geschäftssprache für Vorstandsetagen und Führung.",
+      fr: "Langage stratégique pour les conseils d'administration et le leadership.",
+      es: "Lenguaje estratégico de negocios para juntas directivas y liderazgo.",
+      sv: "Strategiskt affärsspråk för styrelserum och ledarskap.",
+    },
   },
   {
     id: "politician",
-    name: "Politician",
-    description: "Persuasive, diplomatic language for public office and policy.",
+    name: { en: "Politician", de: "Politiker", fr: "Politicien", es: "Político", sv: "Politiker" },
+    description: {
+      en: "Persuasive, diplomatic language for public office and policy.",
+      de: "Überzeugende, diplomatische Sprache für öffentliche Ämter und Politik.",
+      fr: "Langage persuasif et diplomatique pour la fonction publique et les politiques.",
+      es: "Lenguaje persuasivo y diplomático para cargos públicos y políticas.",
+      sv: "Övertygande, diplomatiskt språk för offentliga uppdrag och politik.",
+    },
   },
   {
     id: "lawyer",
-    name: "Lawyer",
-    description: "Precise, adversarial language for courtrooms and negotiations.",
+    name: { en: "Lawyer", de: "Anwalt", fr: "Avocat", es: "Abogado", sv: "Jurist" },
+    description: {
+      en: "Precise, adversarial language for courtrooms and negotiations.",
+      de: "Präzise, kontradiktorische Sprache für Gerichtssäle und Verhandlungen.",
+      fr: "Langage précis et contradictoire pour les tribunaux et les négociations.",
+      es: "Lenguaje preciso y contradictorio para tribunales y negociaciones.",
+      sv: "Precist, motstridigt språk för rättssalar och förhandlingar.",
+    },
   },
 ];
 
@@ -212,7 +230,7 @@ const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, Collocation
   de: [
     {
       id: "risiko-kleiner",
-      category: "Risk & Strategy",
+      category: "Risiko & Strategie",
       weakPhrase: "Wir müssen das Risiko kleiner machen, bevor wir wachsen.",
       targetVerbStem: "minimier",
       targetNounStem: "risiko",
@@ -226,7 +244,7 @@ const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, Collocation
     },
     {
       id: "plan-besser",
-      category: "Strategy",
+      category: "Strategie",
       weakPhrase: "Wir wollen den Plan besser machen.",
       targetVerbStem: "optimier",
       targetNounStem: "rahmen",
@@ -240,7 +258,7 @@ const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, Collocation
     },
     {
       id: "geld-vorsichtig",
-      category: "Financial",
+      category: "Finanzen",
       weakPhrase: "Das Geld muss vorsichtig ausgegeben werden.",
       targetVerbStem: "eingesetzt",
       targetNounStem: "kapital",
@@ -254,7 +272,7 @@ const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, Collocation
     },
     {
       id: "firma-waechst",
-      category: "Growth & Performance",
+      category: "Wachstum & Leistung",
       weakPhrase: "Wir wollen, dass die Firma gut wächst.",
       targetVerbStem: "vorantreib",
       targetNounStem: "wachstum",
@@ -268,7 +286,7 @@ const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, Collocation
     },
     {
       id: "chef-lob",
-      category: "Leadership & Compliance",
+      category: "Führung & Compliance",
       weakPhrase: "Der Chef sagte, die Arbeit des Mitarbeiters war gut.",
       targetVerbStem: "gewürdigt",
       targetNounStem: "leistung",
@@ -284,7 +302,7 @@ const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, Collocation
   fr: [
     {
       id: "reduire-risque",
-      category: "Risk & Strategy",
+      category: "Risque & Stratégie",
       weakPhrase: "Nous devons réduire le risque avant de grandir.",
       targetVerbStem: "atténu",
       targetNounStem: "risque",
@@ -298,7 +316,7 @@ const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, Collocation
     },
     {
       id: "ameliorer-plan",
-      category: "Strategy",
+      category: "Stratégie",
       weakPhrase: "Nous voulons améliorer le plan.",
       targetVerbStem: "optimis",
       targetNounStem: "cadre",
@@ -312,7 +330,7 @@ const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, Collocation
     },
     {
       id: "argent-soin",
-      category: "Financial",
+      category: "Finance",
       weakPhrase: "L'argent doit être dépensé avec soin.",
       targetVerbStem: "allou",
       targetNounStem: "capital",
@@ -326,7 +344,7 @@ const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, Collocation
     },
     {
       id: "entreprise-grandit",
-      category: "Growth & Performance",
+      category: "Croissance & Performance",
       weakPhrase: "Nous voulons que l'entreprise grandisse bien.",
       targetVerbStem: "stimul",
       targetNounStem: "croissance",
@@ -340,7 +358,7 @@ const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, Collocation
     },
     {
       id: "patron-eloge",
-      category: "Leadership & Compliance",
+      category: "Leadership & Conformité",
       weakPhrase: "Le patron a dit que le travail de l'employé était bon.",
       targetVerbStem: "salu",
       targetNounStem: "performance",
@@ -356,7 +374,7 @@ const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, Collocation
   es: [
     {
       id: "reducir-riesgo",
-      category: "Risk & Strategy",
+      category: "Riesgo y Estrategia",
       weakPhrase: "Necesitamos reducir el riesgo antes de crecer.",
       targetVerbStem: "mitig",
       targetNounStem: "riesgo",
@@ -370,7 +388,7 @@ const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, Collocation
     },
     {
       id: "mejorar-plan",
-      category: "Strategy",
+      category: "Estrategia",
       weakPhrase: "Queremos mejorar el plan.",
       targetVerbStem: "optimiz",
       targetNounStem: "marco",
@@ -384,7 +402,7 @@ const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, Collocation
     },
     {
       id: "dinero-cuidado",
-      category: "Financial",
+      category: "Finanzas",
       weakPhrase: "El dinero debe gastarse con cuidado.",
       targetVerbStem: "asign",
       targetNounStem: "capital",
@@ -398,7 +416,7 @@ const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, Collocation
     },
     {
       id: "empresa-crece",
-      category: "Growth & Performance",
+      category: "Crecimiento y Rendimiento",
       weakPhrase: "Queremos que la empresa crezca bien.",
       targetVerbStem: "impuls",
       targetNounStem: "crecimiento",
@@ -412,7 +430,7 @@ const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, Collocation
     },
     {
       id: "jefe-elogio",
-      category: "Leadership & Compliance",
+      category: "Liderazgo y Cumplimiento",
       weakPhrase: "El jefe dijo que el trabajo del empleado era bueno.",
       targetVerbStem: "elogi",
       targetNounStem: "desempeñ",
@@ -428,7 +446,7 @@ const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, Collocation
   sv: [
     {
       id: "minska-risken",
-      category: "Risk & Strategy",
+      category: "Risk & Strategi",
       weakPhrase: "Vi måste minska risken innan vi växer.",
       targetVerbStem: "begräns",
       targetNounStem: "risk",
@@ -442,7 +460,7 @@ const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, Collocation
     },
     {
       id: "planen-battre",
-      category: "Strategy",
+      category: "Strategi",
       weakPhrase: "Vi vill göra planen bättre.",
       targetVerbStem: "optimer",
       targetNounStem: "ramverk",
@@ -456,7 +474,7 @@ const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, Collocation
     },
     {
       id: "pengarna-forsiktigt",
-      category: "Financial",
+      category: "Ekonomi",
       weakPhrase: "Pengarna måste spenderas försiktigt.",
       targetVerbStem: "fördela",
       targetNounStem: "kapital",
@@ -470,7 +488,7 @@ const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, Collocation
     },
     {
       id: "foretaget-vaxer",
-      category: "Growth & Performance",
+      category: "Tillväxt & Prestation",
       weakPhrase: "Vi vill att företaget ska växa bra.",
       targetVerbStem: "driv",
       targetNounStem: "tillväxt",
@@ -484,7 +502,7 @@ const EXECUTIVE_CHALLENGES_BY_LANGUAGE: Partial<Record<LanguageCode, Collocation
     },
     {
       id: "chefen-berom",
-      category: "Leadership & Compliance",
+      category: "Ledarskap & Regelefterlevnad",
       weakPhrase: "Chefen sa att medarbetarens jobb var bra.",
       targetVerbStem: "hylla",
       targetNounStem: "prestation",
@@ -575,7 +593,7 @@ const POLITICIAN_CHALLENGES_EN: CollocationChallenge[] = [
 const POLITICIAN_CHALLENGES_DE: CollocationChallenge[] = [
   {
     id: "kompromiss-such",
-    category: "Bipartisanship",
+    category: "Überparteilichkeit",
     weakPhrase: "Wir müssen mit der anderen Partei zusammenarbeiten.",
     targetVerbStem: "such",
     targetNounStem: "kompromiss",
@@ -589,7 +607,7 @@ const POLITICIAN_CHALLENGES_DE: CollocationChallenge[] = [
   },
   {
     id: "basisunterstuetzung",
-    category: "Campaigning",
+    category: "Wahlkampf",
     weakPhrase: "Viele Menschen vor Ort unterstützen unsere Kampagne.",
     targetVerbStem: "erleb",
     targetNounStem: "basisunterstützung",
@@ -603,7 +621,7 @@ const POLITICIAN_CHALLENGES_DE: CollocationChallenge[] = [
   },
   {
     id: "rechenschaft",
-    category: "Governance",
+    category: "Regierungsführung",
     weakPhrase: "Wir müssen dafür sorgen, dass Politiker für ihr Handeln geradestehen.",
     targetVerbStem: "zieh",
     targetNounStem: "rechenschaft",
@@ -617,7 +635,7 @@ const POLITICIAN_CHALLENGES_DE: CollocationChallenge[] = [
   },
   {
     id: "zusammensteh",
-    category: "National Address",
+    category: "Rede an die Nation",
     weakPhrase: "Alle im Land müssen jetzt zusammenhalten.",
     targetVerbStem: "zusammensteh",
     targetNounStem: "nation",
@@ -631,7 +649,7 @@ const POLITICIAN_CHALLENGES_DE: CollocationChallenge[] = [
   },
   {
     id: "vertrauen-wiederherstell",
-    category: "Campaigning",
+    category: "Wahlkampf",
     weakPhrase: "Wir versprechen, die Dinge besser zu machen und ehrlich zu den Wählern zu sein.",
     targetVerbStem: "wiederherstell",
     targetNounStem: "vertrauen",
@@ -648,7 +666,7 @@ const POLITICIAN_CHALLENGES_DE: CollocationChallenge[] = [
 const POLITICIAN_CHALLENGES_FR: CollocationChallenge[] = [
   {
     id: "tendre-opposition",
-    category: "Bipartisanship",
+    category: "Bipartisme",
     weakPhrase: "Nous devons travailler avec l'autre parti.",
     targetVerbStem: "tend",
     targetNounStem: "opposition",
@@ -662,7 +680,7 @@ const POLITICIAN_CHALLENGES_FR: CollocationChallenge[] = [
   },
   {
     id: "soutien-base",
-    category: "Campaigning",
+    category: "Campagne électorale",
     weakPhrase: "Beaucoup de gens au niveau local soutiennent notre campagne.",
     targetVerbStem: "constat",
     targetNounStem: "base",
@@ -676,7 +694,7 @@ const POLITICIAN_CHALLENGES_FR: CollocationChallenge[] = [
   },
   {
     id: "tenir-responsable",
-    category: "Governance",
+    category: "Gouvernance",
     weakPhrase: "Nous devons nous assurer que les dirigeants répondent de leurs actes.",
     targetVerbStem: "ten",
     targetNounStem: "responsable",
@@ -690,7 +708,7 @@ const POLITICIAN_CHALLENGES_FR: CollocationChallenge[] = [
   },
   {
     id: "rester-unie",
-    category: "National Address",
+    category: "Discours à la Nation",
     weakPhrase: "Tout le monde dans le pays doit s'unir maintenant.",
     targetVerbStem: "rest",
     targetNounStem: "uni",
@@ -704,7 +722,7 @@ const POLITICIAN_CHALLENGES_FR: CollocationChallenge[] = [
   },
   {
     id: "restaurer-confiance",
-    category: "Campaigning",
+    category: "Campagne électorale",
     weakPhrase: "Nous promettons de faire mieux et d'être honnêtes envers les électeurs.",
     targetVerbStem: "restaur",
     targetNounStem: "confiance",
@@ -721,7 +739,7 @@ const POLITICIAN_CHALLENGES_FR: CollocationChallenge[] = [
 const POLITICIAN_CHALLENGES_ES: CollocationChallenge[] = [
   {
     id: "tender-puentes",
-    category: "Bipartisanship",
+    category: "Bipartidismo",
     weakPhrase: "Necesitamos trabajar con el otro partido.",
     targetVerbStem: "tend",
     targetNounStem: "puentes",
@@ -735,7 +753,7 @@ const POLITICIAN_CHALLENGES_ES: CollocationChallenge[] = [
   },
   {
     id: "respaldo-base",
-    category: "Campaigning",
+    category: "Campaña electoral",
     weakPhrase: "Mucha gente a nivel local apoya nuestra campaña.",
     targetVerbStem: "respald",
     targetNounStem: "base",
@@ -749,7 +767,7 @@ const POLITICIAN_CHALLENGES_ES: CollocationChallenge[] = [
   },
   {
     id: "exigir-cuentas",
-    category: "Governance",
+    category: "Gobernanza",
     weakPhrase: "Debemos asegurarnos de que los líderes respondan por sus actos.",
     targetVerbStem: "exig",
     targetNounStem: "cuentas",
@@ -763,7 +781,7 @@ const POLITICIAN_CHALLENGES_ES: CollocationChallenge[] = [
   },
   {
     id: "permanecer-unida",
-    category: "National Address",
+    category: "Discurso a la Nación",
     weakPhrase: "Todos en el país deben unirse ahora.",
     targetVerbStem: "permanec",
     targetNounStem: "unida",
@@ -777,7 +795,7 @@ const POLITICIAN_CHALLENGES_ES: CollocationChallenge[] = [
   },
   {
     id: "restaurar-confianza",
-    category: "Campaigning",
+    category: "Campaña electoral",
     weakPhrase: "Prometemos mejorar las cosas y ser honestos con los votantes.",
     targetVerbStem: "restaur",
     targetNounStem: "confianza",
@@ -794,7 +812,7 @@ const POLITICIAN_CHALLENGES_ES: CollocationChallenge[] = [
 const POLITICIAN_CHALLENGES_SV: CollocationChallenge[] = [
   {
     id: "bygga-broar",
-    category: "Bipartisanship",
+    category: "Blocköverskridande",
     weakPhrase: "Vi måste samarbeta med det andra partiet.",
     targetVerbStem: "bygg",
     targetNounStem: "broar",
@@ -808,7 +826,7 @@ const POLITICIAN_CHALLENGES_SV: CollocationChallenge[] = [
   },
   {
     id: "grasrotsstod",
-    category: "Campaigning",
+    category: "Valkampanj",
     weakPhrase: "Många människor lokalt stödjer vår kampanj.",
     targetVerbStem: "gräsrot",
     targetNounStem: "stöd",
@@ -822,7 +840,7 @@ const POLITICIAN_CHALLENGES_SV: CollocationChallenge[] = [
   },
   {
     id: "stalla-till-svars",
-    category: "Governance",
+    category: "Styrning",
     weakPhrase: "Vi måste se till att ledare svarar för sina handlingar.",
     targetVerbStem: "ställ",
     targetNounStem: "svars",
@@ -836,7 +854,7 @@ const POLITICIAN_CHALLENGES_SV: CollocationChallenge[] = [
   },
   {
     id: "sta-enad",
-    category: "National Address",
+    category: "Nationellt Tal",
     weakPhrase: "Alla i landet måste hålla ihop nu.",
     targetVerbStem: "stå",
     targetNounStem: "enad",
@@ -850,7 +868,7 @@ const POLITICIAN_CHALLENGES_SV: CollocationChallenge[] = [
   },
   {
     id: "atterupprata-fortroende",
-    category: "Campaigning",
+    category: "Valkampanj",
     weakPhrase: "Vi lovar att göra saker bättre och vara ärliga mot väljarna.",
     targetVerbStem: "återupprätt",
     targetNounStem: "förtroende",
@@ -940,7 +958,7 @@ const LAWYER_CHALLENGES_EN: CollocationChallenge[] = [
 const LAWYER_CHALLENGES_DE: CollocationChallenge[] = [
   {
     id: "beweislast-erfuell",
-    category: "Trial Advocacy",
+    category: "Plädoyer",
     weakPhrase: "Wir glauben, die Gegenseite hat ihren Fall nicht ausreichend bewiesen.",
     targetVerbStem: "erfüll",
     targetNounStem: "beweislast",
@@ -954,7 +972,7 @@ const LAWYER_CHALLENGES_DE: CollocationChallenge[] = [
   },
   {
     id: "vertragsverletzung",
-    category: "Civil Litigation",
+    category: "Zivilprozess",
     weakPhrase: "Mein Mandant hat den Vertrag nicht gebrochen.",
     targetVerbStem: "haft",
     targetNounStem: "vertragsverletzung",
@@ -968,7 +986,7 @@ const LAWYER_CHALLENGES_DE: CollocationChallenge[] = [
   },
   {
     id: "zweifelsfrei",
-    category: "Trial Advocacy",
+    category: "Plädoyer",
     weakPhrase: "Wir sind sicher, dass er es getan hat, wegen all der Beweise.",
     targetVerbStem: "begründ",
     targetNounStem: "zweifelsfrei",
@@ -982,7 +1000,7 @@ const LAWYER_CHALLENGES_DE: CollocationChallenge[] = [
   },
   {
     id: "unzulaessig-ausschliess",
-    category: "Trial Procedure",
+    category: "Verfahrensrecht",
     weakPhrase: "Ich denke nicht, dass dieser Beweis zugelassen werden sollte.",
     targetVerbStem: "ausschließ",
     targetNounStem: "unzulässig",
@@ -996,7 +1014,7 @@ const LAWYER_CHALLENGES_DE: CollocationChallenge[] = [
   },
   {
     id: "schiedsverfahren",
-    category: "Negotiation",
+    category: "Verhandlung",
     weakPhrase: "Wir wollen das ohne Gericht klären.",
     targetVerbStem: "klär",
     targetNounStem: "schiedsverfahren",
@@ -1013,7 +1031,7 @@ const LAWYER_CHALLENGES_DE: CollocationChallenge[] = [
 const LAWYER_CHALLENGES_FR: CollocationChallenge[] = [
   {
     id: "charge-preuve",
-    category: "Trial Advocacy",
+    category: "Plaidoirie",
     weakPhrase: "Nous pensons que l'autre partie n'a pas suffisamment prouvé son cas.",
     targetVerbStem: "acquitt",
     targetNounStem: "preuve",
@@ -1027,7 +1045,7 @@ const LAWYER_CHALLENGES_FR: CollocationChallenge[] = [
   },
   {
     id: "rupture-contrat",
-    category: "Civil Litigation",
+    category: "Contentieux civil",
     weakPhrase: "Mon client n'a pas rompu le contrat.",
     targetVerbStem: "respons",
     targetNounStem: "rupture",
@@ -1041,7 +1059,7 @@ const LAWYER_CHALLENGES_FR: CollocationChallenge[] = [
   },
   {
     id: "doute-raisonnable",
-    category: "Trial Advocacy",
+    category: "Plaidoirie",
     weakPhrase: "Nous sommes sûrs qu'il l'a fait à cause de toutes les preuves.",
     targetVerbStem: "établi",
     targetNounStem: "doute",
@@ -1055,7 +1073,7 @@ const LAWYER_CHALLENGES_FR: CollocationChallenge[] = [
   },
   {
     id: "exclure-irrecevable",
-    category: "Trial Procedure",
+    category: "Procédure de procès",
     weakPhrase: "Je ne pense pas que cette preuve devrait être autorisée.",
     targetVerbStem: "exclu",
     targetNounStem: "irrecevable",
@@ -1069,7 +1087,7 @@ const LAWYER_CHALLENGES_FR: CollocationChallenge[] = [
   },
   {
     id: "resoudre-arbitrage",
-    category: "Negotiation",
+    category: "Négociation",
     weakPhrase: "Nous voulons régler cela sans aller au tribunal.",
     targetVerbStem: "résoud",
     targetNounStem: "arbitrage",
@@ -1086,7 +1104,7 @@ const LAWYER_CHALLENGES_FR: CollocationChallenge[] = [
 const LAWYER_CHALLENGES_ES: CollocationChallenge[] = [
   {
     id: "carga-prueba",
-    category: "Trial Advocacy",
+    category: "Alegato",
     weakPhrase: "Creemos que la otra parte no probó su caso lo suficiente.",
     targetVerbStem: "cumpl",
     targetNounStem: "carga",
@@ -1100,7 +1118,7 @@ const LAWYER_CHALLENGES_ES: CollocationChallenge[] = [
   },
   {
     id: "incumplimiento-contrato",
-    category: "Civil Litigation",
+    category: "Litigio civil",
     weakPhrase: "Mi cliente no rompió el contrato.",
     targetVerbStem: "respons",
     targetNounStem: "incumplimiento",
@@ -1114,7 +1132,7 @@ const LAWYER_CHALLENGES_ES: CollocationChallenge[] = [
   },
   {
     id: "duda-razonable",
-    category: "Trial Advocacy",
+    category: "Alegato",
     weakPhrase: "Estamos seguros de que lo hizo por todas las pruebas.",
     targetVerbStem: "establec",
     targetNounStem: "duda",
@@ -1128,7 +1146,7 @@ const LAWYER_CHALLENGES_ES: CollocationChallenge[] = [
   },
   {
     id: "excluir-inadmisible",
-    category: "Trial Procedure",
+    category: "Procedimiento judicial",
     weakPhrase: "No creo que esa prueba deba permitirse.",
     targetVerbStem: "exclu",
     targetNounStem: "inadmisible",
@@ -1142,7 +1160,7 @@ const LAWYER_CHALLENGES_ES: CollocationChallenge[] = [
   },
   {
     id: "resolver-arbitraje",
-    category: "Negotiation",
+    category: "Negociación",
     weakPhrase: "Queremos resolver esto sin ir a juicio.",
     targetVerbStem: "resolv",
     targetNounStem: "arbitraje",
@@ -1159,7 +1177,7 @@ const LAWYER_CHALLENGES_ES: CollocationChallenge[] = [
 const LAWYER_CHALLENGES_SV: CollocationChallenge[] = [
   {
     id: "bevisborda-uppfyll",
-    category: "Trial Advocacy",
+    category: "Pläderande",
     weakPhrase: "Vi tycker att motparten inte bevisade sin sak tillräckligt.",
     targetVerbStem: "uppfyll",
     targetNounStem: "bevisbörd",
@@ -1173,7 +1191,7 @@ const LAWYER_CHALLENGES_SV: CollocationChallenge[] = [
   },
   {
     id: "avtalsbrott",
-    category: "Civil Litigation",
+    category: "Civilrättslig Tvist",
     weakPhrase: "Min klient bröt inte mot avtalet.",
     targetVerbStem: "ansvar",
     targetNounStem: "avtalsbrott",
@@ -1187,7 +1205,7 @@ const LAWYER_CHALLENGES_SV: CollocationChallenge[] = [
   },
   {
     id: "bortom-rimligt-tvivel",
-    category: "Trial Advocacy",
+    category: "Pläderande",
     weakPhrase: "Vi är säkra på att han gjorde det på grund av alla bevis.",
     targetVerbStem: "fastställ",
     targetNounStem: "tvivel",
@@ -1201,7 +1219,7 @@ const LAWYER_CHALLENGES_SV: CollocationChallenge[] = [
   },
   {
     id: "otillaten-uteslut",
-    category: "Trial Procedure",
+    category: "Rättegångsförfarande",
     weakPhrase: "Jag tycker inte att den bevisningen ska tillåtas.",
     targetVerbStem: "uteslut",
     targetNounStem: "otillåten",
@@ -1215,7 +1233,7 @@ const LAWYER_CHALLENGES_SV: CollocationChallenge[] = [
   },
   {
     id: "skiljeforfarande",
-    category: "Negotiation",
+    category: "Förhandling",
     weakPhrase: "Vi vill lösa det här utan att gå till domstol.",
     targetVerbStem: "lös",
     targetNounStem: "skiljeförfarande",

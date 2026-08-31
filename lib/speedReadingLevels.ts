@@ -1,7 +1,9 @@
+import type { LanguageCode } from "@/lib/languages";
+
 export interface ReadingLevel {
   id: "beginner" | "intermediate" | "advanced";
-  name: string;
-  description: string;
+  name: Record<LanguageCode, string>;
+  description: Record<LanguageCode, string>;
   wpmMin: number;
   wpmMax: number;
   maxWordsPerChunk: number;
@@ -11,8 +13,20 @@ export interface ReadingLevel {
 export const READING_LEVELS: ReadingLevel[] = [
   {
     id: "beginner",
-    name: "Level 1 – Beginner",
-    description: "150–200 wpm, one word at a time.",
+    name: {
+      en: "Level 1 – Beginner",
+      de: "Stufe 1 – Anfänger",
+      fr: "Niveau 1 – Débutant",
+      es: "Nivel 1 – Principiante",
+      sv: "Nivå 1 – Nybörjare",
+    },
+    description: {
+      en: "150–200 wpm, one word at a time.",
+      de: "150–200 Wörter/Min., ein Wort nach dem anderen.",
+      fr: "150–200 mots/min, un mot à la fois.",
+      es: "150–200 ppm, una palabra a la vez.",
+      sv: "150–200 ord/min, ett ord i taget.",
+    },
     wpmMin: 150,
     wpmMax: 200,
     maxWordsPerChunk: 1,
@@ -20,8 +34,20 @@ export const READING_LEVELS: ReadingLevel[] = [
   },
   {
     id: "intermediate",
-    name: "Level 2 – Intermediate",
-    description: "300–400 wpm, 1–2 words at a time.",
+    name: {
+      en: "Level 2 – Intermediate",
+      de: "Stufe 2 – Fortgeschritten",
+      fr: "Niveau 2 – Intermédiaire",
+      es: "Nivel 2 – Intermedio",
+      sv: "Nivå 2 – Mellannivå",
+    },
+    description: {
+      en: "300–400 wpm, 1–2 words at a time.",
+      de: "300–400 Wörter/Min., 1–2 Wörter auf einmal.",
+      fr: "300–400 mots/min, 1 à 2 mots à la fois.",
+      es: "300–400 ppm, 1–2 palabras a la vez.",
+      sv: "300–400 ord/min, 1–2 ord i taget.",
+    },
     wpmMin: 300,
     wpmMax: 400,
     maxWordsPerChunk: 2,
@@ -29,8 +55,20 @@ export const READING_LEVELS: ReadingLevel[] = [
   },
   {
     id: "advanced",
-    name: "Level 3 – Advanced (Chunking)",
-    description: "500+ wpm, 3–4 words per chunk.",
+    name: {
+      en: "Level 3 – Advanced (Chunking)",
+      de: "Stufe 3 – Fortgeschritten (Wortgruppen)",
+      fr: "Niveau 3 – Avancé (groupes de mots)",
+      es: "Nivel 3 – Avanzado (agrupación)",
+      sv: "Nivå 3 – Avancerad (gruppering)",
+    },
+    description: {
+      en: "500+ wpm, 3–4 words per chunk.",
+      de: "500+ Wörter/Min., 3–4 Wörter pro Gruppe.",
+      fr: "500+ mots/min, 3 à 4 mots par groupe.",
+      es: "500+ ppm, 3–4 palabras por grupo.",
+      sv: "500+ ord/min, 3–4 ord per grupp.",
+    },
     wpmMin: 500,
     wpmMax: 650,
     maxWordsPerChunk: 4,

@@ -11,8 +11,77 @@ import {
   type StructureModel,
 } from "@/lib/structureModels";
 import { useLanguage } from "@/components/LanguageProvider";
+import type { LanguageCode } from "@/lib/languages";
 
 const EXERCISE_SECONDS = 60;
+
+const T: Record<LanguageCode, {
+  word: string;
+  newWord: string;
+  structure: string;
+  newModel: string;
+  finishNow: string;
+  discardRecording: string;
+  newWordAndModel: string;
+  startButton: string;
+  loading: string;
+}> = {
+  en: {
+    word: "Word",
+    newWord: "🎲 New word",
+    structure: "Structure",
+    newModel: "🎲 New model",
+    finishNow: "Finish now",
+    discardRecording: "🗑️ Discard recording",
+    newWordAndModel: "🎲 New word & model",
+    startButton: "Start (60 sec)",
+    loading: "Loading…",
+  },
+  de: {
+    word: "Wort",
+    newWord: "🎲 Neues Wort",
+    structure: "Struktur",
+    newModel: "🎲 Neues Modell",
+    finishNow: "Jetzt beenden",
+    discardRecording: "🗑️ Aufnahme verwerfen",
+    newWordAndModel: "🎲 Neues Wort & Modell",
+    startButton: "Starten (60 Sek.)",
+    loading: "Wird geladen…",
+  },
+  fr: {
+    word: "Mot",
+    newWord: "🎲 Nouveau mot",
+    structure: "Structure",
+    newModel: "🎲 Nouveau modèle",
+    finishNow: "Terminer maintenant",
+    discardRecording: "🗑️ Supprimer l'enregistrement",
+    newWordAndModel: "🎲 Nouveau mot et modèle",
+    startButton: "Démarrer (60 s)",
+    loading: "Chargement…",
+  },
+  es: {
+    word: "Palabra",
+    newWord: "🎲 Nueva palabra",
+    structure: "Estructura",
+    newModel: "🎲 Nuevo modelo",
+    finishNow: "Terminar ahora",
+    discardRecording: "🗑️ Descartar grabación",
+    newWordAndModel: "🎲 Nueva palabra y modelo",
+    startButton: "Empezar (60 s)",
+    loading: "Cargando…",
+  },
+  sv: {
+    word: "Ord",
+    newWord: "🎲 Nytt ord",
+    structure: "Struktur",
+    newModel: "🎲 Ny modell",
+    finishNow: "Avsluta nu",
+    discardRecording: "🗑️ Kasta inspelning",
+    newWordAndModel: "🎲 Nytt ord & modell",
+    startButton: "Starta (60 sek)",
+    loading: "Laddar…",
+  },
+};
 
 /**
  * 60-second improv drill: a random everyday word plus a rhetorical
@@ -26,6 +95,7 @@ const EXERCISE_SECONDS = 60;
  */
 export function ImprovTrainer() {
   const { language } = useLanguage();
+  const t = T[language];
   // Picked client-side only (in an effect below): a random initial value
   // here would be computed once during SSR and again on the client during
   // hydration, and Math.random() obviously won't agree with itself.
@@ -102,7 +172,7 @@ export function ImprovTrainer() {
   if (!word || !model) {
     return (
       <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-        <p className="text-sm text-slate-400">Loading…</p>
+        <p className="text-sm text-slate-400">{t.loading}</p>
       </div>
     );
   }
@@ -113,7 +183,7 @@ export function ImprovTrainer() {
     <div className="flex flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
       {/* Word */}
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Word</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">{t.word}</p>
         <div className="mt-2 flex items-center gap-3">
           <p className="text-2xl font-bold text-slate-900">{word}</p>
           {showSetup && (
@@ -121,7 +191,7 @@ export function ImprovTrainer() {
               onClick={handleNewWord}
               className="rounded-lg bg-slate-100 px-3 py-1.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-200"
             >
-              🎲 New word
+              {t.newWord}
             </button>
           )}
         </div>
@@ -132,13 +202,13 @@ export function ImprovTrainer() {
         <div>
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-              Structure
+              {t.structure}
             </p>
             <button
               onClick={handleNewModel}
               className="rounded-lg bg-slate-100 px-3 py-1.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-200"
             >
-              🎲 New model
+              {t.newModel}
             </button>
           </div>
 
@@ -191,7 +261,7 @@ export function ImprovTrainer() {
               onClick={stop}
               className="rounded-lg bg-slate-800 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-slate-700"
             >
-              Finish now
+              {t.finishNow}
             </button>
           )}
 
@@ -203,13 +273,13 @@ export function ImprovTrainer() {
                   onClick={handleDiscard}
                   className="rounded-lg bg-red-50 px-6 py-3 text-sm font-semibold text-red-700 transition-colors hover:bg-red-100"
                 >
-                  🗑️ Discard recording
+                  {t.discardRecording}
                 </button>
                 <button
                   onClick={handleNewPrompt}
                   className="rounded-lg bg-slate-200 px-6 py-3 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-300"
                 >
-                  🎲 New word & model
+                  {t.newWordAndModel}
                 </button>
               </div>
             </div>
@@ -222,7 +292,7 @@ export function ImprovTrainer() {
           onClick={handleStart}
           className="self-center rounded-lg bg-indigo-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500"
         >
-          Start (60 sec)
+          {t.startButton}
         </button>
       )}
     </div>

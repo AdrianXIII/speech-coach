@@ -9,14 +9,19 @@ pronunciation of individual words.
 
 One global language switch lives in the nav bar (next to "Speech Coach"),
 not a separate control per feature. Picking English, German, French,
-Spanish, or Swedish there both translates the nav labels and swaps the
-content in every multi-language trainer (Improv, Contrastive Stress,
-Listening & Summary, Elite Phrasing, Speed Reading) — implemented
-once in `components/LanguageProvider.tsx` (React context + one
-localStorage key) rather than each trainer managing its own. Record &
-Analyze, Virtual Stage, and Pronunciation aren't wired to it: the first
-two work in whatever language you speak already (Gemini handles that),
-and Pronunciation Trainer is still English-only (see its section below).
+Spanish, or Swedish there translates everything inside each multi-language
+trainer (Improv, Contrastive Stress, Listening & Summary, Elite Phrasing,
+Speed Reading) — not just the practice content, but every label, button,
+instruction, and generated message: page titles/subtitles (`components/
+PageHeader.tsx`), profile pills, round/status labels, quiz questions
+generated on the fly from pasted text (`lib/readingComprehension.ts`), and
+locally-generated feedback strings (`lib/languageRichness.ts`). The nav
+labels and language state are implemented once in
+`components/LanguageProvider.tsx` (React context + one localStorage key)
+rather than each trainer managing its own. Record & Analyze, Virtual Stage,
+and Pronunciation aren't wired to it: the first two work in whatever
+language you speak already (Gemini handles that), and Pronunciation
+Trainer is still English-only (see its section below).
 
 ## What it does
 

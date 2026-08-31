@@ -26,6 +26,160 @@ const WORDS_PER_MID_CHECK = 150;
 const MIN_WORDS = 30;
 const MID_CHECK_LOOKBACK_WORDS = 25;
 
+const T: Record<LanguageCode, {
+  pasteInstruction: (langName: string) => string;
+  text: string;
+  placeholder: string;
+  wordsCount: (n: number) => string;
+  level: string;
+  startReading: string;
+  done: string;
+  quickCheck: string;
+  comprehensionQuestions: string;
+  comprehensionSubtitle: string;
+  seeResults: string;
+  speed: string;
+  wordsPerMinute: string;
+  comprehension: string;
+  correctOf: (correct: number, total: number) => string;
+  percentCorrect: (pct: number) => string;
+  wordsInDuration: (words: number, duration: string) => string;
+  improvedNote: (prevWpm: number, wpm: number) => string;
+  lastAttemptNote: (prevWpm: number, prevPct: number) => string;
+  history: string;
+  readAgain: string;
+  newText: string;
+  levelShortNames: Record<"beginner" | "intermediate" | "advanced", string>;
+}> = {
+  en: {
+    pasteInstruction: (l) => `Paste text in ${l} — change the language from the picker in the nav bar above.`,
+    text: "Text",
+    placeholder: "Paste a text to practice on (at least ~30 words)…",
+    wordsCount: (n) => `${n} words`,
+    level: "Level",
+    startReading: "Start reading",
+    done: "Done",
+    quickCheck: "Quick check",
+    comprehensionQuestions: "Comprehension questions",
+    comprehensionSubtitle: "Based on the text you just read — nothing to look up, just what you actually absorbed.",
+    seeResults: "See results",
+    speed: "Speed",
+    wordsPerMinute: "words/minute",
+    comprehension: "Comprehension",
+    correctOf: (c, t) => `${c}/${t} correct`,
+    percentCorrect: (pct) => `${pct}% correct`,
+    wordsInDuration: (w, d) => `${w} words in ${d}`,
+    improvedNote: (prev, wpm) => `📈 Faster than last attempt (${prev} → ${wpm} wpm) without comprehension dropping — you're actually reading faster, not just skimming.`,
+    lastAttemptNote: (prev, pct) => `Last attempt at this level: ${prev} wpm, ${pct}% comprehension.`,
+    history: "History",
+    readAgain: "Read the same text again",
+    newText: "New text",
+    levelShortNames: { beginner: "Beginner", intermediate: "Intermediate", advanced: "Advanced" },
+  },
+  de: {
+    pasteInstruction: (l) => `Füge einen Text auf ${l} ein — ändere die Sprache über den Wähler in der Navigationsleiste oben.`,
+    text: "Text",
+    placeholder: "Füge einen Übungstext ein (mindestens ~30 Wörter)…",
+    wordsCount: (n) => `${n} Wörter`,
+    level: "Level",
+    startReading: "Lesen starten",
+    done: "Fertig",
+    quickCheck: "Kurzcheck",
+    comprehensionQuestions: "Verständnisfragen",
+    comprehensionSubtitle: "Basierend auf dem Text, den du gerade gelesen hast — nichts zum Nachschlagen, nur das, was du tatsächlich aufgenommen hast.",
+    seeResults: "Ergebnisse ansehen",
+    speed: "Geschwindigkeit",
+    wordsPerMinute: "Wörter/Minute",
+    comprehension: "Verständnis",
+    correctOf: (c, t) => `${c}/${t} richtig`,
+    percentCorrect: (pct) => `${pct}% richtig`,
+    wordsInDuration: (w, d) => `${w} Wörter in ${d}`,
+    improvedNote: (prev, wpm) => `📈 Schneller als beim letzten Versuch (${prev} → ${wpm} Wörter/Min.) ohne Verständnisverlust — du liest wirklich schneller, nicht nur oberflächlich.`,
+    lastAttemptNote: (prev, pct) => `Letzter Versuch auf diesem Level: ${prev} Wörter/Min., ${pct}% Verständnis.`,
+    history: "Verlauf",
+    readAgain: "Denselben Text erneut lesen",
+    newText: "Neuer Text",
+    levelShortNames: { beginner: "Anfänger", intermediate: "Mittel", advanced: "Fortgeschritten" },
+  },
+  fr: {
+    pasteInstruction: (l) => `Collez un texte en ${l} — changez la langue depuis le sélecteur dans la barre de navigation ci-dessus.`,
+    text: "Texte",
+    placeholder: "Collez un texte pour vous entraîner (au moins ~30 mots)…",
+    wordsCount: (n) => `${n} mots`,
+    level: "Niveau",
+    startReading: "Commencer la lecture",
+    done: "Terminé",
+    quickCheck: "Vérification rapide",
+    comprehensionQuestions: "Questions de compréhension",
+    comprehensionSubtitle: "Basé sur le texte que vous venez de lire — rien à chercher, juste ce que vous avez vraiment retenu.",
+    seeResults: "Voir les résultats",
+    speed: "Vitesse",
+    wordsPerMinute: "mots/minute",
+    comprehension: "Compréhension",
+    correctOf: (c, t) => `${c}/${t} correctes`,
+    percentCorrect: (pct) => `${pct}% correctes`,
+    wordsInDuration: (w, d) => `${w} mots en ${d}`,
+    improvedNote: (prev, wpm) => `📈 Plus rapide que la dernière tentative (${prev} → ${wpm} mots/min) sans baisse de compréhension — vous lisez vraiment plus vite, pas juste en survolant.`,
+    lastAttemptNote: (prev, pct) => `Dernière tentative à ce niveau : ${prev} mots/min, ${pct}% de compréhension.`,
+    history: "Historique",
+    readAgain: "Relire le même texte",
+    newText: "Nouveau texte",
+    levelShortNames: { beginner: "Débutant", intermediate: "Intermédiaire", advanced: "Avancé" },
+  },
+  es: {
+    pasteInstruction: (l) => `Pega un texto en ${l} — cambia el idioma desde el selector en la barra de navegación de arriba.`,
+    text: "Texto",
+    placeholder: "Pega un texto para practicar (al menos ~30 palabras)…",
+    wordsCount: (n) => `${n} palabras`,
+    level: "Nivel",
+    startReading: "Empezar a leer",
+    done: "Listo",
+    quickCheck: "Comprobación rápida",
+    comprehensionQuestions: "Preguntas de comprensión",
+    comprehensionSubtitle: "Basado en el texto que acabas de leer — nada que buscar, solo lo que realmente absorbiste.",
+    seeResults: "Ver resultados",
+    speed: "Velocidad",
+    wordsPerMinute: "palabras/minuto",
+    comprehension: "Comprensión",
+    correctOf: (c, t) => `${c}/${t} correctas`,
+    percentCorrect: (pct) => `${pct}% correctas`,
+    wordsInDuration: (w, d) => `${w} palabras en ${d}`,
+    improvedNote: (prev, wpm) => `📈 Más rápido que el intento anterior (${prev} → ${wpm} ppm) sin bajar la comprensión — realmente estás leyendo más rápido, no solo hojeando.`,
+    lastAttemptNote: (prev, pct) => `Último intento en este nivel: ${prev} ppm, ${pct}% de comprensión.`,
+    history: "Historial",
+    readAgain: "Leer el mismo texto de nuevo",
+    newText: "Nuevo texto",
+    levelShortNames: { beginner: "Principiante", intermediate: "Intermedio", advanced: "Avanzado" },
+  },
+  sv: {
+    pasteInstruction: (l) => `Klistra in text på ${l} — byt språk via väljaren i navigeringsfältet ovan.`,
+    text: "Text",
+    placeholder: "Klistra in en text att öva på (minst ~30 ord)…",
+    wordsCount: (n) => `${n} ord`,
+    level: "Nivå",
+    startReading: "Börja läsa",
+    done: "Klar",
+    quickCheck: "Snabbkoll",
+    comprehensionQuestions: "Förståelsefrågor",
+    comprehensionSubtitle: "Baserat på texten du just läste — inget att slå upp, bara det du faktiskt tog till dig.",
+    seeResults: "Se resultat",
+    speed: "Hastighet",
+    wordsPerMinute: "ord/minut",
+    comprehension: "Förståelse",
+    correctOf: (c, t) => `${c}/${t} rätt`,
+    percentCorrect: (pct) => `${pct}% rätt`,
+    wordsInDuration: (w, d) => `${w} ord på ${d}`,
+    improvedNote: (prev, wpm) => `📈 Snabbare än förra försöket (${prev} → ${wpm} ord/min) utan att förståelsen sjönk — du läser faktiskt snabbare, inte bara skummar.`,
+    lastAttemptNote: (prev, pct) => `Förra försöket på den här nivån: ${prev} ord/min, ${pct}% förståelse.`,
+    history: "Historik",
+    readAgain: "Läs samma text igen",
+    newText: "Ny text",
+    levelShortNames: { beginner: "Nybörjare", intermediate: "Mellan", advanced: "Avancerad" },
+  },
+};
+
+type Translations = (typeof T)[LanguageCode];
+
 type Phase = "setup" | "reading" | "midcheck" | "quiz" | "results";
 
 interface SessionResult {
@@ -61,6 +215,7 @@ export function SpeedReadingTrainer() {
   const [result, setResult] = useState<SessionResult | null>(null);
   const [history, setHistory] = useState<ReadingSessionResult[]>([]);
   const { language } = useLanguage();
+  const t = T[language];
   useEffect(() => {
     // localStorage doesn't exist during SSR, so this has to be a client-only
     // effect — same deliberate pattern as the random pickers elsewhere.
@@ -238,6 +393,7 @@ export function SpeedReadingTrainer() {
     <div className="flex flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
       {phase === "setup" && (
         <SetupPanel
+          t={t}
           text={text}
           onTextChange={setText}
           wordCount={wordCount}
@@ -257,12 +413,13 @@ export function SpeedReadingTrainer() {
                 onClick={handleFinishNow}
                 className="rounded-lg bg-slate-200 px-6 py-2.5 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-300"
               >
-                Done
+                {t.done}
               </button>
             </>
           )}
           {phase === "midcheck" && midCheckQuestion && (
             <MidCheckPanel
+              t={t}
               question={midCheckQuestion}
               selected={midCheckSelected}
               onAnswer={handleMidCheckAnswer}
@@ -273,6 +430,7 @@ export function SpeedReadingTrainer() {
 
       {phase === "quiz" && (
         <QuizPanel
+          t={t}
           questions={quizQuestions}
           answers={quizAnswers}
           onSelect={handleSelectQuizAnswer}
@@ -282,6 +440,8 @@ export function SpeedReadingTrainer() {
 
       {phase === "results" && result && (
         <ResultsPanel
+          t={t}
+          language={language}
           result={result}
           levelId={levelRef.current.id}
           history={history}
@@ -296,6 +456,7 @@ export function SpeedReadingTrainer() {
 /* ─────────────────────────── Setup ─────────────────────────── */
 
 function SetupPanel({
+  t,
   text,
   onTextChange,
   wordCount,
@@ -304,6 +465,7 @@ function SetupPanel({
   language,
   onStart,
 }: {
+  t: Translations;
   text: string;
   onTextChange: (value: string) => void;
   wordCount: number;
@@ -316,25 +478,22 @@ function SetupPanel({
 
   return (
     <div className="flex flex-col gap-5">
-      <p className="text-xs text-slate-400">
-        Paste text in <span className="font-semibold text-slate-600">{getLanguage(language).name}</span> —
-        change the language from the picker in the nav bar above.
-      </p>
+      <p className="text-xs text-slate-400">{t.pasteInstruction(getLanguage(language).name)}</p>
 
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Text</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">{t.text}</p>
         <textarea
           value={text}
           onChange={(e) => onTextChange(e.target.value)}
-          placeholder="Paste a text to practice on (at least ~30 words)…"
+          placeholder={t.placeholder}
           rows={8}
           className="mt-2 w-full resize-none rounded-lg border border-slate-200 p-3 text-sm text-slate-800 placeholder:text-slate-400 focus:border-indigo-400 focus:outline-none"
         />
-        <p className="mt-1 text-xs text-slate-400">{wordCount} words</p>
+        <p className="mt-1 text-xs text-slate-400">{t.wordsCount(wordCount)}</p>
       </div>
 
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Level</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">{t.level}</p>
         <div className="mt-2 grid gap-2 sm:grid-cols-3">
           {READING_LEVELS.map((level) => (
             <button
@@ -346,8 +505,8 @@ function SetupPanel({
                   : "border-slate-200 bg-white hover:bg-slate-50"
               }`}
             >
-              <p className="text-sm font-bold text-slate-900">{level.name}</p>
-              <p className="mt-0.5 text-xs text-slate-500">{level.description}</p>
+              <p className="text-sm font-bold text-slate-900">{level.name[language]}</p>
+              <p className="mt-0.5 text-xs text-slate-500">{level.description[language]}</p>
             </button>
           ))}
         </div>
@@ -358,7 +517,7 @@ function SetupPanel({
         disabled={tooShort}
         className="self-center rounded-lg bg-indigo-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-40"
       >
-        Start reading
+        {t.startReading}
       </button>
     </div>
   );
@@ -416,17 +575,19 @@ function FocusBox({ children }: { children: ReactNode }) {
 /* ─────────────────────────── Mid-reading check ─────────────────────────── */
 
 function MidCheckPanel({
+  t,
   question,
   selected,
   onAnswer,
 }: {
+  t: Translations;
   question: ComprehensionQuestion;
   selected: number | null;
   onAnswer: (index: number) => void;
 }) {
   return (
     <div className="flex w-full flex-col items-center gap-4 rounded-xl border border-indigo-200 bg-indigo-50 p-6">
-      <p className="text-xs font-semibold uppercase tracking-wide text-indigo-500">Quick check</p>
+      <p className="text-xs font-semibold uppercase tracking-wide text-indigo-500">{t.quickCheck}</p>
       <p className="text-center text-base font-medium text-slate-800">{question.prompt}</p>
       <div className="grid w-full max-w-sm grid-cols-2 gap-2">
         {question.options.map((option, i) => {
@@ -460,11 +621,13 @@ function MidCheckPanel({
 /* ─────────────────────────── End-of-session quiz ─────────────────────────── */
 
 function QuizPanel({
+  t,
   questions,
   answers,
   onSelect,
   onSubmit,
 }: {
+  t: Translations;
   questions: ComprehensionQuestion[];
   answers: (number | null)[];
   onSelect: (questionIndex: number, optionIndex: number) => void;
@@ -476,11 +639,9 @@ function QuizPanel({
     <div className="flex flex-col gap-5">
       <div>
         <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-          Comprehension questions
+          {t.comprehensionQuestions}
         </p>
-        <p className="mt-1 text-sm text-slate-500">
-          Based on the text you just read — nothing to look up, just what you actually absorbed.
-        </p>
+        <p className="mt-1 text-sm text-slate-500">{t.comprehensionSubtitle}</p>
       </div>
 
       {questions.map((q, qi) => (
@@ -509,7 +670,7 @@ function QuizPanel({
         disabled={!allAnswered}
         className="self-center rounded-lg bg-indigo-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-40"
       >
-        See results
+        {t.seeResults}
       </button>
     </div>
   );
@@ -518,12 +679,16 @@ function QuizPanel({
 /* ─────────────────────────── Results ─────────────────────────── */
 
 function ResultsPanel({
+  t,
+  language,
   result,
   levelId,
   history,
   onReadAgain,
   onNewText,
 }: {
+  t: Translations;
+  language: LanguageCode;
   result: SessionResult;
   levelId: string;
   history: ReadingSessionResult[];
@@ -543,12 +708,12 @@ function ResultsPanel({
     <div className="flex flex-col gap-6">
       <div className="grid grid-cols-2 gap-4">
         <div className="rounded-xl border border-slate-200 bg-slate-50 p-5 text-center">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Speed</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">{t.speed}</p>
           <p className="mt-1 text-3xl font-extrabold text-slate-900">{result.wpm}</p>
-          <p className="text-xs text-slate-500">words/minute</p>
+          <p className="text-xs text-slate-500">{t.wordsPerMinute}</p>
         </div>
         <div className="rounded-xl border border-slate-200 bg-slate-50 p-5 text-center">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Comprehension</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">{t.comprehension}</p>
           <p
             className={`mt-1 text-3xl font-extrabold ${
               result.comprehensionPct >= 75 ? "text-emerald-600" : result.comprehensionPct >= 50 ? "text-amber-600" : "text-red-600"
@@ -557,13 +722,13 @@ function ResultsPanel({
             {result.comprehensionPct}%
           </p>
           <p className="text-xs text-slate-500">
-            {result.correctCount}/{result.totalQuestions} correct
+            {t.correctOf(result.correctCount, result.totalQuestions)}
           </p>
         </div>
       </div>
 
       <p className="text-center text-xs text-slate-400">
-        {result.wordCount} words in {formatDuration(Math.round(result.elapsedSeconds))}
+        {t.wordsInDuration(result.wordCount, formatDuration(Math.round(result.elapsedSeconds)))}
       </p>
 
       {previousAtLevel && (
@@ -573,21 +738,21 @@ function ResultsPanel({
           }`}
         >
           {improved
-            ? `📈 Faster than last attempt (${previousAtLevel.wpm} → ${result.wpm} wpm) without comprehension dropping — you're actually reading faster, not just skimming.`
-            : `Last attempt at this level: ${previousAtLevel.wpm} wpm, ${previousAtLevel.comprehensionPct}% comprehension.`}
+            ? t.improvedNote(previousAtLevel.wpm, result.wpm)
+            : t.lastAttemptNote(previousAtLevel.wpm, previousAtLevel.comprehensionPct)}
         </p>
       )}
 
       {history.length > 1 && (
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">History</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">{t.history}</p>
           <div className="mt-2 flex flex-col gap-1">
             {[...history].reverse().slice(0, 6).map((h, i) => (
               <div key={i} className="flex justify-between text-xs text-slate-500">
-                <span>{new Date(h.date).toLocaleDateString("en-US")}</span>
-                <span>{h.levelId}</span>
-                <span>{h.wpm} wpm</span>
-                <span>{h.comprehensionPct}% correct</span>
+                <span>{new Date(h.date).toLocaleDateString(language)}</span>
+                <span>{t.levelShortNames[h.levelId as "beginner" | "intermediate" | "advanced"]}</span>
+                <span>{h.wpm} {t.wordsPerMinute}</span>
+                <span>{t.percentCorrect(h.comprehensionPct)}</span>
               </div>
             ))}
           </div>
@@ -599,13 +764,13 @@ function ResultsPanel({
           onClick={onReadAgain}
           className="rounded-lg bg-slate-200 px-6 py-3 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-300"
         >
-          Read the same text again
+          {t.readAgain}
         </button>
         <button
           onClick={onNewText}
           className="rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500"
         >
-          New text
+          {t.newText}
         </button>
       </div>
     </div>

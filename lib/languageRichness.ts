@@ -201,6 +201,7 @@ export function analyzeRichness(
     connectivesUsed,
     missedTerms,
     wordCount,
+    language,
   });
 
   return {
@@ -219,44 +220,104 @@ export function analyzeRichness(
   };
 }
 
+const FEEDBACK_STRINGS: Record<LanguageCode, {
+  shortSummary: string;
+  strongCoverage: string;
+  missedPoints: string;
+  basicVocab: string;
+  goodVocab: string;
+  noConnectives: string;
+  goodFlow: (used: string) => string;
+  tryTerms: (terms: string) => string;
+}> = {
+  en: {
+    shortSummary: "Your summary was quite short — try expanding on the key details a bit more.",
+    strongCoverage: "Strong content coverage — you captured the core points clearly.",
+    missedPoints: "You missed several key points — listen again and focus on the main facts.",
+    basicVocab: "You leaned on basic vocabulary (\"good\", \"bad\", \"thing\"...). Try weaving in more precise terms.",
+    goodVocab: "Good use of precise, professional vocabulary.",
+    noConnectives: "No professional connectives used (e.g. \"consequently\", \"whereas\", \"as a result\") — these make spoken summaries sound more structured and executive.",
+    goodFlow: (used) => `Nice structural flow — you used: ${used}.`,
+    tryTerms: (terms) => `Terms from the passage you could try using next time: ${terms}.`,
+  },
+  de: {
+    shortSummary: "Deine Zusammenfassung war ziemlich kurz — versuche, die wichtigsten Details etwas mehr auszuführen.",
+    strongCoverage: "Starke inhaltliche Abdeckung — du hast die Kernpunkte klar erfasst.",
+    missedPoints: "Du hast mehrere Kernpunkte verpasst — hör noch einmal zu und konzentriere dich auf die wichtigsten Fakten.",
+    basicVocab: "Du hast dich auf einfaches Vokabular verlassen („gut“, „schlecht“, „Sache“...). Versuche, präzisere Begriffe einzubauen.",
+    goodVocab: "Guter Einsatz von präzisem, professionellem Vokabular.",
+    noConnectives: "Keine professionellen Konnektoren verwendet (z. B. „folglich“, „während“, „infolgedessen“) — sie lassen gesprochene Zusammenfassungen strukturierter und souveräner klingen.",
+    goodFlow: (used) => `Schöner struktureller Fluss — du hast verwendet: ${used}.`,
+    tryTerms: (terms) => `Begriffe aus der Passage, die du nächstes Mal ausprobieren könntest: ${terms}.`,
+  },
+  fr: {
+    shortSummary: "Votre résumé était plutôt court — essayez de développer un peu plus les détails clés.",
+    strongCoverage: "Bonne couverture du contenu — vous avez clairement saisi les points essentiels.",
+    missedPoints: "Vous avez manqué plusieurs points clés — réécoutez et concentrez-vous sur les faits principaux.",
+    basicVocab: "Vous vous êtes appuyé sur un vocabulaire basique (« bon », « mauvais », « chose »...). Essayez d'intégrer des termes plus précis.",
+    goodVocab: "Bon usage d'un vocabulaire précis et professionnel.",
+    noConnectives: "Aucun connecteur professionnel utilisé (par ex. « par conséquent », « alors que », « ainsi ») — ils rendent les résumés oraux plus structurés et plus percutants.",
+    goodFlow: (used) => `Beau fil conducteur — vous avez utilisé : ${used}.`,
+    tryTerms: (terms) => `Termes du passage que vous pourriez essayer d'utiliser la prochaine fois : ${terms}.`,
+  },
+  es: {
+    shortSummary: "Tu resumen fue bastante corto — intenta desarrollar un poco más los detalles clave.",
+    strongCoverage: "Buena cobertura del contenido — captaste los puntos principales con claridad.",
+    missedPoints: "Te perdiste varios puntos clave — escucha de nuevo y concéntrate en los hechos principales.",
+    basicVocab: "Te apoyaste en vocabulario básico (\"bueno\", \"malo\", \"cosa\"...). Intenta incorporar términos más precisos.",
+    goodVocab: "Buen uso de vocabulario preciso y profesional.",
+    noConnectives: "No usaste conectores profesionales (p. ej. \"en consecuencia\", \"mientras que\", \"por lo tanto\") — hacen que los resúmenes orales suenen más estructurados y ejecutivos.",
+    goodFlow: (used) => `Buen flujo estructural — usaste: ${used}.`,
+    tryTerms: (terms) => `Términos del pasaje que podrías intentar usar la próxima vez: ${terms}.`,
+  },
+  sv: {
+    shortSummary: "Din sammanfattning var ganska kort — försök utveckla de viktigaste detaljerna lite mer.",
+    strongCoverage: "Stark innehållstäckning — du fångade kärnpunkterna tydligt.",
+    missedPoints: "Du missade flera kärnpunkter — lyssna igen och fokusera på huvudfakta.",
+    basicVocab: "Du lutade dig mot enkelt ordförråd (\"bra\", \"dålig\", \"sak\"...). Försök väva in mer precisa termer.",
+    goodVocab: "Bra användning av precist, professionellt ordförråd.",
+    noConnectives: "Inga professionella konnektiver användes (t.ex. \"följaktligen\", \"medan\", \"som ett resultat\") — de får muntliga sammanfattningar att låta mer strukturerade och ledande.",
+    goodFlow: (used) => `Snyggt strukturellt flöde — du använde: ${used}.`,
+    tryTerms: (terms) => `Termer från avsnittet du kan prova använda nästa gång: ${terms}.`,
+  },
+};
+
 function buildFeedback(input: {
   contentCoverageRatio: number;
   advancedVocabRatio: number;
   connectivesUsed: string[];
   missedTerms: string[];
   wordCount: number;
+  language: LanguageCode;
 }): string[] {
+  const s = FEEDBACK_STRINGS[input.language];
   const notes: string[] = [];
 
   if (input.wordCount < 15) {
-    notes.push("Your summary was quite short — try expanding on the key details a bit more.");
+    notes.push(s.shortSummary);
   }
 
   if (input.contentCoverageRatio >= 0.8) {
-    notes.push("Strong content coverage — you captured the core points clearly.");
+    notes.push(s.strongCoverage);
   } else if (input.contentCoverageRatio < 0.4) {
-    notes.push("You missed several key points — listen again and focus on the main facts.");
+    notes.push(s.missedPoints);
   }
 
   if (input.advancedVocabRatio < 0.3) {
-    notes.push(
-      "You leaned on basic vocabulary (\"good\", \"bad\", \"thing\"...). Try weaving in more precise terms.",
-    );
+    notes.push(s.basicVocab);
   } else if (input.advancedVocabRatio >= 0.5) {
-    notes.push("Good use of precise, professional vocabulary.");
+    notes.push(s.goodVocab);
   }
 
   if (input.connectivesUsed.length === 0) {
-    notes.push(
-      "No professional connectives used (e.g. \"consequently\", \"whereas\", \"as a result\") — these make spoken summaries sound more structured and executive.",
-    );
+    notes.push(s.noConnectives);
   } else {
-    notes.push(`Nice structural flow — you used: ${input.connectivesUsed.join(", ")}.`);
+    notes.push(s.goodFlow(input.connectivesUsed.join(", ")));
   }
 
   if (input.missedTerms.length > 0) {
     const suggestions = input.missedTerms.slice(0, 4).join(", ");
-    notes.push(`Terms from the passage you could try using next time: ${suggestions}.`);
+    notes.push(s.tryTerms(suggestions));
   }
 
   return notes;

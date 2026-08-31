@@ -161,12 +161,12 @@ const MODELS_BY_LANGUAGE: Record<LanguageCode, StructureModel[]> = {
     {
       id: "prep",
       name: "PREP",
-      fullName: "Point – Reason – Example – Point",
+      fullName: "Punkt – Anledning – Exempel – Punkt",
       phases: [
-        { label: "Point", seconds: 10 },
-        { label: "Reason", seconds: 15 },
-        { label: "Example", seconds: 25 },
-        { label: "Point", seconds: 10 },
+        { label: "Punkt", seconds: 10 },
+        { label: "Anledning", seconds: 15 },
+        { label: "Exempel", seconds: 25 },
+        { label: "Punkt", seconds: 10 },
       ],
     },
     {
