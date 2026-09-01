@@ -135,6 +135,30 @@ English with a small notice if a profile/language combination is ever
 missing, but with all 15 combinations filled in that path shouldn't
 trigger today.)
 
+**Case Studies** (`/case-studies`)
+Pick a profession — Business, Law, or Politics — then a category within
+it, and get handed a realistic problem to solve out loud (e.g. "your
+board wants a recommendation: enter this market, or reinvest in your core
+business"). Every case is original content: either fictional-but-specific
+scenarios or reworkings of publicly known situations in fresh wording —
+never copied case-study text, since real case libraries (Harvard Business
+Publishing, Case Centre, etc.) are commercially licensed and can't be
+reused. Business has 8 categories × 5 cases (40 total); Law and Politics
+have 5 categories × 2 cases each (10 apiece). Each case carries its own
+grading rubric (key issues, expected professional concepts/jargon, and a
+description of what a strong answer looks like) baked into the content
+file, not written per-request — so Gemini grades against a consistent
+standard instead of improvising one each time. Your spoken answer (via
+the same free Web Speech API transcript every other spoken-response
+feature uses) goes to Gemini along with that rubric, which returns a
+0-100 score, verdict, and separate feedback on correctness, structure,
+and professional-vocabulary use, plus concrete reading recommendations —
+this is the one feature in the app where AI grading isn't optional, since
+judging open-ended professional reasoning isn't something local pattern-
+matching can do meaningfully. English-only for now, with the same
+English-only fallback notice pattern as Elite Phrasing's profiles when a
+different language is selected.
+
 ## Running it locally
 
 ```bash
@@ -176,11 +200,13 @@ app/
   speed-reading/page.tsx          Snabbläsning (RSVP speed reading) page
   comprehension/page.tsx          Listening & Summary page
   collocations/page.tsx           Elite Phrasing page
+  case-studies/page.tsx           Case Studies page
   api/
     analyze-speech/               Gemini transcription+coaching (one call) -> filler-word/pace analysis
     generate-script/              Topic/draft -> Gemini-polished speakable script
     pronunciation-feedback/       Word + recording -> Gemini pronunciation feedback
     word-stress/                  Word -> syllable count + expected stress index (CMU dict lookup)
+    case-study-feedback/          Case id + transcript -> Gemini grading against that case's rubric
     chat/                         Text-only follow-up chat, seeded with any of the above
 components/
   SpeechRecorder.tsx               Record/stop/playback + "Analyze Speech"
@@ -194,6 +220,7 @@ components/
   SpeedReadingTrainer.tsx          RSVP speed reader: leveled chunking, recall checks, comprehension quiz
   ComprehensionTrainer.tsx         Listen (TTS) -> spoken summary (Web Speech API) -> local richness scoring
   CollocationTrainer.tsx           Upgrade-the-phrase quiz + spoken collocation-usage check
+  CaseStudyTrainer.tsx             Profession/category picker -> case -> spoken answer -> Gemini rubric grading
   FollowUpChat.tsx                 Reusable "ask a follow-up" thread under any AI feedback panel
   NavBar.tsx
   stage/
@@ -206,7 +233,8 @@ lib/
   languages.ts,
   speedReadingLevels.ts, readingComprehension.ts, readingHistory.ts,
   comprehensionContent.ts, languageRichness.ts, collocationContent.ts,
-  collocationCheck.ts, gemini.ts, audio.ts
+  collocationCheck.ts, caseStudyContent.ts, caseStudyFeedback.ts,
+  gemini.ts, audio.ts
 hooks/
   useMediaRecorder.ts, useSpeechRecognition.ts
 types/

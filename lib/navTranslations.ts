@@ -86,4 +86,14 @@ export const NAV_LINKS: NavLink[] = [
       sv: "Elituttryck",
     },
   },
+  {
+    href: "/case-studies",
+    labels: {
+      en: "Case Studies",
+      de: "Fallstudien",
+      fr: "Études de cas",
+      es: "Casos de estudio",
+      sv: "Fallstudier",
+    },
+  },
 ];
