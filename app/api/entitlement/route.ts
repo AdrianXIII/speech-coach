@@ -1,9 +1,14 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getEntitlement } from "@/lib/entitlements";
+import { hasOwnerAccess } from "@/lib/ownerAccess";
 
-/** GET /api/entitlement — used by AuthProvider to know if the signed-in user is premium. */
+/** GET /api/entitlement — used by AuthProvider to know if this device/user is premium. */
 export async function GET() {
+  if (await hasOwnerAccess()) {
+    return NextResponse.json({ premium: true });
+  }
+
   const supabase = await createClient();
   const {
     data: { user },

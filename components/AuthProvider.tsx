@@ -43,12 +43,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (!user) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setIsPremium(false);
-      return;
-    }
-
+    // Checked regardless of `user` — an owner-access cookie grants premium
+    // without any Supabase session at all.
     let cancelled = false;
     fetch("/api/entitlement")
       .then((res) => (res.ok ? res.json() : { premium: false }))

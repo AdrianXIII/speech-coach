@@ -21,22 +21,20 @@ export function NavBar() {
           </span>
           <div className="flex flex-wrap items-center gap-2">
             {!loading &&
-              (user ? (
-                isPremium ? (
-                  <Link
-                    href="/account"
-                    className="rounded-full border border-brass bg-brass px-3 py-1 text-xs font-semibold text-navy"
-                  >
-                    Premium
-                  </Link>
-                ) : (
-                  <Link
-                    href="/upgrade"
-                    className="rounded-full border border-brass px-3 py-1 text-xs font-semibold text-brass-soft transition-colors hover:bg-brass hover:text-navy"
-                  >
-                    Upgrade
-                  </Link>
-                )
+              (isPremium ? (
+                <Link
+                  href={user ? "/account" : "/"}
+                  className="rounded-full border border-brass bg-brass px-3 py-1 text-xs font-semibold text-navy"
+                >
+                  Premium
+                </Link>
+              ) : user ? (
+                <Link
+                  href="/upgrade"
+                  className="rounded-full border border-brass px-3 py-1 text-xs font-semibold text-brass-soft transition-colors hover:bg-brass hover:text-navy"
+                >
+                  Upgrade
+                </Link>
               ) : (
                 <Link
                   href="/login"

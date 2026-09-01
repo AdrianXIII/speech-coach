@@ -4,6 +4,7 @@ import { getCaseById } from "@/lib/caseStudyContent";
 import { geminiErrorResponse } from "@/lib/gemini";
 import { createClient } from "@/lib/supabase/server";
 import { getEntitlement } from "@/lib/entitlements";
+import { hasOwnerAccess } from "@/lib/ownerAccess";
 
 /**
  * POST /api/case-study-feedback
@@ -32,7 +33,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: `Unknown case id '${caseId}'.` }, { status: 404 });
   }
 
-  if (caseStudy.premium) {
+  if (caseStudy.premium && !(await hasOwnerAccess())) {
     const supabase = await createClient();
     const {
       data: { user },
