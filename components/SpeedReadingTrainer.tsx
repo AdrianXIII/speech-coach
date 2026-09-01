@@ -14,6 +14,8 @@ import {
   generateRecallCheck,
   type ComprehensionQuestion,
 } from "@/lib/readingComprehension";
+import { useAuth } from "@/components/AuthProvider";
+import { UpgradeCta } from "@/components/UpgradeCta";
 import {
   loadReadingHistory,
   saveReadingResult,
@@ -201,6 +203,7 @@ interface SessionResult {
  * itself, no AI call involved.
  */
 export function SpeedReadingTrainer() {
+  const { isPremium } = useAuth();
   const [phase, setPhase] = useState<Phase>("setup");
   const [text, setText] = useState("");
   const [levelId, setLevelId] = useState<ReadingLevel["id"]>("beginner");
@@ -319,6 +322,7 @@ export function SpeedReadingTrainer() {
     if (words.length < MIN_WORDS) return;
 
     const level = READING_LEVELS.find((l) => l.id === levelId) ?? READING_LEVELS[0];
+    if (level.premium && !isPremium) return;
     levelRef.current = level;
     allWordsRef.current = words;
     chunksRef.current = chunkWords(words, level.maxWordsPerChunk, level.maxCharsPerChunk);
@@ -400,6 +404,7 @@ export function SpeedReadingTrainer() {
           levelId={levelId}
           onLevelChange={setLevelId}
           language={language}
+          isPremium={isPremium}
           onStart={handleStart}
         />
       )}
@@ -463,6 +468,7 @@ function SetupPanel({
   levelId,
   onLevelChange,
   language,
+  isPremium,
   onStart,
 }: {
   t: Translations;
@@ -472,9 +478,12 @@ function SetupPanel({
   levelId: ReadingLevel["id"];
   onLevelChange: (id: ReadingLevel["id"]) => void;
   language: LanguageCode;
+  isPremium: boolean;
   onStart: () => void;
 }) {
   const tooShort = wordCount < MIN_WORDS;
+  const selectedLevel = READING_LEVELS.find((l) => l.id === levelId);
+  const selectedLocked = !!selectedLevel?.premium && !isPremium;
 
   return (
     <div className="flex flex-col gap-5">
@@ -495,30 +504,42 @@ function SetupPanel({
       <div>
         <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{t.level}</p>
         <div className="mt-2 grid gap-2 sm:grid-cols-3">
-          {READING_LEVELS.map((level) => (
-            <button
-              key={level.id}
-              onClick={() => onLevelChange(level.id)}
-              className={`rounded-lg border p-3 text-left transition-colors ${
-                levelId === level.id
-                  ? "border-brass bg-surface-2"
-                  : "border-hairline bg-surface hover:bg-surface-2"
-              }`}
-            >
-              <p className="text-sm font-bold text-ink">{level.name[language]}</p>
-              <p className="mt-0.5 text-xs text-ink-muted">{level.description[language]}</p>
-            </button>
-          ))}
+          {READING_LEVELS.map((level) => {
+            const locked = level.premium && !isPremium;
+            return (
+              <button
+                key={level.id}
+                onClick={() => onLevelChange(level.id)}
+                className={`relative rounded-lg border p-3 text-left transition-colors ${
+                  levelId === level.id
+                    ? "border-brass bg-surface-2"
+                    : "border-hairline bg-surface hover:bg-surface-2"
+                } ${locked ? "opacity-70" : ""}`}
+              >
+                {locked && (
+                  <span className="absolute top-2 right-2 rounded-full border border-brass bg-brass/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brass-text">
+                    🔒 Premium
+                  </span>
+                )}
+                <p className="text-sm font-bold text-ink">{level.name[language]}</p>
+                <p className="mt-0.5 text-xs text-ink-muted">{level.description[language]}</p>
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      <button
-        onClick={onStart}
-        disabled={tooShort}
-        className="self-center rounded-lg bg-navy px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800 disabled:cursor-not-allowed disabled:opacity-40"
-      >
-        {t.startReading}
-      </button>
+      {selectedLocked ? (
+        <UpgradeCta message="This reading speed is part of Speech Coach Premium." />
+      ) : (
+        <button
+          onClick={onStart}
+          disabled={tooShort}
+          className="self-center rounded-lg bg-navy px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800 disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          {t.startReading}
+        </button>
+      )}
     </div>
   );
 }

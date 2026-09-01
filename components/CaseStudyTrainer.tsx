@@ -12,6 +12,8 @@ import {
 import type { CaseStudyFeedback } from "@/lib/caseStudyFeedback";
 import { FollowUpChat } from "@/components/FollowUpChat";
 import { useLanguage } from "@/components/LanguageProvider";
+import { useAuth } from "@/components/AuthProvider";
+import { UpgradeCta } from "@/components/UpgradeCta";
 import { getLanguage } from "@/lib/languages";
 
 type Phase = "selectProfession" | "selectCategory" | "case" | "recording" | "grading" | "feedback";
@@ -37,6 +39,7 @@ function pickRandom<T>(items: T[], exclude?: T): T {
  */
 export function CaseStudyTrainer() {
   const { language } = useLanguage();
+  const { isPremium } = useAuth();
   const [phase, setPhase] = useState<Phase>("selectProfession");
   const [profession, setProfession] = useState<CaseProfession | null>(null);
   const [category, setCategory] = useState<string | null>(null);
@@ -161,6 +164,7 @@ export function CaseStudyTrainer() {
           phase={phase}
           transcript={recognition.transcript}
           canSpeak={recognition.isSupported}
+          isPremium={isPremium}
           gradingError={gradingError}
           onStart={handleStartRecording}
           onStop={handleStopRecording}
@@ -265,6 +269,7 @@ function CaseStep({
   phase,
   transcript,
   canSpeak,
+  isPremium,
   gradingError,
   onStart,
   onStop,
@@ -277,12 +282,15 @@ function CaseStep({
   phase: "case" | "recording";
   transcript: string;
   canSpeak: boolean;
+  isPremium: boolean;
   gradingError: string | null;
   onStart: () => void;
   onStop: () => void;
   onNewCase: () => void;
   onChangeCategory: () => void;
 }) {
+  const locked = !!caseStudy.premium && !isPremium;
+
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center justify-between">
@@ -295,9 +303,27 @@ function CaseStep({
       </div>
 
       <div className="rounded-lg bg-surface-2 p-5">
-        <h3 className="font-display text-base font-semibold text-ink">{caseStudy.title}</h3>
-        <p className="mt-2 text-sm leading-relaxed text-ink">{caseStudy.scenario}</p>
+        <div className="flex items-center gap-2">
+          <h3 className="font-display text-base font-semibold text-ink">{caseStudy.title}</h3>
+          {caseStudy.premium && (
+            <span className="rounded-full border border-brass bg-brass/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brass-text">
+              Premium
+            </span>
+          )}
+        </div>
+        <p className={`mt-2 text-sm leading-relaxed text-ink ${locked ? "line-clamp-2 opacity-70" : ""}`}>
+          {caseStudy.scenario}
+        </p>
       </div>
+
+      {locked && (
+        <div className="flex flex-col items-center gap-3">
+          <UpgradeCta message="This case is part of Speech Coach Premium." />
+          <button onClick={onNewCase} className="text-xs font-semibold text-brass-text hover:underline">
+            🎲 Different case in this category
+          </button>
+        </div>
+      )}
 
       {gradingError && (
         <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -305,7 +331,7 @@ function CaseStep({
         </p>
       )}
 
-      {phase === "case" && (
+      {!locked && phase === "case" && (
         <div className="flex flex-col items-center gap-3 py-2">
           <p className="text-sm text-ink-muted">
             Think it through, then record your solution out loud.

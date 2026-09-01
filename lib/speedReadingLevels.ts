@@ -8,6 +8,8 @@ export interface ReadingLevel {
   wpmMax: number;
   maxWordsPerChunk: number;
   maxCharsPerChunk: number;
+  /** Requires an active subscription. Beginner stays free forever. */
+  premium: boolean;
 }
 
 export const READING_LEVELS: ReadingLevel[] = [
@@ -31,6 +33,7 @@ export const READING_LEVELS: ReadingLevel[] = [
     wpmMax: 200,
     maxWordsPerChunk: 1,
     maxCharsPerChunk: 16,
+    premium: false,
   },
   {
     id: "intermediate",
@@ -52,6 +55,7 @@ export const READING_LEVELS: ReadingLevel[] = [
     wpmMax: 400,
     maxWordsPerChunk: 2,
     maxCharsPerChunk: 12,
+    premium: true,
   },
   {
     id: "advanced",
@@ -73,6 +77,7 @@ export const READING_LEVELS: ReadingLevel[] = [
     wpmMax: 650,
     maxWordsPerChunk: 4,
     maxCharsPerChunk: 24,
+    premium: true,
   },
 ];
 

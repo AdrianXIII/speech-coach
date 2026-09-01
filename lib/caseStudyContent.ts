@@ -15,6 +15,8 @@ export interface CaseStudy {
   modelApproach: string;
   /** Concepts/frameworks worth reading up on, shown as a baseline regardless of AI feedback. */
   furtherReading: string[];
+  /** Requires an active subscription. Omitted/false for every case in the free baseline. */
+  premium?: boolean;
 }
 
 export const CASE_CATEGORIES: Record<CaseProfession, string[]> = {
@@ -1773,6 +1775,95 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Continuing resolutions and government funding mechanisms",
       "Brinkmanship and negotiation theory in legislative standoffs",
       "Historical case studies of government shutdown negotiations",
+    ],
+  },
+
+  // ============================================================ PREMIUM (subscription required)
+  {
+    id: "biz-strategy-platform-shift-premium",
+    profession: "business",
+    category: "Strategy",
+    title: "Betting on a Platform Shift",
+    premium: true,
+    scenario:
+      "Your enterprise software company built a decade-long moat around on-premise deployments favored by security-conscious clients. A new generation of cloud-native competitors is winning deals with faster implementation and a third of the cost, and two of your largest accounts are asking for a cloud migration path. Rebuilding your product cloud-native would take 18 months and could alienate the on-premise base that still generates 70% of revenue. The board wants a platform strategy, not just a feature roadmap.",
+    keyIssues: [
+      "Whether to run both architectures in parallel or commit fully to a migration",
+      "Revenue risk of disrupting the on-premise base that funds the transition",
+      "Realistic sequencing given the 18-month rebuild estimate against competitive urgency",
+      "How to communicate the shift to enterprise clients who chose you specifically for on-premise control",
+    ],
+    expectedConcepts: [
+      "platform strategy",
+      "technology transition risk",
+      "cannibalization",
+      "dual-track roadmap",
+      "enterprise sales cycle",
+    ],
+    modelApproach:
+      "A strong answer treats this as a managed transition rather than an all-or-nothing bet — proposing a dual-track period with clear sunset milestones, protecting near-term revenue while committing visibly enough to win the cloud-native deals already on the table.",
+    furtherReading: [
+      "Platform transitions in enterprise software (on-prem to cloud case studies)",
+      "The Innovator's Dilemma by Clayton Christensen",
+      "Dual-track product roadmap strategy",
+    ],
+  },
+  {
+    id: "law-corporate-cross-border-restructuring-premium",
+    profession: "law",
+    category: "Corporate & Compliance",
+    title: "A Cross-Border Restructuring",
+    premium: true,
+    scenario:
+      "Your client's multinational group wants to consolidate three separate national subsidiaries under a single holding structure to simplify tax reporting and governance. Each subsidiary operates under different corporate law regimes, has different minority shareholders, and is subject to different works-council consultation requirements. Leadership wants the restructuring completed within one fiscal quarter. You need to advise on how to sequence this without triggering a regulatory or labor-relations crisis in any jurisdiction.",
+    keyIssues: [
+      "Whether a compressed one-quarter timeline is realistic given works-council consultation obligations in some jurisdictions",
+      "Minority shareholder protections that could block or delay parts of the restructuring",
+      "Sequencing to avoid triggering change-of-control clauses in existing contracts",
+      "Coordinating outside counsel across jurisdictions without inconsistent positions",
+    ],
+    expectedConcepts: [
+      "cross-border restructuring",
+      "works council consultation",
+      "minority shareholder rights",
+      "change of control clause",
+      "regulatory coordination",
+    ],
+    modelApproach:
+      "A strong answer is honest that some jurisdictions' consultation requirements make a single-quarter timeline unrealistic without real legal risk, and proposes a phased sequence — starting with the jurisdiction with the fewest procedural obstacles — while flagging early which change-of-control clauses need pre-clearance before any public step is taken.",
+    furtherReading: [
+      "Cross-border corporate restructuring frameworks",
+      "EU works council consultation requirements",
+      "Change-of-control clause risk review in M&A/restructuring",
+    ],
+  },
+  {
+    id: "pol-crisis-coalition-collapse-premium",
+    profession: "politics",
+    category: "Crisis Response",
+    title: "A Coalition Government on the Brink",
+    premium: true,
+    scenario:
+      "You advise the head of government in a coalition administration. The junior coalition partner has just threatened to withdraw support over a contested policy unless it's reversed within 48 hours, which would trigger a confidence vote your government would likely lose. Reversing the policy publicly would look like capitulation and damage credibility with your own base ahead of elections next year. You have less than two days to recommend a path forward.",
+    keyIssues: [
+      "Whether a face-saving compromise exists that lets the junior partner claim a partial win without a full reversal",
+      "Risk calculus of forcing a confidence vote versus conceding",
+      "Managing your own base's perception of the outcome regardless of which path is chosen",
+      "Time pressure and what can realistically be negotiated in 48 hours versus what needs more time",
+    ],
+    expectedConcepts: [
+      "coalition governance",
+      "confidence vote",
+      "face-saving compromise",
+      "political credibility",
+      "brinkmanship",
+    ],
+    modelApproach:
+      "A strong answer looks for a substantive but narrow concession — e.g., a review clause, a delayed implementation, or a carve-out — that gives the junior partner a credible claim to have moved the policy without a full public reversal, while being realistic about the confidence-vote math if no compromise is reachable in time.",
+    furtherReading: [
+      "Coalition government stability and confidence vote mechanics",
+      "Face-saving negotiation tactics in political crises",
+      "Case studies in coalition breakdown and recovery",
     ],
   },
 ];
