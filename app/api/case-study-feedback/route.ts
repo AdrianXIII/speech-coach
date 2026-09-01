@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser();
 
-    const isPremium = user ? await getEntitlement(supabase, user.id) : false;
+    const isPremium = user ? await getEntitlement(supabase, user.id, user.email) : false;
     if (!isPremium) {
       return NextResponse.json({ error: "This case requires Speech Coach Premium." }, { status: 403 });
     }

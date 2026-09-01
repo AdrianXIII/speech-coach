@@ -13,6 +13,6 @@ export async function GET() {
     return NextResponse.json({ premium: false });
   }
 
-  const premium = await getEntitlement(supabase, user.id);
+  const premium = await getEntitlement(supabase, user.id, user.email);
   return NextResponse.json({ premium });
 }
