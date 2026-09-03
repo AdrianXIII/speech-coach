@@ -9,6 +9,13 @@ import {
   type CaseProfession,
   type CaseStudy,
 } from "@/lib/caseStudyContent";
+import { getFundamentals, getFundamentalLabel } from "@/lib/caseStudyFundamentals";
+import {
+  loadFundamentalScores,
+  saveFundamentalScores,
+  countMastered,
+  MASTERY_THRESHOLD,
+} from "@/lib/caseStudyProgress";
 import type { CaseStudyFeedback } from "@/lib/caseStudyFeedback";
 import { FollowUpChat } from "@/components/FollowUpChat";
 import { useLanguage } from "@/components/LanguageProvider";
@@ -79,6 +86,9 @@ export function CaseStudyTrainer() {
         return res.json() as Promise<CaseStudyFeedback>;
       })
       .then((result) => {
+        if (currentCase.testsFundamentals?.length) {
+          saveFundamentalScores(currentCase.testsFundamentals, result.score);
+        }
         setFeedback(result);
         setPhase("feedback");
       })
@@ -231,6 +241,12 @@ function CategoryPicker({
   onSelect: (category: string) => void;
   onBack: () => void;
 }) {
+  const [scores, setScores] = useState<Record<string, number>>({});
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setScores(loadFundamentalScores());
+  }, []);
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
@@ -244,6 +260,8 @@ function CategoryPicker({
       <div className="grid gap-2 sm:grid-cols-2">
         {CASE_CATEGORIES[profession].map((cat) => {
           const count = casesForCategory(profession, cat).length;
+          const fundamentals = getFundamentals(profession, cat);
+          const mastered = fundamentals.length ? countMastered(scores, fundamentals.map((f) => f.id)) : 0;
           return (
             <button
               key={cat}
@@ -251,7 +269,11 @@ function CategoryPicker({
               className="flex items-center justify-between rounded-lg border border-hairline bg-surface-2 px-4 py-3 text-left transition-colors hover:border-brass"
             >
               <span className="text-sm font-semibold text-ink">{cat}</span>
-              <span className="text-xs text-ink-muted">{count} case{count === 1 ? "" : "s"}</span>
+              <span className="text-xs text-ink-muted">
+                {fundamentals.length
+                  ? `${mastered}/${fundamentals.length} fundamentals mastered`
+                  : `${count} case${count === 1 ? "" : "s"}`}
+              </span>
             </button>
           );
         })}
@@ -426,6 +448,24 @@ function FeedbackStep({
         <p className={`text-4xl font-extrabold ${scoreColor(feedback.score)}`}>{feedback.score}</p>
         <p className="text-sm text-ink-muted">{feedback.verdict}</p>
       </div>
+
+      {!!caseStudy.testsFundamentals?.length && (
+        <div className="rounded-lg border border-brass/40 bg-brass/5 p-4">
+          <p className="text-xs font-semibold uppercase tracking-wide text-brass-text">
+            This case tested you on
+          </p>
+          <ul className="mt-2 flex flex-col gap-1">
+            {caseStudy.testsFundamentals.map((id) => (
+              <li key={id} className="text-sm text-ink">
+                • {getFundamentalLabel(caseStudy.profession, caseStudy.category, id)}
+                {feedback.score >= MASTERY_THRESHOLD && (
+                  <span className="ml-1.5 text-emerald-600">✓ mastered</span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <div className="flex flex-col gap-3">
         <FeedbackBlock label="Correctness" text={feedback.correctnessFeedback} />

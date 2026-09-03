@@ -17,6 +17,12 @@ export interface CaseStudy {
   furtherReading: string[];
   /** Requires an active subscription. Omitted/false for every case in the free baseline. */
   premium?: boolean;
+  /**
+   * IDs of the fundamental knowledge points (see lib/caseStudyFundamentals.ts)
+   * this case is designed to test. A case can test more than one; coverage
+   * is the union across all cases in a category, not a strict 1:1 mapping.
+   */
+  testsFundamentals?: string[];
 }
 
 export const CASE_CATEGORIES: Record<CaseProfession, string[]> = {
@@ -98,6 +104,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Ansoff Matrix (market development vs. product development)",
       "Blue Ocean Strategy by Kim & Mauborgne",
     ],
+    testsFundamentals: ["strat-five-forces", "strat-generic-strategies", "strat-resource-based-view"],
   },
   {
     id: "biz-strategy-diversification",
@@ -126,6 +133,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Adjacent Possible strategy frameworks",
       "Real options thinking in capital allocation",
     ],
+    testsFundamentals: ["strat-diversification-related-unrelated", "strat-resource-based-view", "strat-real-options-strategic-investment"],
   },
   {
     id: "biz-strategy-low-cost-disruptor",
@@ -154,6 +162,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Price segmentation and fighter brands",
       "Cost leadership vs. differentiation (Porter's generic strategies)",
     ],
+    testsFundamentals: ["strat-disruption-theory", "strat-generic-strategies"],
   },
   {
     id: "biz-strategy-vertical-integration",
@@ -182,6 +191,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Make-vs-buy decision frameworks",
       "Supply chain risk management",
     ],
+    testsFundamentals: ["strat-vertical-integration-make-buy"],
   },
   {
     id: "biz-strategy-blue-ocean",
@@ -210,6 +220,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Value curve / strategy canvas analysis",
       "Segmentation, targeting, positioning (STP) framework",
     ],
+    testsFundamentals: ["strat-blue-ocean-value-innovation", "strat-five-forces"],
   },
 
   // ============================================================ BUSINESS: Finance
@@ -241,6 +252,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Weighted average cost of capital (WACC)",
       "Debt-to-EBITDA and interest coverage ratios",
     ],
+    testsFundamentals: ["fin-capital-structure-leverage", "fin-wacc-cost-of-capital"],
   },
   {
     id: "biz-finance-cash-flow-crisis",
@@ -270,6 +282,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Invoice factoring and receivables financing",
       "Working capital management fundamentals",
     ],
+    testsFundamentals: ["fin-cash-conversion-cycle", "fin-working-capital-financing"],
   },
   {
     id: "biz-finance-investment-appraisal",
@@ -298,6 +311,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Capital budgeting techniques",
       "Payback period as a liquidity-focused metric",
     ],
+    testsFundamentals: ["fin-npv-irr-payback", "fin-capital-allocation-constraints"],
   },
   {
     id: "biz-finance-pricing-margins",
@@ -326,6 +340,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Sales compensation design and incentive alignment",
       "Customer lifetime value (LTV) analysis",
     ],
+    testsFundamentals: ["fin-margin-pricing-discipline"],
   },
   {
     id: "biz-finance-downturn-tradeoff",
@@ -354,6 +369,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Zero-based budgeting",
       "Strategic cost management vs. across-the-board cuts",
     ],
+    testsFundamentals: ["fin-sunk-cost-opportunity-cost", "fin-capital-allocation-constraints"],
   },
 
   // ============================================================ BUSINESS: Marketing
@@ -384,6 +400,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Brand trust and equity measurement",
       "Case studies on product-safety brand recoveries",
     ],
+    testsFundamentals: ["mktg-crisis-trust-repair", "mktg-brand-equity-management"],
   },
   {
     id: "biz-marketing-product-cannibalization",
@@ -412,6 +429,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "SaaS pricing and packaging strategy",
       "Customer segmentation for tiered products",
     ],
+    testsFundamentals: ["mktg-product-cannibalization", "mktg-clv-cac-economics"],
   },
   {
     id: "biz-marketing-new-segment",
@@ -440,6 +458,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Segmentation, targeting, positioning (STP)",
       "Case studies on outdoor/lifestyle brand crossover (e.g. Patagonia, The North Face)",
     ],
+    testsFundamentals: ["mktg-stp-segmentation-targeting-positioning", "mktg-brand-extension-dilution"],
   },
   {
     id: "biz-marketing-share-vs-profit",
@@ -468,6 +487,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Share of voice vs. share of market",
       "Sustainable competitive advantage frameworks",
     ],
+    testsFundamentals: ["mktg-competitive-response-share-vs-profit"],
   },
   {
     id: "biz-marketing-digital-transformation",
@@ -496,6 +516,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Digital transformation change management",
       "Showrooming and webrooming consumer behavior",
     ],
+    testsFundamentals: ["mktg-omnichannel-strategy"],
   },
 
   // ============================================================ BUSINESS: Operations
@@ -526,6 +547,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Dual sourcing and supplier diversification strategy",
       "Business continuity planning for manufacturing",
     ],
+    testsFundamentals: ["ops-supply-risk-mitigation"],
   },
   {
     id: "biz-ops-quality-recall",
@@ -554,6 +576,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Precautionary principle in risk management",
       "Case studies: Johnson & Johnson Tylenol recall (gold-standard response)",
     ],
+    testsFundamentals: ["ops-recall-thresholds", "ops-regulatory-compliance-ops"],
   },
   {
     id: "biz-ops-lean-resistance",
@@ -582,6 +605,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Kotter's 8-step change management model",
       "Change resistance and employee engagement research",
     ],
+    testsFundamentals: ["ops-lean-change-management"],
   },
   {
     id: "biz-ops-outsourcing",
@@ -610,6 +634,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Business process outsourcing (BPO) case studies",
       "Service level agreement (SLA) design",
     ],
+    testsFundamentals: ["ops-make-vs-buy-tco"],
   },
   {
     id: "biz-ops-capacity-planning",
@@ -638,6 +663,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Scenario planning methodology",
       "Capacity planning and demand forecasting techniques",
     ],
+    testsFundamentals: ["ops-capacity-planning-uncertainty"],
   },
 
   // ============================================================ BUSINESS: Leadership & HR
@@ -668,6 +694,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "360-degree feedback processes",
       "Psychological safety in teams (Amy Edmondson)",
     ],
+    testsFundamentals: ["hr-toxic-high-performer-management", "hr-performance-management-documentation", "hr-psychological-safety-team-culture"],
   },
   {
     id: "biz-hr-layoffs-vs-paycuts",
@@ -696,6 +723,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Layoffs vs. pay cuts: comparative organizational outcomes",
       "WARN Act and legal considerations in workforce reductions",
     ],
+    testsFundamentals: ["hr-workforce-reduction-tradeoffs", "hr-survivor-syndrome", "hr-labor-employment-law-compliance"],
   },
   {
     id: "biz-hr-culture-clash",
@@ -724,6 +752,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Cultural due diligence in M&A",
       "Acqui-hire retention strategies",
     ],
+    testsFundamentals: ["hr-post-merger-culture-integration", "hr-organizational-culture-change-management"],
   },
   {
     id: "biz-hr-succession-crisis",
@@ -752,6 +781,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Interim leadership research and case studies",
       "Crisis governance and board responsibilities",
     ],
+    testsFundamentals: ["hr-succession-planning-interim-leadership"],
   },
   {
     id: "biz-hr-dei-resistance",
@@ -780,6 +810,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Managing change resistance in organizational initiatives",
       "Research on DEI backlash and effective communication strategies",
     ],
+    testsFundamentals: ["hr-dei-program-design-resistance", "hr-organizational-culture-change-management"],
   },
 
   // ============================================================ BUSINESS: Crisis Management
@@ -810,6 +841,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Data breach notification laws (GDPR, state-level US laws)",
       "Case studies: Equifax vs. other breach responses (a cautionary comparison)",
     ],
+    testsFundamentals: ["crisis-disclosure-timing", "crisis-regulatory-breach-notification", "crisis-post-crisis-remediation"],
   },
   {
     id: "biz-crisis-executive-scandal",
@@ -838,6 +870,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Crisis communications and reputational risk management",
       "Corporate governance responses to executive misconduct allegations",
     ],
+    testsFundamentals: ["crisis-independent-investigation", "crisis-duty-of-care", "crisis-public-dispute-narrative-control"],
   },
   {
     id: "biz-crisis-disaster-supply",
@@ -866,6 +899,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Supply chain resilience post-disaster case studies (e.g. 2011 Japan earthquake auto industry)",
       "Crisis leadership and decision-making under uncertainty",
     ],
+    testsFundamentals: ["crisis-business-continuity-disruption", "crisis-employee-safety-first-sequencing"],
   },
   {
     id: "biz-crisis-whistleblower",
@@ -894,6 +928,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Internal investigation best practices",
       "Corporate compliance and fraud risk management",
     ],
+    testsFundamentals: ["crisis-whistleblower-protection", "crisis-independent-investigation"],
   },
   {
     id: "biz-crisis-viral-backlash",
@@ -922,6 +957,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Image repair theory (Benoit)",
       "Case studies in rapid-response corporate apologies",
     ],
+    testsFundamentals: ["crisis-social-media-response-speed", "crisis-apology-accountability-framing"],
   },
 
   // ============================================================ BUSINESS: Mergers & Acquisitions
@@ -952,6 +988,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Common takeover defense mechanisms (poison pills, staggered boards)",
       "Case studies in hostile takeover battles",
     ],
+    testsFundamentals: ["ma-hostile-defense-tactics", "ma-fiduciary-duty-standards"],
   },
   {
     id: "biz-ma-integration-failure",
@@ -980,6 +1017,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Post-merger integration playbooks",
       "Talent retention in acquisitions",
     ],
+    testsFundamentals: ["ma-post-merger-integration-planning", "ma-synergy-quantification", "ma-talent-retention-in-deals"],
   },
   {
     id: "biz-ma-valuation-gap",
@@ -1008,6 +1046,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Valuation methodologies (DCF, comparable company analysis)",
       "Negotiation tactics for bridging valuation disagreements",
     ],
+    testsFundamentals: ["ma-valuation-methods", "ma-earnout-structuring", "ma-strategic-vs-financial-buyer-dynamics"],
   },
   {
     id: "biz-ma-cultural-diligence",
@@ -1036,6 +1075,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Why culture clashes derail acquisitions (research on M&A failure causes)",
       "Organizational culture assessment tools",
     ],
+    testsFundamentals: ["ma-cultural-due-diligence", "ma-post-merger-integration-planning"],
   },
   {
     id: "biz-ma-divestiture",
@@ -1064,6 +1104,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Sunk cost fallacy in corporate decision-making",
       "Employee transition planning in divestitures",
     ],
+    testsFundamentals: ["ma-divestiture-decision-analysis"],
   },
 
   // ============================================================ BUSINESS: Entrepreneurship & Startups
@@ -1094,6 +1135,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Product-market fit signals and how to measure them",
       "Case studies of successful startup pivots (Slack, Instagram, Twitter)",
     ],
+    testsFundamentals: ["startup-pmf-signal-validation", "startup-mvp-testing", "startup-runway-math"],
   },
   {
     id: "biz-startup-cofounder-conflict",
@@ -1122,6 +1164,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Cap table management and equity disputes",
       "Case studies in founder conflict resolution",
     ],
+    testsFundamentals: ["startup-equity-vesting-mechanics", "startup-cofounder-dispute-resolution", "startup-cap-table-management"],
   },
   {
     id: "biz-startup-funding-choice",
@@ -1150,6 +1193,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Understanding dilution and cap table impact of funding rounds",
       "Case studies: profitable bootstrapped companies vs. VC-backed competitors",
     ],
+    testsFundamentals: ["startup-fundraising-tradeoffs", "startup-board-governance"],
   },
   {
     id: "biz-startup-burn-rate",
@@ -1178,6 +1222,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Unit economics and path-to-profitability frameworks",
       "Case studies in startup down-round and cash crisis navigation",
     ],
+    testsFundamentals: ["startup-runway-math", "startup-unit-economics", "startup-cost-cutting-prioritization"],
   },
   {
     id: "biz-startup-capital-competitor",
@@ -1206,6 +1251,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Switching costs and customer lock-in strategy",
       "Case studies: incumbents surviving well-funded new entrants",
     ],
+    testsFundamentals: ["startup-competitive-moat-analysis"],
   },
 
   // ============================================================ LAW: Contract Law
@@ -1817,6 +1863,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "The Innovator's Dilemma by Clayton Christensen",
       "Dual-track product roadmap strategy",
     ],
+    testsFundamentals: ["strat-disruption-theory", "strat-platform-ecosystem-lockin"],
   },
   {
     id: "law-corporate-cross-border-restructuring-premium",
@@ -1906,6 +1953,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Entry mode selection (direct investment vs. licensing vs. partnership)",
     ],
     premium: true,
+    testsFundamentals: ["strat-market-entry-mode"],
   },
   {
     id: "biz-strategy-exit-declining-line",
@@ -1936,6 +1984,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Christensen's theory of disruptive innovation and capital reallocation",
     ],
     premium: true,
+    testsFundamentals: ["strat-portfolio-bcg", "strat-harvest-divest-exit"],
   },
   {
     id: "biz-strategy-new-regulation",
@@ -1966,6 +2015,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Gig economy classification law (AB5-style precedents) and its strategic precedent",
     ],
     premium: true,
+    testsFundamentals: ["strat-nonmarket-regulatory-strategy"],
   },
   {
     id: "biz-strategy-build-vs-buy",
@@ -1996,6 +2046,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Brand extension theory (Aaker)",
     ],
     premium: true,
+    testsFundamentals: ["strat-build-buy-partner", "strat-ma-integration-risk", "strat-brand-portfolio-architecture"],
   },
   {
     id: "biz-strategy-ecosystem-lockin",
@@ -2026,6 +2077,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Blue Ocean Strategy — finding uncontested niche space",
     ],
     premium: true,
+    testsFundamentals: ["strat-platform-ecosystem-lockin"],
   },
   {
     id: "biz-strategy-portfolio-rationalization",
@@ -2056,6 +2108,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Sunk cost fallacy in product-line decisions",
     ],
     premium: true,
+    testsFundamentals: ["strat-sku-portfolio-rationalization", "strat-brand-portfolio-architecture"],
   },
   {
     id: "biz-finance-fx-risk",
@@ -2086,6 +2139,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Natural hedging strategies for multinational operations",
     ],
     premium: true,
+    testsFundamentals: ["fin-fx-risk-hedging"],
   },
   {
     id: "biz-finance-buybacks-vs-dividends",
@@ -2116,6 +2170,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Share buyback mechanics and EPS impact",
     ],
     premium: true,
+    testsFundamentals: ["fin-payout-policy-signaling"],
   },
   {
     id: "biz-finance-ipo-readiness",
@@ -2146,6 +2201,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Secondary sales and tender offers as private-market liquidity alternatives",
     ],
     premium: true,
+    testsFundamentals: ["fin-ipo-readiness"],
   },
   {
     id: "biz-finance-activist-investor",
@@ -2176,6 +2232,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Corporate breakup / spin-off value creation studies",
     ],
     premium: true,
+    testsFundamentals: ["fin-activist-investor-valuation", "fin-valuation-methods"],
   },
   {
     id: "biz-finance-growth-vs-profitability",
@@ -2206,6 +2263,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Venture financing cycles and market sentiment shifts",
     ],
     premium: true,
+    testsFundamentals: ["fin-unit-economics-burn-runway"],
   },
   {
     id: "biz-finance-build-vs-lease",
@@ -2236,6 +2294,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Cost of capital and capital structure under tight credit conditions",
     ],
     premium: true,
+    testsFundamentals: ["fin-lease-vs-buy", "fin-wacc-cost-of-capital"],
   },
   {
     id: "biz-finance-credit-downgrade",
@@ -2266,6 +2325,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Covenant and contract triggers tied to credit ratings",
     ],
     premium: true,
+    testsFundamentals: ["fin-credit-rating-covenants"],
   },
   {
     id: "biz-marketing-influencer-risk",
@@ -2296,6 +2356,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "FTC endorsement guidelines and disclosure compliance",
     ],
     premium: true,
+    testsFundamentals: ["mktg-influencer-marketing-brand-safety"],
   },
   {
     id: "biz-marketing-international-entry",
@@ -2326,6 +2387,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Case studies of Western brand adaptation in Middle Eastern/Asian markets",
     ],
     premium: true,
+    testsFundamentals: ["mktg-cultural-adaptation-glocalization"],
   },
   {
     id: "biz-marketing-freemium-pricing",
@@ -2356,6 +2418,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Price discrimination and tiered pricing strategy",
     ],
     premium: true,
+    testsFundamentals: ["mktg-freemium-plg-conversion", "mktg-value-based-pricing"],
   },
   {
     id: "biz-marketing-viral-meme",
@@ -2386,6 +2449,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Brand sentiment analysis and social listening methodology",
     ],
     premium: true,
+    testsFundamentals: ["mktg-real-time-reactive-marketing", "mktg-brand-equity-management"],
   },
   {
     id: "biz-marketing-cheap-competitor",
@@ -2416,6 +2480,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Customer lifetime value and entry-point product strategy",
     ],
     premium: true,
+    testsFundamentals: ["mktg-premium-positioning-defense", "mktg-brand-extension-dilution"],
   },
   {
     id: "biz-marketing-privacy-backlash",
@@ -2446,6 +2511,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Corporate crisis communication and trust-repair strategy",
     ],
     premium: true,
+    testsFundamentals: ["mktg-data-privacy-ethical-marketing"],
   },
   {
     id: "biz-marketing-generational-shift",
@@ -2476,6 +2542,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Brand equity measurement and repositioning risk",
     ],
     premium: true,
+    testsFundamentals: ["mktg-generational-brand-repositioning", "mktg-brand-extension-dilution"],
   },
   {
     id: "biz-ops-automation-headcount",
@@ -2506,6 +2573,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Kotter's change management model",
     ],
     premium: true,
+    testsFundamentals: ["ops-automation-workforce-transition"],
   },
   {
     id: "biz-ops-quality-control-scaleup",
@@ -2536,6 +2604,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Root cause analysis methods (5 Whys / fishbone diagram)",
     ],
     premium: true,
+    testsFundamentals: ["ops-quality-scaling", "ops-root-cause-analysis", "ops-regulatory-compliance-ops"],
   },
   {
     id: "biz-ops-facility-closure",
@@ -2566,6 +2635,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Capacity utilization and economies of scale",
     ],
     premium: true,
+    testsFundamentals: ["ops-facility-rationalization"],
   },
   {
     id: "biz-ops-erp-migration",
@@ -2596,6 +2666,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Big-bang vs. phased cutover strategies",
     ],
     premium: true,
+    testsFundamentals: ["ops-tech-implementation-cutover", "ops-vendor-sla-accountability"],
   },
   {
     id: "biz-ops-seasonal-staffing",
@@ -2626,6 +2697,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Amazon's peak-season fulfillment staffing model",
     ],
     premium: true,
+    testsFundamentals: ["ops-variable-demand-capacity"],
   },
   {
     id: "biz-ops-union-negotiation",
@@ -2656,6 +2728,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Case studies on manufacturing strike costs",
     ],
     premium: true,
+    testsFundamentals: ["ops-labor-relations-negotiation", "ops-regulatory-compliance-ops"],
   },
   {
     id: "biz-ops-safety-incident",
@@ -2686,6 +2759,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Just Culture framework for safety accountability",
     ],
     premium: true,
+    testsFundamentals: ["ops-safety-culture-accountability", "ops-root-cause-analysis", "ops-regulatory-compliance-ops"],
   },
   {
     id: "biz-hr-return-to-office",
@@ -2716,6 +2790,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Case studies on RTO mandate attrition at major tech companies",
     ],
     premium: true,
+    testsFundamentals: ["hr-hybrid-rto-policy-design", "hr-employee-value-proposition-retention"],
   },
   {
     id: "biz-hr-promoting-a-friend",
@@ -2746,6 +2821,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Merit-based promotion frameworks",
     ],
     premium: true,
+    testsFundamentals: ["hr-merit-based-promotion-conflict-of-interest", "hr-difficult-conversations-feedback"],
   },
   {
     id: "biz-hr-whistleblower-executive",
@@ -2776,6 +2852,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Case studies on executive financial misrepresentation (e.g., Wells Fargo, Theranos)",
     ],
     premium: true,
+    testsFundamentals: ["hr-whistleblower-executive-fiduciary-duty"],
   },
   {
     id: "biz-hr-hybrid-policy",
@@ -2806,6 +2883,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Case studies on remote-first company scaling (e.g., GitLab, Automattic)",
     ],
     premium: true,
+    testsFundamentals: ["hr-remote-talent-strategy-investor-pressure", "hr-employee-value-proposition-retention"],
   },
   {
     id: "biz-hr-exec-comp-controversy",
@@ -2836,6 +2914,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Research on executive pay and employee morale during layoffs",
     ],
     premium: true,
+    testsFundamentals: ["hr-executive-compensation-optics"],
   },
   {
     id: "biz-hr-reskilling-crisis",
@@ -2866,6 +2945,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Internal talent marketplace models",
     ],
     premium: true,
+    testsFundamentals: ["hr-reskilling-workforce-transition"],
   },
   {
     id: "biz-hr-burnout-crisis",
@@ -2896,6 +2976,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Harvard Business Review research on preventing team burnout",
     ],
     premium: true,
+    testsFundamentals: ["hr-burnout-sustainable-performance", "hr-psychological-safety-team-culture"],
   },
   {
     id: "biz-crisis-product-recall-viral",
@@ -2926,6 +3007,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Social media crisis response playbooks",
     ],
     premium: true,
+    testsFundamentals: ["crisis-precautionary-principle", "crisis-social-media-response-speed", "crisis-post-crisis-remediation"],
   },
   {
     id: "biz-crisis-ransomware",
@@ -2956,6 +3038,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Case studies on hospital ransomware attacks (e.g., Universal Health Services, 2020)",
     ],
     premium: true,
+    testsFundamentals: ["crisis-ransom-extortion-decision", "crisis-regulatory-breach-notification", "crisis-business-continuity-disruption"],
   },
   {
     id: "biz-crisis-customer-cancels-publicly",
@@ -2986,6 +3069,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Case studies on public customer disputes going viral",
     ],
     premium: true,
+    testsFundamentals: ["crisis-public-dispute-narrative-control", "crisis-investor-relations-disclosure"],
   },
   {
     id: "biz-crisis-activist-short-seller",
@@ -3016,6 +3100,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Audit committee independent investigation practices",
     ],
     premium: true,
+    testsFundamentals: ["crisis-rebuttal-fact-verification", "crisis-investor-relations-disclosure"],
   },
   {
     id: "biz-crisis-supplier-bankruptcy",
@@ -3046,6 +3131,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Business continuity planning frameworks (ISO 22301)",
     ],
     premium: true,
+    testsFundamentals: ["crisis-supply-chain-contingency", "crisis-business-continuity-disruption"],
   },
   {
     id: "biz-crisis-factory-fire",
@@ -3076,6 +3162,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Corporate social responsibility in global supply chains",
     ],
     premium: true,
+    testsFundamentals: ["crisis-duty-of-care", "crisis-third-party-supplier-accountability", "crisis-post-crisis-remediation"],
   },
   {
     id: "biz-crisis-counterfeit-products",
@@ -3106,6 +3193,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Brand authentication technologies (QR/NFC verification systems)",
     ],
     premium: true,
+    testsFundamentals: ["crisis-brand-ip-protection", "crisis-duty-of-care"],
   },
   {
     id: "biz-ma-spac-reverse-merger",
@@ -3136,6 +3224,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Comparative economics of SPAC mergers versus traditional IPOs",
     ],
     premium: true,
+    testsFundamentals: ["ma-spac-mechanics", "ma-valuation-methods"],
   },
   {
     id: "biz-ma-antitrust-block",
@@ -3166,6 +3255,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Notable contested mergers, such as the AT&T–Time Warner antitrust litigation",
     ],
     premium: true,
+    testsFundamentals: ["ma-antitrust-regulatory-strategy", "ma-breakup-fee-economics"],
   },
   {
     id: "biz-ma-bidding-war-pe",
@@ -3196,6 +3286,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Case studies of strategic versus financial buyer competitions",
     ],
     premium: true,
+    testsFundamentals: ["ma-competitive-bidding-discipline", "ma-strategic-vs-financial-buyer-dynamics", "ma-fiduciary-duty-standards"],
   },
   {
     id: "biz-ma-earnout-dispute",
@@ -3226,6 +3317,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Post-acquisition integration and talent retention strategy",
     ],
     premium: true,
+    testsFundamentals: ["ma-earnout-good-faith-covenants", "ma-earnout-structuring", "ma-talent-retention-in-deals"],
   },
   {
     id: "biz-ma-minority-stake",
@@ -3256,6 +3348,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Governance rights in non-control equity transactions",
     ],
     premium: true,
+    testsFundamentals: ["ma-minority-investment-structuring"],
   },
   {
     id: "biz-ma-spinoff-decision",
@@ -3286,6 +3379,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Activist investor campaigns and corporate breakups, such as DuPont and GE",
     ],
     premium: true,
+    testsFundamentals: ["ma-spinoff-value-analysis"],
   },
   {
     id: "biz-ma-lbo-debt-load",
@@ -3316,6 +3410,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Historical default studies of highly leveraged buyouts in cyclical industries",
     ],
     premium: true,
+    testsFundamentals: ["ma-lbo-capital-structure"],
   },
   {
     id: "biz-startup-down-round",
@@ -3346,6 +3441,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Revenue-based financing as a bridge alternative to equity",
     ],
     premium: true,
+    testsFundamentals: ["startup-down-round-mechanics", "startup-cap-table-management", "startup-runway-math"],
   },
   {
     id: "biz-startup-acquihire-vs-strategic",
@@ -3376,6 +3472,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Startup shutdown and wind-down best practices",
     ],
     premium: true,
+    testsFundamentals: ["startup-liquidation-preference-waterfall", "startup-exit-options-comparison"],
   },
   {
     id: "biz-startup-key-engineer-equity",
@@ -3406,6 +3503,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Retention grant design and refresh grant norms",
     ],
     premium: true,
+    testsFundamentals: ["startup-equity-vesting-mechanics", "startup-key-person-retention"],
   },
   {
     id: "biz-startup-bridge-vs-cut",
@@ -3436,6 +3534,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Founder decision-making under cash-out risk",
     ],
     premium: true,
+    testsFundamentals: ["startup-bridge-financing-mechanics", "startup-runway-math", "startup-cost-cutting-prioritization"],
   },
   {
     id: "biz-startup-founder-conflict-direction",
@@ -3466,6 +3565,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Resource allocation frameworks for resource-constrained startups",
     ],
     premium: true,
+    testsFundamentals: ["startup-cofounder-dispute-resolution", "startup-resource-allocation-prioritization", "startup-board-governance"],
   },
   {
     id: "biz-startup-subscription-vs-onetime",
@@ -3496,6 +3596,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Customer migration and grandfathering strategy",
     ],
     premium: true,
+    testsFundamentals: ["startup-business-model-transition", "startup-unit-economics"],
   },
   {
     id: "biz-startup-series-a-inconsistent-metrics",
@@ -3526,6 +3627,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Storytelling with imperfect growth metrics in fundraising",
     ],
     premium: true,
+    testsFundamentals: ["startup-cohort-retention-analysis", "startup-runway-math"],
   },
   {
     id: "biz-sales-lost-signature-client",
@@ -3556,6 +3658,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Win-back campaign strategy in B2B sales",
     ],
     premium: true,
+    testsFundamentals: ["sales-churn-root-cause-diagnosis", "sales-win-back-offer-design", "sales-revenue-concentration-risk"],
   },
   {
     id: "biz-sales-comp-redesign",
@@ -3586,6 +3689,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Change management for sales team incentive shifts",
     ],
     premium: true,
+    testsFundamentals: ["sales-comp-plan-design", "sales-discount-governance"],
   },
   {
     id: "biz-sales-channel-conflict",
@@ -3616,6 +3720,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Multi-channel go-to-market strategy design",
     ],
     premium: true,
+    testsFundamentals: ["sales-channel-conflict-management"],
   },
   {
     id: "biz-sales-rfp-bid-no-bid",
@@ -3646,6 +3751,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Win-loss analysis and win probability calibration",
     ],
     premium: true,
+    testsFundamentals: ["sales-bid-no-bid-decision-analysis"],
   },
   {
     id: "biz-sales-procurement-stall",
@@ -3676,6 +3782,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Deal desk and legal escalation best practices",
     ],
     premium: true,
+    testsFundamentals: ["sales-deal-stuck-in-procurement", "sales-pipeline-forecasting"],
   },
   {
     id: "biz-sales-discount-pressure",
@@ -3706,6 +3813,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Multi-year contract structuring for key accounts",
     ],
     premium: true,
+    testsFundamentals: ["sales-discount-governance", "sales-value-based-selling"],
   },
   {
     id: "biz-sales-new-vertical-motion",
@@ -3736,6 +3844,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Sales cycle benchmarking by industry vertical",
     ],
     premium: true,
+    testsFundamentals: ["sales-new-market-entry-gtm"],
   },
   {
     id: "biz-sales-partnership-vs-direct",
@@ -3766,6 +3875,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Channel partnership revenue-share negotiation",
     ],
     premium: true,
+    testsFundamentals: ["sales-channel-vs-direct-tradeoff"],
   },
   {
     id: "biz-sales-forecast-miss",
@@ -3796,6 +3906,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Forecast accuracy and sandbagging research in sales organizations",
     ],
     premium: true,
+    testsFundamentals: ["sales-pipeline-forecasting", "sales-pipeline-hygiene-qualification"],
   },
   {
     id: "biz-sales-account-concentration",
@@ -3826,6 +3937,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "New business development pipeline strategy for service firms",
     ],
     premium: true,
+    testsFundamentals: ["sales-revenue-concentration-risk"],
   },
   {
     id: "biz-sales-inside-vs-field",
@@ -3856,6 +3968,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Win-loss analysis methodology",
     ],
     premium: true,
+    testsFundamentals: ["sales-model-segmentation", "sales-win-loss-analysis"],
   },
   {
     id: "biz-sales-rep-poaching",
@@ -3886,6 +3999,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Client relationship transition planning after rep departure",
     ],
     premium: true,
+    testsFundamentals: ["sales-key-rep-departure-management", "sales-talent-retention"],
   },
   {
     id: "biz-supplychain-reshoring-decision",
@@ -3916,6 +4030,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Nearshoring case studies (Mexico's role in North American supply chains post-2018 tariffs)",
     ],
     premium: true,
+    testsFundamentals: ["supplychain-total-landed-cost", "supplychain-reshoring-nearshoring", "supplychain-supplier-ecosystem-development"],
   },
   {
     id: "biz-supplychain-last-mile-cost-crisis",
@@ -3946,6 +4061,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Micro-fulfillment center ROI models",
     ],
     premium: true,
+    testsFundamentals: ["supplychain-last-mile-unit-economics"],
   },
   {
     id: "biz-supplychain-port-strike-disruption",
@@ -3975,6 +4091,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Revenue-at-risk prioritization frameworks in supply chain disruption response",
     ],
     premium: true,
+    testsFundamentals: ["supplychain-disruption-triage", "supplychain-concentration-risk"],
   },
   {
     id: "biz-supplychain-demand-forecast-failure",
@@ -4004,6 +4121,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Bullwhip effect research in supply chain management",
     ],
     premium: true,
+    testsFundamentals: ["supplychain-demand-forecasting-methods", "supplychain-sop-process", "supplychain-bullwhip-effect", "supplychain-safety-stock-policy"],
   },
   {
     id: "biz-supplychain-freight-cost-volatility",
@@ -4033,6 +4151,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "DAT and FreightWaves market analyses on capacity-tight freight cycles",
     ],
     premium: true,
+    testsFundamentals: ["supplychain-freight-contract-structuring", "supplychain-concentration-risk", "supplychain-price-elasticity-passthrough"],
   },
   {
     id: "biz-supplychain-logistics-partner-collapse",
@@ -4062,6 +4181,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Phased vendor migration / dual-run transition strategies",
     ],
     premium: true,
+    testsFundamentals: ["supplychain-3pl-vendor-risk", "supplychain-business-continuity", "supplychain-concentration-risk"],
   },
   {
     id: "biz-supplychain-warehouse-automation-investment",
@@ -4091,6 +4211,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Case studies on warehouse robotics adoption (Amazon, Ocado) and labor relations impact",
     ],
     premium: true,
+    testsFundamentals: ["supplychain-automation-capex-payback", "supplychain-workforce-transition-automation"],
   },
   {
     id: "biz-supplychain-cold-chain-failure",
@@ -4120,6 +4241,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "IoT-based real-time cold chain monitoring case studies",
     ],
     premium: true,
+    testsFundamentals: ["supplychain-regulated-cold-chain"],
   },
   {
     id: "biz-supplychain-tariff-trade-war-sourcing",
@@ -4149,6 +4271,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Price elasticity modeling in consumer goods pricing strategy",
     ],
     premium: true,
+    testsFundamentals: ["supplychain-tariff-engineering", "supplychain-reshoring-nearshoring", "supplychain-price-elasticity-passthrough", "supplychain-supplier-ecosystem-development"],
   },
   {
     id: "biz-supplychain-supplier-labor-violation",
@@ -4178,6 +4301,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Rana Plaza and its aftermath as a case study in apparel supply chain labor accountability",
     ],
     premium: true,
+    testsFundamentals: ["supplychain-supplier-social-compliance"],
   },
   {
     id: "biz-supplychain-inventory-obsolescence-writeoff",
@@ -4207,6 +4331,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Root cause analysis methods for inventory planning failures (5 Whys, Ishikawa)",
     ],
     premium: true,
+    testsFundamentals: ["supplychain-inventory-obsolescence-mgmt", "supplychain-sop-process"],
   },
   {
     id: "biz-supplychain-network-redesign-customer-shift",
@@ -4236,6 +4361,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Third-party warehousing as a flexible bridge strategy in network transitions",
     ],
     premium: true,
+    testsFundamentals: ["supplychain-network-design-cog", "supplychain-concentration-risk"],
   },
   {
     id: "biz-it-legacy-modernization",
@@ -4265,6 +4391,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "API-led connectivity architecture for legacy integration",
     ],
     premium: true,
+    testsFundamentals: ["it-legacy-migration-risk"],
   },
   {
     id: "biz-it-vendor-price-hike-lockin",
@@ -4294,6 +4421,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Enterprise software negotiation strategy and multi-year contract structuring",
     ],
     premium: true,
+    testsFundamentals: ["it-vendor-lockin", "it-tco-analysis"],
   },
   {
     id: "biz-it-build-vs-buy",
@@ -4323,6 +4451,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Opportunity cost modeling for engineering resource allocation",
     ],
     premium: true,
+    testsFundamentals: ["it-build-vs-buy", "it-tco-analysis", "it-opportunity-cost-eng"],
   },
   {
     id: "biz-it-ai-adoption-strategy",
@@ -4352,6 +4481,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Human-in-the-loop system design for high-stakes automated decisions",
     ],
     premium: true,
+    testsFundamentals: ["it-ai-use-case-prioritization", "it-ai-governance-bias"],
   },
   {
     id: "biz-it-shadow-it-breach",
@@ -4381,6 +4511,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "IT governance frameworks balancing control and employee self-service (COBIT)",
     ],
     premium: true,
+    testsFundamentals: ["it-shadow-it-risk", "it-breach-notification"],
   },
   {
     id: "biz-it-cloud-cost-overrun",
@@ -4410,6 +4541,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Unit economics and cost-per-transaction metrics in SaaS/fintech infrastructure",
     ],
     premium: true,
+    testsFundamentals: ["it-finops-cost-discipline"],
   },
   {
     id: "biz-it-failed-erp-rollout",
@@ -4439,6 +4571,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Case studies of failed/troubled ERP rollouts (e.g., large-scale SAP/Oracle implementations)",
     ],
     premium: true,
+    testsFundamentals: ["it-erp-phase-gate", "it-change-management-adoption", "it-vendor-accountability"],
   },
   {
     id: "biz-it-tech-debt-vs-velocity",
@@ -4468,6 +4601,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Sustainable pace / capacity allocation models in agile engineering organizations",
     ],
     premium: true,
+    testsFundamentals: ["it-technical-debt-quantification", "it-sustainable-capacity-allocation"],
   },
   {
     id: "biz-it-outsourced-dev-quality",
@@ -4497,6 +4631,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Vendor management maturity models for offshore/nearshore development",
     ],
     premium: true,
+    testsFundamentals: ["it-outsourcing-governance", "it-vendor-accountability", "it-tco-analysis"],
   },
   {
     id: "biz-it-cybersecurity-budget-near-miss",
@@ -4526,6 +4661,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Ransomware cost studies and mean-time-to-detect (MTTD) benchmarks",
     ],
     premium: true,
+    testsFundamentals: ["it-cyber-risk-quantification", "it-regulatory-compliance-exposure"],
   },
   {
     id: "biz-it-single-vendor-vs-best-of-breed",
@@ -4555,6 +4691,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Enterprise software migration change management best practices",
     ],
     premium: true,
+    testsFundamentals: ["it-best-of-breed-vs-suite", "it-tco-analysis"],
   },
   {
     id: "biz-it-org-restructuring-centralized-federated",
@@ -4584,6 +4721,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Case studies on shared services model transitions in multinational corporations",
     ],
     premium: true,
+    testsFundamentals: ["it-centralized-vs-federated-governance", "it-change-management-adoption"],
   },
   {
     id: "biz-manufacturing-automation-workforce-impact",
@@ -4613,6 +4751,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Corporate community relations in single-employer manufacturing towns",
     ],
     premium: true,
+    testsFundamentals: ["mfg-automation-roi-payback", "mfg-workforce-transition-automation", "mfg-community-labor-relations"],
   },
   {
     id: "biz-manufacturing-quality-defect-process-change",
@@ -4642,6 +4781,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Product recall and field action decision frameworks (e.g., NHTSA/CPSC-adjacent industrial equivalents)",
     ],
     premium: true,
+    testsFundamentals: ["mfg-root-cause-analysis", "mfg-recall-decision-criteria", "mfg-spc-tolerance-drift"],
   },
   {
     id: "biz-manufacturing-capacity-expansion-vs-outsourcing",
@@ -4671,6 +4811,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Demand growth sustainability and forecasting for capital investment decisions",
     ],
     premium: true,
+    testsFundamentals: ["mfg-capacity-planning-uncertainty", "mfg-make-vs-buy-contract-mfg"],
   },
   {
     id: "biz-manufacturing-unplanned-downtime-crisis",
@@ -4700,6 +4841,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Business continuity planning for single-line production dependency",
     ],
     premium: true,
+    testsFundamentals: ["mfg-downtime-cost-analysis", "mfg-preventive-maintenance"],
   },
   {
     id: "biz-manufacturing-environmental-compliance-violation",
@@ -4729,6 +4871,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Corporate crisis response and regulatory disclosure best practices",
     ],
     premium: true,
+    testsFundamentals: ["mfg-environmental-self-disclosure", "mfg-root-cause-analysis"],
   },
   {
     id: "biz-manufacturing-lean-jit-vs-buffer-resilience",
@@ -4758,6 +4901,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "ROIC and working capital trade-off analysis in operations strategy",
     ],
     premium: true,
+    testsFundamentals: ["mfg-jit-vs-buffer-resilience"],
   },
   {
     id: "biz-manufacturing-plant-relocation",
@@ -4787,6 +4931,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Workforce retention and transition planning in plant relocations",
     ],
     premium: true,
+    testsFundamentals: ["mfg-facility-relocation-risk", "mfg-phased-transition-execution", "mfg-workforce-transition-automation"],
   },
   {
     id: "biz-manufacturing-raw-material-price-spike",
@@ -4816,6 +4961,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Raw material substitution and reformulation strategies under supply shortage",
     ],
     premium: true,
+    testsFundamentals: ["mfg-commodity-hedging", "mfg-cost-passthrough-contracts"],
   },
   {
     id: "biz-manufacturing-safety-incident-production-halt",
@@ -4845,6 +4991,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Root cause analysis for systemic vs. isolated equipment failures",
     ],
     premium: true,
+    testsFundamentals: ["mfg-osha-safety-authority", "mfg-machine-guarding-compliance"],
   },
   {
     id: "biz-manufacturing-green-manufacturing-investment",
@@ -4874,6 +5021,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Energy tax credit and incentive stacking strategies (e.g., U.S. Inflation Reduction Act provisions)",
     ],
     premium: true,
+    testsFundamentals: ["mfg-sustainability-capex-roi"],
   },
   {
     id: "biz-manufacturing-union-productivity-dispute",
@@ -4903,6 +5051,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Ergonomics and human factors engineering in manufacturing equipment design",
     ],
     premium: true,
+    testsFundamentals: ["mfg-labor-relations-cba", "mfg-community-labor-relations"],
   },
   {
     id: "biz-manufacturing-product-line-rationalization",
@@ -4932,6 +5081,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Pareto (80/20) analysis in product portfolio management",
     ],
     premium: true,
+    testsFundamentals: ["mfg-sku-rationalization-complexity-costing"],
   },
   {
     id: "biz-product-kill-beloved-feature",
@@ -4962,6 +5112,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Basecamp's public feature-deprecation playbooks",
     ],
     premium: true,
+    testsFundamentals: ["product-loss-aversion-deprecation", "product-prioritization-frameworks"],
   },
   {
     id: "biz-product-roadmap-sales-vs-engineering",
@@ -4992,6 +5143,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Technical debt quadrant (Martin Fowler)",
     ],
     premium: true,
+    testsFundamentals: ["product-tech-debt-tradeoff", "product-cross-functional-roadmap-governance"],
   },
   {
     id: "biz-product-mvp-disappoints-early-adopters",
@@ -5022,6 +5174,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Beta program design and expectation-setting best practices",
     ],
     premium: true,
+    testsFundamentals: ["product-mvp-expectation-setting"],
   },
   {
     id: "biz-product-innovation-lab-shelfware",
@@ -5052,6 +5205,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Google X's project-kill and 'moonshot' governance model",
     ],
     premium: true,
+    testsFundamentals: ["product-innovation-governance"],
   },
   {
     id: "biz-product-competitor-clones-feature",
@@ -5082,6 +5236,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Network effects and switching-cost strategy (Hagiu & Wright)",
     ],
     premium: true,
+    testsFundamentals: ["product-sustainable-moat"],
   },
   {
     id: "biz-product-accessibility-vs-speed",
@@ -5112,6 +5267,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Shift-left quality and compliance practices in product development",
     ],
     premium: true,
+    testsFundamentals: ["product-accessibility-compliance"],
   },
   {
     id: "biz-product-data-privacy-recall",
@@ -5142,6 +5298,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Case studies on data breach disclosure timing (e.g., Equifax vs. Uber contrast)",
     ],
     premium: true,
+    testsFundamentals: ["product-incident-disclosure"],
   },
   {
     id: "biz-product-sunset-legacy-line",
@@ -5172,6 +5329,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Case studies on legacy-to-cloud migration incentive design (e.g., Adobe's Creative Suite to Creative Cloud transition)",
     ],
     premium: true,
+    testsFundamentals: ["product-lifecycle-sunset"],
   },
   {
     id: "biz-product-stability-vs-experimentation",
@@ -5202,6 +5360,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Blast radius and chaos engineering principles",
     ],
     premium: true,
+    testsFundamentals: ["product-experimentation-safety"],
   },
   {
     id: "biz-product-ignored-ab-test",
@@ -5232,6 +5391,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Data-driven culture case studies (Netflix, Booking.com experimentation programs)",
     ],
     premium: true,
+    testsFundamentals: ["product-statistical-rigor"],
   },
   {
     id: "biz-product-power-users-vs-mainstream",
@@ -5262,6 +5422,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Superuser/power-user community dynamics in product-led growth companies",
     ],
     premium: true,
+    testsFundamentals: ["product-segment-prioritization", "product-prioritization-frameworks"],
   },
   {
     id: "biz-product-internal-build-vs-partner",
@@ -5292,6 +5453,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Channel conflict management in platform ecosystems",
     ],
     premium: true,
+    testsFundamentals: ["product-build-vs-partner"],
   },
   {
     id: "biz-cx-outsourcing-quality-crisis",
@@ -5322,6 +5484,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Total cost of ownership analysis for outsourced service functions",
     ],
     premium: true,
+    testsFundamentals: ["cx-vendor-tco", "cx-effort-score"],
   },
   {
     id: "biz-cx-personalization-privacy-backlash",
@@ -5352,6 +5515,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Target's pregnancy-prediction personalization controversy as a precedent case",
     ],
     premium: true,
+    testsFundamentals: ["cx-privacy-creepy-line"],
   },
   {
     id: "biz-cx-viral-unanswered-complaint",
@@ -5382,6 +5546,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Case studies on viral customer service failures (e.g., United Airlines 2017)",
     ],
     premium: true,
+    testsFundamentals: ["cx-crisis-response-sequencing", "cx-service-recovery-paradox"],
   },
   {
     id: "biz-cx-nps-decline-despite-investment",
@@ -5412,6 +5577,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Feature bloat and complexity debt in SaaS product design",
     ],
     premium: true,
+    testsFundamentals: ["cx-nps-driver-analysis", "cx-kano-model"],
   },
   {
     id: "biz-cx-self-service-vs-human",
@@ -5442,6 +5608,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Churn cost modeling in subscription and telecom businesses",
     ],
     premium: true,
+    testsFundamentals: ["cx-net-cost-to-serve", "cx-escalation-path-design"],
   },
   {
     id: "biz-cx-loyalty-overhaul-backlash",
@@ -5472,6 +5639,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Case studies on loyalty program backlash (e.g., Delta SkyMiles devaluation reactions)",
     ],
     premium: true,
+    testsFundamentals: ["cx-loyalty-economics", "cx-clv-segmentation"],
   },
   {
     id: "biz-cx-ai-chatbot-backlash",
@@ -5502,6 +5670,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Case studies on chatbot-related customer service controversies (e.g., DPD chatbot incident)",
     ],
     premium: true,
+    testsFundamentals: ["cx-escalation-path-design", "cx-frontline-empowerment"],
   },
   {
     id: "biz-cx-peak-season-sla-failure",
@@ -5532,6 +5701,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Post-incident review / blameless postmortem methodology",
     ],
     premium: true,
+    testsFundamentals: ["cx-surge-capacity-planning", "cx-ticket-triage-severity"],
   },
   {
     id: "biz-cx-churn-reveals-onboarding-gap",
@@ -5562,6 +5732,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Onboarding funnel design and cross-functional ownership models",
     ],
     premium: true,
+    testsFundamentals: ["cx-activation-time-to-value"],
   },
   {
     id: "biz-cx-data-request-privacy-regulation",
@@ -5592,6 +5763,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Privacy operations (PrivacyOps) tooling and process design",
     ],
     premium: true,
+    testsFundamentals: ["cx-dsar-compliance"],
   },
   {
     id: "biz-cx-inconsistent-omnichannel",
@@ -5622,6 +5794,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Case studies on retail channel integration (e.g., Nordstrom's omnichannel investment)",
     ],
     premium: true,
+    testsFundamentals: ["cx-journey-mapping", "cx-service-blueprinting"],
   },
   {
     id: "biz-cx-vip-complaint-major-account",
@@ -5652,6 +5825,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Executive sponsorship programs in B2B customer success",
     ],
     premium: true,
+    testsFundamentals: ["cx-executive-sponsorship", "cx-service-recovery-paradox"],
   },
   {
     id: "biz-talent-pay-equity-gap",
@@ -5682,6 +5856,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Research on the negotiation gap and its contribution to pay disparities (e.g., work by Hannah Riley Bowles)",
     ],
     premium: true,
+    testsFundamentals: ["talent-pay-equity-audit"],
   },
   {
     id: "biz-talent-ai-skills-gap-hiring",
@@ -5712,6 +5887,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Build vs. buy vs. partner frameworks applied to specialized talent acquisition",
     ],
     premium: true,
+    testsFundamentals: ["talent-comp-benchmarking", "talent-evp-design", "talent-build-buy-partner-talent"],
   },
   {
     id: "biz-talent-unfair-promotion-process",
@@ -5742,6 +5918,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Structured decision-making frameworks for fairness in HR processes",
     ],
     premium: true,
+    testsFundamentals: ["talent-promotion-governance"],
   },
   {
     id: "biz-talent-counter-offer-negotiation",
@@ -5772,6 +5949,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Key-person risk and knowledge continuity planning",
     ],
     premium: true,
+    testsFundamentals: ["talent-counter-offer-policy", "talent-key-person-risk"],
   },
   {
     id: "biz-talent-leadership-pipeline-vp-exodus",
@@ -5802,6 +5980,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "High-potential (HiPo) leadership development program design",
     ],
     premium: true,
+    testsFundamentals: ["talent-succession-planning"],
   },
   {
     id: "biz-talent-pip-pretext-firing",
@@ -5832,6 +6011,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Disparate treatment analysis frameworks in employment law",
     ],
     premium: true,
+    testsFundamentals: ["talent-pip-legal-risk"],
   },
   {
     id: "biz-talent-toxic-department-survey",
@@ -5862,6 +6042,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Toxic leadership and manager effectiveness assessment frameworks",
     ],
     premium: true,
+    testsFundamentals: ["talent-psych-safety-investigation", "talent-engagement-survey-action"],
   },
   {
     id: "biz-talent-layoff-survivor-guilt",
@@ -5892,6 +6073,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Change management and trust communication frameworks (Kotter's change model)",
     ],
     premium: true,
+    testsFundamentals: ["talent-layoff-survivor-trust"],
   },
   {
     id: "biz-talent-rto-exception-precedent",
@@ -5922,6 +6104,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Organizational justice and perceived fairness research (equity theory, Adams)",
     ],
     premium: true,
+    testsFundamentals: ["talent-accommodation-policy"],
   },
   {
     id: "biz-talent-founder-ceo-succession",
@@ -5952,6 +6135,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Emergency succession planning frameworks",
     ],
     premium: true,
+    testsFundamentals: ["talent-founder-succession", "talent-key-person-risk"],
   },
   {
     id: "biz-talent-contractor-misclassification-risk",
@@ -5982,6 +6166,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Contingent workforce management and classification audit best practices",
     ],
     premium: true,
+    testsFundamentals: ["talent-worker-classification"],
   },
   {
     id: "biz-talent-whistleblower-senior-leader",
@@ -6012,6 +6197,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Corporate governance escalation to audit committees for executive misconduct allegations",
     ],
     premium: true,
+    testsFundamentals: ["talent-whistleblower-investigation"],
   },
   {
     id: "biz-intl-local-ownership-requirement",
@@ -6042,6 +6228,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "China JV IP-leakage case studies (e.g., early auto industry joint ventures)",
     ],
     premium: true,
+    testsFundamentals: ["intl-jv-structuring", "intl-entry-mode-selection"],
   },
   {
     id: "biz-intl-currency-devaluation-profits",
@@ -6071,6 +6258,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Case studies on multinational operations under emerging-market capital controls (e.g., Venezuela, Argentina precedents)",
     ],
     premium: true,
+    testsFundamentals: ["intl-currency-exposure-hedging", "intl-capital-controls-repatriation"],
   },
   {
     id: "biz-intl-joint-venture-partner-conflict",
@@ -6100,6 +6288,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Channel conflict management in emerging-market distribution",
     ],
     premium: true,
+    testsFundamentals: ["intl-jv-governance-disputes", "intl-jv-structuring"],
   },
   {
     id: "biz-intl-conflicting-labor-laws",
@@ -6129,6 +6318,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Brazil's FGTS severance penalty structure",
     ],
     premium: true,
+    testsFundamentals: ["intl-cross-border-labor-law"],
   },
   {
     id: "biz-intl-sudden-trade-sanction",
@@ -6158,6 +6348,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Revenue concentration and geopolitical risk in corporate strategy",
     ],
     premium: true,
+    testsFundamentals: ["intl-export-controls-sanctions"],
   },
   {
     id: "biz-intl-marketing-cultural-misstep",
@@ -6187,6 +6378,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Global standardization vs. adaptation debate (Levitt vs. localization theorists)",
     ],
     premium: true,
+    testsFundamentals: ["intl-cultural-due-diligence-marketing", "intl-standardization-vs-adaptation"],
   },
   {
     id: "biz-intl-regional-hq-location",
@@ -6216,6 +6408,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Corporate headquarters relocation case studies in financial services",
     ],
     premium: true,
+    testsFundamentals: ["intl-country-risk-site-selection", "intl-entry-mode-selection"],
   },
   {
     id: "biz-intl-global-team-timezone-culture-clash",
@@ -6245,6 +6438,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Psychological safety research (Amy Edmondson)",
     ],
     premium: true,
+    testsFundamentals: ["intl-cultural-intelligence-communication"],
   },
   {
     id: "biz-intl-localization-vs-standardization",
@@ -6274,6 +6468,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Platform architecture strategy (core vs. local configuration layers)",
     ],
     premium: true,
+    testsFundamentals: ["intl-standardization-vs-adaptation"],
   },
   {
     id: "biz-intl-expat-executive-failure",
@@ -6303,6 +6498,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Expatriate failure rate studies in international HR management",
     ],
     premium: true,
+    testsFundamentals: ["intl-expat-selection-adjustment", "intl-cultural-intelligence-communication"],
   },
   {
     id: "biz-intl-bribery-risk-new-market",
@@ -6332,6 +6528,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Third-party intermediary risk in international compliance programs",
     ],
     premium: true,
+    testsFundamentals: ["intl-anti-corruption-compliance"],
   },
   {
     id: "biz-intl-repatriating-profits-capital-controls",
@@ -6361,6 +6558,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Capital control regimes and corporate repatriation planning (IMF country case studies)",
     ],
     premium: true,
+    testsFundamentals: ["intl-capital-controls-repatriation", "intl-transfer-pricing"],
   },
   {
     id: "biz-governance-board-conflict-of-interest",
@@ -6390,6 +6588,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Delaware case law on interested director transactions (entire fairness standard)",
     ],
     premium: true,
+    testsFundamentals: ["gov-conflict-of-interest-disclosure", "gov-related-party-transaction-review", "gov-board-committee-authority"],
   },
   {
     id: "biz-governance-activist-investor-board-seats",
@@ -6419,6 +6618,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Poison pills and other shareholder rights plan defenses",
     ],
     premium: true,
+    testsFundamentals: ["gov-activist-defense-strategy", "gov-takeover-defenses"],
   },
   {
     id: "biz-governance-whistleblower-retaliation",
@@ -6448,6 +6648,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Best practices for independent internal investigations (ACFE / audit committee guidance)",
     ],
     premium: true,
+    testsFundamentals: ["gov-whistleblower-protection"],
   },
   {
     id: "biz-governance-esg-reporting-mixed-performance",
@@ -6477,6 +6678,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Scope 1, 2, and 3 emissions accounting (GHG Protocol)",
     ],
     premium: true,
+    testsFundamentals: ["gov-esg-disclosure-integrity"],
   },
   {
     id: "biz-governance-ceo-succession-disagreement",
@@ -6506,6 +6708,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Executive retention risk during leadership transitions",
     ],
     premium: true,
+    testsFundamentals: ["gov-ceo-succession-planning"],
   },
   {
     id: "biz-governance-related-party-transaction",
@@ -6535,6 +6738,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Delaware entire fairness standard for interested-party transactions",
     ],
     premium: true,
+    testsFundamentals: ["gov-related-party-transaction-review", "gov-duty-of-loyalty-fiduciary"],
   },
   {
     id: "biz-governance-risk-committee-ignored",
@@ -6564,6 +6768,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Board risk committee fiduciary duty and documentation standards",
     ],
     premium: true,
+    testsFundamentals: ["gov-concentration-risk-oversight", "gov-three-lines-of-defense"],
   },
   {
     id: "biz-governance-insider-trading-violation",
@@ -6593,6 +6798,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "SEC voluntary self-disclosure and cooperation credit framework",
     ],
     premium: true,
+    testsFundamentals: ["gov-insider-trading-compliance"],
   },
   {
     id: "biz-governance-proxy-fight-strategic-direction",
@@ -6622,6 +6828,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Sum-of-the-parts valuation methodology",
     ],
     premium: true,
+    testsFundamentals: ["gov-shareholder-value-restructuring", "gov-activist-defense-strategy"],
   },
   {
     id: "biz-governance-climate-risk-disclosure",
@@ -6651,6 +6858,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Physical climate risk assessment methodologies for infrastructure assets",
     ],
     premium: true,
+    testsFundamentals: ["gov-climate-risk-disclosure"],
   },
   {
     id: "biz-governance-executive-comp-clawback",
@@ -6680,6 +6888,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Compensation committee governance under clawback policy design (NACD/ISS guidance)",
     ],
     premium: true,
+    testsFundamentals: ["gov-executive-comp-clawback", "gov-say-on-pay-comp-design"],
   },
   {
     id: "biz-governance-data-governance-board-liability",
@@ -6709,6 +6918,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Board cybersecurity oversight frameworks (NACD Director's Handbook on Cyber-Risk Oversight)",
     ],
     premium: true,
+    testsFundamentals: ["gov-cyber-oversight-caremark", "gov-incident-escalation-protocol"],
   },
   {
     id: "biz-retail-brick-mortar-closures",
@@ -6738,6 +6948,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Store portfolio rationalization case studies (e.g., major apparel retailer store closures 2015-2020)",
     ],
     premium: true,
+    testsFundamentals: ["retail-omnichannel-attribution", "retail-fulfillment-network-design"],
   },
   {
     id: "biz-retail-flash-sale-inventory-chaos",
@@ -6767,6 +6978,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Case studies on viral flash-sale oversell incidents",
     ],
     premium: true,
+    testsFundamentals: ["retail-inventory-sync-oversell", "retail-demand-forecasting-promotions"],
   },
   {
     id: "biz-retail-marketplace-dependency-risk",
@@ -6796,6 +7008,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Customer data ownership and lifetime value in DTC vs. marketplace models",
     ],
     premium: true,
+    testsFundamentals: ["retail-platform-dependency-risk", "retail-dtc-channel-investment"],
   },
   {
     id: "biz-retail-counterfeit-third-party-sellers",
@@ -6825,6 +7038,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Marketplace seller verification and counterfeit detection technology",
     ],
     premium: true,
+    testsFundamentals: ["retail-marketplace-liability-counterfeit", "retail-seller-vetting-moderation"],
   },
   {
     id: "biz-retail-same-day-delivery-cost",
@@ -6854,6 +7068,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Micro-fulfillment center economics in grocery e-commerce",
     ],
     premium: true,
+    testsFundamentals: ["retail-unit-economics-contribution-margin", "retail-cac-ltv-subsidization"],
   },
   {
     id: "biz-retail-checkout-redesign-abandonment",
@@ -6883,6 +7098,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Progressive rollout / canary deployment strategies for high-traffic product changes",
     ],
     premium: true,
+    testsFundamentals: ["retail-ab-testing-scale-validity", "retail-incident-rollback-decisioning"],
   },
   {
     id: "biz-retail-private-label-vs-brand",
@@ -6912,6 +7128,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Category management and brand equity research in retail merchandising",
     ],
     premium: true,
+    testsFundamentals: ["retail-private-label-strategy", "retail-vendor-trade-promotion-leverage"],
   },
   {
     id: "biz-retail-peak-season-supply-shortage",
@@ -6941,6 +7158,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Case studies on peak-season supply disruptions (e.g., holiday toy shortages, chip shortage retail impacts)",
     ],
     premium: true,
+    testsFundamentals: ["retail-supply-disruption-allocation"],
   },
   {
     id: "biz-retail-dynamic-pricing-backlash",
@@ -6970,6 +7188,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Case studies on dynamic pricing backlash (e.g., airline, ride-share surge pricing controversies)",
     ],
     premium: true,
+    testsFundamentals: ["retail-dynamic-pricing-fairness"],
   },
   {
     id: "biz-retail-omnichannel-returns-fraud",
@@ -6999,6 +7218,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Return policy generosity and its effect on purchase conversion (retail operations research)",
     ],
     premium: true,
+    testsFundamentals: ["retail-return-fraud-policy-design"],
   },
   {
     id: "biz-retail-livestream-social-commerce",
@@ -7028,6 +7248,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Pilot program statistical validity and scaling decision frameworks",
     ],
     premium: true,
+    testsFundamentals: ["retail-pilot-to-scale-validation"],
   },
   {
     id: "biz-retail-showrooming-store-format",
@@ -7057,5 +7278,712 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Store format innovation and real estate ROI in specialty retail",
     ],
     premium: true,
+    testsFundamentals: ["retail-experiential-differentiation", "retail-fulfillment-network-design"],
+  },
+  // ============================================================ FUNDAMENTALS GAP-FILL CASES
+  {
+    id: "biz-strategy-capacity-game-theory",
+    profession: "business",
+    category: "Strategy",
+    title: "Betting on Capacity Before Your Rival Does",
+    scenario:
+      "You're VP of Strategy at a specialty chemicals producer. A $60M plant would add 25% to industry capacity, but your only major rival has just hired a construction firm to study a nearly identical expansion. If you both build, years of oversupply will crush margins industry-wide; if only you build, you lock in a dominant low-cost position; if neither builds, prices hold but you risk losing share to demand growth elsewhere. The land option for the site expires in 30 days, before you can know the rival's real intent.",
+    keyIssues: [
+      "Whether your rival is likely to expand regardless of your move, making this less a first-mover choice and more a response to their probable action",
+      "How to build in contingency (delay clauses, phased capacity) rather than a single all-or-nothing $60M bet",
+      "Signal value of publicly committing to capacity versus quietly preserving optionality",
+      "Risk of the land option expiring before enough information about the rival's intent becomes available",
+    ],
+    expectedConcepts: [
+      "game theory",
+      "Nash equilibrium",
+      "first-mover advantage",
+      "capacity expansion signaling",
+      "scenario planning",
+      "real options",
+    ],
+    modelApproach:
+      "A strong answer models the payoff matrix explicitly (build/build, build/no-build, etc.) rather than assuming its own decision happens in a vacuum, and reasons about what the rival's observed signals imply about their dominant strategy. It proposes at least two named scenarios and a way to preserve optionality — such as securing the land option while phasing the build in smaller modules — rather than committing all $60M immediately under uncertainty.",
+    furtherReading: [
+      "Game theory in oligopoly capacity decisions (Cournot competition)",
+      "Scenario planning methodology (Shell's approach)",
+      "Real options in strategic investment (Dixit & Pindyck)",
+    ],
+    premium: true,
+    testsFundamentals: ["strat-competitive-dynamics-game-theory", "strat-scenario-planning"],
+  },
+  {
+    id: "biz-strategy-execution-alignment",
+    profession: "business",
+    category: "Strategy",
+    title: "Making the New Strategy Stick",
+    scenario:
+      "You're the newly appointed Chief Strategy Officer at a regional bank that publicly committed to a 'customer-centric, digital-first' strategy nine months ago, shifting away from product-siloed branches. Digital app usage is flat, cross-sell rates haven't moved, and branch managers are still compensated primarily on individual product sales volume — directly undermining the new strategy. The CEO wants a plan within one quarter that makes the strategy actually work operationally, not just remain a slide in the annual report.",
+    keyIssues: [
+      "Whether the failure to move the numbers is a strategy-design problem or an execution/incentive-alignment problem",
+      "How the current compensation structure and product silos actively work against the stated strategy",
+      "Sequencing organizational and incentive changes against the risk of disrupting existing revenue relationships",
+      "What early, measurable signals would show real execution progress within the quarter, not just renewed intent",
+    ],
+    expectedConcepts: [
+      "strategy execution",
+      "incentive alignment",
+      "organizational structure",
+      "McKinsey 7S framework",
+      "change management",
+      "leading indicators / KPIs",
+    ],
+    modelApproach:
+      "A strong answer resists re-diagnosing the strategy itself and instead pinpoints the incentive/structure misalignment — branch managers still rewarded for the old model — as the primary blocker. It proposes concrete changes such as revised compensation tied to cross-sell and digital metrics, sequenced to avoid disrupting existing revenue relationships, and names specific leading indicators to track within the quarter.",
+    furtherReading: [
+      "McKinsey 7S Framework",
+      "Kaplan & Norton's Balanced Scorecard for strategy execution",
+      "Kotter's 8-step change management model",
+    ],
+    premium: true,
+    testsFundamentals: ["strat-strategy-execution-alignment"],
+  },
+  {
+    id: "biz-finance-statement-diagnosis",
+    profession: "business",
+    category: "Finance",
+    title: "Sales Are Up, So Why Is Profit Down?",
+    scenario:
+      "You're the newly hired CFO of a 40-store regional retail chain. Consolidated statements show revenue up 8% year-over-year, but net income down 40%, and the board is confused since 'sales are growing.' Digging into the statements, SG&A grew 22% because of six new stores opened this year, each carrying $340K in annual fixed lease-and-staffing cost requiring about $1.1M in sales to break even — and several are trending well below that after nine months. You have one week before the board meeting to diagnose the real cause and recommend action.",
+    keyIssues: [
+      "Whether declining net income reflects a temporary new-store ramp issue or a structural margin problem",
+      "How to separate the performance of mature stores from new, not-yet-breakeven stores when reading the consolidated statements",
+      "What each new store's break-even sales threshold implies about which locations to keep funding versus reconsider",
+      "What the board needs to hear differently from 'sales are growing' to understand the real issue",
+    ],
+    expectedConcepts: [
+      "financial statement analysis",
+      "SG&A vs. COGS",
+      "fixed cost absorption",
+      "break-even analysis",
+      "contribution margin",
+      "same-store sales",
+    ],
+    modelApproach:
+      "A strong answer doesn't stop at 'revenue grew, profit fell' — it segments the P&L between mature and new stores, calculates each new store's break-even sales level, and identifies which underperforming locations are dragging down the consolidated results. It recommends a specific, time-bound path, such as a defined improvement window per underperforming store with an explicit closure trigger, rather than a vague 'monitor and see.'",
+    furtherReading: [
+      "Same-store sales analysis in retail finance",
+      "Break-even and contribution margin analysis",
+      "Financial statement analysis for operational diagnosis",
+    ],
+    premium: true,
+    testsFundamentals: ["fin-financial-statement-analysis", "fin-break-even-contribution-margin"],
+  },
+  {
+    id: "biz-finance-acquisition-structuring",
+    profession: "business",
+    category: "Finance",
+    title: "Structuring the Earnout",
+    scenario:
+      "You're the Corporate Development Director at a mid-cap consumer goods company negotiating to acquire a fast-growing direct-to-consumer skincare brand at an agreed enterprise value of $85M. The founder wants most of the value upfront in cash; your CFO wants a significant earnout tied to 3-year revenue targets to guard against overpaying if growth slows and to keep the founder operationally engaged. The founder's lawyers are pushing back that a large earnout shifts too much risk to them and could create disputes if post-close integration decisions affect the metrics the earnout depends on. You must propose a deal structure to the investment committee by Friday.",
+    keyIssues: [
+      "Balancing upfront cash certainty, which the seller wants, against downside protection and retention, which the buyer wants, through earnout design",
+      "Risk that post-close integration decisions (shared services, pricing changes) could unfairly help or hurt earnout metrics and create dispute risk",
+      "Whether the $85M valuation already prices in the growth assumptions, making a large earnout redundant or, conversely, essential",
+      "What financing mix (cash, stock, seller note) fits the acquirer's own balance sheet without overleveraging",
+    ],
+    expectedConcepts: [
+      "earnout structure",
+      "deal consideration mix",
+      "valuation multiple",
+      "integration risk",
+      "seller note/financing",
+      "purchase price allocation",
+    ],
+    modelApproach:
+      "A strong answer proposes a specific earnout structure — metric, measurement period, and operational-independence clauses — that balances the founder's retention incentive against the buyer's downside protection, and explicitly addresses how to wall off earnout metrics from integration decisions to prevent disputes. It ties the financing mix decision back to the acquirer's own balance sheet capacity, not just the seller's stated preference.",
+    furtherReading: [
+      "Earnout structuring and contingent consideration in M&A",
+      "Deal structuring and valuation multiples in private M&A",
+      "Purchase price allocation and post-merger integration risk",
+    ],
+    premium: true,
+    testsFundamentals: ["fin-ma-deal-structuring"],
+  },
+  {
+    id: "biz-marketing-product-launch-gtm",
+    profession: "business",
+    category: "Marketing",
+    title: "The Go-To-Market Countdown",
+    scenario:
+      "You're the Head of Marketing at a beverage company launching a new functional energy drink into a crowded category, facing a hard shelf-reset deadline at major retailers in 10 weeks. You have a $4M launch budget to allocate across finalizing packaging, setting price (a premium $3.49 versus mainstream $2.29), choosing distribution (mass retail versus convenience-store-first), and promotion (a thin national campaign versus a concentrated regional launch with paid social, sampling, and retail media). Sales leadership wants broad national distribution immediately; the CMO worries spreading the budget across every market and channel will produce a launch that doesn't break through anywhere.",
+    keyIssues: [
+      "Whether to concentrate the $4M budget in fewer markets and channels for real breakthrough, or spread it thin for maximum distribution",
+      "How the pricing position (premium vs. mainstream) must align with the chosen retail channel and promotional message",
+      "Whether the 10-week shelf-reset deadline forces tradeoffs between finalizing packaging and funding other launch elements",
+      "How to sequence and coordinate product, price, place, and promotion as one coherent plan rather than four independent choices",
+    ],
+    expectedConcepts: [
+      "marketing mix (4Ps)",
+      "go-to-market strategy",
+      "integrated marketing communications",
+      "retail shelf-reset cycles",
+      "regional launch/rollout strategy",
+      "category positioning",
+    ],
+    modelApproach:
+      "A strong answer treats the 4Ps as interdependent rather than a checklist — a premium price only works with a matching channel and message — and makes an explicit concentration-versus-breadth call given the fixed $4M budget and 10-week deadline, instead of trying to do everything nationally at once. It proposes a coordinated launch sequence, such as a regional beachhead followed by national expansion once proof points exist, tied to one integrated campaign concept across paid, retail, and sampling channels.",
+    furtherReading: [
+      "McCarthy's 4Ps marketing mix framework",
+      "Go-to-market strategy and channel sequencing for CPG launches",
+      "Integrated marketing communications (IMC) planning",
+    ],
+    premium: true,
+    testsFundamentals: ["mktg-marketing-mix-4ps", "mktg-new-product-launch-gtm", "mktg-integrated-marketing-campaign"],
+  },
+  {
+    id: "biz-ops-jit-bottleneck-failure",
+    profession: "business",
+    category: "Operations",
+    title: "The Just-In-Time Bottleneck Failure",
+    scenario:
+      "You're the VP of Operations at a furniture manufacturer that adopted a strict just-in-time inventory model three years ago, cutting warehousing costs by $6M annually by holding almost no buffer stock. A fire at your single CNC-cutting station — the one machine every product line routes through — has halted the entire plant, and your JIT suppliers can't help because there's nowhere to store parts even if deliveries were accelerated. Contractual delivery penalties begin in 5 days if output doesn't resume, and no documented contingency plan exists for a single-machine failure of this kind.",
+    keyIssues: [
+      "Whether the JIT model's cost savings masked a critical single-point-of-failure bottleneck risk",
+      "Immediate options for restoring throughput (rental equipment, outsourcing the cut step, rerouting) given the 5-day penalty clock",
+      "Whether more buffer inventory or backup capacity would have been the right insurance against this exact failure mode",
+      "Building a real contingency plan going forward without abandoning JIT's cost benefits entirely",
+    ],
+    expectedConcepts: [
+      "just-in-time inventory",
+      "bottleneck / theory of constraints",
+      "single point of failure",
+      "business continuity planning",
+      "buffer stock vs. carrying cost trade-off",
+      "contingency planning",
+    ],
+    modelApproach:
+      "A strong answer identifies the CNC station as the plant's true constraint (Theory of Constraints) and recognizes that JIT's cost savings and the bottleneck's fragility are the same underlying decision, not separate problems. It proposes immediate parallel actions — expedited rental or outsourced cutting capacity, and renegotiating the penalty deadline — rather than waiting on one fix, and it commits to a specific post-crisis policy (e.g., targeted backup capacity only at the identified constraint, not blanket inventory increases) that preserves most of JIT's savings while closing the exposed gap.",
+    furtherReading: [
+      "The Goal by Eliyahu Goldratt (Theory of Constraints)",
+      "Toyota Production System and JIT risk management",
+      "Business continuity planning for single-point-of-failure equipment (ISO 22301)",
+    ],
+    premium: true,
+    testsFundamentals: ["ops-inventory-jit-tradeoffs", "ops-bottleneck-throughput-analysis", "ops-business-continuity-planning"],
+  },
+  {
+    id: "biz-hr-structured-hiring-bias",
+    profession: "business",
+    category: "Leadership & HR",
+    title: "Gut-Feel Hiring vs. a Structured Process",
+    scenario:
+      "You're the Head of Talent at a 400-person fintech company. An internal audit found that hiring managers who rely on unstructured 'culture fit' interviews hire candidates who are 73% male despite a candidate pool that's 45% female, and turnover among the few women hired through that process is twice as high as through your structured-interview roles. Several senior hiring managers say structured interviews are 'bureaucratic' and slow down time-to-hire in a competitive market. The CEO wants a company-wide hiring process decision before the next hiring cycle begins in three weeks.",
+    keyIssues: [
+      "Whether the audit's disparity reflects biased selection criteria or a genuinely different candidate pool at that stage",
+      "Trade-off between hiring-manager autonomy/speed and standardized, defensible selection criteria",
+      "Legal exposure from a documented disparate-impact pattern if left unaddressed",
+      "How to roll out structured interviewing without alienating experienced managers who resist it",
+    ],
+    expectedConcepts: [
+      "structured interviewing",
+      "unconscious bias",
+      "disparate impact",
+      "candidate pipeline",
+      "time-to-hire",
+      "selection validity",
+    ],
+    modelApproach:
+      "A strong answer treats the turnover and hiring-ratio data as evidence requiring action, not a coincidence to explain away, and doesn't accept 'culture fit' as a neutral criterion without scrutiny. It recommends structured, criteria-based interviews with standardized scoring as the default hiring method, addresses the speed objection with a concrete design (e.g., pre-built scorecards, calibrated interviewer training) rather than dismissing it, and names the legal and retention cost of inaction as part of the business case to skeptical managers.",
+    furtherReading: [
+      "Work Rules! by Laszlo Bock (structured interviewing at Google)",
+      "EEOC guidance on disparate impact in hiring",
+      "Schmidt & Hunter meta-analysis on structured vs. unstructured interview validity",
+    ],
+    premium: true,
+    testsFundamentals: ["hr-recruitment-selection-bias"],
+  },
+  {
+    id: "biz-crisis-no-playbook-near-miss",
+    profession: "business",
+    category: "Crisis Management",
+    title: "The Near-Miss That Exposed No Plan",
+    scenario:
+      "You're the newly appointed Head of Risk at a regional airline. A minor mechanical issue grounded a flight for six hours last month, and the response was chaotic — no one knew who was authorized to speak to media, three different departments gave passengers conflicting information, and the CEO found out from a news alert instead of an internal escalation. Nothing went legally or physically wrong, but the board saw how close it came to a real reputational crisis and wants a crisis management protocol built and presented in two weeks, before peak holiday travel season begins.",
+    keyIssues: [
+      "Whether to treat this near-miss as a low-priority scare or the clearest possible warning sign",
+      "What a crisis protocol needs to define in advance (escalation chain, spokesperson authority, decision thresholds) versus what must stay flexible for the specific crisis",
+      "Balancing the two-week deadline against building something more than a document nobody will actually use",
+      "Getting genuine buy-in and rehearsal from departments that see this as a compliance exercise",
+    ],
+    expectedConcepts: [
+      "crisis management protocol",
+      "escalation chain",
+      "spokesperson authority",
+      "crisis simulation / tabletop exercise",
+      "decision thresholds",
+      "incident command structure",
+    ],
+    modelApproach:
+      "A strong answer treats the near-miss as the best possible low-cost opportunity to build the protocol before a real crisis forces it, rather than a minor operational hiccup. It specifies concrete elements the protocol must define now — who is authorized to speak externally, what triggers CEO notification, and clear decision thresholds — while insisting on a tabletop rehearsal before peak season, since an untested document is not a real capability.",
+    furtherReading: [
+      "Situational Crisis Communication Theory (Coombs)",
+      "Incident Command System (ICS) for organizational crisis response",
+      "Crisis tabletop exercise design and rehearsal best practices",
+    ],
+    premium: true,
+    testsFundamentals: ["crisis-preparedness-playbook"],
+  },
+  {
+    id: "biz-ma-rw-insurance-indemnification",
+    profession: "business",
+    category: "Mergers & Acquisitions",
+    title: "Who Bears the Risk After Closing",
+    scenario:
+      "As general counsel for the buyer in a $180M acquisition of a specialty manufacturer, you're finalizing the purchase agreement two days before signing. The seller's private equity owner is pushing to cap general indemnification at 8% of purchase price ($14.4M) with a 12-month survival period, while your operating team flags real exposure from an ongoing product-liability claim and undisclosed environmental remediation at one plant. A representations-and-warranties insurance policy could cover $25M in general reps for a 3% premium, but won't cover known issues already flagged in diligence. Your CEO wants to sign on schedule and is asking whether the proposed protections are actually adequate.",
+    keyIssues: [
+      "Whether the negotiated indemnification cap and survival period actually cover realistic downside exposure from the known product-liability and environmental issues",
+      "Whether R&W insurance is a genuine risk transfer or a false sense of security given its exclusion of known/flagged issues",
+      "Trade-off between holding firm on broader seller indemnification versus preserving deal timing and the relationship with the PE seller",
+      "Structuring specific indemnities (uncapped or longer-tail) for the known risks separately from the general cap, versus reopening the whole negotiation",
+    ],
+    expectedConcepts: [
+      "representations and warranties",
+      "indemnification cap",
+      "survival period",
+      "R&W insurance",
+      "basket/deductible",
+      "specific indemnity",
+    ],
+    modelApproach:
+      "A strong answer separates the known, flagged risks (product liability, environmental) — which need a specific, uncapped or long-tail indemnity outside the general cap — from unknown general business risk, which R&W insurance and a standard cap can reasonably cover; it doesn't treat the insurance policy as covering risks it explicitly excludes, and is clear about which protections are worth risking deal timing to negotiate versus accepting as market-standard.",
+    furtherReading: [
+      "ABA/SRS Acquiom studies on M&A indemnification market terms",
+      "Representations and warranties insurance underwriting practices",
+      "Purchase agreement negotiation: caps, baskets, and survival periods",
+    ],
+    premium: true,
+    testsFundamentals: ["ma-rep-warranty-indemnification"],
+  },
+  {
+    id: "biz-ma-cfius-foreign-buyer-review",
+    profession: "business",
+    category: "Mergers & Acquisitions",
+    title: "The Foreign Buyer Problem",
+    scenario:
+      "As corporate development lead for a mid-size semiconductor components maker, you've negotiated a $220M sale to a strategic buyer headquartered in Asia — the highest bid by $40M over the next-best domestic offer. Your legal team flags that the deal touches technology on the CFIUS-sensitive list, and a mandatory filing could take 45-90 days with real risk of a second-stage investigation or presidential block, while the domestic bidder could close in three weeks. The board meets Friday to decide which bid to accept.",
+    keyIssues: [
+      "Whether the $40M premium from the foreign buyer justifies the CFIUS timeline and outright-block risk",
+      "Deal certainty and structuring (reverse termination fee, mitigation agreements) to protect against a failed foreign-buyer transaction",
+      "Whether the underlying technology's sensitivity makes CFIUS clearance genuinely unlikely versus merely slow",
+      "Balancing shareholder value maximization against the practical reality of a deal that may never close",
+    ],
+    expectedConcepts: [
+      "CFIUS review",
+      "national security review",
+      "reverse termination fee",
+      "mitigation agreement",
+      "deal certainty",
+      "cross-border M&A",
+    ],
+    modelApproach:
+      "A strong answer doesn't just compare headline price, but risk-adjusts the foreign bid by the probability and cost of CFIUS rejection or prolonged delay, pushes for structural protections (a meaningful reverse termination fee, interim covenants) if pursuing the foreign buyer, and is honest about the technology risk profile driving the review rather than assuming the deal will sail through on commercial logic alone.",
+    furtherReading: [
+      "CFIUS regulations and the mandatory filing process for critical technology",
+      "Reverse termination fee structuring in cross-border deals",
+      "Case studies in blocked or abandoned CFIUS-reviewed transactions",
+    ],
+    premium: true,
+    testsFundamentals: ["ma-cross-border-cfius"],
+  },
+  {
+    id: "biz-startup-founder-equity-formation-mistakes",
+    profession: "business",
+    category: "Entrepreneurship & Startups",
+    title: "The Handshake Cap Table",
+    scenario:
+      "Eight months after incorporating, your two-person startup finally sits down with a lawyer before a seed round. You discover neither founder filed an 83(b) election on their founder shares (the 30-day window closed months ago), there's no written IP assignment for code your co-founder wrote for the company before formal incorporation, and the company was set up as an LLC, which the lead seed investor's fund cannot legally invest in. The investor's $750K term sheet has a two-week deadline.",
+    keyIssues: [
+      "Tax exposure from the missed 83(b) election and whether anything can still mitigate it",
+      "Legal risk from unassigned pre-incorporation IP and how urgently it needs to be resolved before the round",
+      "Cost and mechanics of converting the LLC to a Delaware C-corp on a compressed timeline without blowing the investor's deadline",
+      "What this episode reveals about the founders' need for basic legal infrastructure going forward",
+    ],
+    expectedConcepts: [
+      "83(b) election",
+      "IP assignment agreement",
+      "entity conversion",
+      "Delaware C-corp",
+      "founder stock",
+      "qualified small business stock",
+    ],
+    modelApproach:
+      "A strong answer treats the IP assignment gap as the most urgent fix — it's a real deal-blocker for the investor's diligence — while being realistic that the missed 83(b) window can't be undone and instead focuses on what tax planning is still available, and lays out a concrete, time-boxed plan to convert entity type without missing the term sheet deadline.",
+    furtherReading: [
+      "Startup formation and incorporation checklists (Clerky, Cooley GO)",
+      "83(b) election mechanics and consequences of missing the deadline",
+      "Qualified Small Business Stock (QSBS) tax treatment under IRC Section 1202",
+    ],
+    premium: true,
+    testsFundamentals: ["startup-legal-formation-basics"],
+  },
+  {
+    id: "biz-sales-account-expansion-play",
+    profession: "business",
+    category: "Sales & Business Development",
+    title: "The Account That Could Be Bigger",
+    scenario:
+      "As a customer-success-turned-expansion manager at a project management SaaS company, you manage a $180K/year account that uses your product in only one of the client's twelve regional offices. Internal usage data shows the client's champion is a strong advocate, but a compelling expansion pitch to the other eleven offices would require an executive-level conversation the champion has been reluctant to broker, worried about overstepping her own internal political standing. Your quarter closes in five weeks and this expansion is the single largest lever you have.",
+    keyIssues: [
+      "How to build the business case and multi-threaded relationships needed to reach economic buyers beyond the champion's comfort zone",
+      "Respecting the champion's political capital while still pushing for the introduction the expansion requires",
+      "Whether a phased expansion pilot in two or three additional offices is more achievable within the timeline than a company-wide push",
+      "Realistic assessment of what closes this quarter versus what needs to be recategorized into next quarter's pipeline",
+    ],
+    expectedConcepts: [
+      "account expansion",
+      "land-and-expand",
+      "multi-threading",
+      "champion enablement",
+      "economic buyer",
+      "expansion pipeline",
+    ],
+    modelApproach:
+      "A strong answer builds a concrete, data-backed expansion business case the champion can safely carry upward, proposes multi-threading to additional stakeholders without bypassing or embarrassing the champion, and scopes a phased pilot as a realistic path to some expansion this quarter rather than an all-or-nothing company-wide bet.",
+    furtherReading: [
+      "Land-and-expand and net revenue retention playbooks",
+      "Multi-threading and champion enablement in enterprise sales",
+      "Account planning frameworks for expansion selling",
+    ],
+    premium: true,
+    testsFundamentals: ["sales-cross-sell-expansion-strategy"],
+  },
+  {
+    id: "biz-supplychain-reverse-logistics-returns",
+    profession: "business",
+    category: "Supply Chain & Logistics",
+    title: "The Reverse Logistics Reckoning",
+    scenario:
+      "You're VP of Supply Chain at a $280M direct-to-consumer electronics retailer. Product returns have climbed to 24% of units sold — driven by a lenient 90-day return policy marketing insisted on — and your ad hoc returns process (a single overflow warehouse with manual inspection) now costs $38 per return in labor, shipping, and restocking, eating $19M annually with no clear disposition strategy: some returns are mistakenly resold as new, others sit in limbo for months awaiting grading. A private equity firm's diligence for a potential $150M investment round has flagged reverse logistics as a red flag on unit economics. You have six weeks before the term sheet is finalized to present a fix.",
+    keyIssues: [
+      "Whether to build a dedicated reverse logistics/reclamation operation in-house or outsource to a specialized returns-management 3PL",
+      "How to segment returns by disposition path (resell as new, resell as refurbished/open-box, liquidate, scrap) rather than running one ad hoc process",
+      "Whether the root fix is operational (better returns processing) or commercial (tightening the return policy that is driving return volume)",
+      "Balancing the cost-reduction urgency of the funding round against the customer-experience value of a generous return policy",
+    ],
+    expectedConcepts: [
+      "reverse logistics",
+      "returns disposition grading (A/B/C stock, refurbishment, liquidation)",
+      "return policy elasticity / return rate as a demand driver",
+      "reverse supply chain 3PL outsourcing",
+      "unit economics of returns processing",
+    ],
+    modelApproach:
+      "A strong answer treats reverse logistics as its own supply chain discipline requiring the same rigor as forward logistics — segmenting returns immediately by grade and routing each to the disposition path with the best economics (resell-as-new only when genuinely unopened, an open-box/refurbished channel for functional returns, liquidation for the rest) rather than one manual queue. It also questions the commercial root cause, modeling how a modest, low-risk change to the return window or a restocking fee on lower-value items reduces volume without materially hurting conversion, and recommends outsourcing to a specialized reverse-logistics 3PL for speed and scale rather than building slowly in-house given the six-week timeline.",
+    furtherReading: [
+      "Reverse logistics and closed-loop supply chain frameworks (Dale Rogers, Ron Tibben-Lembke)",
+      "Returns management and grading standards in retail/e-commerce",
+      "Returns optimization case studies in e-commerce (e.g., Optoro-style reverse logistics platforms)",
+    ],
+    premium: true,
+    testsFundamentals: ["supplychain-reverse-logistics"],
+  },
+  {
+    id: "biz-it-ransomware-dr-privacy",
+    profession: "business",
+    category: "IT & Technology Management",
+    title: "The Ransomware Recovery Clock",
+    scenario:
+      "You're CTO of a $340M B2B software company serving customers across the US and EU. A ransomware attack has encrypted your primary production database and the backup snapshots from the last 48 hours; your most recent clean backup is 6 days old, so restoring from it would lose nearly a week of customer transaction data. Your incident response team estimates rebuilding from that clean backup and replaying available transaction logs could restore full service in 36 hours, versus an unverified ransom payment that might restore current data in as little as 6 hours with no guarantee. Some encrypted systems held EU customers' personal data, triggering a 72-hour GDPR notification clock that started when the breach was detected 10 hours ago. The board wants a recovery and disclosure plan within the hour.",
+    keyIssues: [
+      "Whether to pay the ransom for a faster, uncertain recovery or execute the slower but verified backup-and-replay recovery plan",
+      "How to prioritize the GDPR 72-hour notification clock against the incomplete picture of what data was exfiltrated versus merely encrypted",
+      "What the 6-day-old backup gap reveals about backup frequency/RPO policy failures that need fixing regardless of this incident's outcome",
+      "Coordinating legal, security, and customer communications without either alarming customers prematurely or delaying required disclosure",
+    ],
+    expectedConcepts: [
+      "recovery time objective (RTO) and recovery point objective (RPO)",
+      "ransomware payment risk and law enforcement guidance",
+      "GDPR 72-hour breach notification requirement",
+      "backup and disaster recovery (DR) architecture",
+      "data exfiltration vs. encryption-only breach distinction",
+    ],
+    modelApproach:
+      "A strong answer treats ransom payment as a last resort given its uncertainty and the incentive it creates for future attacks, defaulting to the verified backup-and-replay recovery path while using the RPO gap (6 days of unprotected data) as immediate justification for a more frequent, immutable backup policy going forward. It runs GDPR notification in parallel on its own clock — informed by what's confirmed about exfiltration versus mere encryption — rather than waiting for full recovery certainty, since regulatory deadlines don't pause for operational response.",
+    furtherReading: [
+      "NIST Cybersecurity Framework and ransomware response playbooks",
+      "GDPR Article 33/34 breach notification requirements",
+      "3-2-1 backup rule and immutable backup / RPO-RTO planning frameworks",
+    ],
+    premium: true,
+    testsFundamentals: ["it-disaster-recovery-planning", "it-data-privacy-compliance"],
+  },
+  {
+    id: "biz-manufacturing-lean-transformation-stall",
+    profession: "business",
+    category: "Manufacturing & Production",
+    title: "The Kaizen That Didn't Stick",
+    scenario:
+      "You're Director of Operations at a $270M precision components manufacturer. Eighteen months ago you launched a lean transformation — 5S, kaizen events, and value stream mapping — across your three production lines, and early results were strong: a 30% reduction in changeover time and a 20% cut in work-in-process inventory in the first two quarters. Since then, gains have quietly reversed on two of the three lines as workers drift back to old habits once the consulting team rotated off-site, while the one line that sustained its gains had a supervisor who kept running weekly kaizen check-ins on his own initiative. The plant GM wants a plan to make lean stick plant-wide before the annual budget review in five weeks, without hiring more expensive outside consultants.",
+    keyIssues: [
+      "Diagnosing why gains reverted on two lines while persisting on the third, and what that reveals about what actually sustains lean transformations",
+      "Whether the fix is more training/events versus building the daily management system (standard work, visual management, tiered huddles) that makes improvement self-sustaining",
+      "How to build internal capability so lean doesn't depend on external consultants or one motivated supervisor",
+      "Sequencing a plant-wide rollout of what worked on the successful line without assuming it transfers identically to lines with different products or constraints",
+    ],
+    expectedConcepts: [
+      "lean manufacturing / continuous improvement (Kaizen)",
+      "5S and visual management",
+      "value stream mapping",
+      "daily management system / tiered huddles",
+      "sustaining change / leader standard work",
+    ],
+    modelApproach:
+      "A strong answer identifies that the surviving line's success came from an internal owner running a sustaining routine (weekly kaizen check-ins), not from the initial improvement events themselves, and generalizes that insight: lean gains stick through a daily/weekly management system with leader standard work and visual controls that make deviations visible immediately, not from one-off events. It proposes building internal facilitator capability on each line — rather than depending on consultants or a single champion — and treats the successful line as a pilot to replicate its management routine, not necessarily its specific technical changes, across the other two.",
+    furtherReading: [
+      "Toyota Production System and the Kaizen philosophy (Taiichi Ohno, Masaaki Imai)",
+      "The Toyota Way and daily management systems (Jeffrey Liker)",
+      "Value stream mapping and lean sustainment research (Lean Enterprise Institute)",
+    ],
+    premium: true,
+    testsFundamentals: ["mfg-lean-continuous-improvement"],
+  },
+  {
+    id: "biz-product-pricing-tier-discovery-gap",
+    profession: "business",
+    category: "Product Management & Innovation",
+    title: "The Tier Nobody Asked For",
+    scenario:
+      "You're VP of Product at a vertical SaaS company serving construction firms. Your CRO wants a new 'AI Insights' premium tier priced at a flat $49/seat upsell, positioned to sales as the headline renewal driver for next quarter's $2.8M in contracts up for negotiation. You commissioned rushed customer discovery — 12 interviews in ten days — and found that while customers like the idea of AI features in the abstract, none named a specific job the current product fails to do, and half assumed it would be bundled at no extra cost. The CRO wants the tier locked and priced within five weeks so sales can start pitching it in renewal conversations already on the calendar.",
+    keyIssues: [
+      "Whether the 12 rushed interviews validate a real, underserved job-to-be-done or are being read as validation because leadership already wants this feature to exist",
+      "Whether the flat $49/seat pricing reflects customers' actual willingness to pay or is being set to hit a revenue target regardless of perceived value",
+      "How to give sales and the executive team a coherent product vision for why this tier exists and what it's for, not just a price and a ship date",
+      "Whether five weeks is enough runway to validate willingness to pay before locking pricing that's hard to walk back once quoted to customers",
+    ],
+    expectedConcepts: [
+      "jobs-to-be-done",
+      "willingness-to-pay research",
+      "value-based pricing",
+      "confirmation bias in customer discovery",
+      "product vision narrative",
+      "pricing and packaging strategy",
+    ],
+    modelApproach:
+      "A strong answer treats twelve rushed interviews with no named unmet job as a yellow flag, not validation, and pushes to at least run a lightweight willingness-to-pay test (e.g., van Westendorp pricing questions or a smoke-test landing page) before locking a number that renewal conversations will anchor on. It separates the sales team's need for a renewal story from whether this specific tier is the right one, and offers an alternative articulation of product vision — grounded in a real customer job — that could satisfy the monetization pressure without shipping something built backward from a price target.",
+    furtherReading: [
+      "Clayton Christensen's Jobs-to-be-Done theory",
+      "Van Westendorp price sensitivity meter and value-based pricing methodology",
+      "Marty Cagan's 'Inspired' on validating product opportunities before committing a roadmap",
+    ],
+    premium: true,
+    testsFundamentals: ["product-jtbd-discovery", "product-pricing-monetization", "product-vision-narrative"],
+  },
+  {
+    id: "biz-cx-building-voc-program-on-a-budget",
+    profession: "business",
+    category: "Customer Experience",
+    title: "Building the Feedback Loop You Never Had",
+    scenario:
+      "You're newly appointed Head of CX at a B2B logistics-software company that has run on ad hoc feedback for its entire eight-year life: an annual NPS email blast, whatever support tickets happen to mention, and anecdotes sales relays from renewal calls. Churn root causes are typically only understood three or four months after the fact, once an account is already gone. The CEO wants a real, ongoing voice-of-customer program in place before the next board meeting in six weeks, but finance has capped new tooling spend at $40K a year, and two department heads have already pushed back that customers are 'tired of surveys' and more feedback requests will hurt satisfaction, not help it.",
+    keyIssues: [
+      "Whether to prioritize broad feedback coverage across many touchpoints or a smaller number of well-instrumented moments, given the budget cap",
+      "How to design closed-loop follow-up so feedback visibly reaches the roadmap and customers see something change, not just get collected",
+      "Which instrument fits which moment — transactional effort/satisfaction checks after specific interactions versus periodic relationship surveys — rather than one generic survey for everything",
+      "How to win over skeptical department heads so the program's findings get acted on instead of dismissed as 'more surveys' noise",
+    ],
+    expectedConcepts: [
+      "voice of customer (VoC) program design",
+      "closed-loop feedback",
+      "transactional vs. relationship surveys",
+      "survey fatigue",
+      "feedback signal prioritization",
+      "cross-functional feedback routing",
+    ],
+    modelApproach:
+      "A strong answer resists the urge to bolt on more generic surveys and instead designs a small number of well-placed, purpose-built instruments — a short transactional check right after key moments like onboarding completion or a support resolution, paired with a lighter-touch relationship pulse — chosen to fit the $40K budget rather than a premium all-in-one platform. It makes closed-loop follow-up (someone owns each theme, changes get communicated back to the customers who raised them) the centerpiece of the pitch to skeptical department heads, since a program that visibly changes things is what earns credibility, not the existence of the survey itself.",
+    furtherReading: [
+      "Closed-loop feedback methodology (Bain & Company's Net Promoter System)",
+      "CEB/Gartner 'The Effortless Experience' on transactional effort measurement",
+      "Voice of customer program design frameworks (e.g., Qualtrics XM Institute research)",
+    ],
+    premium: true,
+    testsFundamentals: ["cx-voice-of-customer-program"],
+  },
+  {
+    id: "biz-talent-hiring-surge-process-gaps",
+    profession: "business",
+    category: "HR & Talent Management",
+    title: "Hiring Fast, Losing Faster",
+    scenario:
+      "You're Head of Talent Acquisition at a startup three months past a Series C, tasked with hiring 80 people in two quarters — triple your prior pace. A rejected candidate from a recent round has filed an EEOC inquiry alleging bias, and reviewing the file you find the interview process has no scorecards or structured questions: the same two executives interview nearly every candidate and decide based on unrecorded gut impressions. Separately, your latest cohort data shows 22% of new hires are leaving within 90 days, and exit interviews cite no formal onboarding, no manager check-ins in the first month, and unclear expectations. The CEO's message is blunt: fix both, but hiring cannot slow down while investors are watching headcount growth as a key milestone.",
+    keyIssues: [
+      "Whether the unstructured interview process created real legal exposure or just inconsistent documentation, and how urgently that needs to change",
+      "What a structured interview redesign (scorecards, calibrated panels, consistent questions) would look like without adding weeks to time-to-hire",
+      "What a minimum-viable 30-60-90 onboarding plan would need to include to stop the 90-day attrition bleed quickly rather than waiting for a fuller program",
+      "How to sequence two urgent fixes with limited People-team bandwidth without leadership perceiving either one as being deprioritized",
+    ],
+    expectedConcepts: [
+      "structured interviewing",
+      "interview bias and adverse impact exposure",
+      "30-60-90 onboarding plan",
+      "new-hire attrition root cause analysis",
+      "scorecard-based hiring decisions",
+      "EEOC disparate impact risk",
+    ],
+    modelApproach:
+      "A strong answer treats the EEOC inquiry as a signal to fix immediately — introducing structured scorecards and calibrated, documented interview criteria that can run at hiring speed rather than slowing it down — since undocumented gut-call decisions are what create disparate-impact exposure, not necessarily an actual biased outcome. In parallel, it designs a lightweight but real 30-60-90 onboarding plan (manager check-in cadence, clear first-30-days expectations) that can be stood up in days, and makes the case to the CEO that both fixes protect the hiring milestone rather than threaten it, since unaddressed attrition and legal exposure will slow growth far more than a brief process investment now.",
+    furtherReading: [
+      "Structured interviewing and scorecard-based hiring research (Google's Project Oxygen / re:Work hiring guides)",
+      "EEOC adverse impact and disparate treatment guidance for hiring processes",
+      "30-60-90 day onboarding plan design and new-hire attrition research (SHRM onboarding studies)",
+    ],
+    premium: true,
+    testsFundamentals: ["talent-onboarding-newhire", "talent-inclusive-hiring-bias"],
+  },
+  {
+    id: "biz-intl-tariff-shock-repricing",
+    profession: "business",
+    category: "International & Global Business",
+    title: "The Tariff That Blew Up Your Price Ladder",
+    scenario:
+      "You run global pricing for a mid-sized consumer electronics company that sources 70% of its components from a country just hit with a new 25% US import tariff, effective in 30 days, adding $18 to the landed cost of your best-selling $120 speaker. Sales wants to raise the US price to protect margin, but your Mexico and Canada subsidiaries sell the identical product at $95 and $102 respectively, and a 25% US price hike would open a $30+ gap wide enough for wholesalers to start reimporting units from Mexico into the US gray market, undercutting your own authorized retailers. Manufacturing says qualifying a tariff-exempt supplier would take 9 months, longer than the board's patience for margin erosion. You must present a pricing and sourcing recommendation to the board in two weeks.",
+    keyIssues: [
+      "Whether to absorb the tariff, pass it through fully, or split the cost, and how each choice affects competitiveness and margin",
+      "How much price differential across North American markets can be sustained before gray-market reimportation becomes a serious risk to authorized channels",
+      "Whether the 9-month supplier qualification timeline changes the urgency of the near-term pricing decision or is a separate, slower-moving track",
+      "How to communicate any price increase to retail partners already holding inventory bought at the old landed cost",
+    ],
+    expectedConcepts: [
+      "tariff pass-through vs. cost absorption",
+      "gray market / parallel import arbitrage",
+      "cross-market price coordination (price ladder)",
+      "landed cost analysis",
+      "country-of-origin sourcing diversification",
+    ],
+    modelApproach:
+      "A strong answer quantifies the maximum US price increase before the North American price gap plausibly triggers gray-market reimportation, rather than pricing purely to protect margin in isolation, and treats sourcing diversification as a parallel, slower-moving track rather than a substitute for the near-term pricing decision. It also addresses channel-partner communication given retailers are holding inventory bought at pre-tariff landed cost.",
+    furtherReading: [
+      "Tariff pass-through and cost-absorption strategy in global pricing",
+      "Gray market and parallel import management in multinational pricing research",
+      "Tariff engineering and country-of-origin sourcing diversification strategy",
+    ],
+    premium: true,
+    testsFundamentals: ["intl-trade-policy-tariffs", "intl-global-pricing-gray-market"],
+  },
+  {
+    id: "biz-intl-acquisition-staffing-integration",
+    profession: "business",
+    category: "International & Global Business",
+    title: "Who Runs the Company You Just Bought",
+    scenario:
+      "Your industrial company just closed the acquisition of a family-owned German manufacturer generating $150M in revenue, doubling your EU presence. The board is split on whether to install a trusted US executive as country manager to drive fast integration of financial systems and reporting, or retain the departing founder's local leadership team, who hold the key customer relationships but are resisting headquarters' systems. Your ERP and consolidated-reporting cutover is due in four months to align with next quarter's group financials, and three of the five senior German managers have already signaled they would leave if a US expat is installed as their boss — taking key client relationships with them.",
+    keyIssues: [
+      "Whether installing an expat leader accelerates integration or provokes the talent flight that would destroy the value just acquired",
+      "What staffing orientation (ethnocentric, polycentric, geocentric) actually fits this deal's integration timeline and risk profile",
+      "How to sequence systems/reporting integration versus leadership and cultural integration given the four-month deadline",
+      "How to retain the local managers holding critical client relationships regardless of which staffing decision is made",
+    ],
+    expectedConcepts: [
+      "international staffing orientation (EPRG framework)",
+      "post-merger integration (PMI) sequencing",
+      "key talent retention in cross-border M&A",
+      "cross-cultural due diligence in acquisitions",
+      "acquired-value protection during integration",
+    ],
+    modelApproach:
+      "A strong answer names the staffing tradeoff using a recognized framework rather than choosing intuitively, and matches the staffing decision to what is actually critical to protect — client relationships versus reporting speed — rather than defaulting to headquarters control. It proposes a hybrid model, such as retaining local commercial leadership while embedding a temporary integration/finance lead, and treats the resignation threat as a real, quantifiable risk to acquired value requiring explicit retention agreements, not a bluff to ignore.",
+    furtherReading: [
+      "Perlmutter's EPRG framework for international staffing orientation",
+      "Post-merger integration frameworks for cross-border acquisitions (Haspeslagh & Jemison)",
+      "Key talent retention strategy in M&A integration research",
+    ],
+    premium: true,
+    testsFundamentals: ["intl-staffing-strategy-eprg", "intl-cross-border-ma-integration"],
+  },
+  {
+    id: "biz-governance-non-independent-board-derivative-suit",
+    profession: "business",
+    category: "Corporate Governance & Risk",
+    title: "The Board That Was Too Close to Management",
+    scenario:
+      "You are the newly appointed lead independent director of a mid-cap company where six of nine board members were personally recruited by the CEO, including two former direct reports and one who also sits on the board of the CEO's other company. A shareholder derivative lawsuit has just been filed alleging the board rubber-stamped an overpriced acquisition from a company also linked to the CEO's network without independent negotiation, seeking damages and a restructured board. Outside counsel says the plaintiff's 'demand futility' argument — that asking this board to sue its own CEO would be pointless given these ties — is uncomfortably strong, and the company's D&O insurer is now asking pointed questions about board independence before confirming renewal. Director re-election at the annual meeting is ten weeks away.",
+    keyIssues: [
+      "Whether the board's actual composition makes the demand futility argument a fair characterization rather than just a plaintiff's tactic",
+      "What structural changes (independent director additions, a genuinely independent special litigation committee) would credibly address the underlying problem versus a quick settlement",
+      "How the D&O insurer's independence scrutiny should factor into the board's response given coverage is at stake",
+      "How to handle director re-election with the derivative suit already public before the annual meeting",
+    ],
+    expectedConcepts: [
+      "board independence and composition standards",
+      "demand futility doctrine in derivative litigation",
+      "special litigation committee",
+      "D&O liability insurance",
+      "related-party acquisition scrutiny",
+    ],
+    modelApproach:
+      "A strong answer does not dismiss the demand futility argument as merely a litigation tactic when the board's actual composition supports it, and recommends genuine structural remediation — adding truly independent directors and forming an independent special litigation committee to evaluate the derivative claims — rather than treating disclosure or a fast settlement as sufficient. It treats the D&O insurer's scrutiny as a credible external signal of how the board's independence will be judged, and recommends transparent shareholder communication ahead of the re-election vote rather than hoping the issue goes unraised.",
+    furtherReading: [
+      "Demand futility doctrine in Delaware derivative litigation (Aronson/Zapata standards)",
+      "Board independence standards under NYSE/Nasdaq listing rules",
+      "Special litigation committee best practices and D&O liability insurance considerations",
+    ],
+    premium: true,
+    testsFundamentals: ["gov-board-independence-composition", "gov-shareholder-derivative-litigation"],
+  },
+  {
+    id: "biz-retail-loyalty-points-liability",
+    profession: "business",
+    category: "Retail & E-commerce",
+    title: "The Loyalty Program That's Now a Balance Sheet Problem",
+    scenario:
+      "You are CFO of a mid-size retailer whose 12-million-member loyalty program lets customers redeem points for discounts. Actual point redemption rates have risen from 62% to 81% after marketing ran repeated 'double points' promotions to drive short-term traffic, breaking the breakage assumptions the outstanding point liability was built on and pushing that liability to $85M — larger than finance expected, requiring a true-up of deferred revenue. Marketing wants another double-points quarter to hit holiday traffic targets; finance wants to freeze promotional multipliers and tighten point expiration, which loyalty members and a vocal social media segment will see as a bait-and-switch since no expiration policy existed before.",
+    keyIssues: [
+      "How the rising redemption rate breaks the accounting assumptions behind the point liability and what that means for financial reporting",
+      "Whether continuing double-points promotions is defensible now that their true liability cost is clear, versus the traffic they drive",
+      "Whether changing expiration or redemption terms retroactively for existing members is legally and reputationally viable",
+      "How to redesign the program's economics (point value, breakage assumptions, promotional cadence) without destroying the loyalty behavior it was built to create",
+    ],
+    expectedConcepts: [
+      "loyalty program deferred revenue and points liability accounting",
+      "breakage rate estimation",
+      "promotional cannibalization",
+      "retroactive terms-of-service change risk",
+      "customer retention program economics",
+    ],
+    modelApproach:
+      "A strong answer treats the redemption-rate shift as a real accounting and economic signal requiring the breakage assumption and associated deferred revenue to be revalidated, not just a marketing metric to manage around, and separates the accounting fix from the forward-looking program redesign. It rejects retroactively changing terms on already-earned points as a serious trust and legal risk, instead proposing forward-only changes — adjusted future accrual rates, capped promotional multipliers — with any new promotional cadence tied to updated liability modeling before approval.",
+    furtherReading: [
+      "Loyalty program accounting under ASC 606 (deferred revenue and breakage estimation)",
+      "Loyalty program economics and breakage rate modeling in retail",
+      "Promotional cannibalization and customer retention program design research",
+    ],
+    premium: true,
+    testsFundamentals: ["retail-loyalty-program-economics"],
+  },
+  {
+    id: "biz-retail-markdown-cadence-open-to-buy",
+    profession: "business",
+    category: "Retail & E-commerce",
+    title: "The Markdown Cadence That's Training Customers to Wait",
+    scenario:
+      "You are VP of merchandising at a mid-size fashion retailer where full-price sell-through has fallen from 55% to 38% over three years because customers have learned the pattern: a 30%-off markdown reliably arrives at week 6 of any new collection, then 50% off at week 10. Next season's open-to-buy plan is already 60% committed to new receipts based on the old sell-through assumptions. Finance wants a more disciplined markdown cadence — a later first markdown and a smaller initial cut — to protect margin, but store buyers warn that abruptly changing the pattern this season, with inventory already ordered under the old assumptions, could leave slow-moving styles stranded with no clearance mechanism at season end. The cadence decision must be made before the next buy window closes in three weeks.",
+    keyIssues: [
+      "Whether the trained-markdown behavior is a pricing-discipline problem, a buying and assortment problem, or both",
+      "Whether changing markdown cadence this season is viable given open-to-buy commitments already locked in under the old sell-through assumptions",
+      "How to sequence a cadence change — testing in select categories or stores first versus a full changeover that risks stranded inventory",
+      "What early-warning signals (sell-through by week) should trigger markdown timing instead of a fixed calendar-based cadence",
+    ],
+    expectedConcepts: [
+      "open-to-buy planning",
+      "markdown cadence and clearance optimization",
+      "full-price sell-through rate",
+      "consumer price anchoring / promotional conditioning",
+      "inventory risk under buy commitments",
+    ],
+    modelApproach:
+      "A strong answer recognizes that predictable markdown timing is a self-inflicted problem trained into customers, not simply weak product, and pushes for sell-through-triggered rather than calendar-triggered markdown timing, piloted in select categories this season rather than changed abruptly across the board given the open-to-buy commitments already locked in. It builds in contingency clearance mechanisms for styles that don't move under the new cadence, so the fix doesn't create the stranded end-of-season inventory it is trying to avoid.",
+    furtherReading: [
+      "Open-to-buy planning and markdown optimization in fashion retail merchandising",
+      "Consumer price anchoring and promotional conditioning research",
+      "Sell-through-triggered vs. calendar-based markdown strategy in retail analytics practice",
+    ],
+    premium: true,
+    testsFundamentals: ["retail-markdown-clearance-optimization"],
   },
 ];
