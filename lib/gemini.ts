@@ -42,7 +42,7 @@ export interface GeminiTurn {
 
 async function callGemini(
   contents: GeminiTurn[],
-  options?: { responseMimeType?: string },
+  options?: { responseMimeType?: string; tools?: Record<string, unknown>[] },
 ): Promise<string> {
   const res = await fetch(`${GEMINI_URL}?key=${process.env.GEMINI_API_KEY}`, {
     method: "POST",
@@ -53,6 +53,7 @@ async function callGemini(
         thinkingConfig: { thinkingBudget: 0 },
         ...(options?.responseMimeType && { responseMimeType: options.responseMimeType }),
       },
+      ...(options?.tools && { tools: options.tools }),
     }),
   });
 
@@ -82,7 +83,7 @@ async function callGemini(
  */
 export async function generateContent(
   parts: GeminiPart[],
-  options?: { responseMimeType?: string },
+  options?: { responseMimeType?: string; tools?: Record<string, unknown>[] },
 ): Promise<string> {
   return callGemini([{ role: "user", parts }], options);
 }

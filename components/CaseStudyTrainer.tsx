@@ -3,39 +3,18 @@
 import { useEffect, useMemo, useState } from "react";
 import { useMediaRecorder } from "@/hooks/useMediaRecorder";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
-import {
-  CASE_CATEGORIES,
-  casesForCategory,
-  type CaseProfession,
-  type CaseStudy,
-} from "@/lib/caseStudyContent";
-import { getFundamentals, getFundamentalLabel } from "@/lib/caseStudyFundamentals";
-import {
-  loadFundamentalScores,
-  saveFundamentalScores,
-  countMastered,
-  MASTERY_THRESHOLD,
-} from "@/lib/caseStudyProgress";
+import { casesForCategory, type CaseProfession, type CaseStudy } from "@/lib/caseStudyContent";
+import { getFundamentalLabel } from "@/lib/caseStudyFundamentals";
+import { saveFundamentalScores, MASTERY_THRESHOLD } from "@/lib/caseStudyProgress";
 import type { CaseStudyFeedback } from "@/lib/caseStudyFeedback";
 import { FollowUpChat } from "@/components/FollowUpChat";
 import { useLanguage } from "@/components/LanguageProvider";
-import { useAuth } from "@/components/AuthProvider";
-import { UpgradeCta } from "@/components/UpgradeCta";
 import { getLanguage } from "@/lib/languages";
+import { pickRandom } from "@/lib/random";
+import { ProfessionPicker, PROFESSION_LABELS } from "@/components/shared/ProfessionPicker";
+import { CategoryPicker } from "@/components/shared/CategoryPicker";
 
 type Phase = "selectProfession" | "selectCategory" | "case" | "recording" | "grading" | "feedback";
-
-const PROFESSION_LABELS: Record<CaseProfession, { label: string; blurb: string }> = {
-  business: { label: "Business", blurb: "Strategy, finance, marketing, operations, and more." },
-  law: { label: "Law", blurb: "Contract, corporate, litigation, criminal, and regulatory cases." },
-  politics: { label: "Politics", blurb: "Foreign policy, domestic policy, crisis response, and negotiation." },
-};
-
-function pickRandom<T>(items: T[], exclude?: T): T {
-  const pool = exclude ? items.filter((i) => i !== exclude) : items;
-  const source = pool.length > 0 ? pool : items;
-  return source[Math.floor(Math.random() * source.length)];
-}
 
 /**
  * Case-study drill: pick a profession and category, get a business/legal/
@@ -46,7 +25,6 @@ function pickRandom<T>(items: T[], exclude?: T): T {
  */
 export function CaseStudyTrainer() {
   const { language } = useLanguage();
-  const { isPremium } = useAuth();
   const [phase, setPhase] = useState<Phase>("selectProfession");
   const [profession, setProfession] = useState<CaseProfession | null>(null);
   const [category, setCategory] = useState<string | null>(null);
@@ -174,7 +152,6 @@ export function CaseStudyTrainer() {
           phase={phase}
           transcript={recognition.transcript}
           canSpeak={recognition.isSupported}
-          isPremium={isPremium}
           gradingError={gradingError}
           onStart={handleStartRecording}
           onStop={handleStopRecording}
@@ -204,84 +181,6 @@ export function CaseStudyTrainer() {
   );
 }
 
-/* ─────────────────────────── Profession picker ─────────────────────────── */
-
-function ProfessionPicker({ onSelect }: { onSelect: (p: CaseProfession) => void }) {
-  return (
-    <div className="flex flex-col gap-4">
-      <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
-        Choose a profession
-      </p>
-      <div className="grid gap-3 sm:grid-cols-3">
-        {(Object.keys(PROFESSION_LABELS) as CaseProfession[]).map((p) => (
-          <button
-            key={p}
-            onClick={() => onSelect(p)}
-            className="flex flex-col gap-1.5 rounded-xl border border-hairline bg-surface-2 p-5 text-left transition-colors hover:border-brass"
-          >
-            <span className="font-display text-lg font-semibold text-ink">
-              {PROFESSION_LABELS[p].label}
-            </span>
-            <span className="text-xs text-ink-muted">{PROFESSION_LABELS[p].blurb}</span>
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* ─────────────────────────── Category picker ─────────────────────────── */
-
-function CategoryPicker({
-  profession,
-  onSelect,
-  onBack,
-}: {
-  profession: CaseProfession;
-  onSelect: (category: string) => void;
-  onBack: () => void;
-}) {
-  const [scores, setScores] = useState<Record<string, number>>({});
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setScores(loadFundamentalScores());
-  }, []);
-
-  return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
-          {PROFESSION_LABELS[profession].label} — choose a category
-        </p>
-        <button onClick={onBack} className="text-xs font-semibold text-brass-text hover:underline">
-          ← Change profession
-        </button>
-      </div>
-      <div className="grid gap-2 sm:grid-cols-2">
-        {CASE_CATEGORIES[profession].map((cat) => {
-          const count = casesForCategory(profession, cat).length;
-          const fundamentals = getFundamentals(profession, cat);
-          const mastered = fundamentals.length ? countMastered(scores, fundamentals.map((f) => f.id)) : 0;
-          return (
-            <button
-              key={cat}
-              onClick={() => onSelect(cat)}
-              className="flex items-center justify-between rounded-lg border border-hairline bg-surface-2 px-4 py-3 text-left transition-colors hover:border-brass"
-            >
-              <span className="text-sm font-semibold text-ink">{cat}</span>
-              <span className="text-xs text-ink-muted">
-                {fundamentals.length
-                  ? `${mastered}/${fundamentals.length} fundamentals mastered`
-                  : `${count} case${count === 1 ? "" : "s"}`}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
 /* ─────────────────────────── Case step ─────────────────────────── */
 
 function CaseStep({
@@ -291,7 +190,6 @@ function CaseStep({
   phase,
   transcript,
   canSpeak,
-  isPremium,
   gradingError,
   onStart,
   onStop,
@@ -304,15 +202,12 @@ function CaseStep({
   phase: "case" | "recording";
   transcript: string;
   canSpeak: boolean;
-  isPremium: boolean;
   gradingError: string | null;
   onStart: () => void;
   onStop: () => void;
   onNewCase: () => void;
   onChangeCategory: () => void;
 }) {
-  const locked = !!caseStudy.premium && !isPremium;
-
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center justify-between">
@@ -325,27 +220,9 @@ function CaseStep({
       </div>
 
       <div className="rounded-lg bg-surface-2 p-5">
-        <div className="flex items-center gap-2">
-          <h3 className="font-display text-base font-semibold text-ink">{caseStudy.title}</h3>
-          {caseStudy.premium && (
-            <span className="rounded-full border border-brass bg-brass/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brass-text">
-              Premium
-            </span>
-          )}
-        </div>
-        <p className={`mt-2 text-sm leading-relaxed text-ink ${locked ? "line-clamp-2 opacity-70" : ""}`}>
-          {caseStudy.scenario}
-        </p>
+        <h3 className="font-display text-base font-semibold text-ink">{caseStudy.title}</h3>
+        <p className="mt-2 text-sm leading-relaxed text-ink">{caseStudy.scenario}</p>
       </div>
-
-      {locked && (
-        <div className="flex flex-col items-center gap-3">
-          <UpgradeCta message="This case is part of Speech Coach Premium." />
-          <button onClick={onNewCase} className="text-xs font-semibold text-brass-text hover:underline">
-            🎲 Different case in this category
-          </button>
-        </div>
-      )}
 
       {gradingError && (
         <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -353,7 +230,7 @@ function CaseStep({
         </p>
       )}
 
-      {!locked && phase === "case" && (
+      {phase === "case" && (
         <div className="flex flex-col items-center gap-3 py-2">
           <p className="text-sm text-ink-muted">
             Think it through, then record your solution out loud.

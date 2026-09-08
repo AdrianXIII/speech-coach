@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Source_Serif_4, Source_Sans_3 } from "next/font/google";
 import { NavBar } from "@/components/NavBar";
 import { LanguageProvider } from "@/components/LanguageProvider";
-import { AuthProvider } from "@/components/AuthProvider";
 import "./globals.css";
 
 const sourceSerif = Source_Serif_4({
@@ -29,12 +28,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${sourceSerif.variable} ${sourceSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-paper text-ink font-body">
-        <AuthProvider>
-          <LanguageProvider>
-            <NavBar />
-            {children}
-          </LanguageProvider>
-        </AuthProvider>
+        <LanguageProvider>
+          <NavBar />
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );

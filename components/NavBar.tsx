@@ -5,12 +5,10 @@ import { usePathname } from "next/navigation";
 import { NAV_LINKS } from "@/lib/navTranslations";
 import { LANGUAGES } from "@/lib/languages";
 import { useLanguage } from "@/components/LanguageProvider";
-import { useAuth } from "@/components/AuthProvider";
 
 export function NavBar() {
   const pathname = usePathname();
   const { language, setLanguage } = useLanguage();
-  const { user, isPremium, loading } = useAuth();
 
   return (
     <nav className="border-b border-navy-800 bg-navy">
@@ -20,29 +18,6 @@ export function NavBar() {
             Speech Coach
           </span>
           <div className="flex flex-wrap items-center gap-2">
-            {!loading &&
-              (isPremium ? (
-                <Link
-                  href={user ? "/account" : "/"}
-                  className="rounded-full border border-brass bg-brass px-3 py-1 text-xs font-semibold text-navy"
-                >
-                  Premium
-                </Link>
-              ) : user ? (
-                <Link
-                  href="/upgrade"
-                  className="rounded-full border border-brass px-3 py-1 text-xs font-semibold text-brass-soft transition-colors hover:bg-brass hover:text-navy"
-                >
-                  Upgrade
-                </Link>
-              ) : (
-                <Link
-                  href="/login"
-                  className="rounded-full border border-navy-800 px-3 py-1 text-xs font-semibold text-cream-muted transition-colors hover:border-brass/60 hover:text-cream"
-                >
-                  Sign in
-                </Link>
-              ))}
             {LANGUAGES.map((l) => (
               <button
                 key={l.code}

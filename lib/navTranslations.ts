@@ -96,4 +96,14 @@ export const NAV_LINKS: NavLink[] = [
       sv: "Fallstudier",
     },
   },
+  {
+    href: "/ai-tutor",
+    labels: {
+      en: "AI Tutor",
+      de: "KI-Tutor",
+      fr: "Tuteur IA",
+      es: "Tutor de IA",
+      sv: "AI-handledare",
+    },
+  },
 ];
