@@ -1330,6 +1330,225 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     generatedAt: "2026-09-09",
   },
 
+  "business/International & Global Business": {
+    profession: "business",
+    category: "International & Global Business",
+    overview:
+      "International business is about managing the extra layers of complexity that appear the moment a company crosses a border — currency risk, cultural difference, divergent legal regimes, and political risk — layered on top of every ordinary business decision a purely domestic company would still have to make.",
+    concepts: [
+      {
+        id: "intl-entry-mode-selection",
+        title: "Market entry mode selection",
+        explanation:
+          "Entering a foreign market can take several forms — exporting (lowest commitment and risk, least control), licensing (a local partner produces under license), joint venture (shared ownership, often required by local law), or a wholly-owned subsidiary (full control, highest commitment and risk). The right choice trades off control, speed, cost, and risk.",
+        whyItMatters:
+          "Choosing too light a commitment (pure exporting) can leave a company unable to compete against local rivals with real market presence; choosing too heavy a commitment (a wholly-owned subsidiary) in an unfamiliar or risky market can be an expensive, hard-to-reverse mistake.",
+        example:
+          "Many companies enter a new, unfamiliar market first through a joint venture with a local partner (gaining market knowledge and often satisfying local ownership requirements), then later convert to a wholly-owned subsidiary once they better understand the market and have built the relationships and knowledge to operate independently.",
+      },
+      {
+        id: "intl-standardization-vs-adaptation",
+        title: "Standardization vs. local adaptation",
+        explanation:
+          "The integration-responsiveness framework asks how much of a company's product, marketing, and operations should be globally standardized (efficiency, consistent brand) versus locally adapted (responsiveness to genuinely different local needs, tastes, and regulations).",
+        whyItMatters:
+          "Over-standardizing ignores real local differences that can doom a product's reception; over-adapting sacrifices the scale efficiencies and brand consistency that made global expansion attractive in the first place — the right balance differs by product category and market.",
+        example:
+          "Fast food chains typically standardize core brand identity and operations globally while genuinely adapting menu items to local tastes and dietary norms — a deliberate mix of global consistency and local responsiveness, not one extreme or the other.",
+      },
+      {
+        id: "intl-currency-exposure-hedging",
+        title: "Currency exposure and hedging",
+        explanation:
+          "Companies operating across currencies face transaction exposure (a specific contracted payment in foreign currency), translation exposure (converting foreign subsidiary financials into the parent's reporting currency), and economic exposure (broader competitive effects of currency moves) — each requiring different, sometimes different, hedging approaches.",
+        whyItMatters:
+          "Unhedged currency exposure can turn a genuinely profitable underlying business decision into a loss purely due to exchange rate movement — distinguishing which type of exposure you're managing determines whether financial hedging instruments (forwards, options) or operational hedges (natural matching of costs and revenues in the same currency) are the right tool.",
+        example:
+          "A company that sells in euros but pays its costs in dollars has real transaction exposure — a euro depreciation against the dollar directly erodes margin on already-signed sales contracts, which forward contracts can hedge against in advance.",
+      },
+      {
+        id: "intl-cultural-intelligence-communication",
+        title: "Cross-cultural communication norms",
+        explanation:
+          "Cultures differ systematically in communication style — high-context cultures rely heavily on implicit, contextual meaning (much is unsaid but understood), while low-context cultures favor explicit, direct communication. Misreading which norm applies causes real friction in international teams and negotiations.",
+        whyItMatters:
+          "A direct communication style that reads as efficient and honest in a low-context culture can read as rude or aggressive in a high-context one — and an indirect, contextual style that reads as polite and thoughtful in a high-context culture can read as evasive or unclear in a low-context one.",
+        example:
+          "A manager from a direct-communication culture giving blunt, explicit critical feedback to a team member from a high-context culture may unintentionally cause serious loss of face and damaged trust, even though the same feedback would land as normal and unremarkable within the manager's own cultural context.",
+      },
+      {
+        id: "intl-anti-corruption-compliance",
+        title: "Anti-corruption compliance (FCPA and equivalents)",
+        explanation:
+          "Anti-bribery laws like the U.S. FCPA (and the UK Bribery Act and similar laws elsewhere) prohibit bribing foreign officials to obtain business, including through third-party agents or distributors acting on the company's behalf, with only a narrow exception for genuinely minor facilitation payments in some regimes.",
+        whyItMatters:
+          "Local business norms in some markets can differ from what these laws permit — a company operating internationally needs a compliance program robust enough to prevent violations occurring several layers removed from headquarters, through local intermediaries operating with real autonomy.",
+        example:
+          "Numerous multinational companies have faced major penalties for bribes paid by local sales agents or joint-venture partners rather than company employees directly — regulators explicitly look for this pattern of using intermediaries to create (false) distance from the payment.",
+      },
+      {
+        id: "intl-country-risk-site-selection",
+        title: "Political/regulatory risk assessment",
+        explanation:
+          "Operating internationally means assessing political risk (expropriation, regulatory instability, currency controls, civil unrest) alongside the more familiar factors of talent access, infrastructure, and cost when deciding where to locate operations or facilities.",
+        whyItMatters:
+          "A location that looks attractive on cost and talent alone can carry political risks (sudden regulatory change, asset seizure, capital controls trapping profits) that dominate the actual investment outcome — risk assessment has to be genuinely integrated into the decision, not treated as an afterthought.",
+        example:
+          "Companies have had operations or assets effectively nationalized or trapped by capital controls in countries that looked attractive purely on labor cost and market size — a reminder that political risk assessment isn't optional due diligence, even in an otherwise attractive market.",
+      },
+    ],
+    connections:
+      "Market entry mode selection sets the level of commitment and control a company takes on; standardization-vs-adaptation, cultural communication norms, and currency exposure are all forms of complexity that commitment level then has to manage day to day. Anti-corruption compliance and political risk assessment are both about protecting against the more severe downside risks of operating in unfamiliar legal and political environments — risks that get more serious, not less, the deeper a company's commitment (per entry mode) to that market.",
+    source: "claude",
+    generatedAt: "2026-09-09",
+  },
+
+  "business/Corporate Governance & Risk": {
+    profession: "business",
+    category: "Corporate Governance & Risk",
+    overview:
+      "Corporate governance is about who a board and management are actually accountable to, and the structures — committees, oversight duties, disclosure rules — that are supposed to make that accountability real rather than theoretical, especially when management's and shareholders' interests diverge.",
+    concepts: [
+      {
+        id: "gov-duty-of-loyalty-fiduciary",
+        title: "Fiduciary duties: loyalty and care",
+        explanation:
+          "Directors owe a duty of loyalty (act in the company's interest, not a conflicting personal one) and duty of care (make informed, diligent decisions). The business judgment rule protects good-faith, well-informed decisions from being second-guessed by courts later, even if they turn out badly.",
+        whyItMatters:
+          "This is why board process — reading materials, asking hard questions, documenting deliberation — matters as much as the ultimate decision: courts generally protect a poor outcome reached through good process far more than a good outcome reached through no real process at all.",
+        example:
+          "A board approving a large executive compensation package after genuine independent review and benchmarking is protected by the business judgment rule even if shareholders later think the pay was excessive — a board that rubber-stamps the same package without real review has much weaker protection.",
+      },
+      {
+        id: "gov-board-committee-authority",
+        title: "Board committee structure",
+        explanation:
+          "Boards typically delegate specific oversight functions to committees — audit (financial reporting integrity), risk, compensation, and nominating/governance — each usually composed substantially or entirely of independent (non-management) directors, providing focused oversight that the full board alone couldn't practically maintain.",
+        whyItMatters:
+          "Committee structure is a real, not just symbolic, safeguard — an audit committee made up of genuinely independent directors with real financial expertise is far more likely to catch or question aggressive accounting than management alone would ever flag internally.",
+        example:
+          "Major accounting scandals have frequently been traced partly to audit committees that lacked genuine independence or financial expertise — governance reforms since have focused heavily on strengthening real audit committee independence and competence, not just its formal existence.",
+      },
+      {
+        id: "gov-three-lines-of-defense",
+        title: "Three lines of defense (risk governance)",
+        explanation:
+          "A common risk governance model: the first line (business operations) owns and manages risk day-to-day; the second line (risk management/compliance functions) sets policy and monitors; the third line (internal audit) independently verifies the first two lines are actually working, reporting up to the board.",
+        whyItMatters:
+          "Risk failures often trace to a breakdown in one of these lines — a first line ignoring risk limits, a second line lacking real authority to push back, or a third line whose independent findings get watered down before reaching the board — understanding which line failed clarifies what actually needs fixing.",
+        example:
+          "Several major financial institution risk failures have been traced to risk officers (second line) who identified problems but whose warnings were overruled or ignored by business units chasing short-term returns, without escalation reaching the board in time — a second-line authority failure specifically.",
+      },
+      {
+        id: "gov-activist-defense-strategy",
+        title: "Responding to activist investors",
+        explanation:
+          "An activist investor takes a stake in a company and publicly pushes for change (strategy shifts, board seats, a sale or breakup) — boards must evaluate activist proposals on their actual merits, choosing between engagement/negotiated settlement and a public proxy fight, rather than reflexively resisting all outside pressure.",
+        whyItMatters:
+          "Activist campaigns aren't automatically hostile or wrong — sometimes they identify genuine value-creation opportunities management has been slow to pursue — so a defensible board response starts with honestly evaluating the proposal's merit, not just protecting incumbent management.",
+        example:
+          "Some activist campaigns pushing for a conglomerate breakup or divestiture have been substantiated by subsequent sum-of-the-parts value realization after the changes were made — evidence the underlying critique had real merit, not just opportunistic pressure.",
+      },
+      {
+        id: "gov-esg-disclosure-integrity",
+        title: "ESG disclosure and materiality",
+        explanation:
+          "Environmental, social, and governance disclosure should reflect genuinely material risks and impacts, assessed rigorously — not selectively favorable metrics chosen to create a positive impression ('greenwashing') without corresponding substance behind them.",
+        whyItMatters:
+          "Regulators and investors increasingly scrutinize ESG claims for substance, and greenwashing carries real legal and reputational risk once exposed — the gap between stated commitments and actual practice, once public, often does more reputational damage than never having made the claim.",
+        example:
+          "Several companies have faced regulatory action or investor litigation over ESG-labeled funds or claims that didn't match their underlying holdings or practices — a growing enforcement area as ESG disclosure scrutiny has intensified.",
+      },
+      {
+        id: "gov-ceo-succession-planning",
+        title: "CEO succession planning",
+        explanation:
+          "Boards should maintain both emergency succession plans (an immediate, sudden-departure contingency) and long-term succession plans (developing internal candidates over years), diagnosing what capability gaps a successor needs to fill and weighing internal development against an external search.",
+        whyItMatters:
+          "A board caught without any succession plan when a CEO departs suddenly (health crisis, scandal, unexpected resignation) faces a genuinely destabilizing leadership vacuum at the worst possible time — this is a governance failure that's entirely preventable with advance planning.",
+        example:
+          "Companies that maintained a credible internal successor candidate, developed over years with board visibility into their readiness, have generally executed CEO transitions — even unplanned ones — far more smoothly than companies forced into a reactive external search under time pressure.",
+      },
+    ],
+    connections:
+      "Fiduciary duties are the foundational accountability standard directors are held to; board committee structure and the three lines of defense are the practical organizational machinery for actually exercising that oversight. Activist investor response and ESG disclosure integrity are both tests of whether that governance structure produces genuine accountability under real external pressure, and CEO succession planning is a recurring, foreseeable governance responsibility that ties directly back to the same fiduciary duty of care the whole framework rests on.",
+    source: "claude",
+    generatedAt: "2026-09-09",
+  },
+
+  "business/Retail & E-commerce": {
+    profession: "business",
+    category: "Retail & E-commerce",
+    overview:
+      "Retail and e-commerce is about managing real-time operational complexity (inventory accuracy, fulfillment, pricing) at scale, across channels, while navigating genuine platform dependency risk — since much of modern retail happens on marketplaces and channels a retailer doesn't fully control.",
+    concepts: [
+      {
+        id: "retail-omnichannel-attribution",
+        title: "Omnichannel attribution beyond single-channel P&L",
+        explanation:
+          "Customers routinely research online and buy in-store (or vice versa) — a 'halo effect' where one channel drives sales in another. Judging store or channel performance purely on that channel's direct sales, without accounting for cross-channel influence, can lead to badly wrong decisions like closing a store that was actually driving substantial online sales in its area.",
+        whyItMatters:
+          "Retailers that closed physical stores purely based on that store's own weak direct P&L, without measuring the halo effect on regional online sales, have sometimes seen online sales in that market drop more than expected afterward — evidence the store's true contribution wasn't visible in its own standalone numbers.",
+        example:
+          "Some retailers have found that closing an underperforming physical store causes online sales in that same geographic market to decline meaningfully, revealing that the store had been serving a showroom/brand-awareness function its direct sales figures never captured.",
+      },
+      {
+        id: "retail-unit-economics-contribution-margin",
+        title: "Fully-loaded unit economics",
+        explanation:
+          "True unit economics (per order, per channel, or per service tier) need to include all relevant costs — fulfillment, returns processing, payment processing, customer service, and channel/platform fees — not just cost of goods sold, to understand real contribution margin.",
+        whyItMatters:
+          "A product or channel that looks profitable on gross margin alone can be losing money once fulfillment, returns, and platform fees are properly allocated — many retailers have discovered specific channels or product categories were quietly unprofitable only after building genuinely fully-loaded unit economics.",
+        example:
+          "Free-returns policies can turn an apparently healthy-margin category into a loss-making one once return processing, restocking, and lost-value costs on returned (often damaged or unsellable) merchandise are properly included in the unit economics.",
+      },
+      {
+        id: "retail-platform-dependency-risk",
+        title: "Marketplace/platform dependency risk",
+        explanation:
+          "Selling substantially through a dominant marketplace (a large e-commerce platform) creates real dependency — that platform controls fees, search ranking algorithms, and customer relationship data, giving it significant leverage that can shift with policy changes largely outside the retailer's control.",
+        whyItMatters:
+          "A retailer heavily concentrated on one platform has limited real negotiating leverage and faces genuine business risk if the platform raises fees, changes algorithm rules, or even launches a competing private-label product in the same category.",
+        example:
+          "Many sellers heavily dependent on a single dominant marketplace have faced sudden fee increases or algorithm changes that materially hurt their visibility and margins overnight, with essentially no ability to negotiate — a direct consequence of platform concentration risk.",
+      },
+      {
+        id: "retail-inventory-sync-oversell",
+        title: "Real-time inventory sync and oversell prevention",
+        explanation:
+          "Selling the same inventory across multiple channels (own site, marketplaces, physical stores) requires real-time inventory synchronization to avoid overselling — promising a product to a customer that's actually already sold through a different channel.",
+        whyItMatters:
+          "Overselling during demand spikes (a viral moment, a flash sale) creates a customer-trust crisis at exactly the moment a retailer most wants to capitalize on a surge in interest — the operational failure undermines the marketing success that caused it.",
+        example:
+          "A product that goes viral on social media and sells out faster across channels than inventory systems can sync often leads to a wave of cancelled orders and refunds — turning a marketing win into a customer service and trust problem.",
+      },
+      {
+        id: "retail-dynamic-pricing-fairness",
+        title: "Dynamic pricing and perceived fairness",
+        explanation:
+          "Algorithmic/dynamic pricing (adjusting prices based on demand, inventory, or even individual customer data) can optimize revenue, but customers who discover they were charged differently than another customer for the identical product often perceive this as unfair, generating real backlash even when the practice may be legal.",
+        whyItMatters:
+          "The technical sophistication of a dynamic pricing model doesn't protect against the reputational cost of a fairness backlash — perceived price discrimination, once publicized (often via social media screenshots comparing prices), can generate disproportionate negative attention relative to the actual revenue gained.",
+        example:
+          "Retailers and ride-sharing platforms using visibly steep surge or dynamic pricing during high-demand periods (e.g., a weather emergency) have faced significant public backlash and, in some cases, regulatory scrutiny over price-gouging perceptions, regardless of the underlying economic logic.",
+      },
+      {
+        id: "retail-markdown-clearance-optimization",
+        title: "Markdown cadence and training customers to wait",
+        explanation:
+          "Markdown and clearance strategy has to balance clearing excess inventory against a longer-term risk: if customers learn a predictable discount cycle exists, they'll simply wait for it, undermining full-price sales and eroding the value of the original price entirely.",
+        whyItMatters:
+          "A retailer that reliably marks everything down on a predictable schedule effectively trains its customer base to never buy at full price — the short-term clearance benefit can create a much larger, harder-to-reverse long-term pricing problem.",
+        example:
+          "Some retailers known for frequent, deep, predictable discounting have struggled to convince customers to ever pay full price, since customers learned from repeated experience that waiting a few weeks reliably produced a meaningfully lower price for the same item.",
+      },
+    ],
+    connections:
+      "Omnichannel attribution and fully-loaded unit economics are both about seeing the real, complete picture of profitability across channels rather than a misleadingly narrow slice. Platform dependency risk and inventory sync/oversell are operational risks that come with selling across multiple channels at scale, and dynamic pricing fairness and markdown cadence are both about the long-term reputational and behavioral costs of pricing decisions that look individually rational but can undermine customer trust or full-price sales over time.",
+    source: "claude",
+    generatedAt: "2026-09-09",
+  },
+
   "law/Corporate & Compliance": {
     profession: "law",
     category: "Corporate & Compliance",
