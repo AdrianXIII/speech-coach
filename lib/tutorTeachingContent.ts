@@ -308,6 +308,371 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     generatedAt: "2026-09-09",
   },
 
+  "business/Finance": {
+    profession: "business",
+    category: "Finance",
+    overview:
+      "Corporate finance is about allocating money — where it comes from, what it should be spent on, and how to tell whether a decision actually creates value versus just moving numbers around. Every concept below is ultimately a variation on comparing a return against the true cost of the capital used to get it.",
+    concepts: [
+      {
+        id: "fin-npv-irr-payback",
+        title: "NPV, IRR, and payback period",
+        explanation:
+          "Net present value (NPV) discounts a project's future cash flows to today's dollars and subtracts the initial investment — positive NPV means the project creates value. Internal rate of return (IRR) is the discount rate at which NPV equals zero. Payback period is simply how long until the investment is recouped, ignoring the time value of money.",
+        whyItMatters:
+          "NPV and IRR can disagree on ranking mutually exclusive projects (especially with different sizes or cash flow timing) — NPV is generally the more reliable decision rule since it directly measures value created in dollar terms, while IRR can be misleading for unconventional cash flow patterns.",
+        example:
+          "A project with a huge IRR on a tiny investment can still create less total value than a project with a modest IRR on a much larger investment — which is why a CFO comparing a $10,000 project at 40% IRR against a $10 million project at 15% IRR would rely on NPV, not IRR, to see which actually adds more dollars of value.",
+      },
+      {
+        id: "fin-capital-structure-leverage",
+        title: "Capital structure: debt vs. equity",
+        explanation:
+          "A company can fund itself with debt (must be repaid with interest, but doesn't dilute ownership) or equity (no repayment obligation, but dilutes ownership and is more expensive since equity investors demand higher returns for taking more risk). Leverage — using debt — magnifies both returns and risk to equity holders.",
+        whyItMatters:
+          "More debt increases returns to equity holders when things go well (since debt has a fixed cost and equity captures the upside) but also increases the risk of financial distress or bankruptcy when they don't — capital structure decisions are really about how much of that amplified risk a company can safely carry.",
+        example:
+          "Highly leveraged buyouts (LBOs) intentionally load a company with debt to boost equity returns for the private equity sponsor — a strategy that works well if the business performs as projected, and can force bankruptcy if cash flows fall short of covering the debt service.",
+      },
+      {
+        id: "fin-wacc-cost-of-capital",
+        title: "WACC and the cost of capital",
+        explanation:
+          "The weighted average cost of capital (WACC) blends the cost of debt and the cost of equity, weighted by how much of each a company uses, into a single discount rate representing the minimum return a project must clear to be worth doing — since that's the return capital providers require for the risk they're taking.",
+        whyItMatters:
+          "WACC is the hurdle rate used in NPV calculations — get it wrong (too low) and you'll approve value-destroying projects that look attractive on paper; get it too high and you'll reject genuinely good projects.",
+        example:
+          "A riskier business (like an early-stage biotech) has a much higher WACC than a stable utility, because equity investors demand a much higher expected return to compensate for the biotech's greater risk — the same project cash flows would be judged differently depending on which company's WACC discounts them.",
+      },
+      {
+        id: "fin-cash-conversion-cycle",
+        title: "Cash conversion cycle and profitability vs. liquidity",
+        explanation:
+          "The cash conversion cycle measures how long cash is tied up in operations — from paying for inventory, through selling it, to collecting payment from customers. A profitable company on paper can still run out of cash if this cycle is too long relative to its available financing.",
+        whyItMatters:
+          "This is why 'profitable' and 'solvent' aren't the same thing — a growing company can be reporting healthy profits while simultaneously running out of cash, because growth itself consumes cash (more inventory, more receivables) faster than profit generates it.",
+        example:
+          "Fast-growing retailers have historically gone bankrupt despite reporting profits, because rapid expansion required financing more inventory and receivables than operating cash flow could support — a classic 'growing broke' scenario driven by cash conversion cycle mechanics, not lack of profitability.",
+      },
+      {
+        id: "fin-valuation-methods",
+        title: "Valuation methods: DCF, comparables, precedent transactions",
+        explanation:
+          "Discounted cash flow (DCF) values a company based on its own projected future cash flows, discounted to present value. Trading comparables value it relative to similar public companies' valuation multiples. Precedent transactions value it based on what similar companies actually sold for in past M&A deals.",
+        whyItMatters:
+          "No single method is 'correct' — each has different strengths and blind spots (DCF is sensitive to assumptions about growth and discount rate; comparables depend on finding truly similar companies; precedent transactions can be stale or reflect deal-specific premiums), so practitioners typically triangulate across all three.",
+        example:
+          "Investment bankers routinely present a 'football field' chart showing the valuation range from each method side by side — a company's fair value is usually argued to sit somewhere in the overlap of these ranges, not at a single precise number from any one method.",
+      },
+      {
+        id: "fin-financial-statement-analysis",
+        title: "Diagnosing a business from financial statements",
+        explanation:
+          "The income statement (profitability over a period), balance sheet (assets, liabilities, and equity at a point in time), and cash flow statement (actual cash movements, split into operating, investing, and financing activities) together tell a fuller story than any one alone — reading them together reveals things a single number can hide.",
+        whyItMatters:
+          "A company can show growing revenue and profit on the income statement while its cash flow statement reveals operating cash flow is actually negative — a red flag that pure income-statement analysis would miss entirely, often signaling aggressive revenue recognition or a working-capital problem.",
+        example:
+          "Several accounting scandals (like Enron) involved income statements that looked strong while cash flow and balance sheet details — had they been scrutinized together — showed the underlying cash generation didn't match the reported profits.",
+      },
+    ],
+    connections:
+      "NPV, IRR, and payback are the decision tools for evaluating any individual investment, but they only work correctly once you know your WACC — the true cost of the capital being invested, which itself depends on the debt/equity mix chosen in your capital structure. The cash conversion cycle is a reminder that accounting profit and actual cash aren't the same thing, valuation methods extend the same NPV logic to valuing an entire company rather than a single project, and financial statement analysis is the diagnostic skill that ties all of it back to what a business's real financial health actually looks like.",
+    source: "claude",
+    generatedAt: "2026-09-09",
+  },
+
+  "business/Marketing": {
+    profession: "business",
+    category: "Marketing",
+    overview:
+      "Marketing is about identifying which customers to serve and why they should choose you over alternatives, then executing that choice consistently across price, product, and message. The concepts below build from figuring out who to target to actually launching and pricing something for them.",
+    concepts: [
+      {
+        id: "mktg-stp",
+        title: "Segmentation, targeting, and positioning (STP)",
+        explanation:
+          "Segmentation divides a broad market into groups with similar needs; targeting selects which segment(s) to actually pursue; positioning defines how the product should be perceived relative to alternatives in the targeted segment's mind. Trying to serve everyone with one undifferentiated position usually serves no one especially well.",
+        whyItMatters:
+          "Most marketing failures trace back to skipping or rushing this step — a great product with a confused or overly broad target market struggles to build a coherent message, since 'everyone' isn't a customer segment with a shared, addressable need.",
+        example:
+          "Volvo's decades-long positioning around safety (rather than trying to compete on performance or luxury broadly) is a textbook STP example — a deliberate, narrow, and consistently reinforced position rather than trying to be all things to all car buyers.",
+      },
+      {
+        id: "mktg-brand-equity",
+        title: "Brand equity",
+        explanation:
+          "Brand equity is the added value a brand name gives a product beyond its functional attributes — the premium customers will pay, or the preference they show, purely because of the brand. It's built over time through consistent quality, positioning, and experience, and can be damaged quickly by a single bad episode.",
+        whyItMatters:
+          "Brand equity is a genuine balance-sheet-relevant asset (even when not formally capitalized) — it's why the same physical product can command different prices under different brand names, and why companies protect it so aggressively even at real short-term cost.",
+        example:
+          "A generic drug and its branded equivalent can be chemically identical, yet the branded version commands a substantial price premium purely from accumulated brand trust — pure brand equity with no functional difference behind it.",
+      },
+      {
+        id: "mktg-value-based-pricing",
+        title: "Value-based pricing",
+        explanation:
+          "Rather than pricing based on cost-plus-margin or simply matching competitors, value-based pricing sets price according to the value the customer actually perceives and receives — which can be far higher (or lower) than production cost would suggest.",
+        whyItMatters:
+          "Cost-plus pricing systematically leaves money on the table for high-value products and prices low-value products out of the market — value-based pricing captures more of the value actually created, which is why it's the standard approach for genuinely differentiated products.",
+        example:
+          "Enterprise software is routinely priced based on the cost savings or revenue it generates for the customer (value-based) rather than the marginal cost of producing another software license (which is near zero) — a pure cost-plus approach would radically underprice it.",
+      },
+      {
+        id: "mktg-clv-cac",
+        title: "Customer lifetime value (CLV) and CAC",
+        explanation:
+          "Customer lifetime value estimates the total profit a customer generates over their entire relationship with the company; customer acquisition cost (CAC) is what it costs to acquire one. The relationship between the two (often expressed as a CLV:CAC ratio) tells you whether your growth spending is actually sustainable.",
+        whyItMatters:
+          "A business can grow revenue rapidly while destroying value if CAC exceeds CLV — this is a common trap in subscription and marketplace businesses that mistake top-line growth for health without checking whether each new customer is actually profitable over their lifetime.",
+        example:
+          "Several well-funded startups have grown user numbers rapidly through heavy paid acquisition spending, only to struggle once investor capital dried up, because CAC was never brought meaningfully below CLV — growth was subsidized, not organically profitable.",
+      },
+      {
+        id: "mktg-marketing-mix",
+        title: "The marketing mix (4Ps)",
+        explanation:
+          "Product, price, place (distribution), and promotion — the classic framework for the tactical decisions that execute a chosen positioning. Each element should reinforce the same positioning; misalignment (a premium-positioned product sold through discount channels, for instance) undermines the whole strategy.",
+        whyItMatters:
+          "It's a useful checklist precisely because inconsistency across the 4Ps is one of the most common ways a coherent strategy falls apart in execution — a strong brand position can be quietly eroded by a distribution or pricing decision that contradicts it.",
+        example:
+          "A luxury brand discounting heavily through mass-market outlet channels risks undermining the exclusivity that justifies its premium pricing elsewhere — a 'place' and 'promotion' decision directly undercutting the intended positioning.",
+      },
+      {
+        id: "mktg-gtm-launch",
+        title: "New product launch / go-to-market strategy",
+        explanation:
+          "A go-to-market plan sequences how a new product reaches customers: which segment to target first, which channels to use, how to price and message it, and how to build early momentum (often starting narrow before expanding) rather than launching broadly and thinly everywhere at once.",
+        whyItMatters:
+          "A weak or rushed launch can permanently damage a good product's prospects — first impressions, early reviews, and initial retailer/channel relationships are hard to reset once established, so sequencing and initial targeting decisions carry outsized long-term weight.",
+        example:
+          "Many successful tech products deliberately launched to a narrow beachhead market first (a specific city, use case, or customer segment) to build strong word-of-mouth and refine the product before expanding broadly, rather than attempting a simultaneous mass-market launch.",
+      },
+    ],
+    connections:
+      "STP is the foundational choice — who you're serving and how you want to be perceived — that everything else should reinforce. Brand equity is what accumulates from consistently executing that positioning well over time. Value-based pricing and the CLV:CAC relationship determine whether the resulting business is actually profitable, the marketing mix is the tactical checklist for consistent execution, and go-to-market strategy is how a specific new product enters the market in a way that's aligned with all of the above.",
+    source: "claude",
+    generatedAt: "2026-09-09",
+  },
+
+  "business/Operations": {
+    profession: "business",
+    category: "Operations",
+    overview:
+      "Operations is about reliably converting inputs into outputs at the right cost, quality, and speed — and doing so under real-world uncertainty (demand swings, supplier failures, quality variation) rather than the tidy assumptions of a textbook process diagram.",
+    concepts: [
+      {
+        id: "ops-capacity-planning",
+        title: "Capacity planning under demand uncertainty",
+        explanation:
+          "Capacity decisions (how much production, staffing, or infrastructure to build) are hard because demand is uncertain and capacity commitments are often large and slow to reverse. Approaches range from committing to a single demand forecast, to phased/incremental capacity additions, to real-options thinking that keeps flexibility to scale up or down as actual demand becomes clearer.",
+        whyItMatters:
+          "Overbuilding capacity wastes capital on idle assets; underbuilding leaves revenue on the table and can permanently cede market share to competitors who can meet demand you can't — the cost of being wrong is asymmetric depending on the industry and situation, which is why the planning approach itself matters.",
+        example:
+          "Semiconductor manufacturers face multi-year lead times to build new fabrication capacity, so capacity decisions must be made years before actual demand is known — a systemic reason the industry experiences boom-bust cycles of shortage and oversupply.",
+      },
+      {
+        id: "ops-supply-risk",
+        title: "Supply risk mitigation: safety stock vs. diversification",
+        explanation:
+          "Two complementary (not competing) strategies reduce supply disruption risk: safety stock (buffer inventory that absorbs short-term supply variability) and supplier diversification (multiple qualified suppliers, so no single failure stops production). Relying on just one leaves a real gap the other would have covered.",
+        whyItMatters:
+          "Companies that optimized purely for lean, single-source efficiency learned expensively during recent supply chain disruptions that resilience has a cost worth paying — the right balance depends on how critical and how volatile a given input actually is.",
+        example:
+          "Automakers that relied on a single source for critical semiconductor chips faced production shutdowns during the 2021 chip shortage, while those with more diversified sourcing (or larger buffer stock) weathered it comparatively better.",
+      },
+      {
+        id: "ops-make-vs-buy",
+        title: "Make-vs-buy on total cost of ownership",
+        explanation:
+          "Outsourcing decisions should be evaluated on total cost of ownership — not just the headline unit price, but quality risk, lead time, coordination cost, loss of control, and the strategic cost of not building the capability in-house — rather than choosing the cheapest quoted price alone.",
+        whyItMatters:
+          "A supplier's lower unit price can hide real costs elsewhere (longer lead times requiring more inventory, quality issues requiring rework, or losing an internal capability that turns out to matter strategically later) — narrow price comparison alone routinely leads to bad outsourcing decisions.",
+        example:
+          "Companies that outsourced core manufacturing purely on unit-cost grounds have sometimes found themselves unable to quickly innovate on the product afterward, because the manufacturing know-how — which turned out to matter for product development — had effectively moved to the supplier.",
+      },
+      {
+        id: "ops-bottleneck-throughput",
+        title: "Bottleneck / throughput analysis (Theory of Constraints)",
+        explanation:
+          "In any multi-step process, one step (the bottleneck) limits the throughput of the entire system — improving any other step doesn't increase total output, only improving the actual bottleneck does. The Theory of Constraints formalizes identifying and systematically elevating this constraint.",
+        whyItMatters:
+          "Effort spent optimizing non-bottleneck steps is often wasted effort dressed up as productivity — a common operational mistake is improving the parts of a process that are easiest to improve rather than the one step that's actually limiting overall output.",
+        example:
+          "A factory that speeds up an early production stage that already has spare capacity gains nothing in total output if a later stage remains the true bottleneck — the extra work-in-progress just piles up in front of the real constraint.",
+      },
+      {
+        id: "ops-root-cause-analysis",
+        title: "Root cause analysis (5 Whys, fishbone)",
+        explanation:
+          "Structured root-cause methods (repeatedly asking 'why' to trace a problem to its underlying systemic cause, or mapping potential cause categories on a fishbone/Ishikawa diagram) push past treating symptoms toward fixing the actual, often less obvious, source of a recurring problem.",
+        whyItMatters:
+          "Fixing a symptom without addressing the root cause guarantees the problem recurs — root-cause discipline is what separates a genuine fix from a temporary patch, especially for quality or safety failures that keep coming back in slightly different forms.",
+        example:
+          "A recurring machine breakdown addressed by simply repairing it each time (symptom) versus tracing it back to inadequate preventive maintenance scheduling (root cause) leads to very different long-term outcomes — one keeps recurring, the other actually stops it.",
+      },
+      {
+        id: "ops-jit-inventory",
+        title: "Just-in-time vs. buffer inventory tradeoffs",
+        explanation:
+          "Just-in-time (JIT) inventory minimizes carrying cost by holding minimal stock, ordering just enough just in time for use — efficient when supply is reliable, but fragile when it isn't. Buffer/safety inventory sacrifices some efficiency for resilience against demand or supply variability.",
+        whyItMatters:
+          "The right level on this spectrum isn't universal — it depends on how volatile and consequential a stockout would be for that specific input, which is why sophisticated operations apply different inventory policies to different components rather than one blanket approach.",
+        example:
+          "Toyota, the originator of JIT/lean manufacturing, still maintains deliberate buffer stock for its most critical, hard-to-replace components — even the company most associated with lean inventory recognizes it isn't a one-size-fits-all rule.",
+      },
+    ],
+    connections:
+      "Capacity planning and supply risk mitigation address uncertainty on the input and demand side; make-vs-buy determines which parts of the process you even control directly. Bottleneck analysis tells you where to focus improvement effort once a process exists, root cause analysis is how you actually fix problems that surface (including at the bottleneck), and JIT-vs-buffer tradeoffs run through nearly all of these decisions as the recurring efficiency-versus-resilience tension.",
+    source: "claude",
+    generatedAt: "2026-09-09",
+  },
+
+  "business/Leadership & HR": {
+    profession: "business",
+    category: "Leadership & HR",
+    overview:
+      "This category is about the human side of running an organization — managing performance and behavior fairly and defensibly, handling painful decisions (layoffs, terminations) well, and building a culture that survives stress rather than fracturing under it.",
+    concepts: [
+      {
+        id: "hr-toxic-high-performer",
+        title: "Managing a toxic high performer",
+        explanation:
+          "A high performer whose behavior damages team morale or drives away colleagues creates a real dilemma: their individual output looks valuable, but the team-level cost (attrition, disengagement, chilled psychological safety) is often larger and harder to measure. Acting requires documented behavioral evidence, not just performance metrics.",
+        whyItMatters:
+          "Leaders who tolerate toxic behavior because of strong individual output routinely underestimate the real cost — quiet attrition of other good employees who won't work under those conditions, which is a slower but often larger loss than the toxic employee's individual contribution.",
+        example:
+          "Multiple well-documented corporate cultural crises trace back to leadership protecting a high-revenue-generating individual from consequences for behavioral misconduct for too long — the eventual cost (legal, reputational, talent attrition) usually dwarfs whatever that individual's output was worth.",
+      },
+      {
+        id: "hr-performance-documentation",
+        title: "Performance management and documentation",
+        explanation:
+          "Addressing behavioral or performance issues requires consistent, contemporaneous documentation — specific incidents, dates, and communicated expectations — not just a memory of 'this has been a pattern.' This protects both fairness to the employee and the company's position if a termination is later challenged.",
+        whyItMatters:
+          "Undocumented 'informal' performance concerns are hard to act on later and create real legal exposure if a termination looks retaliatory or discriminatory without a documented performance record to support it — documentation is protective for everyone involved, not just defensive paperwork.",
+        example:
+          "Wrongful termination claims are far harder to defend when a company can't produce any documented performance conversations before the termination — even a legitimate performance-based firing can become expensive to defend without a paper trail.",
+      },
+      {
+        id: "hr-workforce-reduction",
+        title: "Workforce reduction tradeoffs: layoffs vs. pay cuts",
+        explanation:
+          "Cutting costs through headcount (layoffs) versus across-the-board pay/hours reductions involves different tradeoffs: layoffs concentrate pain on fewer people but preserve remaining employees' full compensation and can remove genuinely underperforming roles; broad pay cuts spread pain thinly but can demoralize the whole organization and risk losing your best people to competitors who didn't cut pay.",
+        whyItMatters:
+          "There's no universally 'kinder' option — the right choice depends on how temporary the downturn is expected to be, and which failure mode (losing your best talent broadly, or the trauma/signal of concentrated layoffs) the organization can least afford.",
+        example:
+          "Some Japanese companies have historically favored broad pay/hours reductions over layoffs during downturns, reflecting different cultural and legal norms around employment security — a genuinely different tradeoff resolution than the more layoff-favoring norm in many U.S. companies.",
+      },
+      {
+        id: "hr-post-merger-culture",
+        title: "Cultural integration in M&A",
+        explanation:
+          "Merging two organizations means merging two different cultures, decision-making norms, and unwritten rules — treated as a distinct workstream from financial and legal due diligence, cultural fit assessment tries to anticipate friction (autonomy vs. process, pace of decision-making) before it derails the deal's value.",
+        whyItMatters:
+          "A large share of M&A deals fail to achieve their projected value specifically because of poor integration, and cultural clashes are one of the most commonly cited reasons — a financially sound deal can still fail to deliver its synergies if the two organizations can't actually work together afterward.",
+        example:
+          "Acquisitions of smaller, fast-moving companies by larger, more bureaucratic acquirers have repeatedly seen key talent leave within the first year or two, frustrated by a slower decision-making culture imposed post-acquisition — a cultural integration failure, not a strategic or financial one.",
+      },
+      {
+        id: "hr-psychological-safety",
+        title: "Psychological safety",
+        explanation:
+          "Psychological safety is a shared belief that a team is safe for interpersonal risk-taking — that raising a concern, admitting a mistake, or challenging an idea won't be punished or embarrassing. It's a well-researched predictor of team learning, innovation, and — critically — of problems actually surfacing before they become crises.",
+        whyItMatters:
+          "Teams without psychological safety don't have fewer problems — they have the same problems, just hidden longer, since people are afraid to raise them until it's too late to address them cheaply, which is why so many organizational failures are traced back afterward to warnings that existed but went unspoken.",
+        example:
+          "Google's internal 'Project Aristotle' research on what made teams effective found psychological safety was the single most important factor — more predictive of team performance than who was actually on the team.",
+      },
+      {
+        id: "hr-culture-change-management",
+        title: "Leading organizational culture change",
+        explanation:
+          "Deliberate culture change requires more than a values statement — it needs structural reinforcement: what gets measured, rewarded, and modeled by leadership, since culture is ultimately what an organization actually does under pressure, not what it says it values.",
+        whyItMatters:
+          "A mismatch between stated values and actual incentives (rewarding behavior that contradicts the stated culture) is why so many culture change initiatives fail — employees calibrate to what's actually rewarded and tolerated, not to posters on the wall.",
+        example:
+          "A company that says it values collaboration but only promotes and bonuses individual star performers will develop a competitive, siloed culture regardless of its stated values — because the actual incentive structure, not the mission statement, is what shapes behavior.",
+      },
+    ],
+    connections:
+      "Performance documentation is the foundation that makes it possible to act fairly on both a toxic high performer and a broader workforce reduction decision. Psychological safety and genuine culture change both depend on the same underlying truth — what's actually rewarded and tolerated (not stated) shapes behavior — and post-merger cultural integration is a concentrated, high-stakes test of all of this at once, since two different reward and behavior systems are being forced together simultaneously.",
+    source: "claude",
+    generatedAt: "2026-09-09",
+  },
+
+  "business/Crisis Management": {
+    profession: "business",
+    category: "Crisis Management",
+    overview:
+      "Crisis management is about protecting people and trust when something goes seriously wrong, under real time pressure and incomplete information — the recurring lesson across almost every case study in this area is that how an organization responds usually matters more, in the end, than the original failure itself.",
+    concepts: [
+      {
+        id: "crisis-disclosure-timing",
+        title: "Disclosure timing: legal minimum vs. reputational optimum",
+        explanation:
+          "Companies facing bad news must decide when to disclose it — the legal minimum (what regulation actually requires, and when) is often later than the reputational optimum (disclosing proactively, before being forced to, to control the narrative and demonstrate good faith).",
+        whyItMatters:
+          "Waiting for a forced disclosure (a leak, a regulator, an investigative journalist) almost always looks worse than getting ahead of it voluntarily — the public reads the timing itself as a signal about how much the company was trying to hide.",
+        example:
+          "Companies that disclosed data breaches quickly and transparently have generally faced less lasting reputational damage than those where a breach was discovered to have been known internally for months before public disclosure.",
+      },
+      {
+        id: "crisis-precautionary-principle",
+        title: "Acting under incomplete evidence",
+        explanation:
+          "When safety or reputational risk is asymmetric (the downside of being wrong is much larger than the cost of precaution), the sound approach is often to act on incomplete evidence rather than waiting for full certainty — pausing production, issuing a warning, or recalling a product before root cause is fully confirmed.",
+        whyItMatters:
+          "Waiting for complete certainty before acting on a plausible safety signal has repeatedly proven far more costly (in harm and in liability) than acting early and being wrong about the ultimate root cause — asymmetric risk changes the right decision threshold.",
+        example:
+          "Automotive recalls are frequently issued while root-cause investigation is still ongoing, once a credible enough safety signal exists — regulators and companies both increasingly favor early, precautionary action over waiting for full certainty on causation.",
+      },
+      {
+        id: "crisis-duty-of-care",
+        title: "Duty of care to victims/employees/customers first",
+        explanation:
+          "Effective crisis response explicitly sequences human welfare (affected people's safety and wellbeing) ahead of business or legal considerations — not just as an ethical stance, but because visibly prioritizing anything else (like protecting the stock price) first is itself a reputational catastrophe if it becomes known.",
+        whyItMatters:
+          "Any crisis response that appears to have prioritized legal or financial protection over the people actually harmed tends to become a second, often worse scandal on top of the original one — the sequencing itself is read as a statement of values.",
+        example:
+          "Corporate crisis responses that are later shown (through leaked internal communications) to have focused early discussion on legal liability exposure rather than victim welfare have repeatedly become bigger stories than the original incident.",
+      },
+      {
+        id: "crisis-business-continuity",
+        title: "Business continuity planning",
+        explanation:
+          "A business continuity plan identifies critical operations, single points of failure, and pre-arranged fallback procedures (alternate suppliers, backup facilities, remote work capability) so a disruption doesn't halt the whole business — prepared in advance, not improvised during the actual disruption.",
+        whyItMatters:
+          "Organizations without continuity plans lose far more time improvising a response during the disruption itself — the value of the plan is largely in having already made the hard decisions (who has authority, what the fallback process is) before the pressure of an actual crisis.",
+        example:
+          "Companies with tested remote-work infrastructure and continuity plans in place before COVID-19 transitioned operations far more smoothly in early 2020 than those building remote capability for the first time under emergency conditions.",
+      },
+      {
+        id: "crisis-apology-accountability",
+        title: "Apology and accountability framing",
+        explanation:
+          "Image-repair research distinguishes genuine accountability (a clear acknowledgment of what went wrong and concrete remediation) from defensive strategies (minimizing, blame-shifting, or over-explaining) — the public generally responds far better to the former, even when the underlying failure is serious.",
+        whyItMatters:
+          "A defensive or legalistic non-apology ('we regret that some customers felt...') is widely recognized by the public as evasive and often generates more anger than the original incident — genuine accountability, while it feels riskier legally, usually produces a better reputational outcome.",
+        example:
+          "Johnson & Johnson's 1982 Tylenol response (full accountability, immediate nationwide recall, concrete fix) remains the standard positive benchmark precisely because it avoided minimization or blame-shifting despite the company not being at fault for the tampering itself.",
+      },
+      {
+        id: "crisis-preparedness-playbook",
+        title: "Building a crisis playbook before you need it",
+        explanation:
+          "A crisis management protocol — pre-identified spokespeople, escalation triggers, decision authority, and communication templates — built proactively means a real crisis follows a rehearsed structure instead of being designed from scratch under maximum pressure and scrutiny.",
+        whyItMatters:
+          "The quality of decisions made under acute stress and time pressure is generally worse than decisions made calmly in advance — a playbook moves as many decisions as possible out of the crisis moment itself and into a calmer planning period.",
+        example:
+          "Companies with a pre-designated crisis communications team and pre-approved escalation protocols typically issue their first public response within hours of an incident, while companies without one often take a day or more just to determine who's authorized to speak — a gap that shapes the entire narrative.",
+      },
+    ],
+    connections:
+      "Duty of care sets the priority order everything else should follow. Disclosure timing and the precautionary principle both concern acting before full certainty — proactively, not reactively — and apology/accountability framing is what determines whether the response itself builds or destroys trust once action is taken. Business continuity planning and a pre-built crisis playbook are both about making these choices in advance, so the actual crisis moment executes a rehearsed structure rather than improvising all of the above at once.",
+    source: "claude",
+    generatedAt: "2026-09-09",
+  },
+
   "law/Corporate & Compliance": {
     profession: "law",
     category: "Corporate & Compliance",
