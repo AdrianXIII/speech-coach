@@ -673,6 +673,371 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     generatedAt: "2026-09-09",
   },
 
+  "business/Mergers & Acquisitions": {
+    profession: "business",
+    category: "Mergers & Acquisitions",
+    overview:
+      "M&A is uniquely unforgiving of sloppy analysis — huge sums are committed based on projections about a future that hasn't happened yet, and the difference between a value-creating deal and a value-destroying one is often decided by discipline exercised well before the deal closes.",
+    concepts: [
+      {
+        id: "ma-valuation",
+        title: "Core valuation methods applied to a deal",
+        explanation:
+          "The same triangulation used generally in finance (DCF, trading comparables, precedent transactions) anchors what a target is worth — but in M&A, buyers also add a control premium (compensation to target shareholders for giving up control) on top of the standalone valuation.",
+        whyItMatters:
+          "Overpaying is the single most common way M&A destroys value — a deal can be strategically brilliant and still fail purely because too much was paid relative to what the target was actually worth, even including reasonable synergies.",
+        example:
+          "Time Warner's 2000 merger with AOL is widely cited as a valuation and synergy-overestimation disaster — the deal was struck near the peak of the dot-com bubble, and the projected value never materialized once market conditions normalized.",
+      },
+      {
+        id: "ma-synergy-quantification",
+        title: "Quantifying and stress-testing synergies",
+        explanation:
+          "Synergies — cost savings or revenue gains only achievable by combining two companies — are routinely used to justify paying a premium above standalone value, but they need to be quantified specifically and stress-tested for realism, not simply asserted as a round percentage of combined revenue.",
+        whyItMatters:
+          "Synergy estimates are famously optimistic in practice — deal teams are incentivized (consciously or not) to project synergies large enough to justify the price being discussed, which is why disciplined buyers discount initial synergy estimates and build in integration cost and delay.",
+        example:
+          "Post-merger reviews across many large deals have found actual realized synergies falling well short of pre-deal projections — a persistent enough pattern that sophisticated acquirers now often apply a standard 'haircut' to management's synergy case before valuing a deal.",
+      },
+      {
+        id: "ma-post-merger-integration",
+        title: "Post-merger integration planning",
+        explanation:
+          "Integration — combining systems, teams, processes, and cultures — is where most of a deal's projected value is actually realized or lost, and needs a clear plan (with sequencing priorities, usually customer-facing risk first) developed before close, not improvised afterward.",
+        whyItMatters:
+          "A financially sound deal with a weak integration plan routinely underperforms its own projections — the purchase price is locked in on day one, but synergy realization plays out over the following 1-3 years and depends entirely on execution quality.",
+        example:
+          "Deals that lose key customer-facing staff or disrupt customer relationships during a chaotic early integration period frequently see revenue erosion in year one that offsets much of the projected cost synergies — a failure of integration sequencing, not deal logic.",
+      },
+      {
+        id: "ma-cultural-due-diligence",
+        title: "Cultural due diligence",
+        explanation:
+          "Assessing cultural fit — decision-making pace, risk tolerance, management style — as a distinct workstream from financial and legal diligence, since a financially attractive target with an incompatible culture can still fail to integrate successfully after close.",
+        whyItMatters:
+          "Cultural mismatch is one of the most commonly cited causes of M&A underperformance, yet it's the diligence workstream most often shortchanged relative to financial and legal review, since it's harder to quantify in a spreadsheet.",
+        example:
+          "Acquisitions pairing a fast-moving, entrepreneurial target with a large, process-heavy acquirer have repeatedly seen key talent depart within 12-24 months once the target's autonomy is reduced — a predictable cultural mismatch that proper diligence could often have flagged in advance.",
+      },
+      {
+        id: "ma-earnout-structuring",
+        title: "Earnouts and contingent consideration",
+        explanation:
+          "An earnout ties part of the purchase price to the target's future performance post-close, bridging a valuation gap when buyer and seller disagree about future prospects — the seller gets more if their optimistic projections come true, the buyer doesn't overpay if they don't.",
+        whyItMatters:
+          "Earnouts create their own risk: post-close disputes are common over whether the acquirer managed the business in a way that fairly gave the earnout targets a chance to be met, which is why earnout agreements need carefully drafted operating covenants, not just a target number.",
+        example:
+          "Earnout litigation frequently centers on claims that the acquirer changed operations, cut investment, or redirected resources away from the acquired business specifically to avoid triggering an earnout payment — a recurring enough pattern that sophisticated sellers now negotiate explicit operating covenants to prevent it.",
+      },
+      {
+        id: "ma-antitrust-strategy",
+        title: "Antitrust and regulatory strategy",
+        explanation:
+          "Larger deals face antitrust review, which can result in a 'second request' for extensive information, required divestitures to preserve competition, or in some cases outright blocking. Deal timelines and structure (including breakup fees if the deal fails to close) need to account for this risk from the start.",
+        whyItMatters:
+          "Antitrust risk isn't binary pass/fail — it shapes deal terms directly, including how much walk-away risk each side accepts and what divestiture commitments a buyer is willing to make in advance to smooth regulatory approval.",
+        example:
+          "Several major proposed mergers have been abandoned or restructured after regulators signaled they'd require divestitures large enough to undermine the deal's original strategic logic — antitrust risk realized late enough to have already cost both sides significant time and deal costs.",
+      },
+    ],
+    connections:
+      "Valuation and synergy quantification together determine what a fair price actually is — get either wrong and you overpay regardless of how good the strategic logic sounds. Cultural due diligence and post-merger integration planning determine whether that projected value is actually realized after close, earnouts are one tool for managing valuation disagreement risk between the parties, and antitrust strategy is the regulatory gate the whole deal has to clear before any of the above can even be executed.",
+    source: "claude",
+    generatedAt: "2026-09-09",
+  },
+
+  "business/Entrepreneurship & Startups": {
+    profession: "business",
+    category: "Entrepreneurship & Startups",
+    overview:
+      "Startups operate under extreme uncertainty with limited runway — the core discipline is testing assumptions as cheaply as possible before committing real capital, and knowing exactly how much time you have left to find a business model that actually works.",
+    concepts: [
+      {
+        id: "startup-pmf",
+        title: "Recognizing genuine product-market fit",
+        explanation:
+          "Product-market fit is the point where a product satisfies real, strong market demand — evidenced by organic growth, high retention, and customers who'd be genuinely disappointed to lose the product, not just polite survey responses or vanity signup numbers.",
+        whyItMatters:
+          "Scaling (spending heavily on growth/sales) before genuine product-market fit is one of the most common ways startups burn through capital without building a durable business — growth spending amplifies whatever retention and engagement already exist, good or bad.",
+        example:
+          "The 'Sean Ellis test' — asking users how they'd feel if they could no longer use the product, with a benchmark of roughly 40% saying 'very disappointed' — is a widely used rough signal that real product-market fit may exist before committing to aggressive scaling.",
+      },
+      {
+        id: "startup-mvp-testing",
+        title: "MVP testing before committing engineering investment",
+        explanation:
+          "A minimum viable product tests a core hypothesis with the least investment needed to get a real signal — sometimes not even a working product (a landing page measuring signup interest, or a manually-delivered 'concierge' version) before building the real thing.",
+        whyItMatters:
+          "Building a fully-featured product before validating that anyone actually wants it is one of the most common and expensive startup mistakes — an MVP's entire purpose is learning cheaply, which requires resisting the urge to over-build it.",
+        example:
+          "Airbnb's founders initially tested demand by manually renting out air mattresses in their own apartment and photographing listings themselves — a deliberately manual, unscalable process that validated real demand before any platform was built.",
+      },
+      {
+        id: "startup-runway-math",
+        title: "Runway and burn multiple",
+        explanation:
+          "Runway is how many months of operation remain at the current burn rate (cash spent per month) before running out of money. Burn multiple (net burn divided by net new revenue added) measures how efficiently that cash is buying growth — a useful check on whether spending is translating into durable progress.",
+        whyItMatters:
+          "Running out of runway before finding a sustainable business model or the next round of funding is the single most common cause of startup failure — everything else (product decisions, hiring, marketing) needs to be weighed against how much runway it costs.",
+        example:
+          "A startup burning heavily to acquire revenue that immediately churns away has a poor burn multiple even with headline revenue growth — a sign the spending isn't buying durable business value, just temporary top-line numbers.",
+      },
+      {
+        id: "startup-unit-economics",
+        title: "Unit economics: CAC, LTV, contribution margin",
+        explanation:
+          "Unit economics examines whether a single customer or transaction is fundamentally profitable — customer acquisition cost against lifetime value, and contribution margin per unit sold — independent of whether the overall company is currently profitable at its current scale.",
+        whyItMatters:
+          "A business with broken unit economics (losing money on every customer, before even counting fixed costs) doesn't get better with scale — it gets worse faster, since more volume just multiplies the per-unit losses. Scale only helps a business with sound unit economics amortize fixed costs.",
+        example:
+          "Several heavily funded consumer startups scaled rapidly on venture capital despite losing money on every transaction, betting scale would eventually fix unit economics — a bet that failed when funding dried up and the underlying per-unit losses were still there.",
+      },
+      {
+        id: "startup-fundraising-tradeoffs",
+        title: "Venture capital vs. bootstrapping",
+        explanation:
+          "Venture capital provides growth capital in exchange for equity (dilution) and, often, board influence and pressure for rapid growth; bootstrapping (self-funding from revenue) preserves ownership and control but limits the pace of growth to what current cash flow supports.",
+        whyItMatters:
+          "This choice shapes the entire trajectory of a company, not just its balance sheet — VC funding pushes toward a specific outcome profile (rapid growth, eventual large exit) that may not fit every business, while bootstrapping forecloses opportunities that require large upfront capital to capture a fast-moving market.",
+        example:
+          "Companies like Mailchimp built substantial, profitable businesses through bootstrapping and organic growth rather than venture funding, retaining full founder ownership — a genuinely different and viable path from the VC-funded, rapid-scale model many assume is the only option.",
+      },
+      {
+        id: "startup-equity-vesting",
+        title: "Equity vesting and cliffs",
+        explanation:
+          "Founder and employee equity typically vests over time (commonly four years, with a one-year 'cliff' before any vesting occurs) rather than being granted immediately — protecting the company if someone leaves early, and aligning equity value with sustained contribution.",
+        whyItMatters:
+          "Without vesting, a co-founder who leaves after two months could retain a large equity stake earned by everyone else's continued work — vesting (and the cliff specifically) is the standard protection against exactly this outcome, and its absence is a common early-stage legal mistake.",
+        example:
+          "Co-founder disputes over unvested or improperly structured equity are a recurring cause of early-stage startup dysfunction — the classic cautionary case is a co-founder who departs almost immediately but retains full, unvested equity because no vesting schedule was ever put in place.",
+      },
+    ],
+    connections:
+      "Runway and burn multiple set the clock a startup is racing against — MVP testing and honestly recognizing (or not yet having) product-market fit are how that limited time gets spent efficiently rather than wastefully. Unit economics is the check on whether growth, once it starts, is actually building a sustainable business or just burning cash faster. Fundraising strategy determines how much runway and pressure a company takes on in the first place, and equity vesting protects the ownership structure everyone is working (and betting their time) against.",
+    source: "claude",
+    generatedAt: "2026-09-09",
+  },
+
+  "business/Sales & Business Development": {
+    profession: "business",
+    category: "Sales & Business Development",
+    overview:
+      "Sales is a discipline of prioritization under uncertainty — which deals to pursue, which to walk away from, how much to concede, and how to forecast honestly enough that the rest of the business can plan around it.",
+    concepts: [
+      {
+        id: "sales-churn-diagnosis",
+        title: "Diagnosing the true root cause of churn",
+        explanation:
+          "Customer churn has different underlying causes — price sensitivity, poor onboarding, a missing feature, a bad support experience, or simply outgrowing the product — that require entirely different fixes. Treating all churn the same (e.g., defaulting to a discount) often addresses the wrong problem.",
+        whyItMatters:
+          "A discount fixes price-driven churn but does nothing for churn caused by poor onboarding or an unmet feature need — misdiagnosing the cause wastes the intervention and the customer often leaves anyway, just after a delay.",
+        example:
+          "Exit interviews and churn analysis that segment departing customers by actual stated (and behaviorally inferred) reason reveal very different intervention priorities than assuming all churn is price-related and responding with blanket discounting.",
+      },
+      {
+        id: "sales-value-based-selling",
+        title: "Value-based selling vs. defaulting to price concessions",
+        explanation:
+          "Rather than defaulting to a discount when a deal stalls, value-based selling reframes the conversation around the value delivered — bundling, multi-year terms, or clarifying ROI — preserving price integrity while still addressing the buyer's underlying hesitation.",
+        whyItMatters:
+          "Habitual discounting trains customers (and the sales team) to expect it, eroding margin and pricing credibility over time — a sales team's default response to hesitation shapes long-term pricing power, not just the individual deal.",
+        example:
+          "Enterprise sales teams that lead with quantified ROI and case studies close deals at list price more consistently than teams that default to 'what discount do you need to sign today' — the same product, sold with a different conversation.",
+      },
+      {
+        id: "sales-pipeline-forecasting",
+        title: "Disciplined, evidence-based forecasting",
+        explanation:
+          "Sales forecasts are typically tiered by confidence (commit, best-case, pipeline) based on objective signals — stage in the sales process, specific buying commitments made, not just a rep's optimism — since forecast accuracy directly affects how the rest of the business plans production, hiring, and cash.",
+        whyItMatters:
+          "Inflated or overly optimistic forecasts cascade into bad decisions elsewhere in the business (overhiring, overproducing) — a forecast's real value is its honesty, not its size, which is why disciplined forecasting processes exist to counteract natural sales-side optimism.",
+        example:
+          "Companies that missed public earnings guidance due to overly optimistic sales forecasts have repeatedly had to implement more rigorous, criteria-based forecasting processes afterward — the cost of forecast inaccuracy becomes visible fastest when it's publicly disclosed.",
+      },
+      {
+        id: "sales-pipeline-qualification",
+        title: "Deal qualification discipline (MEDDIC/BANT)",
+        explanation:
+          "Structured qualification frameworks (like MEDDIC: Metrics, Economic buyer, Decision criteria, Decision process, Identify pain, Champion, or the simpler BANT: Budget, Authority, Need, Timeline) force a rep to verify a deal is real and winnable before investing further time, rather than chasing every lead equally.",
+        whyItMatters:
+          "Unqualified pipeline — deals that look active but lack real budget, authority, or urgency — wastes sales capacity and produces the false confidence that leads to inflated forecasts; qualification discipline is what keeps pipeline numbers honest.",
+        example:
+          "A deal with an enthusiastic user champion but no identified economic buyer or budget process is a common trap — genuine enthusiasm that will never convert to a signed contract without someone who can actually approve spending.",
+      },
+      {
+        id: "sales-comp-design",
+        title: "Sales compensation design",
+        explanation:
+          "Sales compensation plans (base salary, commission structure, accelerators, quotas) directly shape rep behavior — a plan overweighted toward new-customer acquisition, for instance, will get exactly that, often at the expense of retention or expansion revenue that isn't equally incentivized.",
+        whyItMatters:
+          "Reps optimize hard for whatever's actually measured and paid, sometimes in ways that hurt the business overall (aggressive discounting to hit quota near quarter-end, or churn-prone customers signed just to close a deal) — comp design is a lever with real behavioral consequences, not just a cost line.",
+        example:
+          "Sales teams compensated purely on new logo acquisition, with no retention or expansion component, have been observed signing customers who churn quickly — the rep's incentive was fully satisfied by the initial signature, regardless of what happened afterward.",
+      },
+      {
+        id: "sales-win-loss-analysis",
+        title: "Win-loss analysis",
+        explanation:
+          "Systematically reviewing why deals were won or lost — competitor comparisons, pricing feedback, feature gaps, sales process friction — turns individual deal outcomes into an organizational learning loop rather than isolated anecdotes.",
+        whyItMatters:
+          "Without structured win-loss analysis, patterns in why deals are lost (a recurring competitor advantage, a consistent pricing objection, a specific stage where deals stall) stay invisible, even though the raw data to see them already exists in each individual deal.",
+        example:
+          "Structured win-loss interviews — conducted by someone other than the losing rep, to get more candid feedback — frequently surface a specific, addressable pattern (like a competitor's feature or a pricing perception) that no single deal's post-mortem alone would have revealed.",
+      },
+    ],
+    connections:
+      "Qualification discipline is what makes forecasting honest in the first place — pipeline built on unqualified deals produces unreliable forecasts regardless of methodology. Churn diagnosis and value-based selling both push toward addressing the real underlying cause of a problem instead of a generic fix (a discount), compensation design shapes what behavior the whole sales organization actually optimizes for day to day, and win-loss analysis is the feedback loop that improves all of the above over time by turning individual deal outcomes into organizational learning.",
+    source: "claude",
+    generatedAt: "2026-09-09",
+  },
+
+  "business/Supply Chain & Logistics": {
+    profession: "business",
+    category: "Supply Chain & Logistics",
+    overview:
+      "Supply chain management is about moving materials and products efficiently across a network that's inherently uncertain — demand fluctuates, suppliers fail, and costs hidden in the details (not the headline price) often determine whether a sourcing decision was actually a good one.",
+    concepts: [
+      {
+        id: "sc-total-landed-cost",
+        title: "Total landed cost",
+        explanation:
+          "Total landed cost adds everything beyond the unit price — freight, tariffs, insurance, carrying cost of longer lead times, and the risk-adjusted cost of potential disruption — to give a true comparison between sourcing options, rather than comparing headline unit prices alone.",
+        whyItMatters:
+          "A supplier with a lower unit price can easily be more expensive overall once longer lead times (requiring more safety stock), higher freight costs, or tariff exposure are properly accounted for — unit-price-only comparisons are a common and costly sourcing mistake.",
+        example:
+          "Offshore sourcing decisions made purely on unit cost have sometimes proven more expensive overall once landed cost properly accounted for tariffs, longer transit-time inventory carrying costs, and quality/rework issues — prompting some companies to reshore or nearshore production after a full landed-cost recalculation.",
+      },
+      {
+        id: "sc-bullwhip-effect",
+        title: "The bullwhip effect",
+        explanation:
+          "Small fluctuations in actual consumer demand get amplified as they propagate upstream through a supply chain — each link (retailer, distributor, manufacturer, raw material supplier) adds a buffer to protect against uncertainty, and those buffers compound, causing large swings in orders far upstream from relatively small real demand changes.",
+        whyItMatters:
+          "This explains a lot of supply chain volatility that looks irrational in isolation — upstream suppliers can see wild order swings even when actual end-consumer demand barely moved, purely because of how uncertainty and buffering compound through each link in the chain.",
+        example:
+          "Modest, temporary spikes in consumer demand for a product have repeatedly triggered dramatically larger order swings at the raw-material level a few links upstream — a textbook bullwhip pattern documented across many industries, from consumer goods to semiconductors.",
+      },
+      {
+        id: "sc-safety-stock-policy",
+        title: "Safety stock policy",
+        explanation:
+          "Safety stock — buffer inventory held above expected demand — is set based on demand variability and the desired service level (probability of not stocking out), not an arbitrary round number. Higher variability or a higher target service level both require more safety stock.",
+        whyItMatters:
+          "Setting safety stock without reference to actual demand variability either wastes capital on excess inventory or leaves the business exposed to stockouts — the right level is a genuine calculation, not a rule of thumb, and it should differ meaningfully across SKUs with different variability.",
+        example:
+          "A retailer applying the same flat safety stock policy across both highly predictable staple products and highly variable seasonal/trend items is likely overstocking the stable items and understocking the volatile ones — a uniform policy applied to a non-uniform problem.",
+      },
+      {
+        id: "sc-sop-process",
+        title: "Sales and operations planning (S&OP)",
+        explanation:
+          "S&OP is the recurring cross-functional process (typically monthly) that reconciles demand forecasts, supply capacity, and financial targets across sales, operations, and finance — so the whole company is planning against one shared, agreed-upon plan rather than each function operating on its own separate assumptions.",
+        whyItMatters:
+          "Without S&OP, sales forecasts optimistic demand while operations plans conservative capacity (or vice versa), and the disconnect surfaces as stockouts or excess inventory — S&OP is specifically the mechanism for catching and resolving that misalignment before it becomes a physical problem.",
+        example:
+          "Companies that implement disciplined monthly S&OP processes commonly report meaningful reductions in both stockouts and excess inventory simultaneously — direct evidence that the previous state wasn't a capacity or demand problem per se, but a coordination problem between functions.",
+      },
+      {
+        id: "sc-concentration-risk",
+        title: "Supply chain concentration risk",
+        explanation:
+          "Over-reliance on a single port, carrier, supplier, or customer creates a structural vulnerability — a single point of failure that can halt operations regardless of how well-run the rest of the supply chain is, independent of any individual supplier's quality or reliability.",
+        whyItMatters:
+          "Concentration risk is often invisible until the single point of failure actually fails — companies that never experienced a disruption at their sole supplier had no reason to notice the risk, right up until they did.",
+        example:
+          "Widespread manufacturing disruptions following a major regional disaster or geopolitical event have repeatedly exposed companies whose supply chains were unknowingly concentrated in a single region or through a single critical supplier, despite appearing diversified on paper across brand names.",
+      },
+      {
+        id: "sc-reshoring-nearshoring",
+        title: "Reshoring, nearshoring, and hybrid sourcing",
+        explanation:
+          "Companies are increasingly weighing offshore sourcing (lowest unit cost, longer lead times, higher risk) against nearshoring (closer, faster, often more expensive) or reshoring (domestic production) — frequently landing on a hybrid dual-network approach rather than an all-or-nothing choice.",
+        whyItMatters:
+          "This is a direct response to the total-landed-cost and concentration-risk lessons above — pure lowest-unit-cost offshoring looks less attractive once realistic risk, lead time, and total cost are properly weighed, which is why hybrid strategies have become more common rather than wholesale reshoring or staying fully offshore.",
+        example:
+          "Several manufacturers have adopted a dual-sourcing strategy — maintaining a lower-cost offshore supplier for baseline volume while adding a nearshore or domestic supplier for surge capacity and risk mitigation — rather than choosing one model exclusively.",
+      },
+    ],
+    connections:
+      "Total landed cost and concentration risk are both about seeing the true cost and risk of a sourcing decision beyond the headline price — which is what motivates the reshoring/nearshoring/hybrid tradeoff. The bullwhip effect explains why demand signals get distorted as they move upstream, safety stock policy and S&OP are the two main tools for managing that distortion and uncertainty (buffer inventory, and cross-functional coordination) so the whole network stays aligned rather than each function planning against its own separate assumptions.",
+    source: "claude",
+    generatedAt: "2026-09-09",
+  },
+
+  "business/IT & Technology Management": {
+    profession: "business",
+    category: "IT & Technology Management",
+    overview:
+      "Technology management is about making build-vs-buy and investment decisions under genuine uncertainty about future needs, while managing the accumulating cost of past shortcuts (technical debt) and increasingly severe downside risk (cyber, compliance) that a purely feature-focused view of IT easily misses.",
+    concepts: [
+      {
+        id: "it-build-vs-buy",
+        title: "Build vs. buy: the core-vs-context framework",
+        explanation:
+          "A useful lens for technology investment decisions: build (invest real engineering effort) in what's genuinely core to competitive advantage; buy (use a vendor solution) for context — necessary but not differentiating — capabilities, where a mature vendor product is usually faster and cheaper than custom development.",
+        whyItMatters:
+          "Building custom software for non-differentiating needs wastes scarce engineering capacity that could go toward genuinely core capabilities — the core-vs-context distinction is what prevents 'we can build it ourselves' from being applied indiscriminately to everything.",
+        example:
+          "Most companies buy standard HR or accounting software rather than building it — those functions are necessary but not a source of competitive differentiation for a typical company, so engineering effort is better spent on whatever actually differentiates the business.",
+      },
+      {
+        id: "it-tco-analysis",
+        title: "Total cost of ownership across build/buy/vendor options",
+        explanation:
+          "A proper technology TCO comparison spans multiple years and includes not just license or build cost, but implementation, integration, ongoing maintenance, support, and the eventual cost of migrating away — not just the initial price tag.",
+        whyItMatters:
+          "A cheap upfront license or build estimate can hide much larger downstream costs (support burden, integration complexity, migration difficulty) — multi-year TCO comparison is what prevents a technology decision from looking good only in year one.",
+        example:
+          "Custom-built internal systems often look cost-competitive against a vendor solution at build time, but the ongoing maintenance burden (with no vendor support, borne entirely by internal engineering) frequently makes the true multi-year TCO higher than initially estimated.",
+      },
+      {
+        id: "it-technical-debt",
+        title: "Quantifying technical debt's business cost",
+        explanation:
+          "Technical debt — shortcuts taken to ship faster that accumulate ongoing cost (slower development velocity, more bugs, harder onboarding) — is easiest to ignore because its cost is diffuse and gradual rather than a single visible expense, unlike a line item in a budget.",
+        whyItMatters:
+          "Quantifying technical debt's actual business cost (in velocity lost, incidents caused, or churn from a buggy product) is what makes the case for investing time in paying it down, since 'the code is messy' alone rarely wins against pressure to ship new features.",
+        example:
+          "Engineering teams that track cycle time or incident frequency over time can often show a clear, quantifiable slowdown correlated with accumulating technical debt in a specific system — turning an abstract complaint into a data-backed business case for dedicated remediation time.",
+      },
+      {
+        id: "it-cyber-risk-quantification",
+        title: "Quantifying cyber risk in financial terms",
+        explanation:
+          "Frameworks like FAIR (Factor Analysis of Information Risk) translate cybersecurity risk into estimated financial terms — expected loss given a breach's likelihood and impact — so security investment can be justified and prioritized against other capital priorities using the same language as the rest of the business.",
+        whyItMatters:
+          "Security requests framed purely in technical terms ('we need better endpoint protection') compete poorly for budget against initiatives with clear ROI — framing cyber risk in expected-financial-loss terms lets it compete on equal footing in capital allocation decisions.",
+        example:
+          "Companies that model a specific breach scenario's expected cost (probability × estimated impact including regulatory fines, remediation, and reputational damage) can make a much more compelling budget case for a specific security investment than a generic appeal to 'best practices.'",
+      },
+      {
+        id: "it-ai-use-case-prioritization",
+        title: "Prioritizing AI/technology initiatives on value vs. feasibility",
+        explanation:
+          "With many possible technology (especially AI) initiatives competing for limited resources, prioritization should weigh realistic business value against actual technical feasibility and data readiness — not just which use case generates the most executive excitement or media attention.",
+        whyItMatters:
+          "Chasing high-visibility but low-feasibility AI projects (often driven by hype rather than a clear-eyed feasibility assessment) is a common way technology budgets get wasted on pilots that never reach production — a disciplined value-versus-feasibility screen catches this before resources are committed.",
+        example:
+          "Many companies' early generative AI pilot projects stalled at the proof-of-concept stage specifically because the necessary underlying data infrastructure and governance weren't actually in place — a feasibility gap that wasn't assessed before the initiative was prioritized based on excitement alone.",
+      },
+      {
+        id: "it-vendor-lockin",
+        title: "Vendor lock-in and switching-cost leverage",
+        explanation:
+          "Deep integration with a vendor's platform creates switching costs that grow over time — useful to recognize both as a risk when choosing a vendor initially, and as a negotiating dynamic (for both sides) when a contract comes up for renewal.",
+        whyItMatters:
+          "A vendor that knows switching would be costly and disruptive for you has real leverage at renewal time — recognizing lock-in depth before it becomes severe (and negotiating exit terms or data portability upfront) preserves negotiating leverage for later.",
+        example:
+          "Companies deeply integrated with a single cloud provider's proprietary services (beyond basic compute/storage) often find migration prohibitively expensive years later — a lock-in dynamic that shows up clearly at the next contract renewal, when the vendor's pricing leverage becomes apparent.",
+      },
+    ],
+    connections:
+      "The core-vs-context framework decides what should be built at all — TCO analysis is how you properly compare the build-vs-buy options for everything else. Technical debt is the accumulating cost of past build decisions, cyber risk quantification and vendor lock-in are both about surfacing risks that are easy to underweight because they're not immediately visible line items, and AI/initiative prioritization applies the same value-versus-feasibility discipline to deciding what gets built or bought next.",
+    source: "claude",
+    generatedAt: "2026-09-09",
+  },
+
   "law/Corporate & Compliance": {
     profession: "law",
     category: "Corporate & Compliance",
