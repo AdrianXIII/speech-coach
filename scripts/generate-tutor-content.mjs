@@ -33,10 +33,41 @@ const ROOT = path.resolve(__dirname, "..");
 const OUTPUT_PATH = path.join(ROOT, "lib/tutorTeachingContent.generated.ts");
 
 // Keep this in sync with HAND_AUTHORED_CONTENT's keys in tutorTeachingContent.ts.
+// As of 2026-09-09, all 28 categories are hand-authored there, so this
+// script currently has nothing to do unless a new category is added to
+// CASE_CATEGORIES in caseStudyContent.ts — this list only needs updating
+// then (remove the new category's key, or run with --force to regenerate
+// everything, which would overwrite nothing since HAND_AUTHORED_CONTENT
+// still wins in the merge — see tutorTeachingContent.ts).
 const SKIP_KEYS = new Set([
   "business/Strategy",
-  "politics/Foreign Policy & Diplomacy",
+  "business/Finance",
+  "business/Marketing",
+  "business/Operations",
+  "business/Leadership & HR",
+  "business/Crisis Management",
+  "business/Mergers & Acquisitions",
+  "business/Entrepreneurship & Startups",
+  "business/Sales & Business Development",
+  "business/Supply Chain & Logistics",
+  "business/IT & Technology Management",
+  "business/Manufacturing & Production",
+  "business/Product Management & Innovation",
+  "business/Customer Experience",
+  "business/HR & Talent Management",
+  "business/International & Global Business",
+  "business/Corporate Governance & Risk",
+  "business/Retail & E-commerce",
   "law/Contract Law",
+  "law/Corporate & Compliance",
+  "law/Civil Litigation",
+  "law/Criminal Law",
+  "law/Constitutional & Regulatory",
+  "politics/Foreign Policy & Diplomacy",
+  "politics/Domestic Policy",
+  "politics/Crisis Response",
+  "politics/Campaign Strategy",
+  "politics/Legislative Negotiation",
 ]);
 
 const FORCE = process.argv.includes("--force");

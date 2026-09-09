@@ -15,14 +15,13 @@ import { GENERATED_TEACHING_CONTENT } from "@/lib/tutorTeachingContent.generated
  * entry says who wrote it (a specific Claude/Gemini call), and `generatedAt`
  * says when — both there so you can tell stale content from fresh.
  *
- * COVERAGE: hand-authored so far for one flagship category per profession
- * (business/Strategy, politics/Foreign Policy & Diplomacy, law/Contract Law)
- * as a working, fact-checkable proof of the whole pipeline. The remaining
- * categories return null from getTeachingContent() until populated — the
- * Teach step falls back to the existing Fundamentals checklist for those, so
- * nothing breaks. Populate the rest at scale with `scripts/generate-tutor-
- * content.mjs` (uses this app's own GEMINI_API_KEY — see that file's header
- * for how to run it), or ask for more to be hand-authored directly here.
+ * COVERAGE: all 28 profession/category combinations are hand-authored here
+ * (18 Business, 5 Law, 5 Politics) — getTeachingContent() should never
+ * return null for an existing CASE_CATEGORIES entry. If a new category is
+ * ever added to caseStudyContent.ts, it'll fall back gracefully to the
+ * plain Fundamentals checklist until content is added for it here (or via
+ * `scripts/generate-tutor-content.mjs`, which bulk-generates via this app's
+ * own GEMINI_API_KEY for whatever isn't yet in SKIP_KEYS/hand-authored).
  */
 
 export interface TeachingConcept {
