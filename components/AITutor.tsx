@@ -1,13 +1,17 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useMediaRecorder } from "@/hooks/useMediaRecorder";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
-import { type CaseProfession, type CaseStudy } from "@/lib/caseStudyContent";
+import { useSpeechSynthesis } from "@/hooks/useSpeechSynthesis";
+import { CASE_CATEGORIES, type CaseProfession, type CaseStudy } from "@/lib/caseStudyContent";
 import type { Fundamental } from "@/lib/caseStudyFundamentals";
 import { buildTeachingBrief, pickChallenge, type TutorFeedback } from "@/lib/tutorEngine";
+import type { TeachingContent } from "@/lib/tutorTeachingContent";
 import type { TutorNewsItem } from "@/lib/tutorNews";
 import { loadTutorProfile, type TutorProfile } from "@/lib/tutorProfile";
+import { saveTutorFlag } from "@/lib/tutorFlags";
+import { matchSpokenLabel, matchesCommand } from "@/lib/voiceMatch";
 import { ProfessionPicker, PROFESSION_LABELS } from "@/components/shared/ProfessionPicker";
 import { CategoryPicker } from "@/components/shared/CategoryPicker";
 import { TutorProfileEditor } from "@/components/TutorProfileEditor";
@@ -17,6 +21,8 @@ import { getLanguage } from "@/lib/languages";
 
 type Phase = "selectProfession" | "selectCategory" | "teach" | "challenge" | "recording" | "evaluating" | "feedback";
 type Mode = "core" | "news";
+/** Voice answers are routed here so one mic button can serve every prompt in the flow. */
+type VoiceIntent = "profession" | "category" | "teachNav" | "handoff" | null;
 
 const ENTITY_LABEL: Record<CaseProfession, string> = {
   business: "company",
@@ -25,12 +31,12 @@ const ENTITY_LABEL: Record<CaseProfession, string> = {
 };
 
 /**
- * One generic tutor session: teach the domain's fundamentals, challenge with
- * a case (or a live news item), listen to a spoken answer, and evaluate
- * knowledge + language + pronunciation together. Same Area → Domain flow as
- * Case Studies (shared pickers), same voice pipeline, same Gemini backend —
- * this component only orchestrates the session, all domain logic lives in
- * lib/tutorEngine.ts.
+ * One generic tutor session, voice-first: it teaches the domain step by
+ * step (spoken aloud, with a mic button to answer/steer by voice — tap
+ * always works too), challenges with a case or live news, listens to a
+ * spoken answer, and evaluates knowledge + language + pronunciation
+ * together. Domain logic lives in lib/tutorEngine.ts; this component only
+ * orchestrates the session and the voice/TTS layer around it.
  */
 export function AITutor() {
   const { language } = useLanguage();
@@ -41,6 +47,8 @@ export function AITutor() {
 
   const [fundamentals, setFundamentals] = useState<Fundamental[]>([]);
   const [exampleApproach, setExampleApproach] = useState("");
+  const [teaching, setTeaching] = useState<TeachingContent | null>(null);
+  const [teachStepIndex, setTeachStepIndex] = useState(-1); // -1 = overview, 0..N-1 = concepts, N = connections/handoff
 
   const [profile, setProfile] = useState<TutorProfile | null>(null);
   const [editingProfile, setEditingProfile] = useState(false);
@@ -54,6 +62,15 @@ export function AITutor() {
   const [evalError, setEvalError] = useState<string | null>(null);
   const [isFinalizing, setIsFinalizing] = useState(false);
   const [lastTranscript, setLastTranscript] = useState("");
+
+  // Voice navigation (profession/category answers, "next"/"repeat"/"back", the
+  // handoff question) — a separate recognizer from the one used to record an
+  // actual challenge answer below, and short-answer tuned (auto-stops after
+  // ~1.5s of silence, so no second tap is needed to say "I'm done").
+  const [voiceIntent, setVoiceIntent] = useState<VoiceIntent>(null);
+  const [voiceNotice, setVoiceNotice] = useState<string | null>(null);
+  const tts = useSpeechSynthesis();
+  const voiceNav = useSpeechRecognition("en-US", 1500);
 
   const { recordedBlob, audioBlob, start: startRecorder, stop: stopRecorder, reset: resetRecorder } =
     useMediaRecorder(false);
@@ -99,7 +116,96 @@ export function AITutor() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFinalizing, recognition.isListening]);
 
+  // Speak the current prompt whenever it changes. Every step also shows the
+  // same text on screen and has a manual "Repeat" control, since some
+  // browsers block audio before any user gesture on first page load.
+  useEffect(() => {
+    if (phase === "selectProfession") {
+      tts.speak("Which profession would you like to explore — Business, Politics, or Law?");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase]);
+
+  useEffect(() => {
+    if (phase === "selectCategory" && profession) {
+      tts.speak(`Which category of ${PROFESSION_LABELS[profession].label} would you like to deep dive into?`);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, profession]);
+
+  useEffect(() => {
+    if (phase !== "teach" || !teaching) return;
+    tts.speak(teachStepText(teaching, teachStepIndex));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, teaching, teachStepIndex]);
+
+  // Resolves whatever the user just said, once voiceNav has settled, against
+  // whichever prompt is currently pending (voiceIntent) — one mic button and
+  // one matching pipeline serves every voice-answer moment in the flow.
+  useEffect(() => {
+    if (!voiceIntent || voiceNav.isListening) return;
+    const heard = voiceNav.transcript.trim();
+    if (!heard) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setVoiceIntent(null);
+      return;
+    }
+
+    if (voiceIntent === "profession") {
+      const labels = (Object.keys(PROFESSION_LABELS) as CaseProfession[]).map((p) => PROFESSION_LABELS[p].label);
+      const match = matchSpokenLabel(heard, labels);
+      const p = match
+        ? (Object.keys(PROFESSION_LABELS) as CaseProfession[]).find((k) => PROFESSION_LABELS[k].label === match)
+        : null;
+      if (p) {
+        setVoiceNotice(null);
+        handleSelectProfession(p);
+      } else {
+        setVoiceNotice(`Didn't catch that — try saying "Business", "Politics", or "Law", or tap one below.`);
+      }
+    } else if (voiceIntent === "category" && profession) {
+      const match = matchSpokenLabel(heard, CASE_CATEGORIES[profession]);
+      if (match) {
+        setVoiceNotice(null);
+        handleSelectCategory(match);
+      } else {
+        setVoiceNotice(`Didn't catch that — try naming the category, or tap one below.`);
+      }
+    } else if (voiceIntent === "teachNav") {
+      const cmd = matchesCommand(heard, ["repeat", "back", "previous", "next", "continue", "skip"]);
+      if (cmd) {
+        setVoiceNotice(null);
+        handleTeachCommand(cmd);
+      } else {
+        setVoiceNotice(`Didn't catch that — say "next" or "repeat", or tap a button below.`);
+      }
+    } else if (voiceIntent === "handoff") {
+      const cmd = matchesCommand(heard, ["news", "standard", "case"]);
+      if (cmd === "news") {
+        setVoiceNotice(null);
+        setMode("news");
+        beginChallenge("news");
+      } else if (cmd) {
+        setVoiceNotice(null);
+        setMode("core");
+        beginChallenge("core");
+      } else {
+        setVoiceNotice(`Didn't catch that — say "standard" or "news", or tap a button below.`);
+      }
+    }
+    setVoiceIntent(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [voiceIntent, voiceNav.isListening]);
+
+  function askByVoice(intent: VoiceIntent) {
+    setVoiceNotice(null);
+    voiceNav.reset();
+    setVoiceIntent(intent);
+    voiceNav.start();
+  }
+
   function handleSelectProfession(p: CaseProfession) {
+    tts.cancel();
     setProfession(p);
     setCategory(null);
     setProfile(loadTutorProfile(p));
@@ -108,22 +214,40 @@ export function AITutor() {
 
   function handleSelectCategory(cat: string) {
     if (!profession) return;
+    tts.cancel();
     setCategory(cat);
     const brief = buildTeachingBrief(profession, cat);
     setFundamentals(brief.fundamentals);
     setExampleApproach(brief.exampleApproach);
+    setTeaching(brief.teaching);
+    setTeachStepIndex(-1);
     setMode("core");
     setNewsFallbackNotice(false);
     setPhase("teach");
   }
 
-  async function beginChallenge() {
+  function handleTeachCommand(cmd: string) {
+    if (!teaching) return;
+    if (cmd === "repeat") {
+      tts.speak(teachStepText(teaching, teachStepIndex));
+      return;
+    }
+    if (cmd === "back" || cmd === "previous") {
+      setTeachStepIndex((i) => Math.max(-1, i - 1));
+      return;
+    }
+    setTeachStepIndex((i) => Math.min(teaching.concepts.length, i + 1));
+  }
+
+  async function beginChallenge(forceMode?: Mode) {
     if (!profession || !category) return;
+    tts.cancel();
+    const activeMode = forceMode ?? mode;
     setEvalError(null);
     resetRecorder();
     recognition.reset();
 
-    if (mode === "news" && profile) {
+    if (activeMode === "news" && profile) {
       setIsFetchingNews(true);
       setNewsFallbackNotice(false);
       try {
@@ -176,6 +300,21 @@ export function AITutor() {
     setIsFinalizing(true);
   }
 
+  async function handleFlagConcept(report: { conceptId: string | null; conceptTitle: string | null; reason: "inaccurate" | "shallow" | "other"; note: string }) {
+    if (!profession || !category) return;
+    const flag = { profession, category, ...report, at: new Date().toISOString() };
+    saveTutorFlag(flag);
+    try {
+      await fetch("/api/tutor/flag", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(flag),
+      });
+    } catch {
+      // Local copy is already saved — the server log is a nice-to-have, not required.
+    }
+  }
+
   const englishOnlyNotice = language !== "en";
 
   return (
@@ -192,14 +331,34 @@ export function AITutor() {
         </div>
       )}
 
-      {phase === "selectProfession" && <ProfessionPicker onSelect={handleSelectProfession} />}
+      {phase === "selectProfession" && (
+        <div className="flex flex-col gap-3">
+          <ProfessionPicker onSelect={handleSelectProfession} />
+          <VoiceAnswerControl
+            prompt="Which profession would you like to explore — Business, Politics, or Law?"
+            listening={voiceIntent === "profession" && voiceNav.isListening}
+            liveTranscript={voiceIntent === "profession" ? voiceNav.transcript : ""}
+            notice={voiceIntent === null ? voiceNotice : null}
+            onSpeak={() => askByVoice("profession")}
+          />
+        </div>
+      )}
 
       {phase === "selectCategory" && profession && (
-        <CategoryPicker
-          profession={profession}
-          onSelect={handleSelectCategory}
-          onBack={() => setPhase("selectProfession")}
-        />
+        <div className="flex flex-col gap-3">
+          <CategoryPicker
+            profession={profession}
+            onSelect={handleSelectCategory}
+            onBack={() => setPhase("selectProfession")}
+          />
+          <VoiceAnswerControl
+            prompt={`Which category of ${PROFESSION_LABELS[profession].label}?`}
+            listening={voiceIntent === "category" && voiceNav.isListening}
+            liveTranscript={voiceIntent === "category" ? voiceNav.transcript : ""}
+            notice={voiceIntent === null ? voiceNotice : null}
+            onSpeak={() => askByVoice("category")}
+          />
+        </div>
       )}
 
       {phase === "teach" && profession && category && profile && (
@@ -208,6 +367,9 @@ export function AITutor() {
           category={category}
           fundamentals={fundamentals}
           exampleApproach={exampleApproach}
+          teaching={teaching}
+          teachStepIndex={teachStepIndex}
+          isSpeaking={tts.isSpeaking}
           mode={mode}
           onModeChange={setMode}
           profile={profile}
@@ -219,7 +381,31 @@ export function AITutor() {
           }}
           onCancelEditProfile={() => setEditingProfile(false)}
           isFetchingNews={isFetchingNews}
-          onStart={beginChallenge}
+          onNext={() => handleTeachCommand("next")}
+          onBack={() => handleTeachCommand("back")}
+          onRepeat={() => handleTeachCommand("repeat")}
+          onFlag={handleFlagConcept}
+          voiceControl={
+            <VoiceAnswerControl
+              prompt='Say "next", "repeat", or "back".'
+              listening={voiceIntent === "teachNav" && voiceNav.isListening}
+              liveTranscript={voiceIntent === "teachNav" ? voiceNav.transcript : ""}
+              notice={voiceIntent === null ? voiceNotice : null}
+              onSpeak={() => askByVoice("teachNav")}
+              compact
+            />
+          }
+          handoffVoiceControl={
+            <VoiceAnswerControl
+              prompt='Say "standard" or "news".'
+              listening={voiceIntent === "handoff" && voiceNav.isListening}
+              liveTranscript={voiceIntent === "handoff" ? voiceNav.transcript : ""}
+              notice={voiceIntent === null ? voiceNotice : null}
+              onSpeak={() => askByVoice("handoff")}
+              compact
+            />
+          }
+          onStart={() => beginChallenge()}
           onChangeCategory={() => setPhase("selectCategory")}
         />
       )}
@@ -264,6 +450,57 @@ export function AITutor() {
   );
 }
 
+/** The text spoken (and shown) for a given step of the rich teaching flow. */
+function teachStepText(teaching: TeachingContent, stepIndex: number): string {
+  if (stepIndex === -1) return teaching.overview;
+  if (stepIndex < teaching.concepts.length) {
+    const c = teaching.concepts[stepIndex];
+    return `${c.title}. ${c.explanation} ${c.whyItMatters} For example: ${c.example}`;
+  }
+  return `${teaching.connections} Do you want to train with a standard use case, or a use case based on live news?`;
+}
+
+/* ─────────────────────────── Voice answer control ─────────────────────────── */
+
+function VoiceAnswerControl({
+  prompt,
+  listening,
+  liveTranscript,
+  notice,
+  onSpeak,
+  compact,
+}: {
+  prompt: string;
+  listening: boolean;
+  liveTranscript: string;
+  notice: string | null;
+  onSpeak: () => void;
+  compact?: boolean;
+}) {
+  return (
+    <div className={`flex flex-col items-center gap-2 ${compact ? "" : "rounded-lg border border-hairline p-3"}`}>
+      <button
+        onClick={onSpeak}
+        disabled={listening}
+        className={`flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold transition-colors ${
+          listening ? "bg-red-100 text-red-700" : "bg-surface-2 text-ink hover:bg-hairline"
+        }`}
+      >
+        {listening ? (
+          <>
+            <span className="h-2 w-2 animate-pulse rounded-full bg-red-500" /> Listening…
+          </>
+        ) : (
+          <>🎤 Answer by voice</>
+        )}
+      </button>
+      {!compact && <p className="text-center text-xs text-ink-muted">{prompt}</p>}
+      {listening && liveTranscript && <p className="text-center text-xs italic text-ink-muted">{liveTranscript}</p>}
+      {notice && <p className="text-center text-xs text-amber-700">{notice}</p>}
+    </div>
+  );
+}
+
 /* ─────────────────────────── Teach step ─────────────────────────── */
 
 function TeachStep({
@@ -271,6 +508,282 @@ function TeachStep({
   category,
   fundamentals,
   exampleApproach,
+  teaching,
+  teachStepIndex,
+  isSpeaking,
+  mode,
+  onModeChange,
+  profile,
+  editingProfile,
+  onEditProfile,
+  onProfileSaved,
+  onCancelEditProfile,
+  isFetchingNews,
+  onNext,
+  onBack,
+  onRepeat,
+  onFlag,
+  voiceControl,
+  handoffVoiceControl,
+  onStart,
+  onChangeCategory,
+}: {
+  profession: CaseProfession;
+  category: string;
+  fundamentals: Fundamental[];
+  exampleApproach: string;
+  teaching: TeachingContent | null;
+  teachStepIndex: number;
+  isSpeaking: boolean;
+  mode: Mode;
+  onModeChange: (m: Mode) => void;
+  profile: TutorProfile;
+  editingProfile: boolean;
+  onEditProfile: () => void;
+  onProfileSaved: (p: TutorProfile) => void;
+  onCancelEditProfile: () => void;
+  isFetchingNews: boolean;
+  onNext: () => void;
+  onBack: () => void;
+  onRepeat: () => void;
+  onFlag: (report: { conceptId: string | null; conceptTitle: string | null; reason: "inaccurate" | "shallow" | "other"; note: string }) => void;
+  voiceControl: ReactNode;
+  handoffVoiceControl: ReactNode;
+  onStart: () => void;
+  onChangeCategory: () => void;
+}) {
+  const header = (
+    <div className="flex items-center justify-between">
+      <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
+        {PROFESSION_LABELS[profession].label} · {category}
+      </p>
+      <button onClick={onChangeCategory} className="text-xs font-semibold text-brass-text hover:underline">
+        ← Change category
+      </button>
+    </div>
+  );
+
+  const sessionTypePicker = (
+    <SessionTypePicker
+      profession={profession}
+      mode={mode}
+      onModeChange={onModeChange}
+      profile={profile}
+      editingProfile={editingProfile}
+      onEditProfile={onEditProfile}
+      onProfileSaved={onProfileSaved}
+      onCancelEditProfile={onCancelEditProfile}
+      isFetchingNews={isFetchingNews}
+      onStart={onStart}
+    />
+  );
+
+  // No generated deep-dive content for this category yet — fall back to the
+  // plain fundamentals checklist (silent, tap-only), same as before.
+  if (!teaching) {
+    return (
+      <div className="flex flex-col gap-5">
+        {header}
+        <div className="rounded-lg bg-surface-2 p-5">
+          <p className="text-xs font-semibold uppercase tracking-wide text-brass-text">
+            Core knowledge for {category}
+          </p>
+          <p className="mt-1 text-xs text-ink-muted">
+            Deep-dive teaching content for this category hasn&rsquo;t been generated yet — here&rsquo;s the
+            fundamentals checklist in the meantime.
+          </p>
+          {fundamentals.length > 0 ? (
+            <ul className="mt-3 flex flex-col gap-1.5">
+              {fundamentals.map((f) => (
+                <li key={f.id} className="text-sm text-ink">
+                  • {f.label}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-2 text-sm text-ink-muted">
+              No fundamentals catalogued yet for this category — you&rsquo;ll still be graded against
+              the challenge&rsquo;s own key issues.
+            </p>
+          )}
+          {exampleApproach && (
+            <p className="mt-4 text-sm leading-relaxed text-ink-muted">
+              <span className="font-semibold text-ink">What a strong answer looks like: </span>
+              {exampleApproach}
+            </p>
+          )}
+        </div>
+        {sessionTypePicker}
+      </div>
+    );
+  }
+
+  const totalSteps = teaching.concepts.length + 2; // overview + concepts + connections/handoff
+  const stepNumber = teachStepIndex + 2; // 1-indexed, overview = 1
+  const isOverview = teachStepIndex === -1;
+  const isConnections = teachStepIndex === teaching.concepts.length;
+  const concept = !isOverview && !isConnections ? teaching.concepts[teachStepIndex] : null;
+
+  return (
+    <div className="flex flex-col gap-5">
+      {header}
+
+      <div className="rounded-lg bg-surface-2 p-5">
+        <div className="flex items-center justify-between">
+          <p className="text-xs font-semibold uppercase tracking-wide text-brass-text">
+            {isOverview ? "Overview" : isConnections ? "Putting it together" : concept!.title}
+          </p>
+          <span className="text-[10px] font-semibold text-ink-muted">
+            {stepNumber} / {totalSteps}
+          </span>
+        </div>
+
+        {isOverview && <p className="mt-2 text-sm leading-relaxed text-ink">{teaching.overview}</p>}
+
+        {concept && (
+          <div className="mt-2 flex flex-col gap-2">
+            <p className="text-sm leading-relaxed text-ink">{concept.explanation}</p>
+            <p className="text-sm leading-relaxed text-ink">
+              <span className="font-semibold">Why it matters: </span>
+              {concept.whyItMatters}
+            </p>
+            <p className="text-sm leading-relaxed text-ink-muted">
+              <span className="font-semibold text-ink">Example: </span>
+              {concept.example}
+            </p>
+          </div>
+        )}
+
+        {isConnections && <p className="mt-2 text-sm leading-relaxed text-ink">{teaching.connections}</p>}
+
+        {isSpeaking && <p className="mt-3 text-xs text-brass-text">🔊 Speaking…</p>}
+      </div>
+
+      {concept && <FlagConceptControl conceptId={concept.id} conceptTitle={concept.title} onFlag={onFlag} />}
+
+      {!isConnections && (
+        <div className="flex flex-col items-center gap-3">
+          <div className="flex flex-wrap justify-center gap-2">
+            <button
+              onClick={onBack}
+              disabled={isOverview}
+              className="rounded-lg bg-surface-2 px-4 py-2 text-xs font-semibold text-ink transition-colors hover:bg-hairline disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              ← Back
+            </button>
+            <button
+              onClick={onRepeat}
+              className="rounded-lg bg-surface-2 px-4 py-2 text-xs font-semibold text-ink transition-colors hover:bg-hairline"
+            >
+              🔁 Repeat
+            </button>
+            <button
+              onClick={onNext}
+              className="rounded-lg bg-navy px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-navy-800"
+            >
+              Next →
+            </button>
+          </div>
+          {voiceControl}
+        </div>
+      )}
+
+      {isConnections && (
+        <div className="flex flex-col items-center gap-4">
+          <div className="flex flex-wrap justify-center gap-2">
+            <button
+              onClick={onBack}
+              className="rounded-lg bg-surface-2 px-4 py-2 text-xs font-semibold text-ink transition-colors hover:bg-hairline"
+            >
+              ← Back
+            </button>
+            <button
+              onClick={onRepeat}
+              className="rounded-lg bg-surface-2 px-4 py-2 text-xs font-semibold text-ink transition-colors hover:bg-hairline"
+            >
+              🔁 Repeat
+            </button>
+          </div>
+          {sessionTypePicker}
+          {handoffVoiceControl}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function FlagConceptControl({
+  conceptId,
+  conceptTitle,
+  onFlag,
+}: {
+  conceptId: string;
+  conceptTitle: string;
+  onFlag: (report: { conceptId: string | null; conceptTitle: string | null; reason: "inaccurate" | "shallow" | "other"; note: string }) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [reason, setReason] = useState<"inaccurate" | "shallow" | "other">("inaccurate");
+  const [note, setNote] = useState("");
+  const [sent, setSent] = useState(false);
+
+  if (sent) {
+    return <p className="text-center text-xs text-ink-muted">Thanks — flagged for review.</p>;
+  }
+
+  if (!open) {
+    return (
+      <button
+        onClick={() => setOpen(true)}
+        className="self-center text-xs font-semibold text-ink-muted hover:text-brass-text hover:underline"
+      >
+        🚩 This seems wrong or shallow
+      </button>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-2 rounded-lg border border-hairline p-3">
+      <div className="flex flex-wrap gap-2">
+        {(["inaccurate", "shallow", "other"] as const).map((r) => (
+          <button
+            key={r}
+            onClick={() => setReason(r)}
+            className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
+              reason === r ? "bg-brass text-navy" : "bg-surface-2 text-ink-muted hover:bg-hairline"
+            }`}
+          >
+            {r}
+          </button>
+        ))}
+      </div>
+      <input
+        value={note}
+        onChange={(e) => setNote(e.target.value)}
+        placeholder="Optional note — what's wrong?"
+        className="rounded-lg border border-hairline px-3 py-1.5 text-xs text-ink placeholder:text-ink-muted focus:border-brass focus:outline-none"
+      />
+      <div className="flex justify-end gap-2">
+        <button onClick={() => setOpen(false)} className="text-xs font-semibold text-ink-muted hover:underline">
+          Cancel
+        </button>
+        <button
+          onClick={() => {
+            onFlag({ conceptId, conceptTitle, reason, note });
+            setSent(true);
+          }}
+          className="rounded-lg bg-navy px-3 py-1.5 text-xs font-semibold text-white hover:bg-navy-800"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────── Session type picker (mode + profile) ─────────────────────────── */
+
+function SessionTypePicker({
+  profession,
   mode,
   onModeChange,
   profile,
@@ -280,12 +793,8 @@ function TeachStep({
   onCancelEditProfile,
   isFetchingNews,
   onStart,
-  onChangeCategory,
 }: {
   profession: CaseProfession;
-  category: string;
-  fundamentals: Fundamental[];
-  exampleApproach: string;
   mode: Mode;
   onModeChange: (m: Mode) => void;
   profile: TutorProfile;
@@ -295,45 +804,9 @@ function TeachStep({
   onCancelEditProfile: () => void;
   isFetchingNews: boolean;
   onStart: () => void;
-  onChangeCategory: () => void;
 }) {
   return (
-    <div className="flex flex-col gap-5">
-      <div className="flex items-center justify-between">
-        <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
-          {PROFESSION_LABELS[profession].label} · {category}
-        </p>
-        <button onClick={onChangeCategory} className="text-xs font-semibold text-brass-text hover:underline">
-          ← Change category
-        </button>
-      </div>
-
-      <div className="rounded-lg bg-surface-2 p-5">
-        <p className="text-xs font-semibold uppercase tracking-wide text-brass-text">
-          Core knowledge for {category}
-        </p>
-        {fundamentals.length > 0 ? (
-          <ul className="mt-3 flex flex-col gap-1.5">
-            {fundamentals.map((f) => (
-              <li key={f.id} className="text-sm text-ink">
-                • {f.label}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="mt-2 text-sm text-ink-muted">
-            No fundamentals catalogued yet for this category — you&rsquo;ll still be graded against
-            the challenge&rsquo;s own key issues.
-          </p>
-        )}
-        {exampleApproach && (
-          <p className="mt-4 text-sm leading-relaxed text-ink-muted">
-            <span className="font-semibold text-ink">What a strong answer looks like: </span>
-            {exampleApproach}
-          </p>
-        )}
-      </div>
-
+    <div className="flex w-full flex-col gap-5">
       <div>
         <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Session type</p>
         <div className="mt-2 grid gap-2 sm:grid-cols-2">

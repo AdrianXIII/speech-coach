@@ -4,6 +4,7 @@ import { generateContent, hasGeminiKey } from "@/lib/gemini";
 import { pickRandom } from "@/lib/random";
 import type { TutorProfile } from "@/lib/tutorProfile";
 import type { TutorNewsItem } from "@/lib/tutorNews";
+import { getTeachingContent, type TeachingContent } from "@/lib/tutorTeachingContent";
 
 /**
  * One generic tutor engine, parameterized by profession/category — no
@@ -18,14 +19,20 @@ export interface TeachingBrief {
   fundamentals: Fundamental[];
   /** One example of what a strong answer looks like in this domain, for orientation before the challenge. */
   exampleApproach: string;
+  /** Rich, step-by-step deep-dive content, when this category has it (see lib/tutorTeachingContent.ts). Null falls back to the plain fundamentals list. */
+  teaching: TeachingContent | null;
 }
 
-/** Zero API calls — pulled directly from the domain's existing Fundamentals + a sample case's model approach. */
+/** Zero API calls — pulled directly from the domain's existing static content, never regenerated per session. */
 export function buildTeachingBrief(profession: CaseProfession, category: string): TeachingBrief {
   const fundamentals = getFundamentals(profession, category);
   const cases = casesForCategory(profession, category);
   const sample = cases.length > 0 ? pickRandom(cases) : null;
-  return { fundamentals, exampleApproach: sample?.modelApproach ?? "" };
+  return {
+    fundamentals,
+    exampleApproach: sample?.modelApproach ?? "",
+    teaching: getTeachingContent(profession, category),
+  };
 }
 
 /** Zero API calls — draws from the same case pool Case Studies uses. */

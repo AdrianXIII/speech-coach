@@ -41,12 +41,19 @@ export interface UseSpeechRecognitionResult {
  * server round trip, since it's the browser's own speech engine (Chrome
  * and Edge; not supported in Firefox or Safari, so callers must check
  * `isSupported` and show a fallback message).
+ *
+ * `silenceTimeoutMs` is optional and opt-in: when set, recognition stops
+ * itself automatically once the user goes quiet for that long, so a caller
+ * doesn't need a second tap to say "I'm done talking" (used for short
+ * voice answers like "Business" or "next"). Omitting it preserves the
+ * exact original manual-stop-only behavior for existing callers.
  */
-export function useSpeechRecognition(lang = "en-US"): UseSpeechRecognitionResult {
+export function useSpeechRecognition(lang = "en-US", silenceTimeoutMs?: number): UseSpeechRecognitionResult {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const recognitionRef = useRef<MinimalSpeechRecognition | null>(null);
   const finalTranscriptRef = useRef("");
+  const silenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const getCtor = useCallback((): SpeechRecognitionCtor | undefined => {
     if (typeof window === "undefined") return undefined;
@@ -86,6 +93,13 @@ export function useSpeechRecognition(lang = "en-US"): UseSpeechRecognitionResult
         }
       }
       setTranscript((finalTranscriptRef.current + interim).trim());
+
+      if (silenceTimeoutMs) {
+        if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+        silenceTimerRef.current = setTimeout(() => {
+          recognitionRef.current?.stop();
+        }, silenceTimeoutMs);
+      }
     };
 
     recognition.onerror = () => {
@@ -105,9 +119,13 @@ export function useSpeechRecognition(lang = "en-US"): UseSpeechRecognitionResult
     recognition.start();
     recognitionRef.current = recognition;
     setIsListening(true);
-  }, [getCtor, lang]);
+  }, [getCtor, lang, silenceTimeoutMs]);
 
   const stop = useCallback(() => {
+    if (silenceTimerRef.current) {
+      clearTimeout(silenceTimerRef.current);
+      silenceTimerRef.current = null;
+    }
     recognitionRef.current?.stop();
   }, []);
 
