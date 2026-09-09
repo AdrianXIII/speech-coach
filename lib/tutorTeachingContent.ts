@@ -1038,6 +1038,298 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     generatedAt: "2026-09-09",
   },
 
+  "business/Manufacturing & Production": {
+    profession: "business",
+    category: "Manufacturing & Production",
+    overview:
+      "Manufacturing leadership is about the discipline of catching problems early — through process control and root-cause thinking — while balancing efficiency gains (automation, lean methods) against the resilience and safety margins that keep a single failure from becoming a catastrophe.",
+    concepts: [
+      {
+        id: "mfg-root-cause-analysis",
+        title: "Root cause analysis (5 Whys, fishbone, SPC)",
+        explanation:
+          "Structured root-cause methods — repeated 'why' questioning, fishbone diagrams categorizing potential causes, and statistical process control (SPC) monitoring for unusual variation — distinguish a systemic cause from a one-off event, which determines whether a fix actually prevents recurrence.",
+        whyItMatters:
+          "A quality failure blamed on 'operator error' without deeper analysis often recurs, because the real cause (a process or design flaw that makes the error easy to make) was never addressed — root cause discipline is what actually stops repeat failures.",
+        example:
+          "SPC control charts flag when a process starts drifting outside normal variation before it produces visibly defective output — catching a tooling wear problem statistically, days before it would otherwise show up as a batch of bad parts.",
+      },
+      {
+        id: "mfg-spc-tolerance-drift",
+        title: "Statistical process control and tolerance drift",
+        explanation:
+          "Manufacturing processes naturally drift over time (tool wear, material variation, temperature changes) — SPC uses control charts to distinguish normal random variation from a real, systematic shift that risks producing out-of-tolerance parts, triggering intervention before defects actually occur.",
+        whyItMatters:
+          "Waiting to catch problems through final inspection alone means defective units have already been produced (and often shipped) — SPC catches drift while the process is still within tolerance, preventing the defect rather than just detecting it after the fact.",
+        example:
+          "A machining process that starts trending toward the upper tolerance limit over several shifts (visible on a control chart) can be recalibrated proactively, before any individual part actually falls outside spec.",
+      },
+      {
+        id: "mfg-lean-continuous-improvement",
+        title: "Lean / continuous improvement (Kaizen)",
+        explanation:
+          "Lean manufacturing focuses on eliminating waste (excess motion, waiting, overproduction, defects) through continuous, incremental improvement (Kaizen) driven substantially by frontline workers who know the process best — not just top-down engineering redesigns.",
+        whyItMatters:
+          "Lean programs imposed purely top-down, without genuine frontline participation, tend to produce short-lived improvements — sustained gains generally require the people actually doing the work to be genuinely engaged in identifying and fixing waste, not just told to follow a new procedure.",
+        example:
+          "Toyota's production system, the origin of much of lean manufacturing practice, is built around frontline workers having explicit authority to stop the line when they spot a problem (andon cord) — a structural, not just cultural, commitment to frontline-driven improvement.",
+      },
+      {
+        id: "mfg-preventive-maintenance",
+        title: "Preventive/predictive maintenance",
+        explanation:
+          "Preventive maintenance services equipment on a schedule before failure; predictive maintenance uses sensor data and analytics to service equipment based on actual condition, catching developing failures earlier and avoiding unnecessary scheduled maintenance on equipment that doesn't yet need it.",
+        whyItMatters:
+          "Unplanned downtime from equipment failure is typically far more expensive than the maintenance that would have prevented it — production stoppage, rush repairs, and missed delivery commitments usually dwarf the cost of proactive maintenance.",
+        example:
+          "Vibration and temperature sensors on critical rotating equipment can detect a developing bearing failure weeks before it would cause an unplanned breakdown, allowing a planned repair during scheduled downtime instead of an emergency stoppage.",
+      },
+      {
+        id: "mfg-capacity-planning-uncertainty",
+        title: "Capacity planning under demand uncertainty",
+        explanation:
+          "Committing to fixed production capacity based on a single demand forecast is risky given real uncertainty — phased capacity investment, flexible/modular equipment, or contract manufacturing for overflow demand all reduce the cost of guessing wrong compared to a single large, irreversible commitment.",
+        whyItMatters:
+          "Overbuilding wastes capital that can't easily be recovered; underbuilding means losing sales (and possibly customers permanently) to competitors who can meet demand — the cost of being wrong in either direction can be severe, which is why flexibility has real value.",
+        example:
+          "A manufacturer entering a new product category might use contract manufacturers for initial production runs, deferring the capital commitment of building dedicated capacity until demand is confirmed at scale.",
+      },
+      {
+        id: "mfg-jit-vs-buffer-resilience",
+        title: "Just-in-time vs. buffer inventory resilience",
+        explanation:
+          "Just-in-time production minimizes inventory carrying costs by timing material delivery closely to need, but leaves little margin for supply disruption. Holding buffer inventory for critical, hard-to-substitute inputs costs more but provides resilience — the right balance should be targeted by how critical and disruption-prone each specific input is, not applied uniformly.",
+        whyItMatters:
+          "Blanket JIT policies applied to every input, regardless of criticality, leave a manufacturer exposed on exactly the inputs where a shortage would be most damaging — the sophisticated approach differentiates buffer policy by input criticality rather than treating all inventory the same way.",
+        example:
+          "Manufacturers that faced production stoppages from single-source semiconductor shortages have since built deliberately larger buffers specifically for critical, hard-to-substitute chips, while keeping leaner JIT policies for easily sourced, lower-risk components.",
+      },
+    ],
+    connections:
+      "Root cause analysis and statistical process control are the diagnostic backbone for catching and understanding problems — lean/Kaizen applies that same discipline continuously to eliminate waste, and preventive/predictive maintenance applies it specifically to equipment reliability. Capacity planning and JIT-vs-buffer decisions are both about managing uncertainty and risk in how much flexibility and resilience to build in, which is the recurring tension underneath most manufacturing strategy decisions.",
+    source: "claude",
+    generatedAt: "2026-09-09",
+  },
+
+  "business/Product Management & Innovation": {
+    profession: "business",
+    category: "Product Management & Innovation",
+    overview:
+      "Product management is the discipline of deciding what to build, for whom, and why — using real evidence (usage data, discovery interviews, experiments) rather than the loudest voice in the room, and holding that discipline even under pressure from stakeholders who want their priority built next.",
+    concepts: [
+      {
+        id: "product-jtbd-discovery",
+        title: "Jobs-to-be-done and customer discovery",
+        explanation:
+          "The jobs-to-be-done framework reframes product decisions around the underlying task or problem a customer is trying to accomplish, rather than the specific feature they asked for — customer discovery (interviews, observation) is how you actually validate that a real, painful problem exists before committing engineering investment to solve it.",
+        whyItMatters:
+          "Building a well-executed feature that solves a problem customers don't actually have is a common, expensive failure mode — discovery validates the problem is real and painful enough that customers will change behavior (or pay) for a solution, before investing in building one.",
+        example:
+          "The famous example is that customers don't actually want a quarter-inch drill — they want a quarter-inch hole. Understanding the underlying job (making a hole) rather than the literal requested product (a drill) opens up a much wider space of possible solutions.",
+      },
+      {
+        id: "product-prioritization-frameworks",
+        title: "Prioritization frameworks (RICE and similar)",
+        explanation:
+          "Structured prioritization frameworks (like RICE: Reach, Impact, Confidence, Effort) score competing roadmap items on consistent criteria, providing a defensible, repeatable basis for sequencing work instead of prioritizing by whoever asked most recently, most loudly, or most senior.",
+        whyItMatters:
+          "Without a structured framework, roadmaps tend to be captured by whichever stakeholder has the most organizational power or persistence, not necessarily the highest-value work — a consistent scoring method makes tradeoffs visible and defensible.",
+        example:
+          "A sales-requested custom feature for one large account might score well on Impact but poorly on Reach (benefits only one customer) — a RICE-style framework makes that tradeoff explicit rather than the decision being made purely on sales pressure.",
+      },
+      {
+        id: "product-mvp-expectation-setting",
+        title: "MVP expectation-setting and feedback triage",
+        explanation:
+          "A minimum viable product is deliberately stripped down to test a core hypothesis with real users — which means managing expectations carefully (this isn't the finished vision) and triaging the resulting feedback to separate genuine signal about the core hypothesis from noise about missing polish that was never the point of the MVP.",
+        whyItMatters:
+          "Early users often judge an MVP as if it were a finished product, generating a flood of feedback about missing features that can drown out the specific signal the MVP was actually designed to test — knowing what question you're trying to answer keeps the feedback useful.",
+        example:
+          "An early MVP that manually fulfills a service behind the scenes (a 'concierge MVP') can validate real customer demand and willingness to pay long before any of the eventual automated product actually exists — the point is testing demand, not showcasing final execution.",
+      },
+      {
+        id: "product-statistical-rigor",
+        title: "Statistical rigor in experimentation",
+        explanation:
+          "A/B tests and other experiments require adequate sample size and statistical significance before drawing conclusions — a result that looks directionally positive but isn't statistically significant is not yet evidence, regardless of how much stakeholders want it to be.",
+        whyItMatters:
+          "Under pressure to ship a change stakeholders are excited about, there's a real temptation to call a marginal, non-significant result a 'win' (sometimes called HiPPO bias — highest-paid-person's-opinion overriding data) — holding the statistical line protects against shipping changes that don't actually work.",
+        example:
+          "A change that shows a 2% lift in a test with wide confidence intervals and a small sample size may well be pure noise — shipping it based on that alone risks rolling out changes with no real effect, or worse, a real negative effect masked by random variation.",
+      },
+      {
+        id: "product-sustainable-moat",
+        title: "Durable competitive advantage vs. easily cloned features",
+        explanation:
+          "Some product advantages are durable — proprietary data that improves with scale, workflow lock-in, genuine network effects — while others (most surface-level features) can be copied by a competitor within a product cycle. Good product strategy invests disproportionately in the former.",
+        whyItMatters:
+          "A roadmap full of easily-copied features can win a temporary edge but rarely a lasting one — competitors will match visible features quickly, so sustainable advantage usually has to come from something structurally harder to replicate.",
+        example:
+          "A product that accumulates unique usage data over time (making its recommendations or matching progressively better) creates a moat that widens with scale — a competitor launching an identical feature today starts with none of that accumulated advantage.",
+      },
+      {
+        id: "product-pricing-monetization",
+        title: "Pricing and packaging aligned to value",
+        explanation:
+          "Pricing and packaging decisions should align the monetization model with how customers actually derive and perceive value — a mismatch (like charging per-seat when value scales with usage, not headcount) can leave money on the table or actively frustrate customers.",
+        whyItMatters:
+          "A pricing model misaligned with actual value delivery creates friction that shows up as churn, negotiation fights, or under-monetization — getting this structurally right matters more than optimizing the specific price point within a poorly chosen model.",
+        example:
+          "Many software products shifted from flat per-seat pricing toward usage-based or outcome-based pricing specifically because seat count stopped correlating well with the value customers were actually getting, especially as more work became automated rather than performed by individual named users.",
+      },
+    ],
+    connections:
+      "Jobs-to-be-done and customer discovery validate that a real problem exists before building anything; prioritization frameworks decide what to build first among many validated (or plausible) opportunities. MVP expectation-setting and statistical rigor are both about interpreting evidence honestly once something ships — resisting the pull to over-read early signal — and sustainable moat and pricing/monetization determine whether what gets built and shipped actually translates into durable, well-captured business value.",
+    source: "claude",
+    generatedAt: "2026-09-09",
+  },
+
+  "business/Customer Experience": {
+    profession: "business",
+    category: "Customer Experience",
+    overview:
+      "Customer experience is about systematically finding where a customer's journey breaks down — not just measuring overall satisfaction, but diagnosing specific friction points — and making the investment case for fixing them using metrics that connect experience quality to real business outcomes like retention and lifetime value.",
+    concepts: [
+      {
+        id: "cx-journey-mapping",
+        title: "Customer journey mapping",
+        explanation:
+          "Journey mapping documents every touchpoint a customer has with a company across channels and over time, surfacing systemic, cross-channel breakdowns that wouldn't be visible looking at any single department's metrics in isolation.",
+        whyItMatters:
+          "Individual departments often each look fine on their own metrics while the overall customer experience is broken at the handoffs between them — journey mapping is specifically designed to catch these cross-functional gaps.",
+        example:
+          "A customer might have a great in-app experience and a great support-call experience individually, but a terrible overall journey if the handoff between the two (e.g., support agents lacking visibility into in-app activity) forces the customer to repeat context — a gap invisible to either team's own metrics.",
+      },
+      {
+        id: "cx-nps-driver-analysis",
+        title: "NPS/CSAT driver analysis, not just the score",
+        explanation:
+          "Net Promoter Score and customer satisfaction scores are useful trend indicators, but the score alone doesn't explain why it moved — proper analysis segments the data by cohort and digs into the underlying drivers rather than assuming any single initiative (like a recent feature launch) explains an aggregate shift.",
+        whyItMatters:
+          "Attributing an NPS change to the most recent visible initiative, without segmenting the actual drivers, risks both wrongly crediting something that didn't help and missing the real cause — which could be an unrelated support process change or a competitor's move.",
+        example:
+          "An overall NPS increase might mask a declining score among a company's highest-value enterprise segment, offset by gains among smaller, lower-value customers — a pattern invisible without segmented analysis, but critical to the business.",
+      },
+      {
+        id: "cx-service-recovery-paradox",
+        title: "The service recovery paradox",
+        explanation:
+          "Research on service recovery suggests that a customer whose problem is resolved exceptionally well after a failure can end up more loyal than one who never experienced a failure at all — genuine, effective remediation converts a visible failure into a demonstration of the company's real values.",
+        whyItMatters:
+          "This reframes a service failure as a genuine opportunity, not just damage control — but only if the recovery is fast, genuine, and goes beyond the bare minimum; a slow or grudging fix doesn't produce the same effect and can compound the original damage.",
+        example:
+          "A customer whose flight was cancelled but who received proactive rebooking, a hotel voucher, and a sincere apology from an empowered agent often rates the airline more favorably afterward than a customer who had an uneventful, unremarkable flight.",
+      },
+      {
+        id: "cx-clv-segmentation",
+        title: "CLV segmentation for triaging effort",
+        explanation:
+          "Customer lifetime value segmentation directs support, retention, and personalization effort toward the accounts that matter most to long-term revenue, rather than treating every customer interaction with identical priority regardless of their actual value to the business.",
+        whyItMatters:
+          "Uniform service levels across all customers, regardless of value, often means under-serving high-value accounts (who could churn at real cost) while over-investing in low-value ones — CLV segmentation makes that resource allocation deliberate rather than accidental.",
+        example:
+          "Many companies route their highest-value customers to dedicated, higher-touch support tiers with faster response times, while lower-value customers rely more heavily on self-service — a deliberate allocation of finite support capacity based on customer value.",
+      },
+      {
+        id: "cx-kano-model",
+        title: "The Kano model: must-haves vs. delighters",
+        explanation:
+          "The Kano model classifies features into must-haves (their absence causes dissatisfaction, but their presence isn't noticed as a bonus), performance features (more is linearly better), and delighters (unexpected extras that create disproportionate satisfaction) — helping distinguish what actually deserves investment.",
+        whyItMatters:
+          "A feedback-driven backlog can drift toward accumulating nice-to-have 'delighter' requests while genuine must-have gaps (invisible until they're missing) go unaddressed — the Kano model helps triage which feedback deserves priority.",
+        example:
+          "Basic account security (like not losing customer data) is a must-have — its presence is invisible and expected, but its absence is catastrophic; a surprising personalized touch (like a handwritten thank-you note) is a delighter — pleasant but not expected, and not damaging if absent.",
+      },
+      {
+        id: "cx-effort-score",
+        title: "Customer Effort Score",
+        explanation:
+          "Customer Effort Score measures how much effort a customer had to expend to get their issue resolved or task completed — a metric that often predicts loyalty and churn better than satisfaction alone, since low-effort experiences (even unremarkable ones) tend to retain customers better than high-satisfaction-but-high-effort ones.",
+        whyItMatters:
+          "A company can score well on satisfaction (customers are happy with the eventual outcome) while still bleeding customers due to high effort required to reach that outcome — effort captures a distinct, often more predictive dimension of the experience.",
+        example:
+          "A support interaction that eventually resolves a customer's issue but requires three transfers and re-explaining the problem each time will likely score well on final resolution satisfaction while scoring poorly on effort — and effort is often the better predictor of whether that customer stays.",
+      },
+    ],
+    connections:
+      "Journey mapping is the diagnostic map for where experience breaks down across the whole customer relationship — NPS/CSAT driver analysis and Customer Effort Score are the specific metrics for measuring how well or badly it's working and why. The Kano model helps decide what's actually worth fixing or adding, CLV segmentation determines how much effort to spend fixing it for which customers, and the service recovery paradox is the reminder that a well-handled failure, found through this whole system, can be turned into a genuine loyalty-building moment rather than pure damage control.",
+    source: "claude",
+    generatedAt: "2026-09-09",
+  },
+
+  "business/HR & Talent Management": {
+    profession: "business",
+    category: "HR & Talent Management",
+    overview:
+      "Talent management is about winning the competition for people — through compensation, growth opportunity, and fair process — while building the pipeline and structural safeguards that keep the organization from being derailed by a single departure or a single biased decision.",
+    concepts: [
+      {
+        id: "talent-comp-benchmarking",
+        title: "Compensation benchmarking",
+        explanation:
+          "Compensation benchmarking compares pay for a given role against the external market (using salary survey data) to ensure offers and existing pay are competitive — critical both for winning new hires and for retaining existing employees whose pay may fall behind a rising market over time (internal pay compression).",
+        whyItMatters:
+          "Without regular benchmarking, a company can drift out of market unnoticed — existing employees discover they're underpaid relative to new-hire offers or the external market, which is a common and preventable driver of otherwise-avoidable attrition.",
+        example:
+          "In tight labor markets for specific skills, new-hire salaries can rise faster than existing employees' pay, creating 'pay compression' where a newly hired employee earns close to (or more than) a tenured peer in the same role — a well-documented driver of resentment and turnover if unaddressed.",
+      },
+      {
+        id: "talent-succession-planning",
+        title: "Succession planning and leadership pipelines",
+        explanation:
+          "Succession planning identifies and develops internal candidates for key leadership roles before a vacancy occurs — often using a '9-box' grid (performance vs. potential) to assess and develop high-potential employees systematically, rather than defaulting to an external search whenever a leadership role opens.",
+        whyItMatters:
+          "Organizations without a real succession pipeline are forced into reactive, often rushed external searches when a key leader departs unexpectedly — with real costs in lost institutional knowledge, onboarding time, and cultural fit risk compared to a prepared internal candidate.",
+        example:
+          "Companies known for strong leadership benches (able to promote a credible internal CEO successor with little disruption) generally invested years in advance identifying and developing multiple internal candidates, rather than starting the succession process only once a vacancy was imminent.",
+      },
+      {
+        id: "talent-pay-equity-audit",
+        title: "Pay equity audits",
+        explanation:
+          "A pay equity audit statistically analyzes whether pay differences correlate with protected characteristics (gender, race) after controlling for legitimate factors (role, experience, performance) — and traces any unexplained gaps back to root causes across hiring, promotion, and negotiation processes, not just current pay.",
+        whyItMatters:
+          "Pay gaps often originate upstream of the current pay decision — in who gets hired at what starting salary, who gets promoted, or who negotiates more aggressively — so remediation that only adjusts current pay without fixing the upstream process tends to see the gap re-emerge over time.",
+        example:
+          "A company that finds an unexplained gender pay gap concentrated among recent hires (not tenured employees) likely has a starting-salary or negotiation-process issue, distinct from a company where the gap grows with tenure (suggesting a promotion or raise-allocation issue) — same headline finding, different root cause and fix.",
+      },
+      {
+        id: "talent-onboarding-newhire",
+        title: "Structured onboarding (e.g., 30-60-90 plans)",
+        explanation:
+          "A structured onboarding plan — often organized around 30/60/90-day milestones — gives new hires clear early expectations and support, which research consistently links to lower early attrition and faster time-to-productivity compared to an unstructured, sink-or-swim start.",
+        whyItMatters:
+          "Early attrition (within the first 90 days) is disproportionately expensive relative to the value gained, since the company has invested full recruiting cost with minimal productive output — good onboarding is one of the highest-leverage, lowest-cost retention investments available.",
+        example:
+          "Companies that pair every new hire with a dedicated onboarding buddy and clear early milestones report meaningfully lower 90-day attrition than teams that rely on ad hoc, manager-dependent onboarding with no structured plan.",
+      },
+      {
+        id: "talent-inclusive-hiring-bias",
+        title: "Structured, bias-resistant hiring",
+        explanation:
+          "Unstructured interviews (different questions for different candidates, purely gut-feel evaluation) are more vulnerable to bias and less predictive of job performance than structured interviews with consistent questions and standardized scorecards applied to every candidate for a role.",
+        whyItMatters:
+          "Beyond fairness, structured hiring is also better hiring — it's more predictive of actual job performance than unstructured 'culture fit' interviews, which is why the business case and the fairness case for structure point the same direction.",
+        example:
+          "Companies that replaced free-form 'tell me about yourself' interviews with structured, scorecard-based interviews using the same core questions for every candidate for a role have reported both improved hiring outcomes and reduced adverse-impact risk in hiring data.",
+      },
+      {
+        id: "talent-evp-design",
+        title: "Employer value proposition (EVP)",
+        explanation:
+          "The employer value proposition is everything an employee gets in exchange for their work beyond base pay — growth opportunity, flexibility, mission, culture, benefits — which matters especially when a company can't simply out-pay competitors for talent.",
+        whyItMatters:
+          "In a competitive talent market where a company can't win on compensation alone, a genuinely differentiated EVP (not just marketing language, but real, delivered attributes) becomes the actual lever for attracting and retaining people who have other options.",
+        example:
+          "Companies that can't match Big Tech compensation levels often compete successfully on EVP elements like mission-driven work, faster growth/responsibility, or flexibility — genuinely delivered, not just stated in recruiting materials, which candidates can usually tell the difference between.",
+      },
+    ],
+    connections:
+      "Compensation benchmarking and pay equity audits both ensure pay is fair and competitive, from different angles (external market position and internal fairness). Structured, bias-resistant hiring and onboarding determine who joins and how well they're set up to succeed, succession planning builds the pipeline for future leadership needs, and EVP design is the overall story that ties compensation, growth, and culture together into why someone should choose — and stay at — this employer over the alternatives.",
+    source: "claude",
+    generatedAt: "2026-09-09",
+  },
+
   "law/Corporate & Compliance": {
     profession: "law",
     category: "Corporate & Compliance",
