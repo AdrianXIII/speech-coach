@@ -189,10 +189,18 @@ live-news-grounded question.
   ("TUTOR CONTENT FLAG") and a local per-device copy (`lib/tutorFlags.ts`)
   as fallbacks.
 
-English-only for now, with the same English-only fallback notice pattern as
-Elite Phrasing's profiles when a different language is selected. To
-bulk-generate teaching content for a new category, see
-`scripts/generate-tutor-content.mjs`.
+Content is English-only for now (same fallback notice pattern as Elite
+Phrasing's profiles), but Law and Politics content is also **country-bound**
+by design (`lib/legalJurisdiction.ts`, `lib/politicalSystem.ts`,
+`lib/countryContext.ts`) — legal doctrine and political institutions
+genuinely differ by country, not just by language. Selecting German,
+French, Spanish, or Swedish shows that country's own Law/Politics content
+(all fully hand-authored, not a translation of the US content); an honest
+on-screen notice appears instead of silently substituting US content if a
+country/category combination isn't populated yet. To bulk-generate content
+for a new category or country, see `scripts/generate-tutor-content.mjs`
+(country-specific legal/political content is flagged there as needing real
+review before being trusted, given the accuracy stakes).
 
 ## Running it locally
 
@@ -287,6 +295,7 @@ lib/
   caseStudyProgress.ts,
   tutorEngine.ts, tutorTeachingContent.ts, tutorTeachingContent.generated.ts,
   tutorNews.ts, tutorProfile.ts, tutorFlags.ts, legalJurisdiction.ts,
+  politicalSystem.ts, countryContext.ts,
   voiceMatch.ts, random.ts, gemini.ts, db.ts, audio.ts
 hooks/
   useMediaRecorder.ts, useSpeechRecognition.ts, useSpeechSynthesis.ts

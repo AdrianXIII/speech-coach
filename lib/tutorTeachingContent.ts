@@ -26,8 +26,12 @@ import type { CountryCode } from "@/lib/countryContext";
  *
  * COUNTRY (Law and Politics): unlike Business, legal and political content
  * are country-bound — see lib/legalJurisdiction.ts and lib/politicalSystem.ts
- * for why. Every existing Law/Politics entry defaults to the United States
- * (`jurisdiction: "us"`), keyed without a country suffix. A country-specific
+ * for why. As of 2026-09-10, every country the app's language picker maps to
+ * is hand-authored for both Law and Politics — US (default, no suffix),
+ * Germany, France, Spain, and Sweden (40 country-specific entries on top of
+ * the 28 US/base ones) — so selecting any supported language and opening
+ * Law or Politics shows real, country-specific content, not a US fallback.
+ * The US entries default without a country suffix. A country-specific
  * entry (e.g. German contract law, or German federal politics) gets keyed
  * `<profession>/<category>/<country>` and takes priority over the US
  * default when that country is requested — see contentKey() and
@@ -2679,6 +2683,376 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     generatedAt: "2026-09-10",
   },
 
+  "law/Contract Law/se": {
+    profession: "law",
+    category: "Contract Law",
+    jurisdiction: "se",
+    overview:
+      "Swedish contract law belongs to the distinct \"Nordic legal family\" — unlike Germany, France, or Spain, Sweden never adopted a single comprehensive civil code. Contract law instead lives in the 1915 Avtalslagen plus separate statutes for sales and consumer protection, and Swedish law traditionally treats a mere offer as binding in a way common law does not.",
+    concepts: [
+      {
+        id: "se-contract-no-codification",
+        title: "No comprehensive civil code — the Nordic legal family",
+        explanation:
+          "Sweden's contract law is governed primarily by the 1915 Avtalslagen (Contracts Act) plus separate specific statutes — the Köplagen (Sale of Goods Act) for commercial sales and the Konsumentköplagen (Consumer Sales Act) for consumer transactions — rather than one comprehensive code like Germany's BGB or France's Code civil, reflecting the Nordic legal family's own distinct historical development.",
+        whyItMatters:
+          "This is a genuinely distinct legal family, not simply \"civil law like Germany or France\" — Nordic law developed through closer Scandinavian cross-country legislative cooperation and separate topic-specific statutes rather than a single unifying code, so assuming BGB- or Code-civil-style codification applies to Sweden is a real analytical error.",
+        example:
+          "A Swedish sales dispute is analyzed primarily under the Köplagen (or Konsumentköplagen for consumer transactions), a dedicated sales-specific statute, rather than under a general contract-law chapter of one overarching civil code the way a comparable German or French dispute would be.",
+      },
+      {
+        id: "se-contract-loftesprincipen",
+        title: "Löftesprincipen — the binding-offer principle",
+        explanation:
+          "Under the Avtalslagen, an offer (anbud) is traditionally treated as binding on the offeror once made — the \"promise principle\" (löftesprincipen) — meaning the offeror generally cannot freely revoke it before the recipient responds, unless the offer explicitly reserves that right. This contrasts with common law, where an offer is generally freely revocable any time before acceptance.",
+        whyItMatters:
+          "This is a foundational, distinctly Scandinavian departure from common-law offer-and-acceptance mechanics — someone reasoning from common-law intuitions about offers being freely withdrawable until accepted would reach the wrong conclusion applying Swedish law.",
+        example:
+          "A Swedish party who makes an offer to sell goods at a stated price generally cannot simply withdraw that offer while the recipient is still considering it within a reasonable response period — the offer itself is treated as binding once communicated, absent an explicit reservation of the right to revoke.",
+      },
+      {
+        id: "se-contract-36-generalklausul",
+        title: "§ 36 Avtalslagen — the unreasonableness general clause",
+        explanation:
+          "Section 36 of the Avtalslagen, introduced in 1976, gives Swedish courts broad discretion to modify or set aside a contract term (or an entire contract) found to be unreasonable, considering the contract's content, the parties' circumstances, and conditions arising after formation — a single, broadly worded standard rather than detailed statutory blacklists of specific clause types.",
+        whyItMatters:
+          "Compared to Germany's detailed AGB-Recht blacklists or France's specific clauses abusives categories, § 36 gives Swedish courts considerably more open-ended interpretive discretion — the tradeoff is less predictability but more flexibility to address genuinely unfair situations a detailed statutory list might not anticipate.",
+        example:
+          "A Swedish court can strike down or modify a contract term under § 36 based on a holistic unreasonableness assessment even if that specific type of clause isn't listed in any statutory blacklist — a broader judicial tool than the more itemized German or French unfair-terms frameworks.",
+      },
+      {
+        id: "se-contract-koplagen-cisg-influence",
+        title: "Köplagen and CISG influence",
+        explanation:
+          "Sweden's 1990 Köplagen (Sale of Goods Act) was drafted with substantial influence from the UN Convention on Contracts for the International Sale of Goods (CISG), giving Swedish commercial sales law — remedies like rättelse (cure), hävning (avoidance/termination), prisavdrag (price reduction), and skadestånd (damages) — a structure that aligns more closely with international commercial law conventions than a purely domestically developed framework might.",
+        whyItMatters:
+          "This CISG alignment makes Swedish sales law relatively predictable and familiar to international commercial counterparties already used to CISG concepts, a deliberate legislative choice favoring international commercial compatibility over a purely home-grown framework.",
+        example:
+          "A buyer facing a seller's defective delivery under Swedish sales law has access to a remedy menu (cure first, then avoidance, price reduction, or damages) that will feel structurally familiar to anyone versed in CISG-based international sales contracts, reflecting the deliberate drafting alignment.",
+      },
+      {
+        id: "se-contract-standardavtal",
+        title: "Standardavtal — industry standard-form contracts",
+        explanation:
+          "Swedish commercial practice relies heavily on sector-specific standard-form contracts negotiated collectively by trade organizations — such as the NL/NLM forms for industrial equipment supply or AB/ABT forms for construction — rather than each company drafting fully bespoke contract terms for every deal.",
+        whyItMatters:
+          "Understanding a specific industry's standard-form terms is often more practically important in Swedish commercial contracting than analyzing general contract-law doctrine in the abstract — much of the real substantive risk allocation in Swedish commercial deals happens through which well-established standard form the parties adopt, and with what modifications.",
+        example:
+          "A Swedish construction contract will typically be built on the widely-used AB (Allmänna Bestämmelser) or ABT standard-form terms, with the parties' negotiation focused mainly on project-specific modifications to that established framework rather than drafting terms from scratch.",
+      },
+      {
+        id: "se-contract-god-sed",
+        title: "God sed and fair dealing without a single codified good-faith clause",
+        explanation:
+          "Unlike France's Article 1104 or Germany's Treu und Glauben, Sweden has no single, explicitly codified general good-faith duty running through all contract law — but similar fair-dealing principles (god sed, roughly \"good practice\" or fair dealing) are recognized through case law, specific statutory provisions, and the § 36 unreasonableness standard rather than one unifying textual source.",
+        whyItMatters:
+          "This is a structural difference worth flagging precisely — Swedish law achieves broadly similar fairness-policing outcomes to France or Germany's codified good-faith principles, but through a more distributed combination of case law and specific statutes rather than a single general clause that can simply be cited.",
+        example:
+          "A party acting in bad faith during contract negotiations or performance in Sweden faces consequences drawn from a combination of specific Avtalslagen provisions, § 36's unreasonableness standard, and general contract-law case law principles — not one single codified \"good faith\" article a lawyer could cite the way a French or German lawyer would cite Article 1104 or § 242 BGB.",
+      },
+    ],
+    connections:
+      "The absence of a comprehensive civil code (Sweden's Nordic legal family membership) is the foundational structural fact shaping everything else — contract law lives across the Avtalslagen, Köplagen, and Konsumentköplagen rather than one code. Löftesprincipen governs formation, treating offers as binding in a distinctly Scandinavian way, § 36's unreasonableness clause and the more distributed god sed principles both police unfairness without the single-article approach France or Germany use, and standardavtal shows how much of actual Swedish commercial contracting happens through adopting established sector-specific forms rather than applying general doctrine from scratch.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "law/Corporate & Compliance/se": {
+    profession: "law",
+    category: "Corporate & Compliance",
+    jurisdiction: "se",
+    overview:
+      "Swedish corporate law is shaped by two genuinely distinctive features: a shareholder-driven board nomination process (the valberedning) rather than board-controlled nominations, and a dual-class share tradition that lets controlling families and industrial spheres — most famously the Wallenberg sphere — retain voting control with a much smaller share of total equity.",
+    concepts: [
+      {
+        id: "se-corp-aktiebolag-forms",
+        title: "Aktiebolag: privat (private) and publikt (public)",
+        explanation:
+          "The Aktiebolagslagen (2005 Companies Act) governs the aktiebolag (AB), Sweden's main limited-liability company form, split into private (simply \"AB\") and public (\"AB (publ)\") companies — public companies face stricter capital and governance requirements, particularly if listed, similar in general spirit to the private/public company splits in Germany, France, and Spain but with Sweden's own specific statutory rules.",
+        whyItMatters:
+          "As in the other countries covered, the private/public distinction determines which governance and disclosure rules apply — but Sweden's specific statutory thresholds and requirements shouldn't be assumed identical to Germany's GmbH/AG or France's SARL/SA/SAS distinctions just because the basic private/public logic is similar.",
+        example:
+          "A Swedish company planning to list on a public exchange must convert to (or be formed as) a publikt aktiebolag, taking on the more extensive capital, governance, and disclosure obligations that status requires under the Aktiebolagslagen.",
+      },
+      {
+        id: "se-corp-valberedning",
+        title: "Valberedningen — shareholder-driven board nomination",
+        explanation:
+          "Swedish listed companies are governed by the Swedish Corporate Governance Code, which mandates a valberedning (nomination committee) composed primarily of representatives from the company's largest shareholders — not the existing board itself — to propose board member candidates for shareholder approval.",
+        whyItMatters:
+          "This is a genuinely distinctive governance feature — in many other systems, the existing board substantially controls or heavily influences its own succession and nomination process; Sweden's shareholder-driven valberedning model gives major owners much more direct, formal influence over board composition than is typical elsewhere.",
+        example:
+          "A major Swedish institutional or family shareholder typically has a seat on the valberedning and directly participates in selecting board candidates to propose to the annual general meeting — a level of direct shareholder involvement in board nomination considerably more formalized than in board-nomination-committee models elsewhere.",
+      },
+      {
+        id: "se-corp-dual-class-shares-wallenberg",
+        title: "Dual-class shares and the Wallenberg sphere tradition",
+        explanation:
+          "Swedish corporate law permits dual-class share structures (A-aktier with more votes per share, B-aktier with fewer) that let founding families or industrial holding groups retain effective voting control of major companies while holding a much smaller proportion of total equity — the Wallenberg family's investment sphere (through Investor AB) being the most famous example, with controlling influence across a significant share of major Swedish listed companies.",
+        whyItMatters:
+          "This structure is central to understanding Swedish corporate ownership patterns broadly — a notable concentration of major Swedish companies trace some degree of influence back to a small number of controlling family/industrial spheres using this dual-class mechanism, a distinctive feature of the Swedish corporate landscape worth knowing as background context, not just a single-company curiosity.",
+        example:
+          "Investor AB, the Wallenberg family's holding company, has historically held controlling voting stakes (via disproportionate-vote A-shares) in a number of major Swedish multinational companies while holding a considerably smaller share of those companies' total equity value — a textbook illustration of the dual-class control mechanism in practice.",
+      },
+      {
+        id: "se-corp-kontrollbalansrakning",
+        title: "Director liability and the kontrollbalansräkning (control balance sheet) requirement",
+        explanation:
+          "Swedish company law imposes a distinctive personal liability mechanism: if a company's equity falls below a statutory threshold, the board must prepare a kontrollbalansräkning (control balance sheet) and take specific remedial steps — failure to do so can expose board members to personal liability for the company's subsequent debts, including unpaid taxes.",
+        whyItMatters:
+          "This creates genuinely sharp, concrete personal financial exposure for Swedish directors tied to a specific, mechanical capital-adequacy trigger — a more procedurally defined and severe personal liability mechanic than the more general \"duty of care\" liability standards common in other jurisdictions covered here.",
+        example:
+          "A Swedish board that fails to promptly prepare a kontrollbalansräkning and take required action once the company's equity falls below the statutory threshold can become personally liable for company debts (including tax liabilities) incurred afterward — a specific, mechanically triggered liability distinct from a more general fault-based director-liability standard.",
+      },
+      {
+        id: "se-corp-mbl-codetermination",
+        title: "Medbestämmandelagen (MBL) — union codetermination",
+        explanation:
+          "Sweden's 1976 Co-determination Act (MBL) gives labor unions extensive rights to information and negotiation before major management decisions — reflecting Sweden's historically very high union density and strong collective bargaining tradition — achieving a similar underlying goal to Germany's Mitbestimmung, but through collective-bargaining-based information/negotiation rights rather than mandatory union board seats.",
+        whyItMatters:
+          "The mechanism differs meaningfully from Germany's approach — Swedish codetermination operates primarily through negotiation and consultation obligations under collective agreements rather than guaranteed board representation, so it shouldn't be assumed to work identically just because both systems give organized labor real influence over major company decisions.",
+        example:
+          "A Swedish employer planning significant organizational changes is generally required under MBL to negotiate with relevant unions before finalizing the decision — a mandatory consultation and negotiation obligation, though without the guaranteed supervisory-board seats German Mitbestimmung provides at larger companies.",
+      },
+      {
+        id: "se-corp-visselblasarlagen",
+        title: "Visselblåsarlagen — whistleblower protection",
+        explanation:
+          "Sweden implemented the EU Whistleblower Directive through the 2021 Visselblåsarlagen, requiring larger companies (above defined employee thresholds) to establish internal reporting channels and protecting whistleblowers who report suspected wrongdoing from retaliation.",
+        whyItMatters:
+          "Because this implements an EU directive, the core substantive protections are broadly similar to what other EU member states (including France and Germany, and Spain) have implemented under the same directive — a useful point of genuine EU-wide convergence amid otherwise quite distinct national corporate law traditions.",
+        example:
+          "A Swedish company above the relevant size threshold must maintain a confidential internal reporting channel for suspected legal violations and is barred from retaliating against employees who use it in good faith — obligations that closely mirror equivalent whistleblower-protection requirements implemented under the same EU directive elsewhere in the bloc.",
+      },
+    ],
+    connections:
+      "The private/public aktiebolag distinction is the basic structural choice, with the valberedning's shareholder-driven nomination process and dual-class share structures (epitomized by the Wallenberg sphere) together defining Sweden's distinctive concentrated-ownership corporate governance model. The kontrollbalansräkning requirement gives directors sharp personal liability exposure tied to capital adequacy specifically, MBL's codetermination rights give organized labor a real (if structurally different from Germany's) voice in major decisions, and visselblåsarlagen adds an EU-harmonized compliance layer that looks broadly similar to equivalent obligations across the other countries covered.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "law/Civil Litigation/se": {
+    profession: "law",
+    category: "Civil Litigation",
+    jurisdiction: "se",
+    overview:
+      "Swedish civil litigation runs under the 1942 Rättegångsbalken — unusually, a single procedural code covering both civil and criminal process together — with a fairly full loser-pays cost rule and an unusually widespread practical funding mechanism: most Swedes carry legal-expense insurance bundled into their home insurance.",
+    concepts: [
+      {
+        id: "se-civ-rattegangsbalken",
+        title: "The Rättegångsbalken — one code for civil and criminal procedure",
+        explanation:
+          "Sweden's 1942 Code of Judicial Procedure (Rättegångsbalken) governs both civil and criminal procedure within a single comprehensive code — a structural choice distinct from most systems (including the other three countries covered here), which maintain separate civil and criminal procedure codes.",
+        whyItMatters:
+          "This unified structure reflects a deliberate Swedish/Nordic legislative approach to procedural law generally — shared principles (like evidence evaluation standards) run across both civil and criminal proceedings under one framework, rather than being developed as two entirely separate procedural traditions.",
+        example:
+          "Core evidentiary principles like fri bevisprövning (free evaluation of evidence) apply across both civil and criminal Swedish proceedings because they're grounded in the same unified Rättegångsbalken, rather than needing to be separately established in distinct civil and criminal procedure codes.",
+      },
+      {
+        id: "se-civ-court-hierarchy-provningstillstand",
+        title: "Tingsrätt to Högsta domstolen, with prövningstillstånd",
+        explanation:
+          "Civil cases start at a tingsrätt (district court), can be appealed to a hovrätt (court of appeal) — often requiring prövningstillstånd (leave to appeal) for many civil matters — and in limited circumstances reach the Högsta domstolen (Supreme Court), which grants review primarily for genuinely precedent-setting cases (prejudikatdispens) rather than functioning as a routine further appeal level.",
+        whyItMatters:
+          "Because Högsta domstolen review is reserved mainly for cases with genuine precedential significance, most Swedish civil disputes are effectively and finally resolved at the hovrätt level — similar in spirit to how limited Supreme Court civil access works in Spain and France, though through Sweden's own specific prövningstillstånd/prejudikatdispens mechanics.",
+        example:
+          "A civil dispute resolved at the hovrätt level typically has no realistic further path to the Högsta domstolen unless it raises a genuinely novel or unsettled legal question worth establishing precedent on — ordinary fact-specific disputes, however contested, generally don't clear this bar.",
+      },
+      {
+        id: "se-civ-full-cost-shifting",
+        title: "Rättegångskostnader — fairly full loser-pays cost shifting",
+        explanation:
+          "Chapter 18 of the Rättegångsbalken applies a fairly full loser-pays principle — the losing party generally must reimburse the winning party's litigation costs, including a substantial share of actual attorney fees, closer to Germany's fuller statutory cost-shifting model than to France's more partial, discretionary approach.",
+        whyItMatters:
+          "This creates a real financial deterrent against pursuing weak or marginal claims, similar in effect to Germany's system — Swedish litigants generally face more predictable and fuller cost exposure from losing than French litigants would under France's more partial Article 700-style recovery.",
+        example:
+          "A losing party in Swedish civil litigation typically must reimburse a substantial portion of the winning side's actual legal costs, a real financial risk that shapes the decision to litigate at all in a way closer to German cost-shifting than to the more partial recovery typical in French proceedings.",
+      },
+      {
+        id: "se-civ-rattsskyddsforsakring",
+        title: "Rättsskyddsförsäkring — widespread legal expense insurance",
+        explanation:
+          "An unusually large share of the Swedish population carries legal-expense insurance (rättsskyddsförsäkring), typically bundled automatically into standard home or contents insurance policies — covering a substantial portion of litigation costs for many ordinary civil disputes without needing to rely on formal state-provided legal aid.",
+        whyItMatters:
+          "This is a distinctive practical funding mechanism for ordinary Swedes' access to civil litigation that most other countries don't have at comparable scale — understanding Swedish access-to-justice in practice requires accounting for this insurance-based funding layer, not just the formal state legal-aid system, which by comparison plays a smaller practical role for most ordinary disputes.",
+        example:
+          "A Swedish homeowner involved in a contract or property dispute will typically first check whether their existing home insurance's bundled rättsskyddsförsäkring covers the dispute, rather than immediately considering formal state legal aid, which functions more as a backstop for cases outside typical insurance coverage.",
+      },
+      {
+        id: "se-civ-namndemann-limited-civil-role",
+        title: "Nämndemän (lay judges) — a more limited civil role than in criminal cases",
+        explanation:
+          "Sweden uses nämndemän (lay judges sitting alongside professional judges) more prominently in criminal proceedings; their role in civil cases is more limited and case-type-specific, with most civil litigation decided by professional judges alone or in small professional panels rather than including lay participation as a general rule.",
+        whyItMatters:
+          "This is a useful distinction to keep straight — Sweden's lay-judge tradition (itself politically distinctive, discussed further in the Criminal Law content) is genuinely more central to criminal than civil process, unlike systems where lay participation (or its absence) is more uniform across both.",
+        example:
+          "A typical Swedish civil contract dispute is decided by professional judges alone at the tingsrätt level, without the nämndemän participation that would be standard for many categories of Swedish criminal trials at the same court level.",
+      },
+      {
+        id: "se-civ-scc-arbitration",
+        title: "Stockholm as an international arbitration hub",
+        explanation:
+          "The Arbitration Institute of the Stockholm Chamber of Commerce (SCC) is a major international arbitration venue, historically particularly significant for East-West commercial and investment disputes (Cold War-era Soviet/Russian trade relationships made Stockholm a preferred neutral seat), and remains broadly significant today for international commercial and investment arbitration.",
+        whyItMatters:
+          "Stockholm's specific historical niche (as a preferred neutral venue for disputes involving Russia and former Soviet states) is distinctive context explaining why it became such a significant arbitration center despite Sweden's relatively small domestic economy — a different specific comparative advantage than Madrid's Ibero-American focus or Germany's broader European commercial arbitration role.",
+        example:
+          "Historically, a significant share of major international arbitrations involving Russian or former Soviet state parties specified Stockholm/SCC arbitration specifically because of Sweden's Cold War-era reputation for genuine neutrality between East and West — a specific historical niche still shaping Stockholm's arbitration caseload today.",
+      },
+    ],
+    connections:
+      "The unified Rättegångsbalken is the procedural foundation for both civil and criminal cases, with the tingsrätt-to-Högsta domstolen hierarchy and its prövningstillstånd requirements determining how far a civil case can realistically be appealed. Full loser-pays cost shifting shapes litigation risk, offset in practice for many ordinary Swedes by widespread rättsskyddsförsäkring insurance coverage — a distinctly Swedish practical funding layer. Nämndemän's more limited civil role (compared to their more prominent criminal-trial function) is worth keeping distinct, and SCC arbitration in Stockholm offers a well-established alternative track with its own specific historical niche in East-West commercial disputes.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "law/Criminal Law/se": {
+    profession: "law",
+    category: "Criminal Law",
+    jurisdiction: "se",
+    overview:
+      "Swedish criminal law runs under the 1962 Brottsbalken, uses politically-nominated lay judges (nämndemän) rather than a citizen jury or Germany's more civically-selected Schöffen, and reflects a historically strong penal-welfarist, rehabilitation-oriented tradition now under real political pressure amid a serious recent rise in gang-related violence.",
+    concepts: [
+      {
+        id: "se-crim-brottsbalken-elements",
+        title: "Brottsbalken and the elements of a crime",
+        explanation:
+          "Sweden's 1962 Penal Code (Brottsbalken) structures criminal liability around objective and subjective elements (objektiva och subjektiva rekvisit) — broadly comparable to actus reus/mens rea — but Nordic criminal law theory organizes this analysis in a somewhat more streamlined way than Germany's more elaborately tiered Tatbestand/Rechtswidrigkeit/Schuld framework, despite sharing some underlying conceptual DNA.",
+        whyItMatters:
+          "Sweden shouldn't be assumed to follow the German three-tier dogmatik as precisely as Spain does — Nordic criminal law theory developed its own, somewhat less formally tiered analytical tradition, even though it shares broadly similar underlying concerns (distinguishing the act itself from justification and from personal culpability).",
+        example:
+          "A Swedish self-defense case is still analyzed in terms of whether the act was justified (nödvärn, the self-defense provision) — reaching a similar practical outcome to German or Spanish justification analysis — but without necessarily working through as explicitly separated a multi-tier formal structure as German dogmatik requires.",
+      },
+      {
+        id: "se-crim-namndeman-political-nomination",
+        title: "Nämndemän — politically nominated lay judges",
+        explanation:
+          "Swedish criminal trials, especially at the tingsrätt level, typically include nämndemän — lay judges who sit alongside a professional judge and vote on both guilt and sentence — but distinctively, nämndemän are nominated through local political parties (municipal councils propose candidates, often reflecting party political affiliation) rather than through a more civically neutral selection process.",
+        whyItMatters:
+          "This politically-linked nomination process is genuinely distinctive and has drawn real domestic criticism and reform debate — unlike Germany's Schöffen (selected through a more depoliticized civic process) or a jury pool, Swedish nämndemän's political-party nomination pathway raises questions about political influence in individual criminal verdicts that Sweden's own legal and political establishment have actively debated.",
+        example:
+          "Reform proposals to change or restrict the political-party-based nämndemän nomination system have been debated in Swedish politics and legal commentary specifically because of concerns that political affiliation, rather than pure civic representativeness, currently shapes who ends up serving as a lay judge deciding real criminal cases.",
+      },
+      {
+        id: "se-crim-atalsplikt",
+        title: "Åtalsplikt (duty to prosecute) with limited exceptions",
+        explanation:
+          "Swedish prosecutors generally operate under åtalsplikt — a duty to prosecute when evidence is sufficient — with limited, defined exceptions allowing åtalsunderlåtelse (a decision to waive prosecution) for minor offenses or specific circumstances, a structure occupying a middle ground similar in spirit to Germany's Legalitätsprinzip/Opportunitätsprinzip split.",
+        whyItMatters:
+          "As with Germany, this limits how much Swedish prosecutors can simply decline politically or strategically unwelcome prosecutions as a matter of discretion — the default expectation, as in Germany, is that sufficient evidence leads to prosecution unless a specific statutory exception applies.",
+        example:
+          "A prosecutor facing a minor first-time offense with sufficient evidence to prosecute might apply åtalsunderlåtelse under specific statutory criteria (such as the offender's circumstances or the offense's minor character), but cannot simply decline prosecution as a general policy matter the way broader US-style prosecutorial discretion might allow.",
+      },
+      {
+        id: "se-crim-straffmatning-welfarist-tradition",
+        title: "Straffmätning and Sweden's penal-welfarist tradition",
+        explanation:
+          "Chapters 29-30 of the Brottsbalken provide structured sentencing factors, historically reflecting Sweden's strong penal-welfarist tradition (generally lower sentencing levels and a stronger rehabilitation emphasis than many comparable countries) — though this tradition has come under significant, genuinely recent political pressure amid a serious rise in gang-related shootings and bombings, producing real legislative moves toward harsher sentencing.",
+        whyItMatters:
+          "This is an area of genuinely live, ongoing legal and political change — describing Swedish sentencing as simply \"lenient and rehabilitation-focused\" risks being outdated, since recent reforms have specifically moved toward harsher sentencing for serious and gang-related crimes in direct response to the security crisis, a real and consequential recent shift worth flagging explicitly.",
+        example:
+          "Sweden has enacted a series of sentencing-toughening reforms in recent years specifically targeting gang-related and firearms offenses, a genuine legislative reversal of the historically more lenient, rehabilitation-first sentencing tradition, driven directly by the rise in gang violence as a major domestic political issue.",
+      },
+      {
+        id: "se-crim-juvenile-lvu",
+        title: "Ung lagöverträdare — the juvenile diversion tradition",
+        explanation:
+          "Sweden has a strong tradition of diverting young offenders (generally under 18, with softer treatment considerations extending to around 21) away from the ordinary criminal justice system and toward social services intervention under the Lagen om vård av unga (LVU, Care of Young Persons Act) — reflecting the same broader welfarist orientation as Swedish sentencing traditionally has.",
+        whyItMatters:
+          "This diversion tradition is also under real strain from the same gang-violence crisis driving broader sentencing toughening — recent debate has specifically questioned whether the traditional juvenile-diversion approach remains appropriate given documented recruitment of increasingly young children into organized gang violence, a genuinely live and consequential Swedish policy debate.",
+        example:
+          "Reports of gang networks deliberately recruiting children below the age of criminal responsibility (specifically because they fall outside ordinary criminal liability) to commit serious violence have intensified political pressure to reconsider aspects of Sweden's traditional juvenile-diversion approach under LVU.",
+      },
+      {
+        id: "se-crim-gang-violence-context",
+        title: "Gang violence as reshaping Swedish criminal law and policy",
+        explanation:
+          "Sweden has experienced a significant, well-documented rise in gang-related shootings and bombings in recent years, becoming a defining domestic security and criminal-justice policy issue — driving legislative responses including expanded police powers, harsher sentencing for firearms and gang-related offenses, and broader reconsideration of the traditional penal-welfarist approach.",
+        whyItMatters:
+          "This context is essential for correctly understanding current Swedish criminal law and policy debates — much of the most significant recent legislative and political activity in this space is a direct response to this specific, ongoing security crisis, not incremental adjustment to a stable system.",
+        example:
+          "Sweden's gang-violence crisis has prompted specific legislative responses including expanded police stop-and-search and surveillance powers in designated high-crime areas and toughened sentencing specifically for firearms and explosives offenses connected to gang activity — concrete policy responses directly traceable to this security crisis.",
+      },
+    ],
+    connections:
+      "The Brottsbalken's objective/subjective elements structure is the analytical foundation for any offense, applied by professional judges working alongside politically-nominated nämndemän rather than a jury. Åtalsplikt determines whether a case reaches trial given sufficient evidence, and straffmätning determines the sentence — an area currently in genuine flux, moving away from the traditional welfarist orientation that the ung lagöverträdare diversion tradition also reflects. The gang violence crisis is the single most important context for understanding why so much of this traditional framework is currently being actively reconsidered and toughened.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "law/Constitutional & Regulatory/se": {
+    profession: "law",
+    category: "Constitutional & Regulatory",
+    jurisdiction: "se",
+    overview:
+      "Sweden's constitution is split across four separate fundamental laws rather than one document, includes one of the world's oldest and strongest public-access-to-documents traditions, historically had unusually weak judicial review (only strengthened in 2010), and invented the \"ombudsman\" concept the rest of the world later borrowed.",
+    concepts: [
+      {
+        id: "se-const-four-fundamental-laws",
+        title: "The four grundlagar (fundamental laws)",
+        explanation:
+          "Sweden's constitution consists of four separate fundamental laws with equal constitutional status: Regeringsformen (Instrument of Government, the main constitutional framework document), Successionsordningen (Act of Succession, governing royal succession), Tryckfrihetsförordningen (Freedom of the Press Act), and Yttrandefrihetsgrundlagen (Fundamental Law on Freedom of Expression) — a genuinely distinctive structural choice compared to the single-document constitutions of Germany, France, or Spain.",
+        whyItMatters:
+          "Having freedom of the press and freedom of expression each elevated to their own separate constitutional-law status (not just as articles within a general rights chapter) reflects how seriously these specific freedoms are institutionally protected in Sweden — amending them requires the same enhanced constitutional procedure as amending the core government structure document.",
+        example:
+          "A dispute over press freedom or published expression in Sweden is analyzed under the specific, dedicated Tryckfrihetsförordningen or Yttrandefrihetsgrundlagen — bodies of law with their own detailed procedural rules (including a distinctive system of a single \"responsible publisher\" bearing legal liability) — rather than under a general free-expression clause within a broader single constitutional document.",
+      },
+      {
+        id: "se-const-offentlighetsprincipen",
+        title: "Offentlighetsprincipen (the principle of public access)",
+        explanation:
+          "Sweden's principle of public access to official documents, with roots dating back to 1766 (making it one of the world's oldest freedom-of-information traditions), gives the public and press very broad constitutionally protected rights to access government records, with narrowly defined and specific exceptions rather than broad discretionary withholding.",
+        whyItMatters:
+          "This is an unusually expansive transparency tradition even by European standards — Swedish government agencies operate under a default presumption of openness considerably stronger than the more discretionary or narrower freedom-of-information regimes common elsewhere, shaping how government business, including internal deliberation, is actually conducted.",
+        example:
+          "A journalist or member of the public can generally request and receive most official government correspondence and internal documents in Sweden, with the burden on the authority to justify any specific narrow exception for withholding — a presumption-of-openness default rather than the more common presumption-of-discretion approach found in many other transparency regimes.",
+      },
+      {
+        id: "se-const-uppenbarhetsrekvisitet-2010-reform",
+        title: "The end of the manifest-error requirement for judicial review",
+        explanation:
+          "Sweden historically had unusually weak judicial review — courts could only set aside a law as unconstitutional if the conflict was \"manifest\" (uppenbar), a demanding threshold known as uppenbarhetsrekvisitet. A 2010 constitutional reform removed this manifest-error requirement, meaningfully strengthening ordinary Swedish courts' practical power to review legislation against the constitution.",
+        whyItMatters:
+          "This is a genuinely significant, relatively recent shift — Swedish constitutional law before 2010 gave courts markedly less practical power to check legislation than Germany's centralized Bundesverfassungsgericht or even France's post-2010-QPC system, and understanding current Swedish judicial review requires knowing this reform actually happened, not assuming the older, weaker standard still applies.",
+        example:
+          "Before 2010, a Swedish court needed to find a law's unconstitutionality \"manifest\" — an unusually high bar — before setting it aside; since the reform removed that heightened threshold, ordinary constitutional review by Swedish courts operates on a standard bar closer to (though still institutionally distinct from) other European judicial review systems.",
+      },
+      {
+        id: "se-const-lagradet",
+        title: "Lagrådet — advisory, preventive constitutional review",
+        explanation:
+          "Sweden has no dedicated constitutional court like Germany's Bundesverfassungsgericht — instead, the Lagrådet (Council on Legislation), composed mainly of senior judges, reviews draft legislation before enactment for consistency with the constitution and general legal coherence, but its opinions are advisory only, not legally binding on the Riksdag.",
+        whyItMatters:
+          "Despite being non-binding, negative Lagrådet opinions carry real political weight and frequently prompt the government to revise a bill before final passage — functioning as a genuine, if formally non-binding, preventive check, structurally closer in spirit to France's traditional a priori Conseil constitutionnel review than to Germany's binding after-the-fact court review.",
+        example:
+          "A government bill that receives significant Lagrådet criticism for constitutional or legal-coherence problems is frequently revised in response before final Riksdag passage, even though the Riksdag retains the formal legal authority to ignore Lagrådet's advisory opinion entirely and proceed unchanged.",
+      },
+      {
+        id: "se-const-justitieombudsmannen",
+        title: "Justitieombudsmannen (JO) — the original ombudsman institution",
+        explanation:
+          "Sweden created the world's first ombudsman institution in 1809 — the Justitieombudsmannen (JO), an independent parliamentary official empowered to investigate citizen complaints against public authorities and oversee that officials and agencies follow the law — a concept since widely copied by other countries' own ombudsman institutions.",
+        whyItMatters:
+          "Sweden is the genuine historical origin point for the \"ombudsman\" concept now used worldwide — a useful piece of context when comparing Swedish administrative oversight to other countries' later-adopted (and often differently structured) versions of institutions inspired by this original Swedish model.",
+        example:
+          "A Swedish citizen who believes a public authority mishandled their case or acted unlawfully can file a complaint directly with the JO, who can investigate and issue formal criticism of the authority — the original template that numerous other countries' later-established ombudsman institutions were explicitly modeled on.",
+      },
+      {
+        id: "se-const-forvaltningsmodellen-ministerstyre",
+        title: "Förvaltningsmodellen — the constitutional ban on ministerstyre",
+        explanation:
+          "Swedish government ministries are constitutionally barred from directly instructing agencies (myndigheter) on how to decide individual cases or handle specific implementation matters — a prohibition on \"ministerstyre\" (ministerial rule) that gives Swedish administrative agencies unusually strong, constitutionally protected independence from direct day-to-day political direction.",
+        whyItMatters:
+          "This is a foundational, distinctive feature of Swedish governance with real practical consequences (discussed further in the Politics content, especially regarding crisis response) — Swedish ministers genuinely cannot simply order an agency how to decide a specific case the way a minister in many other systems more readily could, since doing so would itself be constitutionally improper.",
+        example:
+          "Sweden's independent expert agencies (like the Public Health Agency during COVID-19, or various regulatory bodies) make many operational and case-specific decisions with real legal insulation from direct ministerial command — a structural independence rooted directly in this constitutional ministerstyre prohibition, not just an informal governance norm.",
+      },
+    ],
+    connections:
+      "The four grundlagar structure is the foundational constitutional framework, with offentlighetsprincipen and the press/expression fundamental laws reflecting just how centrally transparency and free expression sit within it. The 2010 removal of the manifest-error requirement strengthened ordinary courts' constitutional review power, while Lagrådet provides a separate, earlier, advisory-only check before legislation is even enacted — together forming a genuinely different model than Germany's single binding constitutional court. JO's ombudsman oversight and the constitutional ministerstyre prohibition both protect against improper political interference in individual administrative decisions, from two different institutional angles — one reactive complaint investigation, the other a structural bar on ministers giving case-specific orders in the first place.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
   "law/Corporate & Compliance": {
     profession: "law",
     category: "Corporate & Compliance",
@@ -4081,6 +4455,376 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     ],
     connections:
       "Investidura negotiation and bilateral pacts with regional parties are where most of the real deal-making in a fragmented Congreso actually happens, with the constructive no-confidence motion's mere availability shaping the background leverage in all of it. The Senado's weak formal role means virtually none of this negotiation needs to route through the upper chamber the way it would in Germany, Real Decreto-Ley offers the executive a way to act first and negotiate ratification after rather than before, and Pactos de Estado represent the (inconsistently achieved) aspiration to transcend this whole transactional, fragmented-parliament negotiating dynamic entirely for a select few especially significant structural issues.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "politics/Foreign Policy & Diplomacy/se": {
+    profession: "politics",
+    category: "Foreign Policy & Diplomacy",
+    jurisdiction: "se",
+    overview:
+      "Swedish foreign policy was defined for over two centuries by military non-alignment — a defining national identity, not just a policy setting — until Russia's 2022 invasion of Ukraine triggered one of the most dramatic foreign-policy reversals in modern European history, ending with full NATO membership on March 7, 2024.",
+    concepts: [
+      {
+        id: "se-fp-end-of-nonalignment",
+        title: "The end of two centuries of military non-alignment",
+        explanation:
+          "Sweden maintained formal military non-alignment for over 200 years, avoiding binding defense alliances while still engaging internationally — a policy identity so foundational that abandoning it was almost unthinkable until Russia's February 2022 invasion of Ukraine prompted Sweden to apply for NATO membership within months, becoming the alliance's 32nd member on March 7, 2024.",
+        whyItMatters:
+          "This is arguably the single most consequential Swedish foreign-policy event in modern history — understanding current Swedish security policy requires recognizing this isn't an incremental adjustment but the deliberate abandonment of a two-centuries-old core national policy identity, compressed into roughly two years.",
+        example:
+          "Sweden applied for NATO membership on May 18, 2022 — just months after Russia's full-scale invasion of Ukraine — and formally joined on March 7, 2024, after ratification delays from Turkey and Hungary, ending a non-alignment tradition that had held continuously since the early 19th century.",
+      },
+      {
+        id: "se-fp-historical-neutrality",
+        title: "Historical neutrality through WWII and the Cold War",
+        explanation:
+          "Sweden's neutrality allowed it to avoid direct military involvement in both World War II and the Cold War's formal alliance blocs — a stance that included controversial wartime trade relationships with Nazi Germany, and during the Cold War, formal non-alignment paired with substantial \"hidden\" defense preparedness against a potential Soviet threat.",
+        whyItMatters:
+          "Sweden's historical neutrality was never simple pacifism or disengagement — it coexisted with serious, sustained domestic defense investment and preparedness (see totalförsvaret in the Crisis Response content), a nuance essential to understanding why the 2024 NATO shift, while historic, built on an already substantial underlying defense infrastructure rather than starting from nothing.",
+        example:
+          "Sweden maintained a large, technologically sophisticated domestic defense industry and substantial conscription-based armed forces throughout the Cold War specifically to make neutrality credible against a potential Soviet threat — active preparedness, not passive non-involvement.",
+      },
+      {
+        id: "se-fp-multilateralism-un",
+        title: "Strong multilateral and UN engagement",
+        explanation:
+          "Sweden has historically been a disproportionately active contributor to UN peacekeeping operations, international development aid (consistently ranking among the highest contributors as a percentage of gross national income), and multilateral diplomacy generally — a pattern of active internationalist engagement that partly compensated for formal military non-alignment.",
+        whyItMatters:
+          "This multilateral engagement tradition remains a core part of Swedish foreign-policy identity even after the NATO shift — Sweden's self-conception as an active, engaged global citizen through aid and multilateral institutions long predates and now continues alongside its new alliance membership, not replaced by it.",
+        example:
+          "Sweden has consistently ranked among the world's most generous development-aid donors relative to its economic size for decades, a consistent policy priority across different governments reflecting a durable, cross-party foreign-policy commitment to multilateral engagement.",
+      },
+      {
+        id: "se-fp-nordic-cooperation",
+        title: "Nordic cooperation as a distinct diplomatic framework",
+        explanation:
+          "Sweden coordinates closely with Denmark, Finland, Iceland, and Norway through the Nordic Council and Nordic Council of Ministers — a distinct regional cooperation framework operating alongside (not replaced by) EU and now NATO membership, reflecting deep historical, cultural, and political ties among the Nordic countries.",
+        whyItMatters:
+          "This Nordic-specific coordination layer means Swedish foreign policy often moves in close, informal lockstep with its Nordic neighbors on many issues — useful context for understanding Sweden and Finland's closely coordinated, nearly simultaneous 2022 NATO applications, itself a clear illustration of this coordination pattern.",
+        example:
+          "Finland and Sweden submitted their NATO membership applications together in May 2022 and coordinated closely throughout the accession process, reflecting the deep, practical policy coordination the Nordic cooperation framework enables even on major, historic foreign-policy decisions.",
+      },
+      {
+        id: "se-fp-eu-eurozone-optout",
+        title: "EU membership without the euro",
+        explanation:
+          "Sweden joined the EU in 1995 but has never adopted the euro — Swedish voters explicitly rejected eurozone membership in a 2003 referendum, and Sweden has since maintained its own currency (the krona) as a full EU member otherwise, a position distinct from being a treaty-based opt-out (like Denmark's) but functioning similarly in practice by choice not to meet the adoption criteria.",
+        whyItMatters:
+          "This is a useful, specific point of divergence from full continental EU integration — Sweden participates fully in EU political and regulatory structures while deliberately remaining outside monetary union, a distinct position from Germany, France, and Spain, all of which are eurozone members.",
+        example:
+          "Sweden's 2003 referendum on euro adoption failed with a clear majority voting against, and no government has seriously revisited the question since — a settled, durable domestic political position keeping Sweden in the EU's single market and political structures while remaining outside its currency union.",
+      },
+      {
+        id: "se-fp-feminist-foreign-policy",
+        title: "The feminist foreign policy experiment (2014-2022)",
+        explanation:
+          "Sweden became the first country in the world to explicitly adopt a \"feminist foreign policy\" framework in 2014, aiming to systematically integrate gender-equality considerations across foreign policy, aid, and trade decisions — a distinctive, widely internationally discussed branding and policy exercise that a subsequent Swedish government formally discontinued in 2022.",
+        whyItMatters:
+          "Both the launch and the 2022 discontinuation are significant, genuinely recent developments — citing Sweden's \"feminist foreign policy\" as current without noting its 2022 discontinuation would be factually outdated, even though the underlying policy period generated substantial international attention and was influential in prompting other countries to consider similar frameworks.",
+        example:
+          "Following Sweden's pioneering 2014 feminist foreign policy launch, several other countries (including Canada and France, in different specific forms) adopted their own versions of explicitly gender-focused foreign policy frameworks — but Sweden itself formally ended its own framework in 2022 under a new government, a notable and relatively recent reversal.",
+      },
+    ],
+    connections:
+      "Historical neutrality through WWII and the Cold War is the deep backdrop the dramatic 2022-2024 NATO shift has to be understood against — a genuine reversal of two centuries of policy identity, closely coordinated with Finland through the Nordic cooperation framework. Multilateral/UN engagement and the feminist foreign policy experiment both reflect Sweden's longer-standing self-conception as an active, values-driven international actor, an identity that continues (feminist foreign policy's 2022 end notwithstanding) even as the underlying security posture has fundamentally changed. EU membership without the euro is a separate, settled dimension of Swedish international positioning, distinct from and unaffected by the recent NATO shift.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "politics/Domestic Policy/se": {
+    profession: "politics",
+    category: "Domestic Policy",
+    jurisdiction: "se",
+    overview:
+      "Swedish domestic policy is shaped by the historical legacy of the comprehensive \"folkhemmet\" welfare state, a long tradition of minority governments (unlike Germany's coalition-agreement norm), strong constitutionally protected local self-government, and an unusually thorough pre-legislative consultation culture — all increasingly complicated by the rise of the Sweden Democrats scrambling the traditional left-right bloc system.",
+    concepts: [
+      {
+        id: "se-dp-folkhemmet-legacy",
+        title: "The folkhemmet (\"people's home\") legacy",
+        explanation:
+          "The \"folkhemmet\" concept — Sweden as a shared, caring \"people's home\" — underpinned Swedish social democracy's dominant 20th-century influence over domestic policy, shaping the development of a comprehensive, universal welfare state model (as opposed to a more means-tested or residual welfare approach) that continues to shape policy debate and expectations even as the specific governing party has changed over time.",
+        whyItMatters:
+          "This historical framing remains a genuine reference point in Swedish domestic policy debate across the political spectrum — even parties that have moved away from social democratic dominance generally operate within, and are measured against, the comprehensive welfare-state expectations this legacy established, rather than proposing to dismantle it wholesale.",
+        example:
+          "Swedish domestic policy debates over welfare reform, even from more market-oriented parties, have typically proposed adjustments within the broadly universal welfare-state framework rather than fundamental dismantlement — a durable policy legacy shaping the boundaries of what's considered a mainstream reform proposal.",
+      },
+      {
+        id: "se-dp-minority-government-norm",
+        title: "Minority government as the historical norm",
+        explanation:
+          "Unlike Germany's tradition of formal, comprehensively negotiated coalition governments, Sweden has a long history of minority governments — a party or bloc governing without a parliamentary majority, relying on other parties' tolerance (often issue-by-issue or budget-by-budget) rather than a full governing coalition agreement.",
+        whyItMatters:
+          "This is a structurally different governing pattern from Germany's Koalitionsvertrag model — Swedish minority governments have historically had to continuously negotiate support rather than relying on one comprehensive pre-agreed governing program, a more fluid, ongoing negotiating dynamic (elaborated further in the Legislative Negotiation content).",
+        example:
+          "Sweden has had numerous minority governments throughout its modern democratic history that governed for full terms by successfully negotiating ad hoc parliamentary support for individual major votes (like the budget) rather than commanding an outright majority coalition.",
+      },
+      {
+        id: "se-dp-kommuner-regioner-autonomy",
+        title: "Kommuner and regioner autonomy",
+        explanation:
+          "Swedish municipalities (kommuner) and regions (regioner) have strong, constitutionally protected local self-government with genuine taxation power — notably kommunalskatt, a municipal income tax — and implement much of the actual welfare state (regioner primarily run healthcare, kommuner run schools and social services).",
+        whyItMatters:
+          "As in Germany's federalism, much of what's popularly understood as \"Swedish\" welfare policy is actually implemented with real local variation and genuine local fiscal autonomy — national policy debates on healthcare or education quality often can't be resolved by a single national decision alone, since kommuner and regioner retain real implementing authority and their own tax base.",
+        example:
+          "Healthcare quality and specific service offerings vary meaningfully across Swedish regioner, since each region runs its own healthcare system funded substantially by its own regional taxation, not a single centrally uniform national health service.",
+      },
+      {
+        id: "se-dp-remiss-consultation-culture",
+        title: "The remiss consultation process",
+        explanation:
+          "Swedish policy-making traditionally emphasizes extensive consultation before legislation is finalized — the \"remiss\" system, where draft legislation or official inquiry reports (utredningar) are formally circulated to affected stakeholders, agencies, and organizations for detailed written comment before the government finalizes a bill.",
+        whyItMatters:
+          "This is a genuinely distinctive, thorough deliberative process compared to more purely legislature-centered policy development elsewhere — much of the real substantive policy shaping in Sweden happens during this consultation phase, before a bill ever reaches formal parliamentary debate, making the remiss responses themselves a significant part of understanding how a policy actually took its final shape.",
+        example:
+          "A major Swedish policy reform typically begins with a formal government inquiry (utredning) producing a detailed report, which then goes through a remiss round where dozens of affected agencies, municipalities, and interest organizations submit formal written responses — genuinely shaping the final legislative proposal before it's even introduced to the Riksdag.",
+      },
+      {
+        id: "se-dp-bloc-politics-sd-disruption",
+        title: "Bloc politics and the Sweden Democrats' disruptive effect",
+        explanation:
+          "Swedish politics was traditionally organized around clear left (\"rödgröna,\" red-green) versus right (\"Alliansen,\" the Alliance) blocs — but the rise of the Sweden Democrats, a party other mainstream parties long treated as outside normal coalition consideration, has scrambled this clean two-bloc framework, forcing more complex, historically unusual cross-cutting negotiating arrangements in recent years.",
+        whyItMatters:
+          "Understanding current Swedish domestic policy negotiation requires recognizing this isn't a stable, settled two-bloc system anymore — the Sweden Democrats' growing electoral strength and mainstream parties' evolving, still actively contested willingness to negotiate or cooperate with them is one of the defining structural features reshaping Swedish domestic policy-making in the current era.",
+        example:
+          "Recent Swedish governments have required more complex, sometimes informal cooperation arrangements involving the Sweden Democrats to secure parliamentary support, a marked departure from the clean two-bloc competition that characterized Swedish politics for decades before this party's rise.",
+      },
+      {
+        id: "se-dp-offentlighet-domestic-debate",
+        title: "Offentlighetsprincipen's effect on domestic policy debate",
+        explanation:
+          "Sweden's strong public-documents-access tradition (offentlighetsprincipen, covered in the Law content) means Swedish domestic policy deliberation — including internal government inquiry materials, remiss responses, and much official correspondence — happens with unusually high public visibility compared to most other countries' more closed internal deliberation processes.",
+        whyItMatters:
+          "This transparency shapes the actual texture of Swedish domestic policy debate — journalists, researchers, and the public can access far more of the underlying deliberative material behind a given policy decision than in more closed systems, making Swedish domestic policy formation notably more observable and traceable in its early stages.",
+        example:
+          "Journalists and researchers can generally request and review the full formal remiss responses submitted by various stakeholders on a proposed policy, giving unusually direct public visibility into how and why a specific Swedish policy proposal was shaped or changed during its development — a level of process transparency uncommon in more closed policy-development systems.",
+      },
+    ],
+    connections:
+      "The folkhemmet legacy sets the broad welfare-state policy expectations Swedish domestic politics operates within, implemented substantially through kommuner and regioner's genuine local fiscal autonomy. Minority government as the historical norm means securing support for policy has traditionally required ongoing negotiation rather than one binding coalition agreement, a dynamic the Sweden Democrats' bloc-scrambling rise has made considerably more complex in recent years. The remiss consultation process and offentlighetsprincipen's transparency together mean much of the real policy-shaping negotiation happens visibly, before formal parliamentary debate even begins — a genuinely distinctive, thorough, and unusually public deliberative culture.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "politics/Crisis Response/se": {
+    profession: "politics",
+    category: "Crisis Response",
+    jurisdiction: "se",
+    overview:
+      "Swedish crisis response is structurally unique among the countries covered here because ministers are constitutionally barred from directly instructing agencies on individual cases — meaning the world-famous \"Swedish approach\" to COVID-19 was driven substantially by an independent expert agency, not direct political command, a distinction essential to understanding how and why Sweden's pandemic response looked so different from its neighbors.",
+    concepts: [
+      {
+        id: "se-cr-swedish-covid-approach",
+        title: "The \"Swedish approach\" to COVID-19",
+        explanation:
+          "Sweden's COVID-19 response was internationally notable for avoiding a full mandatory lockdown, relying considerably more on voluntary public recommendations issued by the Public Health Agency (Folkhälsomyndigheten) than on mandatory legal restrictions — a genuinely distinctive approach among European countries, later the subject of extensive domestic and international debate and an official government Corona Commission review.",
+        whyItMatters:
+          "This wasn't simply a different policy preference chosen by politicians — it reflected the deeper structural reality of förvaltningsmodellen (discussed next): the constitutionally independent Public Health Agency had substantial authority to shape the actual response, with government ministers constitutionally limited in how directly they could override or instruct the agency's case-specific judgments.",
+        example:
+          "Sweden's state epidemiologist, leading the Public Health Agency, became the primary public face and decision-shaping authority for pandemic policy in a way that would be structurally unusual in countries where health crisis decisions run more directly through elected political leadership rather than a constitutionally insulated expert agency.",
+      },
+      {
+        id: "se-cr-forvaltningsmodellen-crisis",
+        title: "Förvaltningsmodellen's crisis-response consequences",
+        explanation:
+          "Because Swedish ministers cannot constitutionally instruct agencies on individual case decisions (the ministerstyre prohibition, covered in the Law content), major crisis response substantially runs through legally independent expert agencies — meaning Swedish crisis governance is structurally less centralized around direct political command than in most other systems covered here.",
+        whyItMatters:
+          "This is the single most important structural fact distinguishing Swedish crisis response from Germany, France, or Spain's more directly executive-led models — understanding why a specific Swedish crisis decision was made (or wasn't) often requires looking at the responsible independent agency's own judgment, not assuming it reflects direct political calculation the way it more readily would elsewhere.",
+        example:
+          "During COVID-19, the Swedish government could set overall legal frameworks and provide resources, but many of the specific, most consequential judgment calls about recommended measures came from the Public Health Agency's own independent expert assessment — a structural division of authority genuinely distinct from more politically centralized crisis command models.",
+      },
+      {
+        id: "se-cr-totalforsvaret-revival",
+        title: "Totalförsvaret — the revival of total defense",
+        explanation:
+          "Sweden's Cold War-era \"total defense\" concept (totalförsvaret) — integrating military defense with civil society-wide preparedness — was substantially scaled back after the Cold War ended, but has been actively revived since around 2015 and significantly accelerated after 2022, including reintroduced conscription (2018) and renewed civil-defense and preparedness planning across society.",
+        whyItMatters:
+          "This revival is a direct, concrete policy consequence of the same security environment shift that produced NATO membership — understanding current Swedish crisis and defense preparedness requires recognizing this active rebuilding process, reversing decades of reduced defense investment following the Cold War's end.",
+        example:
+          "Sweden reintroduced military conscription in 2018 — a notable reversal after suspending it in 2010 — and has since significantly expanded both military spending and civil preparedness planning (including public information campaigns on household emergency preparedness), directly reflecting the totalförsvaret revival.",
+      },
+      {
+        id: "se-cr-msb",
+        title: "MSB — the Swedish Civil Contingencies Agency",
+        explanation:
+          "The Myndigheten för samhällsskydd och beredskap (MSB) is Sweden's coordinating agency for civil crisis preparedness and response, working across national, regional, and local levels — itself operating within the same independent-agency structural model as other Swedish authorities, coordinating rather than commanding the various levels of government involved in crisis response.",
+        whyItMatters:
+          "MSB's coordinating (rather than commanding) role reflects the broader Swedish governance pattern of independent agencies and strong local autonomy — effective Swedish crisis response depends heavily on MSB successfully coordinating genuinely autonomous kommuner, regioner, and other agencies rather than issuing binding top-down orders.",
+        example:
+          "During major crises, MSB coordinates information-sharing and resource allocation across Swedish kommuner, regioner, and national agencies, but its role is fundamentally coordinating and advisory rather than commanding — consistent with the broader Swedish governance model of agency independence and strong local autonomy.",
+      },
+      {
+        id: "se-cr-2018-wildfires",
+        title: "The 2018 wildfire season as a capability-gap case study",
+        explanation:
+          "Sweden's severe 2018 wildfire season exposed real gaps in domestic firefighting capacity, requiring Sweden to request international assistance through the EU Civil Protection Mechanism, including firefighting aircraft and personnel from other European countries — a notable moment revealing the practical limits of Sweden's own crisis-response infrastructure at the time.",
+        whyItMatters:
+          "This is a useful concrete case study in how even a well-governed, well-resourced country can face genuine capability gaps during an unusually severe crisis — and how EU-level mutual assistance mechanisms can function as a real, practically significant crisis-response resource beyond a single country's own domestic capacity.",
+        example:
+          "During the unusually severe 2018 wildfires, Sweden formally requested and received firefighting aircraft and personnel assistance from several other European countries through the EU Civil Protection Mechanism — a concrete instance of EU-level crisis cooperation functioning as intended when domestic capacity proved insufficient.",
+      },
+      {
+        id: "se-cr-gang-violence-as-crisis",
+        title: "Gang violence as an emerging crisis-response category",
+        explanation:
+          "Sweden's significant recent rise in gang-related shootings and bombings has increasingly been treated as a national crisis-level security issue in its own right, prompting responses (discussed further in the Law and Domestic Policy content) that blend ordinary criminal-justice policy with crisis-response-style urgency and resource mobilization.",
+        whyItMatters:
+          "This represents a notable category shift in what counts as a \"crisis\" in Swedish political discourse — a sustained domestic security problem, not a single discrete event like a flood or pandemic, being treated with comparable political urgency and crisis-framing language, worth recognizing as a distinct pattern from more traditional acute-crisis categories.",
+        example:
+          "Swedish political and media discourse has increasingly framed the sustained rise in gang violence using crisis-level language and urgency comparable to how more traditional acute crises (natural disasters, security threats) are discussed, reflecting a genuine shift in how this sustained domestic security problem is politically categorized and responded to.",
+      },
+    ],
+    connections:
+      "Förvaltningsmodellen's constitutional independence for agencies is the structural key to understanding Swedish crisis response generally, most visibly illustrated by the \"Swedish approach\" to COVID-19 being substantially agency-driven rather than directly politically commanded. MSB coordinates crisis response across Sweden's genuinely autonomous kommuner and regioner within this same structural model, totalförsvaret's revival reflects the broader security-environment shift also driving NATO membership, the 2018 wildfires show a real capability gap this structure didn't fully cover on its own, and gang violence illustrates how the crisis-response framing itself has expanded to cover a sustained security problem rather than only discrete, acute events.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "politics/Campaign Strategy/se": {
+    profession: "politics",
+    category: "Campaign Strategy",
+    jurisdiction: "se",
+    overview:
+      "Swedish campaigns run on a 4% proportional-representation threshold, unusually high voter turnout that shifts strategic emphasis toward persuasion over turnout mobilization, a historically low-key campaign culture (including the distinctive \"valstuga\" campaign-hut tradition), and — most significantly in recent years — the Sweden Democrats' rise breaking the once-stable left-right bloc framing that used to structure every campaign.",
+    concepts: [
+      {
+        id: "se-cs-four-percent-threshold",
+        title: "The 4% national threshold",
+        explanation:
+          "Sweden's 349-seat Riksdag is elected via party-list proportional representation, with parties needing at least 4% of the national vote (or 12% in a single constituency) to win seats — a somewhat lower bar than Germany's 5% threshold, though functioning similarly as a mechanism to limit extreme party fragmentation while still allowing smaller parties a genuine path to representation.",
+        whyItMatters:
+          "As with Germany's threshold, campaign strategy for smaller Swedish parties often concentrates heavily on \"threshold survival\" messaging — but the somewhat lower 4% bar (versus Germany's 5%) has historically allowed a slightly larger number of smaller parties to maintain parliamentary representation over time.",
+        example:
+          "Smaller Swedish parties polling near the 4% line run explicit late-campaign messaging urging supporters not to \"waste\" their vote on a party that might fall short — the same threshold-survival strategic logic seen in Germany, adjusted for Sweden's specific percentage bar.",
+      },
+      {
+        id: "se-cs-high-turnout-culture",
+        title: "Unusually high voter turnout",
+        explanation:
+          "Sweden has historically maintained very high voter turnout by international standards — routinely above 80% in general elections — a level considerably higher than many comparable democracies, reflecting strong civic participation norms and, notably, automatic voter registration removing a common turnout barrier elsewhere.",
+        whyItMatters:
+          "This changes campaign strategy's basic cost-benefit calculation — with turnout already so high and relatively stable, Swedish campaigns generally invest relatively less strategic emphasis on pure turnout-mobilization operations than campaigns in lower-turnout systems, focusing comparatively more on persuading and shifting the preferences of voters who will show up regardless.",
+        example:
+          "Unlike campaigns in lower-turnout democracies that invest heavily in get-out-the-vote operations targeting specific demographic groups less likely to vote, Swedish campaigns can generally assume most eligible voters will participate regardless, shifting relative strategic emphasis toward persuasion messaging over turnout mechanics.",
+      },
+      {
+        id: "se-cs-valstuga-low-key-culture",
+        title: "Valstugor and low-key campaign culture",
+        explanation:
+          "Swedish campaign culture is comparatively low-spending and low-intensity by international standards, featuring distinctive grassroots traditions like \"valstugor\" — small party campaign huts set up in town squares and public spaces where candidates and volunteers directly engage with passersby — alongside more restrained overall campaign advertising spending than less-regulated systems.",
+        whyItMatters:
+          "This reflects a broader Nordic pattern (shared to varying degrees with the other countries covered, but particularly pronounced in Sweden) of campaign competition emphasizing direct, low-key public engagement over expensive, high-production media campaigns — a genuinely different campaign texture than more media-spending-intensive political cultures.",
+        example:
+          "During Swedish election campaigns, it remains common to see party valstugor set up in central town locations, staffed by volunteers and sometimes candidates themselves, offering a direct, informal citizen-engagement format that persists as a recognizable campaign tradition even in an increasingly digital campaign environment.",
+      },
+      {
+        id: "se-cs-bloc-politics-disrupted",
+        title: "Bloc politics disrupted by the Sweden Democrats",
+        explanation:
+          "Swedish campaigns historically framed competition in clear left (\"rödgröna\") versus right (\"Alliansen\") bloc terms — but the Sweden Democrats' electoral rise has broken this clean framing, forcing campaigns (and voters) to navigate a more complex landscape where traditional bloc lines no longer reliably predict post-election governing coalitions.",
+        whyItMatters:
+          "Campaign messaging strategy has had to adapt substantially to this disruption — parties can no longer simply campaign on \"vote for our bloc\" logic the way they once could, since actual post-election governing arrangements have become considerably less predictable from pre-election bloc positioning alone.",
+        example:
+          "Recent Swedish election campaigns have featured genuine uncertainty and strategic ambiguity from mainstream parties about post-election cooperation possibilities involving the Sweden Democrats, a level of governing-coalition unpredictability that the older, cleaner two-bloc campaign framing didn't require parties to navigate.",
+      },
+      {
+        id: "se-cs-party-financing-transparency-reform",
+        title: "Party financing and post-2014 transparency reforms",
+        explanation:
+          "Swedish party financing includes significant public subsidies with comparatively less reliance on large private donations than less-regulated systems, but Sweden's donation-transparency rules were historically notably less strict than its Nordic neighbors' — a gap addressed through stricter transparency reforms enacted from 2014 onward requiring clearer disclosure of party funding sources.",
+        whyItMatters:
+          "This is a genuinely notable point of contrast worth flagging — Sweden's reputation for strong institutional transparency (offentlighetsprincipen) didn't automatically extend to party campaign financing specifically, which required its own dedicated, relatively recent reform push to catch up to comparable Nordic transparency standards.",
+        example:
+          "Before the post-2014 reforms, Swedish political parties faced less stringent donation-disclosure requirements than their Danish, Finnish, or Norwegian counterparts — a genuine transparency gap in party financing specifically that subsequent reform legislation was designed to close.",
+      },
+      {
+        id: "se-cs-public-broadcasting-debates",
+        title: "SVT/SR debates and equal-time norms",
+        explanation:
+          "Sweden's public broadcasters (SVT for television, SR for radio) host major campaign debates and generally operate under equal-treatment norms for competing parties, similar in spirit to Germany's Triell debates and France's temps de parole rules, though implemented through Sweden's own specific public-broadcasting structures and conventions.",
+        whyItMatters:
+          "As with the other countries covered, this regulated equal-airtime tradition limits how much campaign strategy can rely on simply dominating broadcast media exposure — Swedish campaigns compete for attention within a media environment that structurally constrains any single party or candidate from crowding out competitors' public-broadcast visibility.",
+        example:
+          "Major Swedish party leader debates hosted by SVT during election campaigns typically include all parties with realistic representation prospects, reflecting the broadcaster's institutional commitment to balanced coverage rather than favoring only the largest or best-funded parties.",
+      },
+    ],
+    connections:
+      "The 4% threshold sets the basic seat-allocation math, and high turnout culture means campaign strategy leans relatively more toward persuasion than turnout mobilization compared to lower-turnout systems. Valstuga culture and SVT/SR equal-time debate norms both reflect a low-key, structurally balanced campaign media environment that limits how much any single campaign can dominate through spending alone — reinforced by the post-2014 financing transparency reforms. The Sweden Democrats' disruption of traditional bloc politics is the single biggest recent change to how campaigns actually have to strategize, since the old predictable two-bloc framing this whole system used to operate within no longer reliably holds.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "politics/Legislative Negotiation/se": {
+    profession: "politics",
+    category: "Legislative Negotiation",
+    jurisdiction: "se",
+    overview:
+      "Swedish legislative negotiation has long centered on the challenge of governing without a majority — a historical norm, not an exception — occasionally formalized through notable explicit cross-bloc agreements, and increasingly complicated by the strategic question of whether and how to negotiate with the Sweden Democrats.",
+    concepts: [
+      {
+        id: "se-ln-minority-government-negotiation",
+        title: "Governing as a minority: the historical negotiating pattern",
+        explanation:
+          "Because Swedish minority governments are historically common rather than exceptional, Swedish legislative negotiation has long centered on securing sufficient ad hoc parliamentary support — issue by issue, or crucially budget by budget — rather than relying on one comprehensive, binding coalition agreement covering the full governing program the way Germany's Koalitionsvertrag model does.",
+        whyItMatters:
+          "This produces a structurally more continuous, ongoing negotiating dynamic than Germany's front-loaded coalition-agreement model — a Swedish minority government's negotiators are essentially always negotiating, reassembling working majorities for each significant vote, rather than executing a single pre-agreed program.",
+        example:
+          "A Swedish minority government has historically needed to separately negotiate sufficient support for its annual budget, for major reform legislation, and for other significant votes — sometimes with different combinations of supporting or abstaining parties on different issues, rather than relying on one stable governing majority across all votes.",
+      },
+      {
+        id: "se-ln-december-january-agreements",
+        title: "Decemberöverenskommelsen and Januariavtalet",
+        explanation:
+          "Notable formal cross-bloc agreements — the 2014 \"December Agreement\" (Decemberöverenskommelsen) and the 2019 \"January Agreement\" (Januariavtalet) — saw parties negotiate explicit, sometimes controversial arrangements to enable minority government stability, representing a more formalized departure from Sweden's traditionally more informal, ad hoc minority-negotiation pattern.",
+        whyItMatters:
+          "These agreements illustrate how, when the traditional informal minority-negotiation pattern comes under sufficient strain (often due to close election results or bloc fragmentation), Swedish parties have sometimes resorted to unusually explicit, formalized cross-party arrangements — and how controversial such formal departures from normal practice can become within party bases.",
+        example:
+          "The 2019 Januariavtalet involved the Social Democrat-led government securing support from parties outside its traditional bloc in exchange for specific policy commitments, a formalized arrangement that generated significant internal party controversy specifically because it broke from Sweden's traditionally more informal minority-negotiation norms.",
+      },
+      {
+        id: "se-ln-budgetprocessen",
+        title: "Budgetprocessen — the all-or-nothing budget framework vote",
+        explanation:
+          "Sweden's budget process, reformed after a 1990s fiscal crisis, requires the Riksdag to first vote on the overall budget framework (fastställande av utgiftsramar) as a single package before voting on individual spending allocations within it — a structural rule that has, notably in 2014, produced situations where the government's own proposed framework lost to an opposition-negotiated alternative.",
+        whyItMatters:
+          "This structural rule creates unusually high-stakes, winner-take-all budget negotiation dynamics — because the framework vote is essentially all-or-nothing, a government lacking secured majority support risks its entire budget being replaced by an opposition alternative in one vote, rather than losing more narrowly on individual line items.",
+        example:
+          "In 2014, Sweden's minority government's budget proposal was voted down in favor of the opposition's alternative budget framework — a rare but consequential illustration of how the all-or-nothing framework-vote structure can produce a complete budget defeat for a government lacking secured majority or plurality support.",
+      },
+      {
+        id: "se-ln-remiss-as-prelegislative-negotiation",
+        title: "Remiss consultation as informal pre-legislative negotiation",
+        explanation:
+          "The extensive remiss consultation process (covered in the Domestic Policy content) functions as a form of negotiation and consensus-building with affected stakeholders and agencies well before a bill ever reaches formal Riksdag votes — meaning significant substantive negotiation often happens during this pre-legislative phase, not only during formal parliamentary proceedings.",
+        whyItMatters:
+          "Understanding Swedish legislative negotiation purely by looking at formal Riksdag votes and party positioning misses much of where real substantive compromise actually happens — significant policy substance is frequently already negotiated and adjusted during the remiss phase, before formal legislative negotiation among parties even formally begins.",
+        example:
+          "A controversial policy proposal that generates strong negative remiss responses from key stakeholders is often substantially revised by the government before formal introduction to the Riksdag — meaning much of the effective \"negotiation\" already happened during consultation, ahead of the visible parliamentary process.",
+      },
+      {
+        id: "se-ln-lagradet-soft-checkpoint",
+        title: "Lagrådet review as a negotiation-influencing checkpoint",
+        explanation:
+          "As covered in the Law content, Lagrådet's advisory (non-binding) review of draft legislation for constitutional and legal coherence frequently prompts government revision before final passage — functioning as an additional informal checkpoint that can reshape a bill's content even without any formal negotiating power over the Riksdag itself.",
+        whyItMatters:
+          "Because Lagrådet criticism carries real political weight despite being non-binding, government negotiators factor anticipated Lagrådet reaction into how they draft legislation in the first place — an informal but genuinely consequential input into the overall legislative negotiation process, distinct from formal inter-party bargaining.",
+        example:
+          "Government legislative drafters routinely anticipate likely Lagrådet objections and adjust bill language proactively during drafting, specifically to avoid the political cost of a public negative Lagrådet opinion that could complicate or delay the bill's passage.",
+      },
+      {
+        id: "se-ln-sd-cooperation-question",
+        title: "The Sweden Democrats cooperation question",
+        explanation:
+          "Whether and how mainstream parties are willing to negotiate directly with the Sweden Democrats — a question that has evolved considerably over recent years as the party's electoral strength has grown — has become a central, actively contested strategic question shaping which legislative negotiating coalitions are even realistically possible on any given issue.",
+        whyItMatters:
+          "This single question now shapes an unusually large share of practical Swedish legislative negotiating possibilities — understanding current Swedish legislative dynamics requires tracking not just formal party positions on policy substance, but each mainstream party's current, evolving stance on cooperation with the Sweden Democrats specifically.",
+        example:
+          "Legislative negotiations on issues like migration or criminal justice policy in recent Swedish parliamentary terms have often directly involved Sweden Democrat input or support in ways that would have been considered politically unthinkable for mainstream parties in earlier periods — a genuine, still-evolving shift in the boundaries of Swedish legislative coalition-building.",
+      },
+    ],
+    connections:
+      "Minority government negotiation is the default mode Swedish legislative politics has long operated in, occasionally formalized into explicit arrangements like the December and January Agreements when informal ad hoc negotiation alone proves insufficient. The budgetprocessen's all-or-nothing framework vote raises the stakes of budget negotiation specifically, while remiss consultation and Lagrådet review both shape legislation substantially before or alongside formal inter-party bargaining, adding informal negotiation layers most purely majoritarian systems lack. The Sweden Democrats cooperation question now cuts across all of this, reshaping which negotiating coalitions are practically available on almost any given piece of legislation.",
     source: "claude",
     generatedAt: "2026-09-10",
   },

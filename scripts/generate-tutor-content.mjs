@@ -93,6 +93,19 @@ const SKIP_KEYS = new Set([
   "politics/Legislative Negotiation",
 ]);
 
+// As of 2026-09-10, Germany/France/Spain/Sweden are ALL hand-authored for
+// BOTH Law and Politics (40 country-specific entries) — every country this
+// app's language picker maps to (see lib/countryContext.ts) is covered.
+// This list exists so a --jurisdiction run doesn't waste Gemini calls
+// regenerating already-hand-authored content; update it (or use --force)
+// if a new country is ever added to lib/countryContext.ts.
+const SKIP_JURISDICTION_KEYS = new Set(
+  ["de", "fr", "es", "se"].flatMap((code) => [
+    ...CASE_CATEGORIES.law.map((c) => `law/${c}/${code}`),
+    ...CASE_CATEGORIES.politics.map((c) => `politics/${c}/${code}`),
+  ]),
+);
+
 const FORCE = process.argv.includes("--force");
 const JURISDICTION_ARG = process.argv.find((a) => a.startsWith("--jurisdiction="))?.split("=")[1];
 const JURISDICTION_PROFESSION = process.argv.find((a) => a.startsWith("--profession="))?.split("=")[1] ?? "law";
@@ -202,7 +215,14 @@ async function main() {
   if (JURISDICTION_ARG) {
     for (const category of CASE_CATEGORIES[JURISDICTION_PROFESSION]) {
       const key = `${JURISDICTION_PROFESSION}/${category}/${JURISDICTION_ARG}`;
+      if (!FORCE && SKIP_JURISDICTION_KEYS.has(key)) continue;
       targets.push({ profession: JURISDICTION_PROFESSION, category, key, jurisdiction: JURISDICTION_ARG });
+    }
+    if (targets.length === 0) {
+      console.log(
+        `Nothing to do — all ${JURISDICTION_PROFESSION} categories for ${LABELS_FOR_PROFESSION[JURISDICTION_ARG]} are already hand-authored. Pass --force to regenerate an alternative draft anyway.`,
+      );
+      return;
     }
   } else {
     for (const profession of Object.keys(CASE_CATEGORIES)) {
