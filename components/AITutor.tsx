@@ -406,6 +406,10 @@ export function AITutor() {
             />
           }
           onStart={() => beginChallenge()}
+          onSkipToChallenge={() => {
+            setMode("core");
+            beginChallenge("core");
+          }}
           onChangeCategory={() => setPhase("selectCategory")}
         />
       )}
@@ -526,6 +530,7 @@ function TeachStep({
   voiceControl,
   handoffVoiceControl,
   onStart,
+  onSkipToChallenge,
   onChangeCategory,
 }: {
   profession: CaseProfession;
@@ -550,6 +555,8 @@ function TeachStep({
   voiceControl: ReactNode;
   handoffVoiceControl: ReactNode;
   onStart: () => void;
+  /** Jumps straight to a standard case, bypassing the teaching walkthrough — the old Case Studies experience, now reachable from inside the tutor instead of a separate page. */
+  onSkipToChallenge: () => void;
   onChangeCategory: () => void;
 }) {
   const header = (
@@ -627,6 +634,15 @@ function TeachStep({
   return (
     <div className="flex flex-col gap-5">
       {header}
+
+      {isOverview && (
+        <button
+          onClick={onSkipToChallenge}
+          className="self-center text-xs font-semibold text-ink-muted hover:text-brass-text hover:underline"
+        >
+          Skip the lesson — practice a case now →
+        </button>
+      )}
 
       <div className="rounded-lg bg-surface-2 p-5">
         <div className="flex items-center justify-between">

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { NAV_LINKS } from "@/lib/navTranslations";
+import { NAV_GROUPS } from "@/lib/navTranslations";
 import { LANGUAGES } from "@/lib/languages";
 import { useLanguage } from "@/components/LanguageProvider";
 
@@ -34,23 +34,32 @@ export function NavBar() {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-1">
-          {NAV_LINKS.map((link) => {
-            const active = pathname === link.href;
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
-                  active
-                    ? "bg-navy-800 text-brass-soft"
-                    : "text-cream-muted hover:bg-navy-800 hover:text-cream"
-                }`}
-              >
-                {link.labels[language]}
-              </Link>
-            );
-          })}
+        <div className="flex flex-wrap items-start gap-x-5 gap-y-2">
+          {NAV_GROUPS.map((group) => (
+            <div key={group.label.en} className="flex flex-col gap-1">
+              <span className="px-1 text-[10px] font-semibold uppercase tracking-wide text-cream-muted/70">
+                {group.label[language]}
+              </span>
+              <div className="flex flex-wrap gap-1">
+                {group.links.map((link) => {
+                  const active = pathname === link.href;
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className={`whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+                        active
+                          ? "bg-navy-800 text-brass-soft"
+                          : "text-cream-muted hover:bg-navy-800 hover:text-cream"
+                      }`}
+                    >
+                      {link.labels[language]}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </nav>

@@ -8,7 +8,8 @@ export default function Home() {
           <h1 className="font-display text-2xl font-semibold text-ink">AI Public Speaking Coach</h1>
           <div className="mx-auto mt-3 h-px w-10 bg-brass" />
           <p className="mt-3 text-sm text-ink-muted">
-            Record a short speech and get instant feedback on pace, filler words, and delivery.
+            Record a short speech and get instant feedback on pace, filler words, and delivery —
+            or switch to Stage practice for video, a live audience, and a teleprompter.
           </p>
         </header>
 

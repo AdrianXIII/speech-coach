@@ -8,7 +8,7 @@ import type { AnalyzeSpeechResponse } from "@/types/speechAnalysis";
  * POST /api/analyze-speech
  * Accepts a recorded audio blob (multipart/form-data, field name "audio",
  * plus a "durationSeconds" field, as sent by components/SpeechRecorder.tsx
- * and components/VirtualStage.tsx) and runs the coaching pipeline:
+ * — both its Simple and Stage practice modes) and runs the coaching pipeline:
  *
  *   1. Transcribe the audio and generate coaching feedback in a single
  *      Gemini call (mocked if GEMINI_API_KEY isn't set, so the rest of the
