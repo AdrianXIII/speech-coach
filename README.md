@@ -184,9 +184,10 @@ live-news-grounded question.
   (terminology/word choice/grammar), and pronunciation together, plus a
   summary and next steps to practice.
 - **Flag**: a "this seems wrong or shallow" control under each taught
-  concept — this app has no database, so flags land in Vercel's Runtime
-  Logs (search "TUTOR CONTENT FLAG") and a local per-device copy
-  (`lib/tutorFlags.ts`).
+  concept — written to Postgres when a database is connected (`lib/db.ts`),
+  reviewable at `/tutor-flags`; always also logged to Vercel's Runtime Logs
+  ("TUTOR CONTENT FLAG") and a local per-device copy (`lib/tutorFlags.ts`)
+  as fallbacks.
 
 English-only for now, with the same English-only fallback notice pattern as
 Elite Phrasing's profiles when a different language is selected. To
@@ -217,10 +218,20 @@ cp .env.example .env.local
 # GEMINI_API_KEY=...
 ```
 
+## Database (optional)
+
+The app is local-first by design (recordings/results live only in the
+browser) — the one exception is AI Tutor content flags, which persist to
+Postgres when connected (see `.env.example`'s `DATABASE_URL` section for
+setup: Vercel dashboard -> Storage -> Connect Database -> Postgres/Neon).
+Without it, flags still work, just without cross-device review at
+`/tutor-flags`. The `tutor_flags` table is created automatically on first
+write — no manual migration step.
+
 ## Tech stack
 
-Next.js (App Router) + TypeScript + Tailwind CSS. No database yet —
-recordings and results live only in the browser for the current session.
+Next.js (App Router) + TypeScript + Tailwind CSS + Postgres (optional, see
+above). Everything except AI Tutor flags lives only in the browser.
 
 ## Project structure
 
@@ -234,6 +245,7 @@ app/
   comprehension/page.tsx          Listening & Summary page
   collocations/page.tsx           Elite Phrasing page
   ai-tutor/page.tsx                AI Tutor page (Business/Law/Politics)
+  tutor-flags/page.tsx             Review view for AI Tutor content flags (GET /api/tutor/flags)
   api/
     analyze-speech/               Gemini transcription+coaching (one call) -> filler-word/pace analysis
     generate-script/              Topic/draft -> Gemini-polished speakable script
@@ -241,7 +253,8 @@ app/
     word-stress/                  Word -> syllable count + expected stress index (CMU dict lookup)
     tutor/evaluate/                Case id or news item + transcript + audio -> Gemini knowledge/language/pronunciation grading
     tutor/news/                    Fetches a live news item via Gemini Google Search grounding
-    tutor/flag/                    Logs a "this content seems wrong" report (see AI Tutor section above)
+    tutor/flag/                    Records a "this content seems wrong" report (Postgres + log + client-local)
+    tutor/flags/                   Lists flags for the /tutor-flags review page
     chat/                         Text-only follow-up chat, seeded with any of the above
 components/
   SpeechRecorder.tsx               Record & Analyze: Simple/Stage mode toggle, recording, playback, "Analyze Speech"
@@ -273,8 +286,8 @@ lib/
   collocationCheck.ts, caseStudyContent.ts, caseStudyFundamentals.ts,
   caseStudyProgress.ts,
   tutorEngine.ts, tutorTeachingContent.ts, tutorTeachingContent.generated.ts,
-  tutorNews.ts, tutorProfile.ts, tutorFlags.ts, voiceMatch.ts, random.ts,
-  gemini.ts, audio.ts
+  tutorNews.ts, tutorProfile.ts, tutorFlags.ts, legalJurisdiction.ts,
+  voiceMatch.ts, random.ts, gemini.ts, db.ts, audio.ts
 hooks/
   useMediaRecorder.ts, useSpeechRecognition.ts, useSpeechSynthesis.ts
 scripts/

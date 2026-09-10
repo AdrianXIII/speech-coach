@@ -11,12 +11,11 @@ export interface TutorFlag {
 }
 
 /**
- * This app has no database, so the durable copy of a flag is the Vercel
- * function log (see app/api/tutor/flag/route.ts). This local copy exists so
- * flags stay visible *in the app itself* on the device that reported them,
- * between sessions — check it via lib/tutorFlags.ts's loadTutorFlags() from
- * the browser console, or wire up a small review view if this grows past a
- * handful of reports.
+ * The durable, cross-device copy of a flag lives in Postgres when a
+ * database is connected (see lib/db.ts, app/api/tutor/flag/route.ts) —
+ * reviewable at /tutor-flags. This local copy exists as a fallback so
+ * flags stay visible *in the app itself* on the reporting device even
+ * before a database is set up, or if a write to it ever fails.
  */
 export function loadTutorFlags(): TutorFlag[] {
   if (typeof window === "undefined") return [];
