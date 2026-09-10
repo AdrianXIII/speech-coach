@@ -1569,6 +1569,376 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     generatedAt: "2026-09-09",
   },
 
+  "law/Contract Law/de": {
+    profession: "law",
+    category: "Contract Law",
+    jurisdiction: "de",
+    overview:
+      "German contract law is codified in the Bürgerliches Gesetzbuch (BGB) — a systematic civil code, not judge-made common law. The single biggest mental adjustment for someone trained on US contract law: German law has no doctrine of \"consideration\" at all. A promise can be binding without anything given in exchange for it.",
+    concepts: [
+      {
+        id: "de-contract-rechtsgeschaeft-willenserklaerung",
+        title: "Rechtsgeschäft and Willenserklärung (legal transaction and declaration of intent)",
+        explanation:
+          "A contract (Vertrag) forms through two matching Willenserklärungen (declarations of intent) — an Angebot (offer) and an Annahme (acceptance). This is structurally similar to offer-and-acceptance in common law, but German law does not require consideration: a one-sided gift promise (Schenkungsversprechen) can be a fully valid, binding Rechtsgeschäft if it meets formality requirements, something that would need a seal or reliance doctrine to be enforceable in most US states.",
+        whyItMatters:
+          "This is the doctrine most likely to trip up someone trained in common law — describing German contract formation using \"consideration\" language is simply wrong, not just imprecise, and signals a fundamental misunderstanding of the system's structure.",
+        example:
+          "A father's promise to gift his adult child money to buy a car, if properly notarized where required (§518 BGB), is enforceable in Germany with no exchange required — the same bare promise would likely fail for lack of consideration in most US common-law jurisdictions without reliance or a special doctrine.",
+      },
+      {
+        id: "de-contract-geschaeftsfaehigkeit",
+        title: "Geschäftsfähigkeit (capacity to contract)",
+        explanation:
+          "The BGB (§§104-113) sets out tiered capacity: no capacity under 7 (geschäftsunfähig), limited capacity from 7-17 (beschränkt geschäftsfähig, generally requiring a legal guardian's consent for anything beyond pocket-money-scale transactions under the \"Taschengeldparagraph,\" §110), and full capacity at 18.",
+        whyItMatters:
+          "The \"Taschengeldparagraph\" (pocket-money clause) is a distinctly German structural feature — a minor's contract becomes valid retroactively the moment they perform it with money given to them freely for that purpose, without needing separate parental ratification each time.",
+        example:
+          "A 12-year-old buying a video game with their own allowance money is making a fully valid purchase under §110 BGB the moment they pay — no parental co-signature needed, unlike a bigger transaction like a phone contract, which would need a guardian's consent.",
+      },
+      {
+        id: "de-contract-formvorschriften",
+        title: "Formvorschriften (form requirements)",
+        explanation:
+          "The general rule is Formfreiheit — contracts don't need to be written to be valid. But the BGB carves out specific exceptions requiring notarization (notarielle Beurkundung), most importantly real estate sales (§311b) and certain guarantee/suretyship promises — failure to meet the required form generally makes the contract void, not just unenforceable.",
+        whyItMatters:
+          "Unlike a common-law statute of frauds (which typically just bars a lawsuit on an unwritten deal), missing German form requirements can void the transaction entirely — there's no informal workaround once the formality is skipped.",
+        example:
+          "A handshake deal to sell a house, however clearly both sides agreed, is void under German law without notarization — the buyer can't even sue for specific performance based on an oral agreement, unlike some common-law jurisdictions' partial-performance exceptions.",
+      },
+      {
+        id: "de-contract-leistungsstoerungsrecht",
+        title: "Leistungsstörungsrecht (the law of breach)",
+        explanation:
+          "Since the 2002 Schuldrechtsreform (law of obligations reform), German law organizes all breach scenarios — impossibility (Unmöglichkeit), delay (Verzug), and defective performance (mangelhafte Leistung) — under one general concept: Pflichtverletzung (breach of duty), the basis for damages claims under §280 BGB.",
+        whyItMatters:
+          "This unified structure is a distinctly German simplification — rather than separate common-law doctrines for different breach types, one needs to ask: was there a Pflichtverletzung, and does an exception (like the debtor not being at fault) apply?",
+        example:
+          "Whether a seller failed to deliver at all, delivered late, or delivered a defective product, the analysis starts from the same §280 BGB Pflichtverletzung framework — the differences show up in which specific follow-on rules apply, not in which doctrine governs.",
+      },
+      {
+        id: "de-contract-gewaehrleistung",
+        title: "Gewährleistung and the priority of Nacherfüllung (cure)",
+        explanation:
+          "In sales law (Kaufrecht), a buyer who receives defective goods must generally first give the seller the chance to cure (Nacherfüllung — repair or replacement) before reaching for rescission (Rücktritt), price reduction (Minderung), or damages (Schadensersatz) — the Vorrang der Nacherfüllung (priority of cure).",
+        whyItMatters:
+          "This priority-of-cure structure is more seller-protective at the first step than typical US sales remedies, which often let a buyer choose among remedies more freely — a German buyer generally cannot skip straight to rescission for a first-time, curable defect.",
+        example:
+          "A buyer who receives a laptop with a faulty battery must generally let the seller repair or replace the battery first; only if that cure fails, is refused, or is unreasonable can the buyer move to price reduction, rescission, or damages.",
+      },
+      {
+        id: "de-contract-agb-recht",
+        title: "AGB-Recht (standard terms control)",
+        explanation:
+          "§§305-310 BGB impose strict judicial control over Allgemeine Geschäftsbedingungen (AGB — pre-formulated standard contract terms, roughly \"boilerplate\"): clauses that unreasonably disadvantage the other party are void, with detailed statutory blacklists and greylists of specific clause types.",
+        whyItMatters:
+          "This is considerably stricter and more codified than typical US unconscionability doctrine, which is a vaguer, more case-by-case common-law standard — German courts routinely strike specific boilerplate clauses (e.g. certain limitation-of-liability language) as a matter of course under detailed statutory criteria.",
+        example:
+          "A standard consumer contract clause completely excluding all liability for negligence is void under §309 BGB's blacklist almost automatically — a German court doesn't need to weigh fairness case-by-case the way unconscionability analysis typically requires elsewhere.",
+      },
+    ],
+    connections:
+      "Rechtsgeschäft/Willenserklärung and Geschäftsfähigkeit answer the threshold question of whether a valid contract exists at all — no consideration required, but capacity still matters. Formvorschriften layers on formality requirements for specific transaction types. Leistungsstörungsrecht and the priority of Nacherfüllung under Gewährleistung govern what happens when performance goes wrong, and AGB-Recht is the separate, stricter control on standard-form terms that cuts across all of the above whenever boilerplate language is involved.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "law/Corporate & Compliance/de": {
+    profession: "law",
+    category: "Corporate & Compliance",
+    jurisdiction: "de",
+    overview:
+      "German corporate law centers on a structural feature almost no common-law system shares: a mandatory two-tier board, with management and oversight formally and legally separated into different bodies. Compliance obligations are built around this structure rather than around a single omnibus statute like the US Sarbanes-Oxley framework.",
+    concepts: [
+      {
+        id: "de-corp-two-tier-board",
+        title: "The two-tier board: Vorstand and Aufsichtsrat",
+        explanation:
+          "A German Aktiengesellschaft (AG, stock corporation) is legally required to have two separate bodies: the Vorstand (management board, runs the company) and the Aufsichtsrat (supervisory board, appoints and oversees the Vorstand but cannot itself manage). Unlike a US unitary board, the same person cannot sit on both simultaneously.",
+        whyItMatters:
+          "This structural separation is mandatory, not a governance best practice a company can choose — a US-style unitary board where directors both manage and oversee themselves simply isn't legally available to a German AG.",
+        example:
+          "A German AG's CEO (Vorstandsvorsitzender) cannot also chair the Aufsichtsrat that supervises them — that's structurally prohibited, unlike some jurisdictions where a combined chair/CEO role is merely discouraged by governance codes rather than legally barred.",
+      },
+      {
+        id: "de-corp-gmbh-vs-ag",
+        title: "GmbH vs. AG",
+        explanation:
+          "The GmbH (limited liability company) is by far the most common company form for German businesses, including many large ones — simpler governance, no mandatory two-tier board split for management purposes in the same way. The AG is reserved mainly for companies planning to list publicly or needing to raise capital broadly.",
+        whyItMatters:
+          "Choosing GmbH vs. AG is a much bigger structural decision than choosing, say, an LLC vs. a corporation in the US — it changes mandatory governance structure, not just tax treatment or liability shielding.",
+        example:
+          "Many well-known, large German companies (including family-owned Mittelstand firms) are structured as GmbH & Co. KG hybrids specifically to combine limited liability with more flexible, less publicly-scrutinized governance than a full AG structure would require.",
+      },
+      {
+        id: "de-corp-geschaeftsfuehrerhaftung",
+        title: "Director liability and the German business judgment rule",
+        explanation:
+          "§93(1) AktG (for AG Vorstand members) and §43 GmbHG (for GmbH Geschäftsführer) impose a duty of care, with a business-judgment-rule-style safe harbor codified since the 2005 UMAG reform — protecting good-faith, adequately informed decisions made in the company's interest from being second-guessed later, tracing back to the landmark ARAG/Garmenbeck decision.",
+        whyItMatters:
+          "Unlike the US business judgment rule, which developed almost entirely through case law (mainly Delaware), Germany's version is explicitly written into statute — meaning the exact wording of §93(1) AktG itself, not accumulated case precedent alone, defines the safe harbor's boundaries.",
+        example:
+          "A Vorstand member who approves a risky but well-researched acquisition, having consulted appropriate advisors and reviewed adequate information, is protected by §93(1) AktG's safe harbor even if the deal later fails — mirroring Delaware's Business Judgment Rule in effect, but resting on explicit statutory text rather than judicial doctrine.",
+      },
+      {
+        id: "de-corp-mitbestimmung",
+        title: "Mitbestimmung (codetermination)",
+        explanation:
+          "German law requires worker representation on the Aufsichtsrat for larger companies: the Mitbestimmungsgesetz (1976) mandates parity codetermination (equal shareholder and employee representatives) for companies with more than 2,000 employees, while the Drittelbeteiligungsgesetz requires one-third employee representation for companies with 500-2,000 employees.",
+        whyItMatters:
+          "This gives organized labor formal, legally mandated board-level power over major corporate decisions in a way that has no real equivalent in US corporate governance, where worker board representation is essentially unheard of outside voluntary or crisis-driven exceptions.",
+        example:
+          "A German company with 3,000 employees must have an Aufsichtsrat split evenly between shareholder-elected and employee-elected members, meaning major strategic decisions requiring supervisory board approval need genuine buy-in from labor representatives, not just shareholders.",
+      },
+      {
+        id: "de-corp-compliance-organisation",
+        title: "Compliance organization without a single omnibus statute",
+        explanation:
+          "Germany has no single comprehensive compliance statute equivalent to Sarbanes-Oxley — obligations instead derive from §91(2) AktG (requiring a risk-monitoring system) and case law, most importantly the 2013 Neubürger (Siemens) decision, which established that management board members can be personally liable for failing to set up an adequate compliance organization.",
+        whyItMatters:
+          "Because the legal basis is more diffuse (statute plus case law) than a single detailed compliance code, German compliance practice leans heavily on interpreting what courts have found \"adequate\" in specific past cases like Neubürger, rather than checking boxes against one comprehensive rulebook.",
+        example:
+          "The Neubürger decision held a former Siemens legal-compliance board member personally liable for tens of millions of euros for failing to prevent bribery, establishing that an inadequate compliance organization is itself a breach of the duty of care — not just failing to catch a specific violation.",
+      },
+      {
+        id: "de-corp-konzernrecht",
+        title: "Konzernrecht (corporate group law)",
+        explanation:
+          "§§291-338 AktG contain detailed statutory rules specifically governing affiliated-enterprise (Konzern) structures, including the Beherrschungsvertrag (domination agreement) that formally allows a parent to direct a subsidiary's management, paired with statutory protections for the subsidiary's minority shareholders and creditors.",
+        whyItMatters:
+          "This is a distinctly codified body of law with no close US equivalent — American corporate group relationships are governed more by general fiduciary duty and piercing-the-veil principles, not a dedicated statutory chapter regulating parent-subsidiary control and compensating minority shareholders for it.",
+        example:
+          "A German parent company that wants to formally direct a subsidiary's day-to-day management (not just exercise ordinary shareholder influence) typically needs a Beherrschungsvertrag, which in turn triggers statutory obligations to compensate outside minority shareholders (Ausgleich) and guarantee their shares' value (Abfindung).",
+      },
+    ],
+    connections:
+      "The two-tier board and Mitbestimmung together define who has formal power over the company and how oversight is structurally separated from management. GmbH-vs-AG is the foundational choice of governance regime a business makes at formation. Director liability sets the standard officers are held to within whichever structure applies, compliance organization requirements (per Neubürger) flow from that same duty of care, and Konzernrecht extends the whole framework to groups of affiliated companies rather than a single standalone entity.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "law/Civil Litigation/de": {
+    profession: "law",
+    category: "Civil Litigation",
+    jurisdiction: "de",
+    overview:
+      "German civil procedure (Zivilprozessordnung, ZPO) gives judges a more active, structuring role than the adversarial US model, has no jury and no broad American-style discovery, and — unlike the US — generally makes the losing party pay the winner's statutory legal costs.",
+    concepts: [
+      {
+        id: "de-civ-procedural-model",
+        title: "A more judge-directed procedural model",
+        explanation:
+          "German civil procedure gives the judge more active control over structuring and narrowing the case (asking clarifying questions, pushing parties to specify disputed facts) than the more purely party-driven US adversarial model, though it remains fundamentally an adversarial system with parties presenting their own evidence, not a fully inquisitorial one.",
+        whyItMatters:
+          "A German judge routinely raises questions and points the parties toward the legally relevant issues mid-proceeding in a way an American judge, who mostly stays passive until ruling on motions or presiding at trial, typically wouldn't — this shapes how lawyers prepare and argue cases.",
+        example:
+          "A German judge might tell both sides directly during a hearing which legal theory they find most promising and ask targeted follow-up questions — active judicial steering that would be unusual, and in some contexts even improper, for a US trial judge to do before a jury.",
+      },
+      {
+        id: "de-civ-court-hierarchy",
+        title: "Instanzenzug (court hierarchy)",
+        explanation:
+          "Civil cases start at the Amtsgericht (local court, lower-value/simpler disputes) or Landgericht (regional court, higher-value or specialized disputes), with the split determined by the amount in dispute (Streitwert), then can be appealed to the Oberlandesgericht and ultimately the Bundesgerichtshof (BGH, federal court of justice) on points of law.",
+        whyItMatters:
+          "Which court has first-instance jurisdiction is determined mechanically by the claim's monetary value, not by subject-matter complexity or party choice the way US state/federal jurisdiction questions often turn on — a straightforward, largely non-discretionary threshold.",
+        example:
+          "A contract dispute over a small amount starts at the Amtsgericht regardless of how legally complex the underlying issue is; a dispute exceeding the statutory threshold goes to the Landgericht instead, purely because of the amount in dispute.",
+      },
+      {
+        id: "de-civ-beweislast",
+        title: "Beweislast and the absence of broad discovery",
+        explanation:
+          "The standard of proof is \"volle Überzeugung\" (full conviction, §286 ZPO) — similar in spirit to a fairly high civil standard, though articulated differently than the US preponderance-of-the-evidence language. Critically, Germany has no broad US-style pretrial discovery: each party must generally produce its own supporting evidence rather than compelling broad document production from the other side.",
+        whyItMatters:
+          "This is one of the biggest practical differences from US litigation — a party can't go on a broad fishing expedition through the other side's files the way US discovery often allows, which changes litigation strategy substantially, including how much is knowable before filing.",
+        example:
+          "A German plaintiff suspecting internal company documents would support their claim generally can't compel broad production the way a US plaintiff could via discovery requests — they largely need to build their case from evidence they can independently obtain or that specific, narrower disclosure rules allow.",
+      },
+      {
+        id: "de-civ-kostenerstattung",
+        title: "Kostenerstattung — the \"loser pays\" rule",
+        explanation:
+          "Under §91 ZPO, the losing party generally must reimburse the winning party's litigation costs, including statutory attorney fees (calculated from a fixed fee schedule tied to the amount in dispute, not actual hourly billing) — the opposite of the American Rule, where each side typically bears its own attorney fees regardless of outcome.",
+        whyItMatters:
+          "This changes litigation risk calculus substantially — filing a weak claim carries real financial exposure beyond your own legal costs, which tends to discourage marginal claims compared to the US system, where filing costs relatively little beyond your own side's fees.",
+        example:
+          "A claimant who loses a case with a high Streitwert (amount in dispute) can owe not just their own lawyer but the statutory fee-schedule cost of the opposing side's lawyer too — a real deterrent against filing speculative claims that wouldn't carry the same direct cost risk in the US.",
+      },
+      {
+        id: "de-civ-mahnverfahren",
+        title: "Mahnverfahren (payment order procedure)",
+        explanation:
+          "For undisputed monetary claims, creditors can use the streamlined Mahnverfahren — a simplified, largely automated court process to obtain an enforceable payment order without a full lawsuit, unless the debtor formally objects, at which point it converts into ordinary litigation.",
+        whyItMatters:
+          "This gives creditors a fast, cheap tool for routine debt collection that doesn't require the full apparatus of a lawsuit — useful precisely because most such claims are genuinely undisputed and just need an enforceable order.",
+        example:
+          "A business owed an unpaid invoice with no real dispute over the underlying debt can obtain an enforceable Mahnbescheid in a matter of weeks through this streamlined process, reserving full litigation for the smaller share of cases the debtor actually contests.",
+      },
+      {
+        id: "de-civ-schiedsverfahren",
+        title: "Schiedsverfahren and Mediation (arbitration and mediation)",
+        explanation:
+          "Arbitration is governed by §1025 ff. ZPO (closely modeled on the UNCITRAL Model Law, making Germany a common seat for international arbitration), and mediation has grown steadily as an alternative, particularly for commercial and family disputes, encouraged by the Mediationsgesetz (Mediation Act).",
+        whyItMatters:
+          "Because ordinary litigation lacks broad discovery and offers less party control over procedure than arbitration, sophisticated commercial parties (especially in cross-border deals) frequently opt into arbitration by contract specifically to get more procedural flexibility and confidentiality than German state courts provide by default.",
+        example:
+          "International commercial contracts involving a German party frequently specify arbitration (often seated in Germany, a well-regarded, neutral arbitration venue) precisely to access broader evidence-gathering tools and more flexible procedure than the ZPO's default civil process offers.",
+      },
+    ],
+    connections:
+      "The judge-directed procedural model and court hierarchy define how a case is structured and where it's heard. Beweislast and the absence of broad discovery shape what evidence each side can actually bring to bear within that structure, and Kostenerstattung's loser-pays rule shapes the financial risk calculus of filing or defending a claim in the first place. Mahnverfahren and arbitration/mediation are both alternative tracks that sidestep full ordinary litigation — one for simple undisputed debts, the other for parties who want more control and flexibility than the ZPO's default process provides.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "law/Criminal Law/de": {
+    profession: "law",
+    category: "Criminal Law",
+    jurisdiction: "de",
+    overview:
+      "German criminal law uses a distinctive three-tier analytical structure for every offense, has no jury trials in the American sense, and gives prosecutors a general duty to prosecute rather than broad American-style discretion — structural differences that run deeper than just different specific crimes or penalties.",
+    concepts: [
+      {
+        id: "de-crim-three-tier-structure",
+        title: "The three-tier crime structure: Tatbestand, Rechtswidrigkeit, Schuld",
+        explanation:
+          "Every German criminal offense is analyzed in a fixed sequence: Tatbestand (whether the objective and subjective elements of the offense are met), Rechtswidrigkeit (unlawfulness — whether a justification like self-defense applies), and Schuld (culpability — whether the person can be personally blamed, accounting for excuses like insanity). Only if all three are satisfied is there a punishable offense.",
+        whyItMatters:
+          "This is a more layered, sequential framework than the roughly two-part actus reus/mens rea analysis common law uses — self-defense, for instance, is analyzed as negating Rechtswidrigkeit (the act was justified) rather than as a free-standing affirmative defense raised separately, which changes how the analysis is structured, not just labeled.",
+        example:
+          "Someone who kills in genuine self-defense satisfies the Tatbestand of homicide (they did cause a death, intentionally) but the act is not Rechtswidrig (not unlawful) because of Notwehr (self-defense justification, §32 StGB) — so no crime exists at the second stage, before culpability is even reached.",
+      },
+      {
+        id: "de-crim-legalitaetsprinzip",
+        title: "Legalitätsprinzip (mandatory prosecution principle)",
+        explanation:
+          "German prosecutors (Staatsanwaltschaft) operate under a general duty to prosecute when there's sufficient evidence (Legalitätsprinzip), with only limited, statutorily defined exceptions for discretion (Opportunitätsprinzip, e.g. minor offenses under §153 StPO) — a real contrast to the broad, largely unreviewable charging discretion US prosecutors have.",
+        whyItMatters:
+          "This significantly limits a German prosecutor's ability to simply decline to bring charges for policy reasons the way US prosecutorial discretion often allows — the default expectation is that sufficient evidence of a crime leads to prosecution, not a case-by-case policy judgment call.",
+        example:
+          "A US prosecutor might decline to charge a minor drug possession case as a matter of office policy; a German prosecutor facing comparable evidence generally needs a specific statutory basis (like §153 StPO's minor-offense exception, often requiring court consent) to decline, not just prosecutorial preference.",
+      },
+      {
+        id: "de-crim-no-jury-schoeffen",
+        title: "No jury trials — the Schöffengericht system",
+        explanation:
+          "Germany has no jury trials in the American sense. Instead, many cases are heard by mixed panels combining professional judges with Schöffen (lay judges) who have equal voting rights on both guilt and sentence, sitting alongside professional judges rather than as a separate deliberating body.",
+        whyItMatters:
+          "Because lay participants deliberate together with professional judges rather than separately (as an American jury does, insulated from the judge), the dynamic is structurally different — lay input is integrated into the same deliberation as legal expertise, not walled off from it.",
+        example:
+          "A more serious case at the Landgericht might be heard by a panel of three professional judges and two Schöffen, all deliberating and voting together on guilt and sentence — unlike a US trial, where the judge rules on law while a separate jury alone decides facts.",
+      },
+      {
+        id: "de-crim-rights-of-accused",
+        title: "Rights of the accused under the StPO",
+        explanation:
+          "The Strafprozessordnung (StPO) guarantees the right to remain silent (Schweigerecht, §136 StPO) and the right to defense counsel, rooted in both statute and constitutional principle — functionally similar in purpose to Miranda protections, but arising from a different legal source and without the same specific \"warning\" ritual American police procedure requires.",
+        whyItMatters:
+          "There's no single \"Miranda moment\" concept in German procedure — the obligation to inform a suspect of these rights is built into specific StPO provisions governing interrogation, so the practical trigger points and consequences of a violation differ from the American exclusionary-rule analysis around Miranda warnings.",
+        example:
+          "A suspect must be informed of their right to silence and counsel before police questioning under §136 StPO — procedurally similar in purpose to a Miranda warning, but analyzed under different statutory provisions with different consequences for violations than US Fifth Amendment case law.",
+      },
+      {
+        id: "de-crim-strafzumessung",
+        title: "Strafzumessung (sentencing discretion)",
+        explanation:
+          "§46 StGB directs judges to weigh the offender's guilt and a range of individualized factors (motives, prior record, conduct after the offense, effect on the victim) within often-wide statutory sentencing ranges — considerably more open-ended judicial discretion than US sentencing guideline systems or mandatory minimums typically allow.",
+        whyItMatters:
+          "This means the same offense can produce meaningfully different sentences based on individualized circumstances more readily than in jurisdictions with rigid sentencing grids or mandatory minimums — proportionality and individualization are explicit statutory priorities, not just informal judicial custom.",
+        example:
+          "Two defendants convicted of the same theft offense might receive quite different sentences under §46 StGB factors — genuine remorse, restitution to the victim, or a clean prior record can move the outcome substantially within the statutory range, without needing a guideline departure the way a US federal sentencing judge might.",
+      },
+      {
+        id: "de-crim-rechtsmittel",
+        title: "Rechtsmittel: the Berufung/Revision two-track appeal",
+        explanation:
+          "German criminal appeals split into two distinct tracks depending on the originating court: Berufung is a full appeal re-examining both facts and law (available from Amtsgericht decisions), while Revision is a law-only appeal (available from Landgericht decisions and as a second-stage appeal after Berufung) reviewing only legal errors, not re-weighing evidence.",
+        whyItMatters:
+          "Whether an appeal can revisit factual findings or only legal questions depends structurally on which track applies — a party expecting a full factual re-examination on Revision will be disappointed, since that track is deliberately limited to legal error review.",
+        example:
+          "A defendant convicted at the Amtsgericht can pursue a Berufung that re-examines the facts fully, potentially calling witnesses again; a defendant convicted at the Landgericht instead goes straight to Revision, arguing only that the trial court made a legal error, not that it got the facts wrong.",
+      },
+    ],
+    connections:
+      "The three-tier Tatbestand/Rechtswidrigkeit/Schuld structure is the analytical backbone every case runs through. The Legalitätsprinzip determines whether a case reaches trial at all, given sufficient evidence, and the Schöffengericht system and rights of the accused shape how that trial is actually conducted. Strafzumessung determines the consequence once guilt is established, and the Berufung/Revision appeal structure determines what, if anything, can still be challenged afterward — full re-examination or law-only review, depending on the originating court.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "law/Constitutional & Regulatory/de": {
+    profession: "law",
+    category: "Constitutional & Regulatory",
+    jurisdiction: "de",
+    overview:
+      "German constitutional law is built around the Grundgesetz (Basic Law), with human dignity as its untouchable anchor, centralized constitutional review by a single specialized court, and a structured proportionality test that does the analytical work US levels-of-scrutiny doctrine does — but organized quite differently.",
+    concepts: [
+      {
+        id: "de-const-grundgesetz-ewigkeitsklausel",
+        title: "The Grundgesetz and the Ewigkeitsklausel (eternity clause)",
+        explanation:
+          "Germany's constitution, the Grundgesetz (Basic Law), was adopted in 1949 and structures the federal system (Bund and Länder). Article 79(3) — the \"eternity clause\" — puts certain core principles (federalism, human dignity, the fundamental-rights framework, democracy) permanently beyond the reach of constitutional amendment, no matter how large a legislative majority might want to change them.",
+        whyItMatters:
+          "This is a deliberate, explicit design choice with no real US equivalent — the US Constitution can theoretically be amended to change almost anything through Article V's process, while Germany's eternity clause puts specific core principles permanently off-limits, a direct historical response to the Weimar Republic's constitutional vulnerabilities.",
+        example:
+          "A hypothetical German constitutional amendment abolishing the federal structure entirely, or eliminating the human-dignity guarantee, would itself be unconstitutional under Art. 79(3) — no supermajority, however large, can lawfully pass it, a limit the amendment process itself cannot override.",
+      },
+      {
+        id: "de-const-bverfg",
+        title: "The Bundesverfassungsgericht and centralized review",
+        explanation:
+          "Unlike the US's diffuse system (where any court can rule on constitutionality), Germany centralizes constitutional review in one specialized court, the Bundesverfassungsgericht (Federal Constitutional Court) in Karlsruhe — and, distinctively, individual citizens can bring a Verfassungsbeschwerde (constitutional complaint) directly to it after exhausting other legal remedies.",
+        whyItMatters:
+          "The direct-citizen-complaint pathway is a major structural difference — an ordinary German citizen can personally challenge a law or government action at the constitutional court after exhausting lower courts, a more accessible direct route than typical US constitutional litigation, which usually requires a live case working up through the ordinary court system.",
+        example:
+          "A citizen whose personal data-protection rights were affected by a surveillance law can bring a Verfassungsbeschwerde directly challenging the law's constitutionality at the Bundesverfassungsgericht, a path that has produced some of Germany's most significant privacy-rights rulings.",
+      },
+      {
+        id: "de-const-menschenwuerde",
+        title: "Menschenwürde (human dignity) as the supreme value",
+        explanation:
+          "Article 1 GG declares human dignity inviolable and places it first in the constitutional text, deliberately — a direct response to the Nazi era. Every other fundamental right is interpreted in light of this supreme, non-derogable value, which anchors the entire rights framework rather than functioning as merely one right among many.",
+        whyItMatters:
+          "Human dignity plays a structurally central, almost foundational role in German constitutional reasoning that has no precise parallel in US constitutional doctrine, which doesn't organize its rights framework around one supreme, explicitly foundational value in the same way.",
+        example:
+          "The Bundesverfassungsgericht struck down a law that would have authorized shooting down a hijacked passenger plane to prevent a larger attack, reasoning that using the passengers' deaths merely as a means to protect others violated their human dignity under Art. 1 — dignity trumping even a plausible security justification.",
+      },
+      {
+        id: "de-const-foederalismus",
+        title: "Föderalismus and legislative competence (Art. 70-74 GG)",
+        explanation:
+          "The Grundgesetz allocates legislative power between the federal government (Bund) and the states (Länder) through detailed lists of exclusive and concurrent competences (Art. 70-74) — playing a comparable structural role to US Commerce Clause debates, but through explicit, enumerated subject-matter lists rather than a broad, contested \"commerce\" concept.",
+        whyItMatters:
+          "Because German federal-state competence is defined through detailed enumerated lists rather than one broad, frequently litigated clause, disputes tend to center on which specific list a topic falls under, rather than on redefining the scope of a single overarching grant of power the way Commerce Clause litigation often does.",
+        example:
+          "Education policy is largely a Länder (state) competence in Germany, which is why German states, not the federal government, set core school curricula and structure — a much clearer, list-based allocation than the more contested, judicially-negotiated boundaries of US federal versus state authority in comparable areas.",
+      },
+      {
+        id: "de-const-verhaeltnismaessigkeit",
+        title: "Verhältnismäßigkeitsprinzip (the proportionality test)",
+        explanation:
+          "German administrative and constitutional law reviews government action through a structured three-part proportionality test: Geeignetheit (suitability — does the measure actually achieve its goal), Erforderlichkeit (necessity — is there a less restrictive equally effective alternative), and Angemessenheit (proportionality in the strict sense — do the benefits outweigh the burden on the individual).",
+        whyItMatters:
+          "This is a single, consistently applied structured test used across essentially all government-action review, more uniform and step-by-step than the US's more fragmented framework of different levels of scrutiny (rational basis, intermediate, strict) that vary by right and classification.",
+        example:
+          "A law restricting a fundamental right must pass all three proportionality steps in sequence — a law that's suitable and necessary but still imposes burdens grossly disproportionate to its benefit can still fail at the Angemessenheit stage, even after clearing the first two hurdles.",
+      },
+      {
+        id: "de-const-eu-recht-vorrang",
+        title: "The primacy of EU law and German constitutional identity",
+        explanation:
+          "As an EU member state, Germany accepts that EU law generally takes primacy over national law — but the Bundesverfassungsgericht has developed the \"Solange\" (\"so long as\") line of case law reserving the right to review EU measures against core German constitutional identity (particularly fundamental rights and democratic accountability) if EU-level protection ever became inadequate.",
+        whyItMatters:
+          "This creates an ongoing, structurally unresolved tension unique to EU member states — German courts generally defer to EU law's primacy while explicitly reserving a constitutional check they've occasionally actually exercised, a balancing act with no equivalent in a purely domestic legal system like the US.",
+        example:
+          "The Bundesverfassungsgericht's 2020 ruling questioning aspects of the European Central Bank's bond-buying program (on the basis that German authorities hadn't adequately reviewed its proportionality) was a rare, high-profile instance of Germany's top court actually pushing back against an EU-level institutional action.",
+      },
+    ],
+    connections:
+      "The Grundgesetz and its eternity clause set the outer boundaries of what can ever be changed, anchored by Menschenwürde as the supreme value everything else is interpreted through. The Bundesverfassungsgericht is the institution that enforces all of this, including via the citizen-accessible Verfassungsbeschwerde. Föderalismus allocates power between federal and state levels within those boundaries, the proportionality test is the actual analytical tool used to check whether government action at any level goes too far, and the EU law primacy question adds a further, still-evolving layer on top of the whole domestic framework.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
   "law/Corporate & Compliance": {
     profession: "law",
     category: "Corporate & Compliance",
@@ -1863,6 +2233,376 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Separation of powers sets the stage for asking which branch or agency may act; judicial review is the mechanism courts use to police that boundary. The level of scrutiny applied determines how hard it is for a challenged government action to survive, the Commerce Clause is the usual source of federal regulatory authority being tested, administrative deference (or its recent absence, post-Chevron) determines how much benefit of the doubt an agency's own interpretation gets, and due process protections constrain how — and whether — government can act against an individual even within all of the above.",
     source: "claude",
     generatedAt: "2026-09-09",
+  },
+
+  "politics/Foreign Policy & Diplomacy/de": {
+    profession: "politics",
+    category: "Foreign Policy & Diplomacy",
+    jurisdiction: "de",
+    overview:
+      "German foreign policy has, since 1949, been built around embedding the country deeply in multilateral institutions (NATO, the EU) rather than acting unilaterally — a deliberate historical response to the catastrophic consequences of German unilateralism in the first half of the 20th century. That instinct has been genuinely, if unevenly, tested since Russia's 2022 invasion of Ukraine.",
+    concepts: [
+      {
+        id: "de-fp-multilateralism-default",
+        title: "Multilateral embedding as the default posture",
+        explanation:
+          "Post-war German foreign policy consensus favors acting through the EU and NATO rather than unilaterally — sometimes summarized as \"Nie wieder Alleingang\" (never again going it alone) — reflecting a deliberate institutional and psychological break from the country's earlier history of independent great-power action.",
+        whyItMatters:
+          "This shapes German diplomatic behavior distinctively: Germany often prefers to move only once EU consensus exists, even when it has the individual economic weight to act alone, a restraint that frustrates allies at times but reflects genuine, deeply held institutional caution, not just weakness.",
+        example:
+          "Germany has repeatedly preferred coordinated EU-wide sanctions or policy positions over unilateral German action on major foreign-policy questions (such as Russia sanctions), even when Germany's economic leverage alone would allow more unilateral moves.",
+      },
+      {
+        id: "de-fp-parlamentsvorbehalt",
+        title: "Parlamentsvorbehalt (parliamentary reservation on military deployment)",
+        explanation:
+          "German Bundeswehr deployments abroad generally require prior Bundestag authorization — a constitutional-court-derived principle (Parlamentsvorbehalt) that gives parliament, not just the executive, a direct check on committing German forces overseas.",
+        whyItMatters:
+          "This is structurally different from many countries where the executive can deploy forces with far less immediate parliamentary constraint — German chancellors cannot simply order troops abroad the way heads of government elsewhere sometimes can, without first securing a parliamentary vote.",
+        example:
+          "German participation in NATO or UN-mandated missions abroad requires a specific Bundestag mandate, debated and voted on, rather than a purely executive deployment decision — a real constraint that has occasionally slowed or limited German military contributions allies expected faster.",
+      },
+      {
+        id: "de-fp-ostpolitik-legacy",
+        title: "The Ostpolitik legacy: \"Wandel durch Handel\"",
+        explanation:
+          "Willy Brandt's Ostpolitik in the 1970s — engaging diplomatically and economically with the Soviet Bloc rather than pure containment — left a lasting instinct in German foreign policy toward \"Wandel durch Handel\" (change through trade): the belief that economic engagement gradually liberalizes and stabilizes relations with difficult states.",
+        whyItMatters:
+          "This historical legacy explains why Germany pursued deep energy and trade ties with Russia for decades even amid growing security concerns from allies — it wasn't naivety so much as a specific, historically successful diplomatic philosophy being applied to a new and, it turned out, poorly analogous case.",
+        example:
+          "Germany's construction of the Nord Stream gas pipelines directly from Russia, continued even after Russia's 2014 annexation of Crimea, reflected the \"Wandel durch Handel\" instinct — a strategy later widely reassessed after the 2022 full-scale invasion of Ukraine exposed its risks.",
+      },
+      {
+        id: "de-fp-zeitenwende",
+        title: "Zeitenwende — the 2022 turning point",
+        explanation:
+          "Chancellor Olaf Scholz's declaration of a \"Zeitenwende\" (turning point/epochal shift) days after Russia's 2022 invasion of Ukraine marked a rapid, historically unusual policy shift: a dramatic increase in defense spending commitments and a break from decades of German restraint on arms exports to conflict zones, including sending weapons to Ukraine.",
+        whyItMatters:
+          "This illustrates how even deeply embedded, decades-long foreign-policy norms can shift rapidly under acute crisis pressure — useful context for understanding that current German security policy represents a genuine departure from, not a continuation of, its prior post-war posture.",
+        example:
+          "Germany's post-Zeitenwende commitment of a special €100 billion defense fund (Sondervermögen) marked one of the most rapid reversals of a long-standing, deeply held policy position (chronic underinvestment in defense) in modern German political history.",
+      },
+      {
+        id: "de-fp-eu-coordination",
+        title: "EU coordination and the Franco-German relationship",
+        explanation:
+          "German foreign policy is heavily coordinated through, and constrained by, EU-level consensus-building — particularly the Franco-German relationship, often called the \"Motor\" of European integration, which historically has needed to align before major EU initiatives move forward.",
+        whyItMatters:
+          "This means Germany has less unilateral latitude on many foreign-policy questions than a comparably sized non-EU power would — major moves are frequently pre-negotiated with France and other EU partners rather than announced independently, changing both the pace and style of German diplomacy.",
+        example:
+          "Major EU responses to crises (such as coordinated sanctions packages or joint EU debt issuance during the COVID-19 pandemic) have typically required visible Franco-German agreement first, before broader EU consensus could be reached.",
+      },
+      {
+        id: "de-fp-wirtschaftsdiplomatie",
+        title: "Wirtschaftsdiplomatie (economic diplomacy)",
+        explanation:
+          "As an export-oriented economy, Germany's foreign policy priorities are heavily shaped by trade relationships and industrial supply chains — a dynamic that became especially visible after the 2022 energy crisis exposed the risks of deep dependency on a single foreign energy supplier (Russia).",
+        whyItMatters:
+          "Economic exposure functions as a real, sometimes underappreciated foreign-policy constraint for Germany — decisions about sanctions, trade agreements, or diplomatic posture toward major trading partners (China included) are weighed heavily against potential economic self-harm in a way that shapes German positions distinctively.",
+        example:
+          "Germany's heavy reliance on Russian natural gas before 2022 meaningfully slowed and complicated its initial sanctions response to the invasion of Ukraine, compared to countries with less direct energy dependency — a vivid illustration of economic exposure shaping foreign-policy room for maneuver.",
+      },
+    ],
+    connections:
+      "Multilateral embedding is the overarching post-war posture, with Parlamentsvorbehalt as one of its concrete institutional expressions (parliament checking executive military action). The Ostpolitik legacy explains the instinct toward engagement-over-isolation that shaped decades of policy, including the economic-diplomacy ties that Zeitenwende suddenly and dramatically reassessed after 2022. EU coordination constrains how independently Germany can act on any of this, since major moves are typically negotiated within the EU/Franco-German framework rather than announced unilaterally.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "politics/Domestic Policy/de": {
+    profession: "politics",
+    category: "Domestic Policy",
+    jurisdiction: "de",
+    overview:
+      "German domestic policy runs through a federal system where states genuinely implement policy (not just administer it), a proportional electoral system that makes coalition government the norm rather than the exception, and a constitutionally entrenched fiscal rule that constrains budget policy more tightly than in most comparable democracies.",
+    concepts: [
+      {
+        id: "de-dp-kooperativer-foederalismus",
+        title: "Kooperativer Föderalismus (cooperative federalism) and real Länder implementation power",
+        explanation:
+          "German states (Länder) have genuine constitutional authority over major policy areas — education and policing most prominently — not just administrative delegation from the federal government. Policy coordination between Bund and Länder happens through structured cooperative mechanisms rather than pure federal command.",
+        whyItMatters:
+          "This means national domestic policy debates on issues like education aren't really settled at the federal level at all — a federal politician campaigning on school reform has much less direct policy lever to pull than the framing might suggest, since Länder retain the actual authority.",
+        example:
+          "There is no single German national school curriculum — each of the 16 Länder sets its own, coordinated only loosely through voluntary bodies like the Kultusministerkonferenz (Conference of Ministers of Education), producing real, sometimes significant policy variation across states.",
+      },
+      {
+        id: "de-dp-koalitionsregierung",
+        title: "Koalitionsregierung as the norm",
+        explanation:
+          "Germany's proportional representation electoral system (with a 5% threshold to enter the Bundestag) means single-party majorities are rare — governing almost always requires a negotiated coalition (Koalitionsvertrag) among two or more parties, unlike winner-take-all systems that more often produce single-party governments.",
+        whyItMatters:
+          "This structurally changes what \"campaign promise\" even means — a party's platform is understood by voters as an opening negotiating position, not a governing program, since actual policy will be shaped by whatever coalition eventually forms and what its partners will accept.",
+        example:
+          "A party campaigning on a specific tax policy typically ends up implementing a modified, negotiated version of it (or dropping it entirely) once coalition talks with a different-priorities partner conclude — a routine, expected part of German governance rather than a broken promise in the American sense.",
+      },
+      {
+        id: "de-dp-sozialpartnerschaft",
+        title: "Sozialpartnerschaft (social partnership)",
+        explanation:
+          "German economic and labor policy is shaped substantially through institutionalized cooperation between unions (Gewerkschaften) and employer associations (Arbeitgeberverbände), including collective bargaining structures and mandatory works councils (Betriebsräte) — a more consensus-oriented, institutionalized model than the more adversarial US labor-relations tradition.",
+        whyItMatters:
+          "Major domestic economic policy changes (like labor market reforms) are typically negotiated with organized social partners built into the process from the start, not just consulted afterward — ignoring this convention, even when legally possible, carries real political cost.",
+        example:
+          "Germany's works council system (Betriebsräte) gives employees institutionalized co-decision rights over specific workplace matters at the company level, a formal structure with no close equivalent in most US workplaces outside unionized settings.",
+      },
+      {
+        id: "de-dp-schuldenbremse",
+        title: "Schuldenbremse (the constitutional debt brake)",
+        explanation:
+          "Articles 109 and 115 of the Grundgesetz impose a constitutional limit on structural government deficits (the Schuldenbremse, introduced in 2009), sharply restricting how much new debt the federal and state governments can take on outside of defined emergency exceptions.",
+        whyItMatters:
+          "Having a fiscal rule embedded in the constitution itself — not just ordinary statute or informal political norm — makes it far harder to override than a typical budget rule, which shapes German domestic policy debates around spending and stimulus distinctively compared to countries where such limits are just legislative policy.",
+        example:
+          "Major spending initiatives (including a chunk of Germany's post-2022 defense spending) have needed to be structured as constitutionally permitted special funds (Sondervermögen) specifically to work around the Schuldenbremse's strict limits, rather than simply being funded through ordinary deficit spending.",
+      },
+      {
+        id: "de-dp-vermittlungsausschuss",
+        title: "Vermittlungsausschuss (mediation committee)",
+        explanation:
+          "When the Bundestag and Bundesrat (the federal states' chamber) disagree on legislation — particularly Zustimmungsgesetze, laws requiring Bundesrat consent because they affect state administration or finances — a joint Vermittlungsausschuss (mediation committee) works out a compromise text both chambers can accept.",
+        whyItMatters:
+          "This gives the Länder, through the Bundesrat, real structural leverage over a meaningful share of federal legislation — a domestic policy proposal can stall entirely in this reconciliation process, not just face amendment, unlike systems where an upper chamber has a weaker or purely advisory role.",
+        example:
+          "Tax and administrative legislation affecting state budgets frequently requires Vermittlungsausschuss negotiation before final passage, since the Bundesrat's consent is constitutionally required for that category of law — a genuine veto point, not a formality.",
+      },
+      {
+        id: "de-dp-subsidiaritaetsprinzip",
+        title: "Subsidiaritätsprinzip (subsidiarity)",
+        explanation:
+          "The principle that decisions should be made at the lowest effective level of government — local rather than state, state rather than federal, federal rather than EU — is embedded in both German federalism and the country's approach to EU integration, shaping how policy questions default to being handled.",
+        whyItMatters:
+          "This is both a legal principle and a political instinct: proposals to centralize decision-making upward (to the federal level or to the EU) routinely need to justify why the lower level can't handle the matter effectively, rather than centralization being the default assumption.",
+        example:
+          "Debates over further EU-level policy harmonization in Germany frequently invoke subsidiarity to argue that a given matter should stay at the national or even state level rather than move to Brussels — a recurring argument shaping the pace of German support for EU centralization.",
+      },
+    ],
+    connections:
+      "Kooperativer Föderalismus and the Vermittlungsausschuss both flow from the same underlying federal structure — real state-level authority, and a formal mechanism for resolving federal-state legislative disagreement. Koalitionsregierung shapes what's politically achievable at the federal level in the first place, given how policy gets negotiated among coalition partners. Sozialpartnerschaft brings organized labor and business into that negotiation on economic matters specifically, the Schuldenbremse constitutionally constrains how much can be spent regardless of political agreement, and Subsidiaritätsprinzip is the underlying philosophy for why so much of this stays decentralized rather than being centralized federally or at the EU level.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "politics/Crisis Response/de": {
+    profession: "politics",
+    category: "Crisis Response",
+    jurisdiction: "de",
+    overview:
+      "German crisis response runs through a federal system where disaster and public-health authority sits mainly with the Länder and municipalities, a political culture favoring measured, expert-driven communication, and coordination mechanisms that regularly create friction between federal desire for unified action and constitutionally protected state autonomy.",
+    concepts: [
+      {
+        id: "de-cr-foederalismus-friction",
+        title: "Federalism friction in crisis coordination",
+        explanation:
+          "Because domestic security and public health are substantially Länder competences, national crises expose a recurring tension between the federal government's desire for a unified national response and the states' constitutionally protected authority to implement measures their own way — informal coordination bodies like the Ministerpräsidentenkonferenz (conference of state premiers) exist precisely to manage this friction.",
+        whyItMatters:
+          "A German chancellor cannot simply order uniform nationwide crisis measures the way a more centralized executive elsewhere might — implementation genuinely depends on 16 separate state governments' cooperation, which is why crisis response often looks patchwork even when the underlying threat is the same everywhere.",
+        example:
+          "During the COVID-19 pandemic, individual German states set meaningfully different rules on school closures, curfews, and business restrictions at various points, coordinated loosely through the Ministerpräsidentenkonferenz rather than dictated uniformly from Berlin.",
+      },
+      {
+        id: "de-cr-expert-driven-communication",
+        title: "Expert-driven, measured crisis communication",
+        explanation:
+          "German political culture favors measured, technically grounded public communication during crises, often channeled through respected expert institutions (like the Robert Koch-Institut for public health matters) rather than purely political messaging — a style that prizes institutional credibility and caution over rapid, high-emotion messaging.",
+        whyItMatters:
+          "This shapes public expectations of crisis leadership — officials perceived as overriding or contradicting expert institutional guidance for political reasons tend to face significant backlash, more so than in political cultures more tolerant of executive improvisation during emergencies.",
+        example:
+          "During COVID-19, the Robert Koch-Institut's data and recommendations were treated as the authoritative technical basis for policy decisions, with political leaders generally framing their own decisions as following expert guidance rather than substituting their own independent judgment.",
+      },
+      {
+        id: "de-cr-katastrophenschutz",
+        title: "Katastrophenschutz (disaster response) as primarily a Länder/local competence",
+        explanation:
+          "Civil disaster response in Germany is primarily organized at the state and municipal (Kommunen) level, with the federal Technisches Hilfswerk (THW) providing specialized support capacity rather than leading response efforts — a more decentralized structure than systems with a strong centralized federal emergency-management agency.",
+        whyItMatters:
+          "Effective German disaster response depends heavily on local and state government capacity and preparedness, not primarily on federal-level readiness — a structural reality that shaped criticism of the response to major flooding disasters, which exposed gaps in state/local coordination and warning systems.",
+        example:
+          "The 2021 Ahrtal flooding disaster response involved significant criticism of state and local-level warning and coordination failures specifically, which is where primary disaster-response responsibility legally sits, rather than the federal government being the principal locus of responsibility or blame.",
+      },
+      {
+        id: "de-cr-energiekrise-response",
+        title: "The 2022 Energiekrise as a case study in crisis-driven policy acceleration",
+        explanation:
+          "Germany's rapid pivot after 2022 — building LNG import terminals in under a year, a project that would ordinarily take many years through standard German regulatory and planning processes — illustrates how acute crisis pressure can override normally slow, deliberative German infrastructure and regulatory timelines.",
+        whyItMatters:
+          "This is a useful reference point for how much genuine institutional speed is actually available when the political will exists — normal German regulatory caution and process thoroughness are real defaults, but not absolute constraints when crisis conditions create sufficient urgency.",
+        example:
+          "Germany's first floating LNG terminal at Wilhelmshaven went from decision to operational in well under a year, a dramatic acceleration compared to the years-long typical timeline for comparable German infrastructure permitting and construction.",
+      },
+      {
+        id: "de-cr-ministerpraesidentenkonferenz",
+        title: "The Ministerpräsidentenkonferenz coordination mechanism",
+        explanation:
+          "The Ministerpräsidentenkonferenz (conference of state minister-presidents), often meeting jointly with the Chancellor during major crises, is the primary informal mechanism for negotiating a degree of nationwide consistency in crisis response despite the Länder's independent constitutional authority.",
+        whyItMatters:
+          "Because it's a coordination and negotiation body, not a body with binding command authority over the states, its decisions function more as strong political agreements than enforceable orders — individual states have, at various points, departed from agreed common lines.",
+        example:
+          "COVID-19-era Ministerpräsidentenkonferenz meetings produced widely publicized joint decisions on restriction levels, but individual states sometimes implemented variations or departed from the agreed framework, reflecting the conference's fundamentally coordinating rather than binding character.",
+      },
+      {
+        id: "de-cr-vertrauensbildung",
+        title: "Vertrauensbildung durch Transparenz (trust-building through transparency)",
+        explanation:
+          "German crisis-management culture places significant emphasis on institutional trust and transparent, technically grounded reasoning as the basis for public compliance with crisis measures, rather than relying primarily on appeals to authority or emotional persuasion.",
+        whyItMatters:
+          "This means the credibility of the underlying technical/scientific reasoning matters enormously for German public compliance with crisis measures — policies perceived as lacking clear expert justification tend to generate significantly more public resistance than in political cultures more accepting of authority-based directives.",
+        example:
+          "Public debate during COVID-19 frequently centered on demands for the government to publish and justify the specific data and modeling behind restriction decisions, reflecting an expectation that transparency about underlying reasoning is itself part of legitimate crisis governance.",
+      },
+    ],
+    connections:
+      "Federalism friction is the underlying structural reality every German crisis response has to work within, and the Ministerpräsidentenkonferenz is the primary tool for managing that friction toward a degree of national coherence. Katastrophenschutz's Länder/local-level responsibility is a direct consequence of that same federal structure. Expert-driven communication and Vertrauensbildung durch Transparenz are the cultural style crisis leadership is expected to follow within this structure, and the Energiekrise response shows just how much of the normal slow, deliberative pace can be overridden when genuine crisis urgency and political will align.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "politics/Campaign Strategy/de": {
+    profession: "politics",
+    category: "Campaign Strategy",
+    jurisdiction: "de",
+    overview:
+      "German campaigns run on a personalized proportional representation system with two separate votes, a 5% threshold that makes survival itself a strategic objective for smaller parties, and a coalition-aware campaign logic almost entirely absent from two-party, winner-take-all systems.",
+    concepts: [
+      {
+        id: "de-cs-personalisierte-verhaeltniswahl",
+        title: "Personalisierte Verhältniswahl (personalized proportional representation)",
+        explanation:
+          "German voters cast two votes: the Erststimme (first vote) elects a direct constituency representative (similar to a single-member-district race), while the Zweitstimme (second vote) — the one that actually determines each party's overall Bundestag seat share — is cast for a party list. Overall seat allocation is proportional, with direct-mandate wins layered in.",
+        whyItMatters:
+          "This means campaign math is fundamentally different from winner-take-all systems: a party's national vote share (via the Zweitstimme) is what really matters for its power in parliament, so campaigns invest heavily in national image and messaging even while local candidates also compete for direct mandates.",
+        example:
+          "A voter can split their ballot — casting their Erststimme for a well-liked local candidate from one party while casting their Zweitstimme for a different party entirely — a strategic option with no real equivalent in single-vote, winner-take-all electoral systems.",
+      },
+      {
+        id: "de-cs-fuenf-prozent-huerde",
+        title: "The 5% threshold (Sperrklausel) and the Grundmandatsklausel",
+        explanation:
+          "A party must win at least 5% of the national Zweitstimme vote (or, under the Grundmandatsklausel, at least 3 direct constituency seats) to receive any proportional seats in the Bundestag at all — falling just short means zero representation despite meaningful vote share.",
+        whyItMatters:
+          "For smaller and newer parties, campaign strategy often centers almost entirely on \"threshold survival\" — every additional vote below 5% is functionally wasted, which concentrates late-campaign messaging and resources on convincing supporters the party will actually clear the bar, not just on persuasion generally.",
+        example:
+          "Smaller German parties polling near the 5% line frequently run explicit \"every vote counts to reach 5%\" messaging in the campaign's final stretch, a distinct strategic imperative that larger, comfortably-above-threshold parties don't need to worry about.",
+      },
+      {
+        id: "de-cs-parteienfinanzierung",
+        title: "Parteienfinanzierung (party financing)",
+        explanation:
+          "German political parties receive substantial public financing (staatliche Teilfinanzierung) based on factors like past election results and membership dues/donations received, alongside private donations that are more heavily regulated and transparently disclosed than in less-regulated systems.",
+        whyItMatters:
+          "This produces a campaign finance environment considerably less dominated by large private/corporate spending than in more privately-financed systems — campaign strategy doesn't revolve around fundraising to nearly the same degree, shifting relative emphasis toward message and organization.",
+        example:
+          "Public party financing formulas that reward past electoral performance and small-donor engagement (rather than raw fundraising totals) mean a German party's financial base is shaped significantly by its last election result and grassroots support, not primarily by its ability to court large individual or corporate donors.",
+      },
+      {
+        id: "de-cs-koalitionssignale",
+        title: "Koalitionssignale (coalition signaling)",
+        explanation:
+          "Because single-party government is rare, German parties campaign while also signaling coalition preferences and exclusions (Ausschlusserklärungen — explicit statements ruling out governing with a particular party) — a strategic communication layer largely absent from two-party systems where the election itself determines the governing party.",
+        whyItMatters:
+          "Voters factor coalition signals into their choice in a way two-party-system voters don't need to — a vote for a smaller party is partly a vote for which larger party it would help bring to power, making coalition positioning a genuine, actively managed campaign strategy question, not an afterthought.",
+        example:
+          "A smaller party might campaign while explicitly ruling out coalition with a particular larger party, a strategic signal aimed at reassuring voters concerned about what their vote might ultimately help enable in government formation.",
+      },
+      {
+        id: "de-cs-kanzlerkandidat-debates",
+        title: "Kanzlerkandidat debates and the \"Triell\" format",
+        explanation:
+          "Rather than a single head-to-head presidential-style debate, German campaigns for the chancellorship have increasingly featured a \"Triell\" — a televised debate format including the leading chancellor-candidates from the major competing parties (not strictly limited to two), reflecting the multi-party nature of German politics.",
+        whyItMatters:
+          "Debate strategy has to account for multiple simultaneous rivals rather than a single opponent, changing both preparation and on-stage tactics — a candidate must manage attacks and positioning relative to more than one competitor at once.",
+        example:
+          "Recent German federal election cycles have featured Triell debates with three leading chancellor-candidates on stage together, requiring each to differentiate themselves against two rivals simultaneously rather than a single head-to-head opponent.",
+      },
+      {
+        id: "de-cs-regulated-advertising",
+        title: "Regulated campaign advertising and public broadcasting equal-time rules",
+        explanation:
+          "German campaign advertising culture is considerably more restrained than in less-regulated systems, with public broadcasters (öffentlich-rechtlicher Rundfunk) required to give competing parties roughly equitable airtime for campaign advertisements, and overall campaign spending far lower than in systems with more unrestricted private advertising spending.",
+        whyItMatters:
+          "This reduces the relative importance of paid media dominance as a campaign strategy lever — German campaigns can't simply outspend opponents on advertising to the same degree, shifting strategic emphasis toward free media, party organization, and direct voter contact.",
+        example:
+          "German parties receive allocated slots for campaign ads on public broadcasters roughly proportional to their prior electoral strength, rather than competing in a fully open, unregulated advertising marketplace where the highest bidder gets the most airtime.",
+      },
+    ],
+    connections:
+      "Personalisierte Verhältniswahl and the 5% threshold define the basic electoral math every campaign has to solve — winning enough Zweitstimme share to both clear the threshold and maximize proportional seats. Parteienfinanzierung and regulated advertising shape what resources are actually available and how they can be spent, Koalitionssignale add a strategic layer unique to multi-party proportional systems, and Kanzlerkandidat debates are where multiple candidates' campaigns most visibly collide, needing to manage more than one rival at once rather than a single opponent.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "politics/Legislative Negotiation/de": {
+    profession: "politics",
+    category: "Legislative Negotiation",
+    jurisdiction: "de",
+    overview:
+      "German legislative negotiation happens mainly before a government is even formed, through detailed coalition agreements, and continues through a Bundesrat co-decision process that gives the states real leverage over federal legislation — both features largely alien to two-party, single-chamber-dominant systems.",
+    concepts: [
+      {
+        id: "de-ln-koalitionsvertrag",
+        title: "The Koalitionsvertrag (coalition agreement)",
+        explanation:
+          "Before a coalition government takes office, negotiating parties produce a detailed, often lengthy coalition agreement (Koalitionsvertrag) specifying agreed policy commitments across virtually every domestic and foreign-policy area — a document that functions as the de facto governing program for the term.",
+        whyItMatters:
+          "This front-loads most major legislative negotiation to before the government even exists, rather than negotiating each bill freshly once in office — much of the hardest political bargaining happens in these coalition talks, with individual legislation later largely implementing what the Koalitionsvertrag already settled.",
+        example:
+          "A specific policy like a minimum wage increase or a tax change is often negotiated down to precise figures within the Koalitionsvertrag itself, before the coalition government is even sworn in — later legislation on the topic mainly implements what was already agreed.",
+      },
+      {
+        id: "de-ln-fraktionsdisziplin",
+        title: "Fraktionsdisziplin and the constitutional free mandate",
+        explanation:
+          "In practice, German parliamentary groups (Fraktionen) maintain fairly strong voting discipline on most legislation, coordinated through the Fraktion's internal processes — but Article 38 GG constitutionally guarantees each member a free mandate (freies Mandat), meaning they cannot be formally, legally bound to vote a particular way, unlike some systems with enforceable party-line requirements.",
+        whyItMatters:
+          "This creates a real (if usually latent) tension: coalition negotiators need reasonable confidence their agreements will translate into actual votes, but no member can be legally compelled to comply — which is why select highly sensitive issues (like end-of-life legislation) are sometimes explicitly released from Fraktionsdisziplin as Gewissensentscheidungen (conscience votes).",
+        example:
+          "Votes on deeply personal ethical questions like assisted dying or embryo research have periodically been explicitly declared free votes (Gewissensentscheidung) in the Bundestag, with party leadership deliberately not whipping the vote, unlike the treatment of ordinary coalition-agreement legislation.",
+      },
+      {
+        id: "de-ln-bundesrat-zustimmungsgesetze",
+        title: "The Bundesrat's Zustimmungsgesetze veto power",
+        explanation:
+          "Legislation classified as a Zustimmungsgesetz (consent law — typically laws affecting Länder administration or finances) requires actual Bundesrat approval to pass, not just consultation; other legislation (Einspruchsgesetze) can only be delayed, not blocked, by a Bundesrat objection that the Bundestag can override.",
+        whyItMatters:
+          "Whether a bill is a Zustimmungsgesetz or Einspruchsgesetz is often itself a contested legal/political question with real strategic stakes — it determines whether the Länder (via the Bundesrat) hold genuine veto leverage over the legislation or only a delaying power the Bundestag can ultimately override.",
+        example:
+          "Major tax-sharing or administrative-reform legislation affecting state budgets typically qualifies as Zustimmungsgesetze, giving state governments (via their Bundesrat votes) real negotiating leverage that a federal government cannot simply override the way it could with an ordinary Einspruchsgesetz.",
+      },
+      {
+        id: "de-ln-vermittlungsausschuss-negotiation",
+        title: "Vermittlungsausschuss negotiation in practice",
+        explanation:
+          "When Bundestag and Bundesrat can't agree on legislation, the joint Vermittlungsausschuss (mediation committee, with equal representation from both chambers) negotiates a compromise text — a formal, structured process rather than informal horse-trading, though real political negotiation happens within it.",
+        whyItMatters:
+          "Understanding this as a formal, rule-bound process (not just an ad hoc negotiation) matters for predicting outcomes — the committee's composition and procedural rules shape what kind of compromise is achievable, distinct from purely informal deal-making.",
+        example:
+          "Significant tax reforms have gone through extended Vermittlungsausschuss negotiations spanning weeks, with the eventual compromise text differing meaningfully from either chamber's original position — the formal mediation process itself shaping, not just rubber-stamping, the final outcome.",
+      },
+      {
+        id: "de-ln-multi-party-coalitions",
+        title: "Negotiating multi-party (Ampel/Jamaika-style) coalitions",
+        explanation:
+          "As smaller parties have gained vote share, German coalitions increasingly involve three parties rather than the traditional two (nicknamed by color combinations, e.g. \"Ampel\" — traffic light — for a red-yellow-green coalition), requiring genuinely multilateral negotiation among three sets of priorities and red lines simultaneously, not sequential two-party bargaining.",
+        whyItMatters:
+          "Three-party negotiation is structurally harder than two-party negotiation — a compromise acceptable to two parties can still be rejected by the third, and coalition management requires constantly balancing three sets of internal party politics rather than one bilateral relationship.",
+        example:
+          "A three-party coalition negotiating fiscal policy might need to satisfy one partner's spending priorities, a second partner's fiscal-discipline demands, and a third partner's specific policy carve-outs all simultaneously — a materially harder bargaining problem than reconciling just two parties' positions.",
+      },
+      {
+        id: "de-ln-fraktionszwang-tension",
+        title: "The Fraktionszwang vs. freies Mandat tension in coalition management",
+        explanation:
+          "Coalition partners need predictable voting behavior to govern effectively, creating informal pressure toward party-line discipline (sometimes called, somewhat pejoratively, Fraktionszwang) — but this sits in constant tension with each member's constitutionally guaranteed free mandate, which can never be fully overridden by internal party or coalition pressure.",
+        whyItMatters:
+          "This tension is a recurring, structurally built-in feature of German legislative negotiation, not just an occasional friction point — coalition negotiators always have to build in a margin for members who might not vote the party line, since no enforcement mechanism can force them to.",
+        example:
+          "A coalition government can face an unexpected defeat or need for a close vote on legislation its own coalition majority should easily pass, if enough individual members exercise their free mandate to vote against the coalition line on a matter of personal conviction.",
+      },
+    ],
+    connections:
+      "The Koalitionsvertrag is where most substantive legislative negotiation actually happens, before a government even forms — Fraktionsdisziplin and the constitutional free mandate determine how reliably that agreement translates into actual votes once governing begins. The Bundesrat's Zustimmungsgesetze power and the Vermittlungsausschuss process add a further negotiation layer specifically for legislation touching state interests, and multi-party coalition dynamics compound all of this by requiring the original Koalitionsvertrag negotiation itself to satisfy three (or more) parties simultaneously rather than two.",
+    source: "claude",
+    generatedAt: "2026-09-10",
   },
 
   "politics/Domestic Policy": {
