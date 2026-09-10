@@ -11,6 +11,7 @@ import type { TeachingContent } from "@/lib/tutorTeachingContent";
 import type { TutorNewsItem } from "@/lib/tutorNews";
 import { loadTutorProfile, type TutorProfile } from "@/lib/tutorProfile";
 import { saveTutorFlag } from "@/lib/tutorFlags";
+import { jurisdictionForLanguage, JURISDICTION_LABELS } from "@/lib/legalJurisdiction";
 import { matchSpokenLabel, matchesCommand } from "@/lib/voiceMatch";
 import { ProfessionPicker, PROFESSION_LABELS } from "@/components/shared/ProfessionPicker";
 import { CategoryPicker } from "@/components/shared/CategoryPicker";
@@ -49,6 +50,13 @@ export function AITutor() {
   const [exampleApproach, setExampleApproach] = useState("");
   const [teaching, setTeaching] = useState<TeachingContent | null>(null);
   const [teachStepIndex, setTeachStepIndex] = useState(-1); // -1 = overview, 0..N-1 = concepts, N = connections/handoff
+
+  // Law is jurisdiction-bound (see lib/legalJurisdiction.ts) — every other
+  // profession ignores this. Derived from the app language, not stored
+  // separately, so it always tracks the language picker.
+  const jurisdiction = profession === "law" ? jurisdictionForLanguage(language) : undefined;
+  const isJurisdictionFallback =
+    profession === "law" && !!teaching?.jurisdiction && teaching.jurisdiction !== jurisdiction;
 
   const [profile, setProfile] = useState<TutorProfile | null>(null);
   const [editingProfile, setEditingProfile] = useState(false);
@@ -96,6 +104,13 @@ export function AITutor() {
     if (newsItem) formData.append("newsItem", JSON.stringify(newsItem));
     if (profile) formData.append("profile", JSON.stringify(profile));
     if (audioBlob) formData.append("audio", audioBlob, "tutor-answer.webm");
+    // Grade against whatever jurisdiction was actually taught, not just what
+    // was requested — they can differ if that jurisdiction isn't populated
+    // yet and Teach fell back to the US default (see isJurisdictionFallback).
+    if (profession === "law") {
+      const actualJurisdiction = teaching?.jurisdiction ?? jurisdiction;
+      if (actualJurisdiction) formData.append("jurisdiction", actualJurisdiction);
+    }
 
     fetch("/api/tutor/evaluate", { method: "POST", body: formData })
       .then(async (res) => {
@@ -216,7 +231,7 @@ export function AITutor() {
     if (!profession) return;
     tts.cancel();
     setCategory(cat);
-    const brief = buildTeachingBrief(profession, cat);
+    const brief = buildTeachingBrief(profession, cat, jurisdiction);
     setFundamentals(brief.fundamentals);
     setExampleApproach(brief.exampleApproach);
     setTeaching(brief.teaching);
@@ -322,6 +337,13 @@ export function AITutor() {
       {englishOnlyNotice && (
         <p className="text-xs text-brass-text">
           The AI Tutor is English-only for now — showing English content instead of {getLanguage(language).name}.
+        </p>
+      )}
+
+      {isJurisdictionFallback && jurisdiction && (
+        <p className="text-xs text-brass-text">
+          Showing {JURISDICTION_LABELS[teaching!.jurisdiction!]} — {JURISDICTION_LABELS[jurisdiction]} content
+          isn&rsquo;t available yet.
         </p>
       )}
 

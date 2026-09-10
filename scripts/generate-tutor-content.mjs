@@ -19,6 +19,23 @@
  * tutorTeachingContent.generated.ts into HAND_AUTHORED_CONTENT in
  * tutorTeachingContent.ts and add its key to SKIP_KEYS below — that's what
  * protects it from being silently overwritten by a future run.
+ *
+ * JURISDICTION-SPECIFIC LAW CONTENT: pass --jurisdiction=de|fr|es|se to
+ * generate Law content for one non-US jurisdiction instead of the normal
+ * full run (see lib/legalJurisdiction.ts) — e.g.:
+ *   node --no-warnings scripts/generate-tutor-content.mjs --jurisdiction=de
+ * This mode ONLY generates Law categories, keyed `law/<category>/<code>`,
+ * and skips Business/Politics entirely. IMPORTANT: legal content is
+ * higher-stakes than business/politics content — an LLM has no license to
+ * practice law anywhere, and civil-law systems (Germany/France/Spain/
+ * Sweden) use fundamentally different doctrines than the common-law content
+ * already in this file, not just different local details. Treat generated
+ * output here as a rough draft that needs real review (ideally by someone
+ * with actual knowledge of that jurisdiction) before it's trusted the way
+ * the hand-authored US content is — don't promote it into
+ * HAND_AUTHORED_CONTENT without that review. Each run overwrites the whole
+ * generated file, so don't mix a jurisdiction run with a normal full run
+ * without merging their output by hand first.
  */
 
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
@@ -27,6 +44,7 @@ import path from "node:path";
 
 import { CASE_CATEGORIES, casesForCategory } from "../lib/caseStudyContent.ts";
 import { getFundamentals } from "../lib/caseStudyFundamentals.ts";
+import { JURISDICTION_LABELS } from "../lib/legalJurisdiction.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -71,6 +89,13 @@ const SKIP_KEYS = new Set([
 ]);
 
 const FORCE = process.argv.includes("--force");
+const JURISDICTION_ARG = process.argv.find((a) => a.startsWith("--jurisdiction="))?.split("=")[1];
+if (JURISDICTION_ARG && !(JURISDICTION_ARG in JURISDICTION_LABELS)) {
+  throw new Error(`Unknown --jurisdiction "${JURISDICTION_ARG}" — expected one of: ${Object.keys(JURISDICTION_LABELS).join(", ")}`);
+}
+if (JURISDICTION_ARG === "us") {
+  throw new Error("US Law content already exists in HAND_AUTHORED_CONTENT — no need to generate it.");
+}
 
 function loadGeminiApiKey() {
   const envPath = path.join(ROOT, ".env.local");
@@ -113,14 +138,22 @@ const PROFESSION_ROLE = {
   politics: "political science professor and foreign policy analyst",
 };
 
-function buildPrompt(profession, category, fundamentalLabels, sampleScenario) {
+function buildPrompt(profession, category, fundamentalLabels, sampleScenario, jurisdiction) {
   const scaffold = fundamentalLabels.length
     ? `Ground your concepts in these fundamentals this app already tracks for the category (cover the most important ones, you don't have to use all of them verbatim as titles):\n${fundamentalLabels.map((l) => `- ${l}`).join("\n")}`
     : "No pre-existing concept list exists for this category — use your own judgment for what a competent professional must know.";
 
+  const jurisdictionInstruction = jurisdiction
+    ? `\nJURISDICTION: Write this specifically for ${JURISDICTION_LABELS[jurisdiction]}. Use that
+jurisdiction's actual legal doctrines, terminology, and (where relevant) statute/code names — do NOT
+translate or adapt US/common-law concepts (e.g. do not describe "consideration" as if it applies in a
+civil-law system that doesn't use that doctrine). If a concept doesn't map cleanly, describe the
+jurisdiction's own real equivalent concept instead.\n`
+    : "";
+
   return `You are an expert ${PROFESSION_ROLE[profession]} writing teaching content for a one-on-one AI
 tutoring app, for the category "${category}" (in ${profession}).
-
+${jurisdictionInstruction}
 ${scaffold}
 
 ${sampleScenario ? `For context, here's an example of the kind of case a student will later be challenged with in this category:\n"""\n${sampleScenario}\n"""\n` : ""}
@@ -149,27 +182,39 @@ async function main() {
   const apiKey = loadGeminiApiKey();
 
   const targets = [];
-  for (const profession of Object.keys(CASE_CATEGORIES)) {
-    for (const category of CASE_CATEGORIES[profession]) {
-      const key = `${profession}/${category}`;
-      if (!FORCE && SKIP_KEYS.has(key)) continue;
-      targets.push({ profession, category, key });
+  if (JURISDICTION_ARG) {
+    for (const category of CASE_CATEGORIES.law) {
+      const key = `law/${category}/${JURISDICTION_ARG}`;
+      targets.push({ profession: "law", category, key, jurisdiction: JURISDICTION_ARG });
+    }
+  } else {
+    for (const profession of Object.keys(CASE_CATEGORIES)) {
+      for (const category of CASE_CATEGORIES[profession]) {
+        const key = `${profession}/${category}`;
+        if (!FORCE && SKIP_KEYS.has(key)) continue;
+        targets.push({ profession, category, key });
+      }
     }
   }
 
-  console.log(`Generating teaching content for ${targets.length} categories (skipping ${SKIP_KEYS.size} already hand-authored)...`);
+  console.log(
+    JURISDICTION_ARG
+      ? `Generating Law content for ${JURISDICTION_LABELS[JURISDICTION_ARG]} (${targets.length} categories) — remember this needs real legal review before being trusted.`
+      : `Generating teaching content for ${targets.length} categories (skipping ${SKIP_KEYS.size} already hand-authored)...`,
+  );
 
   const results = {};
-  for (const { profession, category, key } of targets) {
+  for (const { profession, category, key, jurisdiction } of targets) {
     process.stdout.write(`  ${key} ... `);
     try {
       const fundamentals = getFundamentals(profession, category).map((f) => f.label);
       const sample = casesForCategory(profession, category)[0]?.scenario;
-      const raw = await callGemini(apiKey, buildPrompt(profession, category, fundamentals, sample));
+      const raw = await callGemini(apiKey, buildPrompt(profession, category, fundamentals, sample, jurisdiction));
       const parsed = JSON.parse(raw);
       results[key] = {
         profession,
         category,
+        ...(jurisdiction && { jurisdiction }),
         overview: parsed.overview,
         concepts: parsed.concepts,
         connections: parsed.connections,
@@ -196,6 +241,11 @@ export const GENERATED_TEACHING_CONTENT: Record<string, TeachingContent> = ${JSO
 
   writeFileSync(OUTPUT_PATH, fileContent, "utf-8");
   console.log(`\nWrote ${Object.keys(results).length} categories to ${path.relative(ROOT, OUTPUT_PATH)}`);
+  if (JURISDICTION_ARG) {
+    console.log(
+      `\nThis is a first draft for ${JURISDICTION_LABELS[JURISDICTION_ARG]} — review it (ideally with someone who actually knows that jurisdiction's law) before promoting any of it into HAND_AUTHORED_CONTENT.`,
+    );
+  }
 }
 
 main().catch((err) => {

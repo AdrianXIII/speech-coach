@@ -5,6 +5,7 @@ import { pickRandom } from "@/lib/random";
 import type { TutorProfile } from "@/lib/tutorProfile";
 import type { TutorNewsItem } from "@/lib/tutorNews";
 import { getTeachingContent, type TeachingContent } from "@/lib/tutorTeachingContent";
+import { JURISDICTION_LABELS, type LawJurisdiction } from "@/lib/legalJurisdiction";
 
 /**
  * One generic tutor engine, parameterized by profession/category — no
@@ -23,15 +24,27 @@ export interface TeachingBrief {
   teaching: TeachingContent | null;
 }
 
-/** Zero API calls — pulled directly from the domain's existing static content, never regenerated per session. */
-export function buildTeachingBrief(profession: CaseProfession, category: string): TeachingBrief {
+/**
+ * Zero API calls — pulled directly from the domain's existing static
+ * content, never regenerated per session. `jurisdiction` only matters for
+ * Law (see lib/legalJurisdiction.ts) — the returned brief's `teaching`
+ * entry carries its own `.jurisdiction` field, which may differ from what
+ * was requested if that jurisdiction isn't populated yet and the lookup
+ * fell back to the US default; callers should surface that honestly rather
+ * than assuming the request was satisfied.
+ */
+export function buildTeachingBrief(
+  profession: CaseProfession,
+  category: string,
+  jurisdiction?: LawJurisdiction,
+): TeachingBrief {
   const fundamentals = getFundamentals(profession, category);
   const cases = casesForCategory(profession, category);
   const sample = cases.length > 0 ? pickRandom(cases) : null;
   return {
     fundamentals,
     exampleApproach: sample?.modelApproach ?? "",
-    teaching: getTeachingContent(profession, category),
+    teaching: getTeachingContent(profession, category, jurisdiction),
   };
 }
 
@@ -98,10 +111,17 @@ export interface EvaluateArgs {
   newsItem?: TutorNewsItem | null;
   profile?: TutorProfile | null;
   audio?: { base64: string; mimeType: string };
+  /** Law only — should match whatever jurisdiction the Teach step actually showed (see lib/legalJurisdiction.ts), so grading stays consistent with what was taught rather than silently assuming the student's own jurisdiction. */
+  jurisdiction?: LawJurisdiction;
 }
 
 function buildPrompt(args: EvaluateArgs): string {
   const { profession, category, fundamentals, transcript, caseStudy, newsItem, profile } = args;
+
+  const jurisdictionNote =
+    profession === "law" && args.jurisdiction
+      ? `\nJURISDICTION: Grade strictly against ${JURISDICTION_LABELS[args.jurisdiction]} — do not apply concepts or terminology from a different legal system, even if they sound similar.\n`
+      : "";
 
   const fundamentalsList =
     fundamentals.map((f) => `- ${f.label}`).join("\n") || "(no fundamentals catalogued for this category yet)";
@@ -138,7 +158,7 @@ Goals: ${profile.goals}`
   return `You are an expert ${PROFESSION_ROLE[profession]} acting as a one-on-one AI tutor in "${category}".
 Be rigorous but constructive — this is a coaching session, not a real engagement, so the goal is
 helping the student improve.
-
+${jurisdictionNote}
 ${challengeBlock}
 
 FUNDAMENTAL CONCEPTS FOR THIS DOMAIN — grade knowledge coverage against this list, not just whatever

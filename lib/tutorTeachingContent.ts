@@ -1,5 +1,6 @@
 import type { CaseProfession } from "@/lib/caseStudyContent";
 import { GENERATED_TEACHING_CONTENT } from "@/lib/tutorTeachingContent.generated";
+import type { LawJurisdiction } from "@/lib/legalJurisdiction";
 
 /**
  * The AI Tutor's deep-dive teaching content — the "what you need to know
@@ -10,10 +11,10 @@ import { GENERATED_TEACHING_CONTENT } from "@/lib/tutorTeachingContent.generated
  *
  * STORAGE: this file, in the repo — not a database (this app has none; see
  * the "no backend" note in .env.example). To fact-check or edit an area,
- * copy the object for that "profession/category" key out of TEACHING_CONTENT
- * below and paste it into whatever you're reviewing with. `source` on each
- * entry says who wrote it (a specific Claude/Gemini call), and `generatedAt`
- * says when — both there so you can tell stale content from fresh.
+ * copy the object for that key out of TEACHING_CONTENT below and paste it
+ * into whatever you're reviewing with. `source` on each entry says who
+ * wrote it (a specific Claude/Gemini call), and `generatedAt` says when —
+ * both there so you can tell stale content from fresh.
  *
  * COVERAGE: all 28 profession/category combinations are hand-authored here
  * (18 Business, 5 Law, 5 Politics) — getTeachingContent() should never
@@ -22,6 +23,18 @@ import { GENERATED_TEACHING_CONTENT } from "@/lib/tutorTeachingContent.generated
  * plain Fundamentals checklist until content is added for it here (or via
  * `scripts/generate-tutor-content.mjs`, which bulk-generates via this app's
  * own GEMINI_API_KEY for whatever isn't yet in SKIP_KEYS/hand-authored).
+ *
+ * JURISDICTION (Law only): unlike Business/Politics, legal content is
+ * jurisdiction-bound — see lib/legalJurisdiction.ts for why. Every existing
+ * Law entry is U.S. common law (`jurisdiction: "us"`), keyed without a
+ * jurisdiction suffix. A jurisdiction-specific entry (e.g. German contract
+ * law) gets keyed `law/<category>/<jurisdiction>` and takes priority over
+ * the US default when that jurisdiction is requested — see contentKey() and
+ * getTeachingContent() below. As of this writing, only the US content
+ * exists; German/French/Spanish/Swedish law entries are not yet populated,
+ * so every non-English language currently falls back to US content with an
+ * honest on-screen notice (see AITutor.tsx) rather than silently presenting
+ * US law as if it were the visitor's own jurisdiction.
  */
 
 export interface TeachingConcept {
@@ -38,6 +51,8 @@ export interface TeachingConcept {
 export interface TeachingContent {
   profession: CaseProfession;
   category: string;
+  /** Only meaningful for profession === "law" — see the jurisdiction note above. */
+  jurisdiction?: LawJurisdiction;
   /** 2-3 sentence framing read before the first concept. */
   overview: string;
   /** In deliberate teaching order — later concepts often build on earlier ones. */
@@ -48,7 +63,10 @@ export interface TeachingContent {
   generatedAt: string;
 }
 
-function contentKey(profession: CaseProfession, category: string): string {
+function contentKey(profession: CaseProfession, category: string, jurisdiction?: LawJurisdiction): string {
+  if (profession === "law" && jurisdiction && jurisdiction !== "us") {
+    return `law/${category}/${jurisdiction}`;
+  }
   return `${profession}/${category}`;
 }
 
@@ -227,6 +245,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
   "law/Contract Law": {
     profession: "law",
     category: "Contract Law",
+    jurisdiction: "us",
     overview:
       "Contract law exists to make promises enforceable — but not every promise, and not in every circumstance. The core doctrines below define which promises the law will enforce, what happens when one side breaks its promise, and when the law will excuse a party from a promise it would otherwise have to keep.",
     concepts: [
@@ -1551,6 +1570,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
   "law/Corporate & Compliance": {
     profession: "law",
     category: "Corporate & Compliance",
+    jurisdiction: "us",
     overview:
       "Corporate and compliance law governs how companies are run internally — who owes what duties to whom, and how a company builds systems to catch and prevent misconduct before regulators do. The recurring theme is that good process, documented at the time, is usually a company's best defense.",
     concepts: [
@@ -1624,6 +1644,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
   "law/Civil Litigation": {
     profession: "law",
     category: "Civil Litigation",
+    jurisdiction: "us",
     overview:
       "Civil litigation is the structured process for resolving private disputes through courts — a sequence of procedural stages, each with its own strategic leverage points, that exists specifically so cases can usually be resolved (or settled) without going all the way to trial.",
     concepts: [
@@ -1697,6 +1718,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
   "law/Criminal Law": {
     profession: "law",
     category: "Criminal Law",
+    jurisdiction: "us",
     overview:
       "Criminal law is fundamentally different from civil law in what's at stake (liberty, not just money) and who brings the case (the state, not a private party) — which is why it comes with a much higher burden of proof and a distinct set of constitutional protections for the accused.",
     concepts: [
@@ -1770,6 +1792,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
   "law/Constitutional & Regulatory": {
     profession: "law",
     category: "Constitutional & Regulatory",
+    jurisdiction: "us",
     overview:
       "Constitutional and regulatory law is about the structure and limits of government power — which branch or agency can do what, how courts check that power, and how much deference agencies get when they act. Recent doctrinal shifts (notably around agency deference) make this an area where staying current matters more than usual.",
     concepts: [
@@ -2143,7 +2166,22 @@ export const TEACHING_CONTENT: Record<string, TeachingContent> = {
   ...HAND_AUTHORED_CONTENT,
 };
 
-export function getTeachingContent(profession: CaseProfession, category: string): TeachingContent | null {
+/**
+ * For Law, tries the requested jurisdiction first, then falls back to the
+ * US default if that jurisdiction isn't populated yet (see the jurisdiction
+ * note above `TeachingContent`). The returned entry's own `.jurisdiction`
+ * field tells the caller which one it actually got, so the UI can show an
+ * honest "this is US law, not German" notice rather than pretending.
+ */
+export function getTeachingContent(
+  profession: CaseProfession,
+  category: string,
+  jurisdiction?: LawJurisdiction,
+): TeachingContent | null {
+  if (profession === "law" && jurisdiction) {
+    const specific = TEACHING_CONTENT[contentKey(profession, category, jurisdiction)];
+    if (specific) return specific;
+  }
   return TEACHING_CONTENT[contentKey(profession, category)] ?? null;
 }
 
