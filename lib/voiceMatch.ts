@@ -4,8 +4,14 @@
  * not an LLM call, since this needs to be instant and free. Returns the
  * matched option's original label, or null if nothing matched confidently.
  */
+// \p{L}/\p{N} (Unicode letter/number properties, with the "u" flag) rather
+// than a-z0-9 — the app supports German/French/Spanish/Swedish, and a plain
+// a-z filter would strip ö/é/ñ/å etc., mangling exactly the words voice
+// matching most needs to recognize in those languages.
+const NON_WORD_CHARS = /[^\p{L}\p{N}\s&]/gu;
+
 export function matchSpokenLabel(transcript: string, options: string[]): string | null {
-  const normalized = transcript.toLowerCase().replace(/[^a-z0-9\s&]/g, " ").trim();
+  const normalized = transcript.toLowerCase().replace(NON_WORD_CHARS, " ").trim();
   if (!normalized) return null;
 
   // Exact or substring match first (handles "Business" said for "Business", or
@@ -23,7 +29,7 @@ export function matchSpokenLabel(transcript: string, options: string[]): string 
   for (const option of options) {
     const optionWords = option
       .toLowerCase()
-      .replace(/[^a-z0-9\s&]/g, " ")
+      .replace(NON_WORD_CHARS, " ")
       .split(/\s+/)
       .filter((w) => w.length >= 4);
     const score = optionWords.filter((w) => words.includes(w)).length;

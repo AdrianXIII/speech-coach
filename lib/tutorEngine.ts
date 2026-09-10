@@ -115,10 +115,18 @@ export interface EvaluateArgs {
   audio?: { base64: string; mimeType: string };
   /** Law and Politics only — should match whatever jurisdiction the Teach step actually showed (see lib/legalJurisdiction.ts, lib/politicalSystem.ts), so grading stays consistent with what was taught rather than silently assuming the student's own country. */
   jurisdiction?: CountryCode;
+  /** The language the student was taught in and answered in (e.g. "German") — defaults to English. The transcript itself will be in this language; feedback should be written in it too, since this is language practice, not just content practice. */
+  languageName?: string;
 }
 
 function buildPrompt(args: EvaluateArgs): string {
   const { profession, category, fundamentals, transcript, caseStudy, newsItem, profile } = args;
+  const languageName = args.languageName ?? "English";
+
+  const languageNote =
+    languageName !== "English"
+      ? `\nLANGUAGE: The student is practicing ${languageName}. Their transcript below is in ${languageName} — grade its content normally, and ALSO evaluate their ${languageName} specifically in the "language" and "pronunciation" fields (terminology, word choice, grammar, pronunciation — all as ${languageName}, not English). Write every text field in your JSON response ("knowledge" entries, "language" fields, "pronunciation", "summary", "nextSteps") in ${languageName} too, since the student is meant to read/hear feedback in the language they're practicing, not in English.\n`
+      : "";
 
   const jurisdictionNote =
     profession === "law" && args.jurisdiction
@@ -162,7 +170,7 @@ Goals: ${profile.goals}`
   return `You are an expert ${PROFESSION_ROLE[profession]} acting as a one-on-one AI tutor in "${category}".
 Be rigorous but constructive — this is a coaching session, not a real engagement, so the goal is
 helping the student improve.
-${jurisdictionNote}
+${languageNote}${jurisdictionNote}
 ${challengeBlock}
 
 FUNDAMENTAL CONCEPTS FOR THIS DOMAIN — grade knowledge coverage against this list, not just whatever

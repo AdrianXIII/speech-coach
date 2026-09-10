@@ -189,18 +189,48 @@ live-news-grounded question.
   ("TUTOR CONTENT FLAG") and a local per-device copy (`lib/tutorFlags.ts`)
   as fallbacks.
 
-Content is English-only for now (same fallback notice pattern as Elite
-Phrasing's profiles), but Law and Politics content is also **country-bound**
-by design (`lib/legalJurisdiction.ts`, `lib/politicalSystem.ts`,
+**Fully multi-language, since the point is practicing the language, not just
+the domain**: picking German/French/Spanish/Swedish switches speech
+recognition and synthesis to that language (`lib/languages.ts`'s
+`speechLang`), and every piece of content the student reads/hears —
+teaching, the challenge, live news, and evaluation feedback — is delivered
+in that language too, not English:
+- **Teach** and **standard-case Challenge** content is hand-authored once in
+  English (`lib/tutorTeachingContent.ts`, `lib/caseStudyContent.ts` — the
+  source of truth, easy to fact-check) and translated server-side per
+  session via Gemini (`lib/tutorTranslate.ts`, `/api/tutor/localize-teach`,
+  `/api/tutor/localize-case`) — English itself skips this entirely (zero
+  extra cost, served straight from static content).
+- **Live News** is generated directly in the target language in the same
+  Gemini call that fetches it (`lib/tutorNews.ts`) — no separate
+  translation step — and, for Law/Politics, prefers a story from the
+  selected country.
+- **Evaluate** is told the transcript is in that language and to write its
+  feedback fields in it too (`lib/tutorEngine.ts`'s `languageName` on
+  `EvaluateArgs`) — same single Gemini call as before, just with that one
+  added instruction.
+- **Profession/category names** and the few fixed voice commands
+  ("next"/"repeat"/"back"/"standard"/"news") are hand-translated static
+  tables (`lib/categoryLabels.ts`, `lib/tutorVoiceCommands.ts`,
+  `components/shared/ProfessionPicker.tsx`'s `professionLabel()`) — small
+  and finite, no need for a Gemini call.
+
+Separately, Law and Politics content is also **country-bound** by design
+(`lib/legalJurisdiction.ts`, `lib/politicalSystem.ts`,
 `lib/countryContext.ts`) — legal doctrine and political institutions
-genuinely differ by country, not just by language. Selecting German,
-French, Spanish, or Swedish shows that country's own Law/Politics content
-(all fully hand-authored, not a translation of the US content); an honest
-on-screen notice appears instead of silently substituting US content if a
-country/category combination isn't populated yet. To bulk-generate content
-for a new category or country, see `scripts/generate-tutor-content.mjs`
+genuinely differ by country, not just by language, so each of the 5 app
+languages maps to a specific country's content (all fully hand-authored,
+not a translation of the US content), with an honest on-screen notice
+instead of silently substituting US content if a country/category
+combination isn't populated yet. To bulk-generate content for a new
+category or country, see `scripts/generate-tutor-content.mjs`
 (country-specific legal/political content is flagged there as needing real
 review before being trusted, given the accuracy stakes).
+
+Not yet localized: the AI Tutor's own UI chrome — button labels like "Next"/
+"Repeat"/"Skip the lesson"/"Start challenge" — stays in English regardless
+of language. The content you actually read, hear, and are evaluated on is
+fully localized; the surrounding buttons are the one remaining gap.
 
 ## Running it locally
 
@@ -259,8 +289,10 @@ app/
     generate-script/              Topic/draft -> Gemini-polished speakable script
     pronunciation-feedback/       Word + recording -> Gemini pronunciation feedback
     word-stress/                  Word -> syllable count + expected stress index (CMU dict lookup)
-    tutor/evaluate/                Case id or news item + transcript + audio -> Gemini knowledge/language/pronunciation grading
-    tutor/news/                    Fetches a live news item via Gemini Google Search grounding
+    tutor/evaluate/                Case id or news item + transcript + audio -> Gemini knowledge/language/pronunciation grading, in the student's language
+    tutor/news/                    Fetches a live news item via Gemini Google Search grounding, written in the target language
+    tutor/localize-teach/           Translates teaching content into a non-English language (English served straight from static content, no call)
+    tutor/localize-case/            Translates a standard case's title/scenario into a non-English language
     tutor/flag/                    Records a "this content seems wrong" report (Postgres + log + client-local)
     tutor/flags/                   Lists flags for the /tutor-flags review page
     chat/                         Text-only follow-up chat, seeded with any of the above
@@ -294,8 +326,9 @@ lib/
   collocationCheck.ts, caseStudyContent.ts, caseStudyFundamentals.ts,
   caseStudyProgress.ts,
   tutorEngine.ts, tutorTeachingContent.ts, tutorTeachingContent.generated.ts,
-  tutorNews.ts, tutorProfile.ts, tutorFlags.ts, legalJurisdiction.ts,
-  politicalSystem.ts, countryContext.ts,
+  tutorNews.ts, tutorProfile.ts, tutorFlags.ts, tutorTranslate.ts,
+  tutorUIStrings.ts, tutorVoiceCommands.ts, categoryLabels.ts,
+  legalJurisdiction.ts, politicalSystem.ts, countryContext.ts,
   voiceMatch.ts, random.ts, gemini.ts, db.ts, audio.ts
 hooks/
   useMediaRecorder.ts, useSpeechRecognition.ts, useSpeechSynthesis.ts

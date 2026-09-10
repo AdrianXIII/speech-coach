@@ -6,7 +6,7 @@ import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
 import { useSpeechSynthesis } from "@/hooks/useSpeechSynthesis";
 import { CASE_CATEGORIES, type CaseProfession, type CaseStudy } from "@/lib/caseStudyContent";
 import type { Fundamental } from "@/lib/caseStudyFundamentals";
-import { buildTeachingBrief, pickChallenge, type TutorFeedback } from "@/lib/tutorEngine";
+import { buildTeachingBrief, pickChallenge, type TeachingBrief, type TutorFeedback } from "@/lib/tutorEngine";
 import type { TeachingContent } from "@/lib/tutorTeachingContent";
 import type { TutorNewsItem } from "@/lib/tutorNews";
 import { loadTutorProfile, type TutorProfile } from "@/lib/tutorProfile";
@@ -14,13 +14,16 @@ import { saveTutorFlag } from "@/lib/tutorFlags";
 import { JURISDICTION_LABELS } from "@/lib/legalJurisdiction";
 import { POLITICAL_SYSTEM_LABELS } from "@/lib/politicalSystem";
 import { countryForLanguage } from "@/lib/countryContext";
-import { matchSpokenLabel, matchesCommand } from "@/lib/voiceMatch";
-import { ProfessionPicker, PROFESSION_LABELS } from "@/components/shared/ProfessionPicker";
+import { matchSpokenLabel } from "@/lib/voiceMatch";
+import { resolveTeachNavCommand, resolveHandoffCommand } from "@/lib/tutorVoiceCommands";
+import { categoryLabel, categoryLabels } from "@/lib/categoryLabels";
+import { tutorStrings } from "@/lib/tutorUIStrings";
+import { ProfessionPicker, PROFESSION_LABELS, professionLabel } from "@/components/shared/ProfessionPicker";
 import { CategoryPicker } from "@/components/shared/CategoryPicker";
 import { TutorProfileEditor } from "@/components/TutorProfileEditor";
 import { FollowUpChat } from "@/components/FollowUpChat";
 import { useLanguage } from "@/components/LanguageProvider";
-import { getLanguage } from "@/lib/languages";
+import { getLanguage, type LanguageCode } from "@/lib/languages";
 
 type Phase = "selectProfession" | "selectCategory" | "teach" | "challenge" | "recording" | "evaluating" | "feedback";
 type Mode = "core" | "news";
@@ -52,6 +55,13 @@ export function AITutor() {
   const [exampleApproach, setExampleApproach] = useState("");
   const [teaching, setTeaching] = useState<TeachingContent | null>(null);
   const [teachStepIndex, setTeachStepIndex] = useState(-1); // -1 = overview, 0..N-1 = concepts, N = connections/handoff
+  const [isLocalizingTeach, setIsLocalizingTeach] = useState(false);
+  // What's actually shown/spoken for the current challenge case — translated
+  // when language !== "en" (see /api/tutor/localize-case). currentCase
+  // itself stays the canonical English CaseStudy (its id is what's actually
+  // submitted for grading).
+  const [caseDisplay, setCaseDisplay] = useState<{ title: string; scenario: string } | null>(null);
+  const [isLocalizingCase, setIsLocalizingCase] = useState(false);
 
   // Law and Politics are both country-bound (see lib/legalJurisdiction.ts,
   // lib/politicalSystem.ts) — Business ignores this. Derived from the app
@@ -81,12 +91,13 @@ export function AITutor() {
   // ~1.5s of silence, so no second tap is needed to say "I'm done").
   const [voiceIntent, setVoiceIntent] = useState<VoiceIntent>(null);
   const [voiceNotice, setVoiceNotice] = useState<string | null>(null);
-  const tts = useSpeechSynthesis();
-  const voiceNav = useSpeechRecognition("en-US", 1500);
+  const speechLang = getLanguage(language).speechLang;
+  const tts = useSpeechSynthesis(speechLang);
+  const voiceNav = useSpeechRecognition(speechLang, 1500);
 
   const { recordedBlob, audioBlob, start: startRecorder, stop: stopRecorder, reset: resetRecorder } =
     useMediaRecorder(false);
-  const recognition = useSpeechRecognition("en-US");
+  const recognition = useSpeechRecognition(speechLang);
 
   // Same "wait for isListening to settle" pattern as Case Studies — the
   // recognizer's last chunk can arrive slightly after stop() is called.
@@ -115,6 +126,7 @@ export function AITutor() {
       const actualJurisdiction = teaching?.jurisdiction ?? jurisdiction;
       if (actualJurisdiction) formData.append("jurisdiction", actualJurisdiction);
     }
+    formData.append("language", language);
 
     fetch("/api/tutor/evaluate", { method: "POST", body: formData })
       .then(async (res) => {
@@ -140,23 +152,23 @@ export function AITutor() {
   // browsers block audio before any user gesture on first page load.
   useEffect(() => {
     if (phase === "selectProfession") {
-      tts.speak("Which profession would you like to explore — Business, Politics, or Law?");
+      tts.speak(tutorStrings(language).professionPrompt);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase]);
 
   useEffect(() => {
     if (phase === "selectCategory" && profession) {
-      tts.speak(`Which category of ${PROFESSION_LABELS[profession].label} would you like to deep dive into?`);
+      tts.speak(tutorStrings(language).categoryPrompt(professionLabel(profession, language).label));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, profession]);
 
   useEffect(() => {
-    if (phase !== "teach" || !teaching) return;
-    tts.speak(teachStepText(teaching, teachStepIndex));
+    if (phase !== "teach" || !teaching || isLocalizingTeach) return;
+    tts.speak(teachStepText(teaching, teachStepIndex, language));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, teaching, teachStepIndex]);
+  }, [phase, teaching, teachStepIndex, isLocalizingTeach]);
 
   // Resolves whatever the user just said, once voiceNav has settled, against
   // whichever prompt is currently pending (voiceIntent) — one mic button and
@@ -171,27 +183,29 @@ export function AITutor() {
     }
 
     if (voiceIntent === "profession") {
-      const labels = (Object.keys(PROFESSION_LABELS) as CaseProfession[]).map((p) => PROFESSION_LABELS[p].label);
+      const professions = Object.keys(PROFESSION_LABELS) as CaseProfession[];
+      const labels = professions.map((p) => professionLabel(p, language).label);
       const match = matchSpokenLabel(heard, labels);
-      const p = match
-        ? (Object.keys(PROFESSION_LABELS) as CaseProfession[]).find((k) => PROFESSION_LABELS[k].label === match)
-        : null;
+      const p = match ? professions[labels.indexOf(match)] : null;
       if (p) {
         setVoiceNotice(null);
         handleSelectProfession(p);
       } else {
-        setVoiceNotice(`Didn't catch that — try saying "Business", "Politics", or "Law", or tap one below.`);
+        setVoiceNotice(`Didn't catch that — try naming a profession, or tap one below.`);
       }
     } else if (voiceIntent === "category" && profession) {
-      const match = matchSpokenLabel(heard, CASE_CATEGORIES[profession]);
-      if (match) {
+      const categories = CASE_CATEGORIES[profession];
+      const labels = categoryLabels(categories, language);
+      const match = matchSpokenLabel(heard, labels);
+      const cat = match ? categories[labels.indexOf(match)] : null;
+      if (cat) {
         setVoiceNotice(null);
-        handleSelectCategory(match);
+        handleSelectCategory(cat);
       } else {
         setVoiceNotice(`Didn't catch that — try naming the category, or tap one below.`);
       }
     } else if (voiceIntent === "teachNav") {
-      const cmd = matchesCommand(heard, ["repeat", "back", "previous", "next", "continue", "skip"]);
+      const cmd = resolveTeachNavCommand(heard, language);
       if (cmd) {
         setVoiceNotice(null);
         handleTeachCommand(cmd);
@@ -199,7 +213,7 @@ export function AITutor() {
         setVoiceNotice(`Didn't catch that — say "next" or "repeat", or tap a button below.`);
       }
     } else if (voiceIntent === "handoff") {
-      const cmd = matchesCommand(heard, ["news", "standard", "case"]);
+      const cmd = resolveHandoffCommand(heard, language);
       if (cmd === "news") {
         setVoiceNotice(null);
         setMode("news");
@@ -231,24 +245,47 @@ export function AITutor() {
     setPhase("selectCategory");
   }
 
-  function handleSelectCategory(cat: string) {
+  async function handleSelectCategory(cat: string) {
     if (!profession) return;
     tts.cancel();
     setCategory(cat);
     const brief = buildTeachingBrief(profession, cat, jurisdiction);
     setFundamentals(brief.fundamentals);
     setExampleApproach(brief.exampleApproach);
-    setTeaching(brief.teaching);
     setTeachStepIndex(-1);
     setMode("core");
     setNewsFallbackNotice(false);
+
+    if (language === "en" || !brief.teaching) {
+      setTeaching(brief.teaching);
+      setPhase("teach");
+      return;
+    }
+
+    // Non-English: translate the teaching content server-side so the
+    // lesson is actual language practice, not English to read/hear.
+    setTeaching(null);
+    setIsLocalizingTeach(true);
     setPhase("teach");
+    try {
+      const res = await fetch("/api/tutor/localize-teach", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ profession, category: cat, jurisdiction, language }),
+      });
+      const data: TeachingBrief = await res.json();
+      setTeaching(data.teaching ?? brief.teaching);
+    } catch {
+      setTeaching(brief.teaching); // fall back to English rather than get stuck
+    } finally {
+      setIsLocalizingTeach(false);
+    }
   }
 
   function handleTeachCommand(cmd: string) {
     if (!teaching) return;
     if (cmd === "repeat") {
-      tts.speak(teachStepText(teaching, teachStepIndex));
+      tts.speak(teachStepText(teaching, teachStepIndex, language));
       return;
     }
     if (cmd === "back" || cmd === "previous") {
@@ -273,12 +310,13 @@ export function AITutor() {
         const res = await fetch("/api/tutor/news", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ profession, category, profile }),
+          body: JSON.stringify({ profession, category, profile, language, country: jurisdiction }),
         });
         const data: { newsItem: TutorNewsItem | null } = await res.json();
         if (data.newsItem) {
           setNewsItem(data.newsItem);
           setCurrentCase(null);
+          setCaseDisplay(null);
           setIsFetchingNews(false);
           setPhase("challenge");
           return;
@@ -292,8 +330,38 @@ export function AITutor() {
     }
 
     setNewsItem(null);
-    setCurrentCase(pickChallenge(profession, category));
+    const picked = pickChallenge(profession, category);
+    setCurrentCase(picked);
+    if (!picked) {
+      setCaseDisplay(null);
+      setPhase("challenge");
+      return;
+    }
+
+    if (language === "en") {
+      setCaseDisplay({ title: picked.title, scenario: picked.scenario });
+      setPhase("challenge");
+      return;
+    }
+
+    // Non-English: translate the case's title/scenario so the challenge is
+    // read/heard in the language being practiced, not in English.
+    setCaseDisplay(null);
+    setIsLocalizingCase(true);
     setPhase("challenge");
+    try {
+      const res = await fetch("/api/tutor/localize-case", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ caseId: picked.id, language }),
+      });
+      const data: { title: string; scenario: string } = await res.json();
+      setCaseDisplay(data);
+    } catch {
+      setCaseDisplay({ title: picked.title, scenario: picked.scenario });
+    } finally {
+      setIsLocalizingCase(false);
+    }
   }
 
   function handleNewChallenge() {
@@ -334,16 +402,8 @@ export function AITutor() {
     }
   }
 
-  const englishOnlyNotice = language !== "en";
-
   return (
     <div className="flex flex-col gap-6 rounded-2xl border border-hairline bg-surface p-8 shadow-sm">
-      {englishOnlyNotice && (
-        <p className="text-xs text-brass-text">
-          The AI Tutor is English-only for now — showing English content instead of {getLanguage(language).name}.
-        </p>
-      )}
-
       {isJurisdictionFallback && jurisdiction && (
         <p className="text-xs text-brass-text">
           Showing {jurisdictionLabels[teaching!.jurisdiction!]} — {jurisdictionLabels[jurisdiction]} content
@@ -359,9 +419,9 @@ export function AITutor() {
 
       {phase === "selectProfession" && (
         <div className="flex flex-col gap-3">
-          <ProfessionPicker onSelect={handleSelectProfession} />
+          <ProfessionPicker language={language} onSelect={handleSelectProfession} />
           <VoiceAnswerControl
-            prompt="Which profession would you like to explore — Business, Politics, or Law?"
+            prompt={tutorStrings(language).professionPrompt}
             listening={voiceIntent === "profession" && voiceNav.isListening}
             liveTranscript={voiceIntent === "profession" ? voiceNav.transcript : ""}
             notice={voiceIntent === null ? voiceNotice : null}
@@ -374,11 +434,12 @@ export function AITutor() {
         <div className="flex flex-col gap-3">
           <CategoryPicker
             profession={profession}
+            language={language}
             onSelect={handleSelectCategory}
             onBack={() => setPhase("selectProfession")}
           />
           <VoiceAnswerControl
-            prompt={`Which category of ${PROFESSION_LABELS[profession].label}?`}
+            prompt={tutorStrings(language).categoryPrompt(professionLabel(profession, language).label)}
             listening={voiceIntent === "category" && voiceNav.isListening}
             liveTranscript={voiceIntent === "category" ? voiceNav.transcript : ""}
             notice={voiceIntent === null ? voiceNotice : null}
@@ -391,9 +452,11 @@ export function AITutor() {
         <TeachStep
           profession={profession}
           category={category}
+          language={language}
           fundamentals={fundamentals}
           exampleApproach={exampleApproach}
           teaching={teaching}
+          isLocalizing={isLocalizingTeach}
           teachStepIndex={teachStepIndex}
           isSpeaking={tts.isSpeaking}
           mode={mode}
@@ -444,7 +507,9 @@ export function AITutor() {
         <ChallengeStep
           profession={profession}
           category={category}
-          caseStudy={currentCase}
+          language={language}
+          caseDisplay={caseDisplay}
+          isLocalizingCase={isLocalizingCase}
           newsItem={newsItem}
           newsFallbackNotice={newsFallbackNotice}
           phase={phase}
@@ -481,13 +546,14 @@ export function AITutor() {
 }
 
 /** The text spoken (and shown) for a given step of the rich teaching flow. */
-function teachStepText(teaching: TeachingContent, stepIndex: number): string {
+function teachStepText(teaching: TeachingContent, stepIndex: number, language: LanguageCode): string {
+  const t = tutorStrings(language);
   if (stepIndex === -1) return teaching.overview;
   if (stepIndex < teaching.concepts.length) {
     const c = teaching.concepts[stepIndex];
-    return `${c.title}. ${c.explanation} ${c.whyItMatters} For example: ${c.example}`;
+    return `${c.title}. ${c.explanation} ${c.whyItMatters} ${t.forExample} ${c.example}`;
   }
-  return `${teaching.connections} Do you want to train with a standard use case, or a use case based on live news?`;
+  return `${teaching.connections} ${t.handoffQuestion}`;
 }
 
 /* ─────────────────────────── Voice answer control ─────────────────────────── */
@@ -536,9 +602,11 @@ function VoiceAnswerControl({
 function TeachStep({
   profession,
   category,
+  language,
   fundamentals,
   exampleApproach,
   teaching,
+  isLocalizing,
   teachStepIndex,
   isSpeaking,
   mode,
@@ -561,9 +629,12 @@ function TeachStep({
 }: {
   profession: CaseProfession;
   category: string;
+  language: LanguageCode;
   fundamentals: Fundamental[];
   exampleApproach: string;
   teaching: TeachingContent | null;
+  /** True while /api/tutor/localize-teach is translating content for a non-English language. */
+  isLocalizing: boolean;
   teachStepIndex: number;
   isSpeaking: boolean;
   mode: Mode;
@@ -588,7 +659,7 @@ function TeachStep({
   const header = (
     <div className="flex items-center justify-between">
       <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
-        {PROFESSION_LABELS[profession].label} · {category}
+        {professionLabel(profession, language).label} · {categoryLabel(category, language)}
       </p>
       <button onClick={onChangeCategory} className="text-xs font-semibold text-brass-text hover:underline">
         ← Change category
@@ -611,6 +682,18 @@ function TeachStep({
     />
   );
 
+  if (isLocalizing) {
+    return (
+      <div className="flex flex-col gap-5">
+        {header}
+        <div className="flex flex-col items-center gap-3 py-10">
+          <span className="h-8 w-8 animate-spin rounded-full border-2 border-hairline border-t-brass" />
+          <p className="text-sm text-ink-muted">Preparing your lesson…</p>
+        </div>
+      </div>
+    );
+  }
+
   // No generated deep-dive content for this category yet — fall back to the
   // plain fundamentals checklist (silent, tap-only), same as before.
   if (!teaching) {
@@ -619,7 +702,7 @@ function TeachStep({
         {header}
         <div className="rounded-lg bg-surface-2 p-5">
           <p className="text-xs font-semibold uppercase tracking-wide text-brass-text">
-            Core knowledge for {category}
+            Core knowledge for {categoryLabel(category, language)}
           </p>
           <p className="mt-1 text-xs text-ink-muted">
             Deep-dive teaching content for this category hasn&rsquo;t been generated yet — here&rsquo;s the
@@ -916,7 +999,9 @@ function SessionTypePicker({
 function ChallengeStep({
   profession,
   category,
-  caseStudy,
+  language,
+  caseDisplay,
+  isLocalizingCase,
   newsItem,
   newsFallbackNotice,
   phase,
@@ -930,7 +1015,11 @@ function ChallengeStep({
 }: {
   profession: CaseProfession;
   category: string;
-  caseStudy: CaseStudy | null;
+  language: LanguageCode;
+  /** Standard-mode case, translated for display when language !== "en" — null while newsItem is the active challenge instead. */
+  caseDisplay: { title: string; scenario: string } | null;
+  /** True while /api/tutor/localize-case is translating the case for a non-English language. */
+  isLocalizingCase: boolean;
   newsItem: TutorNewsItem | null;
   newsFallbackNotice: boolean;
   phase: "challenge" | "recording";
@@ -946,7 +1035,7 @@ function ChallengeStep({
     <div className="flex flex-col gap-5">
       <div className="flex items-center justify-between">
         <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
-          {PROFESSION_LABELS[profession].label} · {category}
+          {professionLabel(profession, language).label} · {categoryLabel(category, language)}
         </p>
         <button onClick={onChangeCategory} className="text-xs font-semibold text-brass-text hover:underline">
           ← Change category
@@ -959,24 +1048,31 @@ function ChallengeStep({
         </p>
       )}
 
-      <div className="rounded-lg bg-surface-2 p-5">
-        {newsItem ? (
-          <>
-            <h3 className="font-display text-base font-semibold text-ink">{newsItem.headline}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-ink">{newsItem.summary}</p>
-            <p className="mt-3 text-sm leading-relaxed text-ink-muted">
-              <span className="font-semibold text-ink">Connection: </span>
-              {newsItem.connection}
-            </p>
-            <p className="mt-3 text-sm font-semibold leading-relaxed text-ink">{newsItem.appliedQuestion}</p>
-          </>
-        ) : caseStudy ? (
-          <>
-            <h3 className="font-display text-base font-semibold text-ink">{caseStudy.title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-ink">{caseStudy.scenario}</p>
-          </>
-        ) : null}
-      </div>
+      {isLocalizingCase ? (
+        <div className="flex flex-col items-center gap-3 py-6">
+          <span className="h-6 w-6 animate-spin rounded-full border-2 border-hairline border-t-brass" />
+          <p className="text-sm text-ink-muted">Preparing your challenge…</p>
+        </div>
+      ) : (
+        <div className="rounded-lg bg-surface-2 p-5">
+          {newsItem ? (
+            <>
+              <h3 className="font-display text-base font-semibold text-ink">{newsItem.headline}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-ink">{newsItem.summary}</p>
+              <p className="mt-3 text-sm leading-relaxed text-ink-muted">
+                <span className="font-semibold text-ink">Connection: </span>
+                {newsItem.connection}
+              </p>
+              <p className="mt-3 text-sm font-semibold leading-relaxed text-ink">{newsItem.appliedQuestion}</p>
+            </>
+          ) : caseDisplay ? (
+            <>
+              <h3 className="font-display text-base font-semibold text-ink">{caseDisplay.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-ink">{caseDisplay.scenario}</p>
+            </>
+          ) : null}
+        </div>
+      )}
 
       {evalError && (
         <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{evalError}</p>

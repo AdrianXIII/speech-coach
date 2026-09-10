@@ -6,6 +6,7 @@ import { geminiErrorResponse } from "@/lib/gemini";
 import type { TutorNewsItem } from "@/lib/tutorNews";
 import type { TutorProfile } from "@/lib/tutorProfile";
 import type { CountryCode } from "@/lib/countryContext";
+import { getLanguage, type LanguageCode } from "@/lib/languages";
 
 /**
  * POST /api/tutor/evaluate
@@ -30,6 +31,7 @@ export async function POST(req: NextRequest) {
   const newsItemRaw = formData.get("newsItem")?.toString();
   const profileRaw = formData.get("profile")?.toString();
   const jurisdiction = formData.get("jurisdiction")?.toString() as CountryCode | undefined;
+  const language = formData.get("language")?.toString() as LanguageCode | undefined;
   const audio = formData.get("audio");
 
   if (!profession || !category) {
@@ -80,6 +82,7 @@ export async function POST(req: NextRequest) {
       profile,
       audio: audioPart,
       jurisdiction,
+      languageName: language ? getLanguage(language).name : undefined,
     });
     return NextResponse.json(result);
   } catch (err) {
