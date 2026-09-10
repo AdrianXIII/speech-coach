@@ -1939,6 +1939,376 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     generatedAt: "2026-09-10",
   },
 
+  "law/Contract Law/fr": {
+    profession: "law",
+    category: "Contract Law",
+    jurisdiction: "fr",
+    overview:
+      "French contract law is codified in the Code civil, substantially modernized by a 2016 reform (ordonnance) that dropped the old \"cause\" requirement and made good faith and specific performance far more central than they are in common-law systems — including a hardship doctrine that French law had famously rejected for over a century before finally adopting it.",
+    concepts: [
+      {
+        id: "fr-contract-formation-2016-reform",
+        title: "Formation after the 2016 reform: from cause to contenu licite et certain",
+        explanation:
+          "Traditional French contract law required an offer (offre), acceptance (acceptation), and a lawful \"cause\" (roughly, the reason/justification for the obligation) — the civil-law analogue that did some of the work common-law consideration does. The 2016 Code civil reform abolished \"cause\" as a formal requirement, replacing it with a requirement that the contract have lawful and certain content (contenu licite et certain).",
+        whyItMatters:
+          "This is a genuinely recent, major doctrinal shift — older French legal materials and case law still discuss \"cause\" extensively, so understanding whether a source predates or postdates the 2016 reform matters for correctly applying current law.",
+        example:
+          "A contract for an illegal purpose (e.g. bribery) fails not because it lacks a valid \"cause\" (the old framing) but because its content isn't lawful (contenu licite) under the current, post-2016 Code civil — same practical outcome, different doctrinal basis.",
+      },
+      {
+        id: "fr-contract-bonne-foi",
+        title: "Bonne foi (good faith) as a general, codified duty",
+        explanation:
+          "Article 1104 of the Code civil imposes a general duty of good faith in the negotiation, formation, and performance of contracts — an explicit, codified, overarching principle, not a narrow doctrine limited to specific contexts the way good faith obligations are often more narrowly applied in common law.",
+        whyItMatters:
+          "This gives French courts a broader general tool to police contractual behavior than common-law courts typically have — bad-faith conduct during negotiations or performance can itself generate liability, even absent a specific breach of an explicit contract term.",
+        example:
+          "A party who negotiates a deal while secretly planning never to perform, or who deliberately withholds information they're obligated to disclose during negotiations, can face liability under the general bad-faith negotiation duty (Art. 1112), independent of whether a contract was ever actually signed.",
+      },
+      {
+        id: "fr-contract-execution-forcee",
+        title: "Exécution forcée en nature — specific performance as the preferred remedy",
+        explanation:
+          "Unlike common law, where money damages are the default remedy and specific performance is an exceptional equitable remedy, French law treats exécution forcée en nature (specific performance — actually performing the contract) as the primary, preferred remedy for breach, available essentially as of right unless impossible or grossly disproportionate.",
+        whyItMatters:
+          "This reverses the common-law default — a French court is comfortable simply ordering a party to actually do what they promised, rather than treating that as an exceptional remedy reserved for unique goods or real estate the way common-law courts typically do.",
+        example:
+          "A seller who breaches a contract to deliver goods can generally be ordered by a French court to actually deliver them (exécution forcée), not just pay damages for non-delivery — a remedy a common-law court would usually only grant if the goods were genuinely unique.",
+      },
+      {
+        id: "fr-contract-imprevision",
+        title: "Théorie de l'imprévision (hardship doctrine)",
+        explanation:
+          "For over a century, French civil courts famously refused to revise contracts for unforeseen hardship (the 1876 Canal de Craponne decision) — a party was strictly bound even if performance became ruinously more burdensome. The 2016 reform (Article 1195) finally introduced a hardship doctrine, letting a party request renegotiation, and ultimately judicial revision or termination, when unforeseen circumstances make performance excessively onerous.",
+        whyItMatters:
+          "This is one of the most significant modernizations in recent French contract law — a doctrine long considered fundamentally foreign to the French tradition of contractual sanctity (pacta sunt servanda) is now codified, bringing France closer to (though still narrower than) some other civil-law systems' approach to unforeseen hardship.",
+        example:
+          "A long-term supply contract that becomes drastically more expensive to perform due to an unforeseen event (a dramatic input-cost spike) can now trigger a renegotiation request under Article 1195 — a claim that would have failed outright under the old Canal de Craponne rule.",
+      },
+      {
+        id: "fr-contract-clauses-abusives",
+        title: "Clauses abusives (unfair terms control)",
+        explanation:
+          "French consumer law (Code de la consommation) and Article 1171 of the Code civil (for adhesion contracts generally) allow courts to strike unfair terms — clauses that create a significant imbalance between the parties' rights and obligations — in standard-form and consumer contracts, with detailed regulatory lists of presumptively abusive clause types.",
+        whyItMatters:
+          "Like Germany's AGB-Recht, this is considerably more codified and systematic than common-law unconscionability doctrine — French courts work from detailed statutory clause categories rather than an open-ended fairness standard applied case by case.",
+        example:
+          "A standard consumer contract clause that lets only one party unilaterally modify the contract's terms without the other's consent is a classic candidate for being struck as a clause abusive under French consumer protection rules.",
+      },
+      {
+        id: "fr-contract-exception-inexecution",
+        title: "L'exception d'inexécution and the remedy menu for breach",
+        explanation:
+          "When one party fails to perform, the other can invoke the exception d'inexécution (suspend their own performance without formally terminating), pursue résolution (termination of the contract), seek a price reduction (réduction du prix), or claim damages (dommages-intérêts) — a menu of remedies the 2016 reform organized more clearly, alongside the specific-performance-first approach.",
+        whyItMatters:
+          "Having a codified menu of distinct, named remedies (rather than a more unified common-law breach analysis) means French practitioners think in terms of which specific remedy category applies to a given breach, each with its own conditions and effects.",
+        example:
+          "A buyer facing a seller who hasn't delivered can simply withhold their own payment (exception d'inexécution) without going to court first — a self-help remedy usable immediately, distinct from the more involved process of seeking résolution or damages through the courts.",
+      },
+    ],
+    connections:
+      "The 2016 reform reshaped the whole framework — formation moved from \"cause\" to lawful content, and bonne foi became an explicit general duty running through negotiation, formation, and performance. Exécution forcée en nature is the preferred remedy once that duty is breached, with exception d'inexécution, résolution, price reduction, and damages as the broader remedy menu. Théorie de l'imprévision and clauses abusives are both relatively recent doctrines correcting for situations the classical bonne-foi-and-specific-performance framework didn't originally address well — genuinely unforeseen hardship, and structurally unequal bargaining power in standard-form contracts.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "law/Corporate & Compliance/fr": {
+    profession: "law",
+    category: "Corporate & Compliance",
+    jurisdiction: "fr",
+    overview:
+      "French corporate law offers real structural choice (unlike Germany's mandatory two-tier board) and, since 2016-2017, two of the most significant and closely watched corporate accountability statutes anywhere: the Loi Sapin II anti-corruption regime and the pioneering devoir de vigilance (duty of vigilance) supply-chain law.",
+    concepts: [
+      {
+        id: "fr-corp-company-forms",
+        title: "SARL, SA, and SAS: the main company forms",
+        explanation:
+          "The SARL (société à responsabilité limitée) is the common limited-liability form for small and medium businesses. The SA (société anonyme) is the more formal, heavily regulated form typically used by larger and listed companies. The SAS (société par actions simplifiée) offers highly flexible, contractually customizable governance and has become the preferred form for startups, joint ventures, and subsidiaries.",
+        whyItMatters:
+          "The SAS's popularity specifically comes from how much governance flexibility French law allows within it — founders can largely design their own governance rules by contract, unlike the more rigid, statutorily mandated structure of an SA.",
+        example:
+          "Most French startups and many international companies' French subsidiaries are structured as SAS specifically because it lets them design a lean, customized governance structure (often a single president rather than a full board) that an SA's more rigid statutory requirements wouldn't allow.",
+      },
+      {
+        id: "fr-corp-moniste-dualiste",
+        title: "The choice between moniste (one-tier) and dualiste (two-tier) governance",
+        explanation:
+          "Unlike Germany, where a two-tier board is mandatory for an AG, French SAs can choose between a one-tier structure (conseil d'administration, a unitary board with a combined or separate chair/CEO) and a two-tier structure (directoire, the management board, overseen by a separate conseil de surveillance, supervisory board) — the choice is made in the company's bylaws.",
+        whyItMatters:
+          "This optionality is itself a distinctive feature — French law doesn't force the German-style separation, letting companies choose the governance model that fits their situation, which is one reason cross-border comparisons between \"French\" and \"German\" corporate governance can be misleading if they assume a single uniform structure.",
+        example:
+          "A French company with a powerful, well-trusted founder-CEO might choose the one-tier conseil d'administration structure to keep management and strategic oversight closely integrated, while a company wanting clearer separation of oversight from management might opt for the directoire/conseil de surveillance structure instead.",
+      },
+      {
+        id: "fr-corp-faute-de-gestion",
+        title: "Responsabilité des dirigeants and faute de gestion",
+        explanation:
+          "French director liability centers on the concept of faute de gestion (management fault) — a broader, more open-textured standard for what counts as a breach of a director's duties than the codified, safe-harbor-protected US/German business judgment rule approach, giving French courts more room to second-guess management decisions after the fact.",
+        whyItMatters:
+          "Directors and officers in France generally face somewhat greater exposure to being second-guessed for ordinary business decisions that turn out badly than their US or German counterparts, who benefit from more explicit statutory or case-law safe harbors for good-faith, informed decisions.",
+        example:
+          "A director who approves a risky but reasonably researched investment that fails might face a faute de gestion claim in France more readily than an equivalent US director would face a successful challenge under the protective Delaware business judgment rule.",
+      },
+      {
+        id: "fr-corp-loi-sapin-ii",
+        title: "Loi Sapin II — France's anti-corruption compliance regime",
+        explanation:
+          "The 2016 Loi Sapin II requires large companies (above defined revenue/headcount thresholds) to implement an eight-pillar anti-corruption compliance program — code of conduct, whistleblower channel, risk mapping, due diligence procedures, internal accounting controls, training, disciplinary sanctions, and an internal monitoring system — enforced by the dedicated Agence Française Anticorruption (AFA).",
+        whyItMatters:
+          "This is France's structural answer to the US FCPA and Germany's more diffuse compliance case law — a single, detailed statute with specific mandatory program elements and a dedicated enforcement agency, giving companies (and regulators) a clear statutory checklist rather than relying mainly on evolving case law.",
+        example:
+          "The AFA has conducted on-site inspections of large French companies' compliance programs against the Loi Sapin II's eight pillars specifically, issuing findings and, in serious cases, financial penalties or requiring remediation — a distinctly proactive regulatory audit approach.",
+      },
+      {
+        id: "fr-corp-devoir-de-vigilance",
+        title: "Devoir de vigilance (duty of vigilance)",
+        explanation:
+          "The 2017 devoir de vigilance law requires large French companies to establish and publish a vigilance plan identifying and mitigating human rights and environmental risks across their own operations, subsidiaries, and — distinctively — their subcontractors' and suppliers' operations too, with civil liability for damages caused by failure to implement an adequate plan.",
+        whyItMatters:
+          "This was one of the first laws globally to impose binding supply-chain human-rights/environmental due diligence obligations with real civil liability exposure, rather than just voluntary corporate social responsibility guidelines — it has become an influential model referenced in subsequent EU-level supply-chain due diligence legislation.",
+        example:
+          "French companies have faced civil lawsuits under the devoir de vigilance law over alleged environmental or human rights harms linked to their overseas subsidiaries' or suppliers' operations — litigation that wouldn't have a comparable legal basis in most other jurisdictions' corporate law.",
+      },
+      {
+        id: "fr-corp-cse",
+        title: "Comité social et économique (CSE, works council)",
+        explanation:
+          "French companies above defined employee thresholds must establish a Comité social et économique — a mandatory employee representative body with consultation and, on some matters, co-decision rights over workplace and economic matters, similar in spirit to Germany's Betriebsrat but with its own distinct French statutory structure and competences.",
+        whyItMatters:
+          "Like Germany's works-council system, this gives French employees formal, legally mandated institutional representation in company decision-making that has no close equivalent in most US workplaces — but the specific French CSE structure and its powers differ meaningfully from the German model, so the two shouldn't be treated as interchangeable.",
+        example:
+          "Major restructuring decisions (such as significant layoffs) at a sufficiently large French company generally require formal CSE consultation before being finalized — a mandatory procedural step, not just a courtesy briefing to employee representatives.",
+      },
+    ],
+    connections:
+      "Company form (SARL/SA/SAS) and the moniste/dualiste governance choice are the foundational structural decisions a French business makes. Faute de gestion sets the liability standard directors operate under within whichever structure is chosen. Loi Sapin II and devoir de vigilance are both relatively recent, France-specific statutory compliance regimes — one focused on anti-corruption, the other on supply-chain human rights/environmental due diligence — that layer additional, quite detailed obligations on top of ordinary corporate governance, and CSE requirements add a mandatory employee-representation dimension that cuts across company form and governance structure alike.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "law/Civil Litigation/fr": {
+    profession: "law",
+    category: "Civil Litigation",
+    jurisdiction: "fr",
+    overview:
+      "French civil litigation runs through a dedicated court hierarchy topped by the Cour de cassation, without a jury, with an active case-managing judge, and a cost-allocation rule that sits between the American Rule and Germany's fuller loser-pays system — the losing side generally pays court costs, but attorney fees are only partially, discretionarily recoverable.",
+    concepts: [
+      {
+        id: "fr-civ-court-hierarchy",
+        title: "The Tribunal judiciaire to Cour de cassation hierarchy",
+        explanation:
+          "Most civil cases start at the Tribunal judiciaire (first-instance court, created by a 2020 reform merging the former Tribunal de grande instance and Tribunal d'instance), can be appealed to a Cour d'appel (which reviews both facts and law), and ultimately to the Cour de cassation — France's highest civil court, which reviews only points of law, not facts.",
+        whyItMatters:
+          "The Cour de cassation's law-only role means it doesn't re-decide who's factually right — a case that reaches it is really a dispute about how the law was applied or interpreted below, similar in spirit to Germany's Revision but within France's own distinct court structure and terminology.",
+        example:
+          "A party dissatisfied purely with the trial court's factual findings gets their full factual re-examination at the Cour d'appel stage; if they then appeal to the Cour de cassation, they can only argue the lower courts misapplied the law, not that they weighed the evidence wrongly.",
+      },
+      {
+        id: "fr-civ-juge-mise-en-etat",
+        title: "The juge de la mise en état (case-management judge)",
+        explanation:
+          "A dedicated judge (juge de la mise en état) actively manages a civil case's progress before trial — setting deadlines, resolving procedural disputes, and pushing the case toward being \"ready\" for a full hearing — giving French civil procedure a more actively judge-managed character than a purely party-driven adversarial process.",
+        whyItMatters:
+          "This active judicial case management, similar in spirit to Germany's more hands-on judicial role, means the pace and shape of pretrial proceedings are considerably more court-directed than in systems where parties largely control scheduling and procedural posture themselves.",
+        example:
+          "A juge de la mise en état can set firm deadlines for exchanging evidence and arguments (conclusions) between the parties and can close the pretrial phase (clôture) once satisfied the case is ready, moving it to a hearing — an active steering role beyond simply ruling on motions as they arise.",
+      },
+      {
+        id: "fr-civ-no-broad-discovery",
+        title: "No broad American-style discovery, but targeted disclosure tools",
+        explanation:
+          "French civil procedure has no broad pretrial discovery process — each party generally must produce its own evidence — but specific, narrower disclosure mechanisms exist, such as an injonction de communiquer (court order compelling production of a specifically identified document) and référé (urgent summary proceedings) that can sometimes be used to secure evidence quickly.",
+        whyItMatters:
+          "A party can't request broad categories of documents the way US discovery allows — they generally need to identify specific documents or narrowly defined evidence and ask the court to order their production, a materially more limited and targeted tool.",
+        example:
+          "A party who knows a specific contract or internal memo exists and is relevant can ask the court for an injonction de communiquer targeting that specific document — but can't send a broad request for \"all documents relating to\" a general topic the way US discovery requests commonly do.",
+      },
+      {
+        id: "fr-civ-depens-vs-article-700",
+        title: "Les dépens and Article 700 — partial cost-shifting",
+        explanation:
+          "The losing party generally must pay the court costs (dépens — filing fees, expert costs, and similar formal expenses), but attorney fees themselves are only partially recoverable, and only at the court's discretion, under Article 700 of the Code de procédure civile — a sum the court sets based on equity, not a full reimbursement of actual legal bills.",
+        whyItMatters:
+          "This sits between the American Rule (each side bears its own attorney fees) and Germany's fuller loser-pays statutory fee-schedule system — French litigants still carry meaningful attorney-fee risk beyond dépens, but with more court discretion and typically less than full recovery than Germany's more formulaic approach.",
+        example:
+          "A losing defendant in French litigation will typically be ordered to pay the dépens and some Article 700 contribution toward the winner's attorney fees, but that contribution is often well below what the winner actually paid their own lawyer — unlike Germany's more predictable statutory fee-schedule reimbursement.",
+      },
+      {
+        id: "fr-civ-referé",
+        title: "Référé (urgent summary proceedings)",
+        explanation:
+          "Référé is a fast-track summary procedure for urgent matters — obtaining provisional measures, stopping an ongoing harm, or securing evidence — decided quickly by a single judge without going through the full ordinary litigation timeline, though the resulting order is generally provisional rather than a final judgment on the merits.",
+        whyItMatters:
+          "This gives French litigants a genuinely fast option for urgent situations that would otherwise take the ordinary multi-year litigation timeline to resolve, though it's deliberately limited to provisional relief rather than a substitute for a full trial on the merits.",
+        example:
+          "A party facing imminent, irreparable harm (like an ongoing breach threatening business continuity) can seek an urgent référé order to stop the harmful conduct within days or weeks, rather than waiting for ordinary proceedings to conclude, which could take years.",
+      },
+      {
+        id: "fr-civ-conciliation-mediation",
+        title: "Mandatory pre-litigation conciliation for smaller claims",
+        explanation:
+          "Reforms encouraging alternative dispute resolution have made an attempt at conciliation or mediation a mandatory prerequisite before filing certain smaller civil claims in court, reflecting a broader French and European policy push to reduce court caseloads by diverting suitable disputes to negotiated resolution first.",
+        whyItMatters:
+          "For claims below relevant thresholds, skipping straight to litigation without first attempting conciliation can actually get a case dismissed as inadmissible — this isn't just an encouraged best practice, but in some circumstances a genuine procedural prerequisite.",
+        example:
+          "A small consumer dispute below the relevant monetary threshold generally cannot proceed straight to a Tribunal judiciaire filing without first showing an attempt at conciliation or mediation was made, unless a specific statutory exception applies.",
+      },
+    ],
+    connections:
+      "The Tribunal judiciaire-to-Cour de cassation hierarchy defines where a case is heard and what kind of review is available at each stage, with the juge de la mise en état actively managing the pretrial phase within that structure. The lack of broad discovery (offset partially by targeted tools like injonction de communiquer and référé) shapes what evidence each side can actually marshal, dépens and Article 700 shape the financial risk of litigating, and mandatory pre-litigation conciliation for smaller claims reflects a policy preference for resolving disputes before they ever reach this whole apparatus in the first place.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "law/Criminal Law/fr": {
+    profession: "law",
+    category: "Criminal Law",
+    jurisdiction: "fr",
+    overview:
+      "French criminal law classifies offenses by severity into a three-tier system that determines which court hears the case, uniquely still uses a genuine citizen jury (alongside professional judges) for its most serious crimes, and gives investigating magistrates a distinctive, judge-led role in serious cases with no real common-law equivalent.",
+    concepts: [
+      {
+        id: "fr-crim-three-elements",
+        title: "Élément légal, matériel, moral — the three elements of an offense",
+        explanation:
+          "French criminal analysis requires an élément légal (a legal basis — the act must actually be defined as a crime by statute, reflecting the principle of legality), an élément matériel (the physical act itself), and an élément moral (the mental/fault element — intent or, for some offenses, negligence) — a structured three-part framework distinct in its specific organization from both common-law and German analysis.",
+        whyItMatters:
+          "The explicit, separate élément légal requirement reflects French law's strong commitment to the principle of legality (nullum crimen sine lege) — an act simply cannot be criminal, however harmful, without an existing statute defining it as such at the time it occurred.",
+        example:
+          "A genuinely harmful act that wasn't defined as a criminal offense under any statute at the time it was committed cannot be prosecuted, no matter how clearly the material and moral elements might otherwise be present — the missing élément légal is fatal to any prosecution.",
+      },
+      {
+        id: "fr-crim-three-tier-classification",
+        title: "Contraventions, délits, crimes — the severity classification",
+        explanation:
+          "French offenses are classified into three tiers by severity: contraventions (minor offenses, like traffic violations, heard by the tribunal de police), délits (mid-level offenses, like theft, heard by the tribunal correctionnel), and crimes (the most serious offenses, like murder, heard by the cour d'assises).",
+        whyItMatters:
+          "This classification isn't just descriptive — it mechanically determines which court has jurisdiction and what procedure applies, including whether a jury is involved at all, so correctly classifying an offense is a threshold procedural question, not just a severity label.",
+        example:
+          "The same underlying harmful conduct might be charged as a délit or a crime depending on specific statutory thresholds and aggravating factors, and that classification alone determines whether the case goes to a tribunal correctionnel (no jury) or a cour d'assises (with a citizen jury).",
+      },
+      {
+        id: "fr-crim-cour-dassises-jury",
+        title: "The cour d'assises — a genuine citizen jury alongside judges",
+        explanation:
+          "Unlike Germany's Schöffen system, France uses an actual jury (jurés) for crimes — currently structured (following recent reforms) with citizen jurors sitting and deliberating together with professional judges on both guilt and sentence, a substantially larger proportion of lay participants relative to professional judges than Germany's mixed panels.",
+        whyItMatters:
+          "This is one of the more distinctive French criminal procedure features — comparing it to a common-law jury (which deliberates separately from the judge) or Germany's Schöffen (a smaller lay contingent) requires recognizing it's structurally its own thing: substantial citizen participation, but integrated deliberation with professional judges, not a separated jury system.",
+        example:
+          "A defendant charged with a serious crime like murder is tried before the cour d'assises, where citizen jurors and professional judges deliberate together on both guilt and the ultimate sentence — a fundamentally more citizen-integrated process than the correctionnel court handling lesser délits, which uses professional judges alone.",
+      },
+      {
+        id: "fr-crim-garde-a-vue",
+        title: "Garde à vue (police custody) safeguards",
+        explanation:
+          "Garde à vue is the period a suspect can be held in police custody for questioning before being released or brought before a prosecutor/judge — significantly reformed in 2011 after European Court of Human Rights pressure to guarantee the right to a lawyer's presence during questioning, which wasn't previously reliably available.",
+        whyItMatters:
+          "The 2011 reform marked a significant, relatively recent expansion of suspects' rights during police custody specifically because the prior regime had been found wanting under European human rights standards — a useful example of European-level human rights law directly reshaping French domestic criminal procedure.",
+        example:
+          "A suspect held in garde à vue today has a guaranteed right to have a lawyer present during police interrogation, a protection that wasn't reliably guaranteed before the 2011 reform responded to ECHR case law finding the earlier regime inadequate.",
+      },
+      {
+        id: "fr-crim-juge-dinstruction",
+        title: "Le juge d'instruction (investigating magistrate)",
+        explanation:
+          "For serious or complex cases, an independent juge d'instruction can be appointed to personally direct the investigation — questioning witnesses, ordering searches, and deciding whether enough evidence exists to send the case to trial — combining investigative authority with judicial independence in a way that has no close common-law equivalent, where investigation is typically led by police/prosecutors rather than a judge.",
+        whyItMatters:
+          "Having a judge (not police or a prosecutor) personally directing a criminal investigation is a genuinely distinctive structural feature — it reflects a deliberate choice to insulate serious-case investigations from purely prosecutorial or police control, at the cost of a generally slower, more formal investigative process.",
+        example:
+          "A complex financial crime or high-profile serious offense is often assigned to a juge d'instruction, who personally oversees months or years of investigation — ordering specific investigative steps and ultimately deciding whether the accumulated evidence justifies sending the case to trial (renvoi) or dismissing it (non-lieu).",
+      },
+      {
+        id: "fr-crim-presomption-innocence",
+        title: "Présomption d'innocence",
+        explanation:
+          "The presumption of innocence is explicitly codified in Article 9-1 of the Code civil (a distinctive placement in the civil code, alongside its protection under Article 6 of the European Convention on Human Rights) — the same underlying principle as in other systems, but with its own specific French statutory anchor.",
+        whyItMatters:
+          "Placing this guarantee explicitly in the Code civil (not just constitutional or criminal-procedure text) gives individuals a specific civil-law basis to seek remedies (like damages) for public statements or media coverage that violate the presumption of innocence before any conviction — a distinctly French procedural tool.",
+        example:
+          "Someone publicly and prematurely declared guilty by media coverage before any trial or conviction has a specific civil-law basis under Article 9-1 Code civil to seek a remedy for that violation of the presumption of innocence, independent of the underlying criminal case's outcome.",
+      },
+    ],
+    connections:
+      "The three-element analysis (légal, matériel, moral) is the analytical backbone for any offense, and the contraventions/délits/crimes classification mechanically determines which court and procedure apply — including whether the citizen-jury cour d'assises is involved. Garde à vue protections govern the investigative stage for any suspect, the juge d'instruction adds a distinctive judge-led investigative layer for serious/complex cases specifically, and présomption d'innocence runs through the whole process as a codified guarantee with its own specific civil-law enforcement mechanism.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "law/Constitutional & Regulatory/fr": {
+    profession: "law",
+    category: "Constitutional & Regulatory",
+    jurisdiction: "fr",
+    overview:
+      "French constitutional law runs on the 1958 Fifth Republic Constitution, a separate specialized court for constitutional review that only gained the power to review already-enacted laws in 2010, an entirely separate administrative court system for disputes involving the state, and a strict conception of secularism considerably more assertive than typical US establishment-clause doctrine.",
+    concepts: [
+      {
+        id: "fr-const-fifth-republic",
+        title: "The 1958 Constitution and the semi-presidential system",
+        explanation:
+          "The Fifth Republic's 1958 Constitution, largely designed under Charles de Gaulle, created a semi-presidential system blending a directly elected president with real executive power and a prime minister/government answerable to parliament — a hybrid structure distinct from both a pure presidential system (like the US) and a pure parliamentary system (like Germany).",
+        whyItMatters:
+          "Understanding France as genuinely hybrid — not simply \"more presidential\" or \"more parliamentary\" — matters because real power distribution between president and prime minister shifts significantly depending on whether they're from the same political camp (see cohabitation in the Politics content), a dynamic neither pure system produces.",
+        example:
+          "The French president can dissolve the National Assembly and call new elections (a power a US president lacks entirely), while the prime minister and government can still be forced from office by a parliamentary vote of no confidence (a check a purely presidential system lacks) — genuinely blended features from both traditions.",
+      },
+      {
+        id: "fr-const-conseil-constitutionnel-qpc",
+        title: "The Conseil constitutionnel and the 2010 QPC reform",
+        explanation:
+          "The Conseil constitutionnel historically only reviewed laws before promulgation (a priori review, typically triggered by political actors like the president or a threshold number of parliamentarians). The 2010 introduction of the Question Prioritaire de Constitutionnalité (QPC) added a posteriori review — allowing individuals to challenge an already-enacted law's constitutionality during ordinary litigation, referred up through the court system.",
+        whyItMatters:
+          "Before 2010, an ordinary citizen had essentially no direct way to challenge a law's constitutionality once it was already in force — the QPC reform was a genuinely major modernization giving individuals real access to constitutional review for the first time, much closer (though still procedurally distinct) to systems with broader individual access to constitutional courts.",
+        example:
+          "A person facing prosecution or a civil claim under a law they believe is unconstitutional can now raise a QPC during their own case, which gets referred up (via the Conseil d'État or Cour de cassation, depending on the court) to the Conseil constitutionnel for a ruling — a pathway that simply didn't exist before 2010.",
+      },
+      {
+        id: "fr-const-dual-court-system",
+        title: "The dual court system: judicial courts vs. Conseil d'État",
+        explanation:
+          "France maintains two entirely separate court hierarchies: the ordinary judicial courts (handling private civil and criminal law, topped by the Cour de cassation) and a distinct administrative court system (handling disputes involving the state and public administration, topped by the Conseil d'État) — governed by its own body of law, droit administratif, developed substantially through the Conseil d'État's own case law.",
+        whyItMatters:
+          "A dispute against a government body in France generally goes to an entirely different court system, applying different legal principles, than a private dispute between individuals or companies — a structural split with no equivalent in a unified common-law court system, and getting the wrong court entirely can be fatal to a claim.",
+        example:
+          "A citizen challenging a government administrative decision (like a denied permit) sues in the administrative courts under droit administratif principles, not in the ordinary civil courts that would hear a private contract or tort dispute — genuinely different courts, procedures, and even substantive legal principles apply.",
+      },
+      {
+        id: "fr-const-bloc-de-constitutionnalite",
+        title: "The bloc de constitutionnalité",
+        explanation:
+          "French constitutional review doesn't rest on a single constitutional text — the \"bloc de constitutionnalité\" (constitutionality block) includes the 1958 Constitution itself, the 1789 Declaration of the Rights of Man and of the Citizen, the preamble to the 1946 Constitution (with its social/economic rights), and the 2004 Charter for the Environment.",
+        whyItMatters:
+          "This layered structure means constitutional arguments in France can draw on multiple historical texts spanning over two centuries, each potentially carrying different rights and principles — a genuinely broader and more textually layered source base than reviewing a single constitutional document.",
+        example:
+          "A constitutional challenge might invoke property rights language dating to the 1789 Declaration alongside social-welfare principles from the 1946 preamble and environmental protections from the 2004 Charter — all simultaneously part of the operative constitutional framework, not just historical background.",
+      },
+      {
+        id: "fr-const-cohabitation",
+        title: "Cohabitation",
+        explanation:
+          "Because the French president and National Assembly majority aren't guaranteed to align (they're elected somewhat separately, though usually in close succession), France has periodically experienced cohabitation — a president from one political camp governing alongside a prime minister and government from an opposing majority, forcing genuine power-sharing.",
+        whyItMatters:
+          "During cohabitation, the informal but powerful presidential dominance over domestic policy weakens considerably, and the prime minister's government — answerable to the opposing parliamentary majority — takes the lead on most domestic matters, while foreign policy and defense (the domaine réservé) tend to remain more contested but traditionally presidential-leaning even then.",
+        example:
+          "France has experienced several multi-year cohabitation periods (for example, in the 1980s-90s) where a president from one major party governed alongside a prime minister from the opposing party, producing visibly different domestic policy dynamics than periods when the presidency and parliamentary majority aligned.",
+      },
+      {
+        id: "fr-const-laicite",
+        title: "Principe de laïcité (secularism)",
+        explanation:
+          "French secularism (laïcité) is constitutionally entrenched and applied more assertively than typical US establishment-clause doctrine — it actively restricts religious expression and symbols in specific public contexts (like public schools and civil-service functions) rather than primarily just barring government endorsement of religion.",
+        whyItMatters:
+          "This is a genuinely different balance than the American approach — French laïcité is understood as protecting the neutrality of public space and institutions from religion actively, not merely preventing government from establishing or favoring one religion, which produces different, sometimes more restrictive, outcomes in disputes over religious expression in public settings.",
+        example:
+          "French law has restricted the wearing of conspicuous religious symbols by students in public schools and by public employees while performing official functions — restrictions justified under laïcité principles that would likely conflict with US First Amendment free-exercise protections in a comparable American context.",
+      },
+    ],
+    connections:
+      "The 1958 Constitution's semi-presidential structure sets the basic distribution of power that cohabitation periodically tests and rebalances. The Conseil constitutionnel is the institution enforcing constitutional limits, now with the QPC giving individuals direct access since 2010, drawing on the full bloc de constitutionnalité rather than a single text. The dual court system means disputes involving the state run through an entirely separate track from private law disputes, and laïcité illustrates how French constitutional principles can produce meaningfully different real-world outcomes than superficially similar-sounding principles (like US religious liberty doctrine) elsewhere.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
   "law/Corporate & Compliance": {
     profession: "law",
     category: "Corporate & Compliance",
@@ -2601,6 +2971,376 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     ],
     connections:
       "The Koalitionsvertrag is where most substantive legislative negotiation actually happens, before a government even forms — Fraktionsdisziplin and the constitutional free mandate determine how reliably that agreement translates into actual votes once governing begins. The Bundesrat's Zustimmungsgesetze power and the Vermittlungsausschuss process add a further negotiation layer specifically for legislation touching state interests, and multi-party coalition dynamics compound all of this by requiring the original Koalitionsvertrag negotiation itself to satisfy three (or more) parties simultaneously rather than two.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "politics/Foreign Policy & Diplomacy/fr": {
+    profession: "politics",
+    category: "Foreign Policy & Diplomacy",
+    jurisdiction: "fr",
+    overview:
+      "French foreign policy is built around a Gaullist tradition of strategic autonomy and national grandeur — an independent nuclear deterrent, a UN Security Council permanent seat, and a historical willingness to chart an independent course from the US and even NATO — that shapes France's self-conception as a global power, not merely a European or Atlantic one.",
+    concepts: [
+      {
+        id: "fr-fp-gaullist-strategic-autonomy",
+        title: "Gaullist strategic autonomy and the force de frappe",
+        explanation:
+          "France maintains its own independent nuclear deterrent (force de frappe), developed under Charles de Gaulle specifically to guarantee French security independent of US/NATO guarantees — reflecting a foundational Gaullist principle that genuine great-power status requires independent military capability, not reliance on allies.",
+        whyItMatters:
+          "This instinct toward strategic autonomy — wanting capability that doesn't depend on any ally's decisions — recurs throughout French foreign and defense policy, including recent pushes for European \"strategic autonomy\" as an extension of the same underlying logic to the EU level.",
+        example:
+          "France withdrew from NATO's integrated military command structure in 1966 specifically to preserve full independent control over its nuclear forces and military decision-making, only rejoining the integrated command in 2009 — a multi-decade illustration of the strategic-autonomy instinct in practice.",
+      },
+      {
+        id: "fr-fp-domaine-reserve",
+        title: "Le domaine réservé (the president's reserved domain)",
+        explanation:
+          "By strong informal tradition rather than explicit constitutional text, foreign policy and defense are understood as the president's personal prerogative — the \"domaine réservé\" — remaining more concentrated in presidential hands even during cohabitation, when domestic policy authority shifts substantially toward the prime minister.",
+        whyItMatters:
+          "This means a French president retains meaningful foreign-policy initiative even when politically weakened domestically by an opposing parliamentary majority — a durability of presidential foreign-policy authority that doesn't have a clean equivalent in systems where foreign policy is more institutionally shared or parliament-dependent.",
+        example:
+          "During past cohabitation periods, French presidents continued representing France directly at international summits and shaping major foreign-policy positions, even while domestic policy leadership had shifted substantially to a prime minister from an opposing party.",
+      },
+      {
+        id: "fr-fp-francafrique-legacy",
+        title: "The Françafrique legacy",
+        explanation:
+          "France maintained an extensive network of political, military, and economic relationships with its former African colonies after independence — sometimes called \"Françafrique\" — including military bases and interventions, a legacy that has become increasingly contested both within France and across Africa, prompting recent reassessment and, in several countries, withdrawal of French forces.",
+        whyItMatters:
+          "Understanding this history is essential context for interpreting recent, high-profile ruptures in French-African relations (military withdrawals, anti-French sentiment, and realignment toward other powers) — these aren't isolated recent events but the culmination of a long-contested relationship increasingly seen as neocolonial.",
+        example:
+          "Several West African countries that historically hosted French military bases as part of anti-terrorism cooperation have in recent years formally ended those arrangements and expelled French forces, reflecting a broader regional reassessment of the Françafrique relationship.",
+      },
+      {
+        id: "fr-fp-eu-leadership-strategic-autonomy",
+        title: "EU leadership ambitions and European strategic autonomy",
+        explanation:
+          "Alongside Germany, France sees itself as a co-leader of European integration, but with a distinctly stronger emphasis than Germany's historically more Atlanticist instinct on \"European strategic autonomy\" — building independent EU defense and industrial capability less dependent on the United States.",
+        whyItMatters:
+          "This is a real, sometimes friction-generating difference from Germany within the supposedly unified \"Franco-German motor\" — France tends to push harder for EU defense independence from the US, while Germany has historically leaned more toward maintaining close US/NATO ties as the foundation of European security.",
+        example:
+          "France has been a consistent advocate for EU-level defense industrial projects and independent European military capability, sometimes advancing proposals that Germany and other more Atlanticist EU members have approached more cautiously, preferring to keep NATO/US ties central.",
+      },
+      {
+        id: "fr-fp-francophonie",
+        title: "La Francophonie as a soft-power network",
+        explanation:
+          "France uses the Francophonie — the international organization and broader network of French-speaking countries and communities — as a distinct diplomatic and soft-power channel, separate from EU or NATO frameworks, for cultural influence, development cooperation, and diplomatic coordination.",
+        whyItMatters:
+          "This gives France a diplomatic reach and cultural influence network that most other European countries, including Germany, simply don't have at comparable scale — a genuinely distinctive lever in French foreign policy tied to language and colonial history rather than purely economic or military weight.",
+        example:
+          "French cultural and development diplomacy in Francophone Africa, Southeast Asia, and parts of the Caribbean operates substantially through Francophonie-linked institutions and language-based cultural ties, a soft-power channel with no equivalent for most other major powers.",
+      },
+      {
+        id: "fr-fp-un-security-council",
+        title: "Permanent UN Security Council membership",
+        explanation:
+          "France is one of five permanent UN Security Council members (P5) with veto power — a status dating to 1945 that gives France an institutional lever most comparably-sized countries, including Germany, lack, reinforcing France's self-conception as a genuinely global (not just regional or European) power.",
+        whyItMatters:
+          "This P5 status is a recurring point of both French foreign-policy identity and international friction — France actively defends this privileged institutional position (including against periodic proposals for UN Security Council reform that might dilute it), since it's central to how France projects global influence disproportionate to its population or economic size alone.",
+        example:
+          "France has consistently supported UN Security Council reform proposals that would add new permanent members (like India, Brazil, or Germany itself) while carefully avoiding any reform that would affect its own existing P5 veto status — a recurring, deliberate distinction in French diplomatic positioning.",
+      },
+    ],
+    connections:
+      "Gaullist strategic autonomy is the foundational instinct underlying French foreign policy, expressed concretely through the independent force de frappe and, more recently, the push for European strategic autonomy at the EU level. The domaine réservé gives the president durable authority to pursue this vision even amid domestic political turbulence, and Francophonie and the UN Security Council seat are the specific institutional and soft-power tools France uses to project influence globally. The Françafrique legacy shows how this historical global orientation is now being actively renegotiated and contested, especially in Africa.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "politics/Domestic Policy/fr": {
+    profession: "politics",
+    category: "Domestic Policy",
+    jurisdiction: "fr",
+    overview:
+      "French domestic policy runs through a historically centralized unitary state (unlike Germany's federalism), a powerful technocratic administrative elite, and a political culture where street protest and strikes function as a genuinely institutionalized channel of policy pressure — alongside a constitutional tool, Article 49.3, that lets governments force legislation through without a parliamentary vote.",
+    concepts: [
+      {
+        id: "fr-dp-unitary-state",
+        title: "France as a centralized unitary state",
+        explanation:
+          "Unlike Germany's federal system, France is constitutionally a unitary state — policy authority is centralized in the national government, though decentralization reforms since the 1980s have given regions (régions) and departments (départements) some genuine administrative and budgetary autonomy, well short of German-style Länder sovereignty.",
+        whyItMatters:
+          "National domestic policy debates in France are genuinely national in a way German debates on Länder-controlled topics aren't — a French president or government can set uniform national policy on education or healthcare directly, without needing 13 regional governments' separate cooperation the way German federal policy often needs 16 Länder.",
+        example:
+          "French national education policy — curriculum, standardized exams (like the baccalauréat) — is set centrally by the Ministry of Education for the whole country, unlike Germany's Länder-by-Länder variation in school curricula and structure.",
+      },
+      {
+        id: "fr-dp-grands-corps-technocracy",
+        title: "The grands corps and technocratic policy influence",
+        explanation:
+          "A relatively small, elite cadre of senior civil servants — traditionally trained at the École Nationale d'Administration (ENA, replaced by the Institut National du Service Public, INSP, in 2022) — exercises outsized, durable influence over policy design across successive governments, moving between top civil-service, political, and even private-sector roles (a pattern called \"pantouflage\").",
+        whyItMatters:
+          "Understanding French domestic policy sometimes requires looking past elected officials to this technocratic elite, whose institutional continuity and specific analytical/administrative traditions shape policy options and framing in ways that persist across changes in elected government.",
+        example:
+          "Multiple French presidents, prime ministers, and senior ministers across different parties and decades have shared the same ENA educational background, reflecting how deeply this specific technocratic training pipeline is embedded in French policy-making leadership regardless of which party holds power.",
+      },
+      {
+        id: "fr-dp-referendum-tradition",
+        title: "The referendum tradition",
+        explanation:
+          "French political history has used national referenda more prominently than Germany, which has no national referendum mechanism at all in the Grundgesetz — de Gaulle in particular used referenda repeatedly (including staking his own political survival on their outcome), and referenda remain a constitutionally available, if less frequently used, domestic policy tool.",
+        whyItMatters:
+          "This is a genuine structural contrast with Germany worth flagging directly — a comparison assuming both countries treat direct democracy similarly would be simply wrong, since Germany's constitutional design deliberately avoided national referenda (partly due to their misuse under the Weimar Republic and Nazi era) while France's constitutional tradition embraces them.",
+        example:
+          "Charles de Gaulle called a 1969 referendum on Senate and regional reform and explicitly pledged to resign if it failed — which it did, and he immediately resigned as president, an extreme illustration of how directly French referenda have historically been tied to political leadership stakes.",
+      },
+      {
+        id: "fr-dp-greve-manifestation",
+        title: "Grève and manifestation as institutionalized political pressure",
+        explanation:
+          "Strikes (grèves) and mass street protests (manifestations) function in French political culture as a recognized, quasi-institutionalized channel for influencing domestic policy — not merely symbolic dissent, but a form of pressure governments genuinely factor into policy calculations, often more centrally than formal parliamentary opposition alone.",
+        whyItMatters:
+          "This means gauging likely public/union mobilization is a routine, serious part of French domestic policy strategy in a way it typically isn't to the same degree in political cultures with less institutionalized protest traditions — a policy that looks politically survivable in parliament can still be forced to retreat by sustained street pressure.",
+        example:
+          "Major pension reform proposals in France have repeatedly triggered sustained nationwide strikes and mass protests significant enough to force governments to modify or, at times, withdraw the reforms entirely — street mobilization functioning as a genuine veto-like check alongside formal parliamentary process.",
+      },
+      {
+        id: "fr-dp-article-49-3",
+        title: "Article 49.3 — forcing legislation through without a vote",
+        explanation:
+          "Article 49.3 of the Constitution lets the government pass a bill without a parliamentary vote by formally engaging its responsibility on the text — the bill is deemed adopted unless the opposition immediately files (and wins) a motion of no confidence (motion de censure) within a set timeframe.",
+        whyItMatters:
+          "This is a powerful, distinctly French executive tool for pushing through domestic legislation when a government lacks a comfortable majority — used more frequently by governments without a clear parliamentary majority (as has increasingly been the case since 2022), it lets a government bypass normal negotiation entirely, at the calculated risk of a no-confidence vote.",
+        example:
+          "French governments have repeatedly used Article 49.3 to push through controversial legislation (including major pension reform) without a direct parliamentary vote on the bill's substance, surviving the resulting no-confidence motions each time — a high-stakes but recurring domestic-policy tool in a fragmented parliament.",
+      },
+      {
+        id: "fr-dp-decentralisation",
+        title: "Decentralization reforms since the 1980s",
+        explanation:
+          "Since major reforms beginning in 1982 (the \"Loi Defferre\"), France has progressively transferred certain administrative and budgetary powers from the central state to régions and départements — real decentralization by French historical standards, though the country remains considerably more centralized than federal systems like Germany.",
+        whyItMatters:
+          "This matters for correctly calibrating expectations — French regional/departmental authorities have genuinely more autonomy today than a purely centralized model would suggest, but describing France as \"federal\" or comparing its regions directly to German Länder overstates their actual constitutional independence.",
+        example:
+          "French régions today have real budgetary authority over areas like regional transportation and some economic development programs — genuine decentralization compared to the pre-1982 fully centralized model, but still operating within a unitary state framework where the national government retains ultimate constitutional authority.",
+      },
+    ],
+    connections:
+      "The unitary state structure and grands corps technocratic influence together explain why French domestic policy tends to be centrally designed and administratively driven, even after decentralization reforms gave régions modest real authority. The referendum tradition and grève/manifestation culture are both channels of direct popular pressure on that centralized policy-making process, operating alongside (and sometimes overriding) ordinary parliamentary politics — and Article 49.3 is the executive's own tool for pushing policy through when parliamentary negotiation alone won't secure passage, particularly relevant in a fragmented, no-clear-majority parliament.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "politics/Crisis Response/fr": {
+    profession: "politics",
+    category: "Crisis Response",
+    jurisdiction: "fr",
+    overview:
+      "French crisis response runs through a centralized state structure — the préfet system gives the national government direct on-the-ground authority no federal system provides — backed by a codified state-of-emergency legal regime and, in the most extreme case, an extraordinary constitutional provision granting the president near-total emergency powers.",
+    concepts: [
+      {
+        id: "fr-cr-prefet-system",
+        title: "The préfet system — centralized on-the-ground authority",
+        explanation:
+          "Each French département has a préfet — a state-appointed (not locally elected) representative of the central government with direct authority to coordinate local crisis response, security, and administration — giving Paris a direct chain of command down to the local level that a federal system's state governments don't provide central authorities.",
+        whyItMatters:
+          "This is a structural advantage for rapid, unified crisis response that Germany's Länder-based system genuinely lacks — the French central government can direct local crisis action through préfets without needing separate negotiation with locally elected, politically independent state governments.",
+        example:
+          "During a major regional crisis (a natural disaster or security incident), the local préfet can coordinate emergency services, evacuation orders, and resource allocation directly as the central government's representative, without needing to negotiate the response with an independently elected regional government the way German crisis coordination requires with Länder governments.",
+      },
+      {
+        id: "fr-cr-etat-durgence",
+        title: "État d'urgence (state of emergency)",
+        explanation:
+          "France has a codified legal framework (dating to a 1955 law, most prominently invoked after the November 2015 Paris terrorist attacks and extended repeatedly) granting expanded executive powers — enhanced search authority, movement restrictions, assembly bans — during a declared state of emergency, subject to parliamentary extension requirements.",
+        whyItMatters:
+          "Having this as a specific, pre-existing codified legal framework (rather than improvised emergency measures) means the scope and limits of emergency powers are, at least formally, defined in advance and subject to known procedural checks like periodic parliamentary reauthorization — even though its extended use after 2015 drew significant civil-liberties criticism.",
+        example:
+          "The état d'urgence declared after the November 2015 Paris attacks was extended multiple times by parliamentary vote over nearly two years before several of its provisions were eventually folded into permanent ordinary law (the 2017 SILT law) rather than remaining emergency-only measures.",
+      },
+      {
+        id: "fr-cr-article-16",
+        title: "Article 16 — extraordinary presidential emergency powers",
+        explanation:
+          "Article 16 of the Constitution allows the president, under specific grave circumstances threatening the nation's institutions, independence, or territorial integrity, and when normal constitutional functioning is interrupted, to assume near-total emergency powers — used exactly once, in 1961, during the Algerian War crisis.",
+        whyItMatters:
+          "This is an extreme, rarely-invoked tool with real constitutional safeguards (consultation requirements, a role for the Conseil constitutionnel, and time-based review after 30 and 60 days) precisely because of how much power it concentrates — its single historical use is itself informative about how genuinely exceptional the circumstances need to be before it's considered appropriate.",
+        example:
+          "Charles de Gaulle invoked Article 16 in 1961 in response to a military coup attempt in Algeria, assuming direct emergency powers for several months — the only time in the Fifth Republic's history this provision has actually been used, illustrating its reserved-for-true-emergencies character.",
+      },
+      {
+        id: "fr-cr-conseil-defense",
+        title: "The Conseil de défense et de sécurité nationale",
+        explanation:
+          "France's top-level national security and defense decision-making body, chaired by the president, brings together the prime minister and relevant ministers to coordinate major crisis and defense decisions — reflecting the concentration of crisis and defense authority in the presidency, consistent with the domaine réservé tradition.",
+        whyItMatters:
+          "This institutional structure reinforces how centrally the French presidency sits at the top of major crisis decision-making — unlike systems with more diffuse or cabinet-collective crisis authority, key decisions in a major national crisis flow through this presidentially chaired body.",
+        example:
+          "Major national security decisions during significant crises (terrorism threats, major public health emergencies with security dimensions) have been coordinated through the Conseil de défense et de sécurité nationale, with the president directly chairing the process rather than delegating it to the prime minister or an interior ministry-led structure alone.",
+      },
+      {
+        id: "fr-cr-gilets-jaunes",
+        title: "Gilets jaunes as a case study in grassroots crisis emergence",
+        explanation:
+          "The 2018-2019 Gilets jaunes (Yellow Vest) protests began as decentralized, social-media-organized grassroots mobilization outside traditional union or party structures, over a fuel-tax increase, and rapidly escalated into a sustained, nationwide domestic political crisis the government initially struggled to address through normal channels.",
+        whyItMatters:
+          "This illustrates a distinctly modern crisis-response challenge — a movement with no clear organizational leadership to negotiate with, emerging and coordinating outside traditional union/party structures the government's normal crisis-negotiation playbook was built around, forcing genuinely improvised response approaches (like the \"Grand débat national\" public consultation exercise).",
+        example:
+          "The government's initial response to the Gilets jaunes crisis — repealing the triggering fuel tax increase — didn't resolve the movement, which had by then evolved into broader grievances about living standards and democratic representation, ultimately prompting an unusual nationwide public consultation process (the Grand débat national) as a crisis-response tool.",
+      },
+      {
+        id: "fr-cr-securite-civile",
+        title: "Sécurité civile — centralized civil protection",
+        explanation:
+          "France's civil protection function (sécurité civile) is organized more centrally than Germany's Länder-plus-THW model, coordinated nationally with specialized units (like the civil security aviation and firefighting assets) that can be deployed across the country under central direction, working alongside local fire and emergency services.",
+        whyItMatters:
+          "This centralized coordination capacity means France can move specialized disaster-response resources (like firefighting aircraft during major wildfires) across regional boundaries more readily under unified national command than a more decentralized system requires inter-state coordination to achieve.",
+        example:
+          "During major wildfire seasons, France's centrally coordinated sécurité civile aviation assets are deployed flexibly to whichever region faces the most severe fires, directed nationally rather than requiring formal cross-regional mutual aid agreements the way a more federated system might.",
+      },
+    ],
+    connections:
+      "The préfet system is the structural foundation giving the central government direct crisis authority down to the local level, and the Conseil de défense et de sécurité nationale is where major crisis decisions get made at the top, consistent with presidential dominance over crisis/security matters. État d'urgence and Article 16 are the two codified legal frameworks for expanding executive power during a crisis, at very different scales of severity, while sécurité civile is the operational machinery executing centrally coordinated response. Gilets jaunes shows what happens when a domestic crisis doesn't fit this top-down model at all — a genuinely decentralized, leaderless movement the normal crisis-response playbook struggled to engage with.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "politics/Campaign Strategy/fr": {
+    profession: "politics",
+    category: "Campaign Strategy",
+    jurisdiction: "fr",
+    overview:
+      "French presidential campaigns run on a two-round majority system that fundamentally reshapes strategy between rounds, a formal candidacy threshold requiring elected officials' sponsorship, strict publicly financed spending limits, and a recurring \"republican front\" dynamic where mainstream parties coordinate against a far-right finalist.",
+    concepts: [
+      {
+        id: "fr-cs-two-round-system",
+        title: "The two-round presidential election (scrutin majoritaire à deux tours)",
+        explanation:
+          "If no candidate wins an outright majority in the first round — which, with a fragmented field, is essentially always the case — the top two finishers advance to a second round two weeks later, decided by simple majority. This fundamentally splits campaign strategy into two distinct phases with different goals.",
+        whyItMatters:
+          "Round one is about consolidating and maximizing your own base and distinguishing yourself from ideologically similar rivals; round two is about broadening appeal to voters who supported eliminated candidates — a strategic pivot common-law single-round systems simply don't require, since round one doesn't need majority support, only relative strength.",
+        example:
+          "A candidate can campaign further to the ideological edges in round one to consolidate a committed base against similar rivals, then pivot to more centrist, broadly reassuring messaging in round two specifically to win over voters whose first-choice candidate didn't make the runoff.",
+      },
+      {
+        id: "fr-cs-parrainages",
+        title: "Parrainages — the 500-signature candidacy threshold",
+        explanation:
+          "To appear on the presidential ballot, a candidate must secure 500 formal sponsorship signatures (parrainages) from elected officials (mayors, MPs, and other qualifying office-holders) spread across a minimum number of different departments — a real, sometimes strategically contested threshold with no equivalent in systems that only require a filing fee or petition of ordinary voters.",
+        whyItMatters:
+          "Securing enough parrainages is itself an early, genuine campaign objective, not a formality — candidates without strong establishment ties can struggle to clear this bar even with real public support, and the requirement has periodically become politically contested as a barrier that can exclude candidates who poll reasonably well.",
+        example:
+          "Minor or outsider candidates with real grassroots polling support have at times publicly struggled to secure 500 valid parrainages from elected officials, illustrating how this institutional threshold can function as a genuine, sometimes controversial gatekeeping mechanism distinct from actual voter support.",
+      },
+      {
+        id: "fr-cs-legislative-follows-presidential",
+        title: "Legislative elections following the presidential calendar",
+        explanation:
+          "Since a 2000-2002 calendar reform, French legislative (National Assembly) elections are held shortly after the presidential election — designed to produce a supportive parliamentary majority for the newly elected president (the \"fait majoritaire\"), though this alignment has weakened notably in the most recent electoral cycles.",
+        whyItMatters:
+          "This calendar sequencing was specifically designed to reduce the likelihood of cohabitation (an opposing parliamentary majority), reflecting a deliberate institutional design choice to reinforce presidential authority — its recent weakening (producing fragmented, no-clear-majority parliaments even under this sequencing) is itself a significant recent development in French politics.",
+        example:
+          "For roughly two decades after the calendar reform, French voters typically gave newly elected presidents a supportive parliamentary majority in the following legislative elections; more recent elections have broken this pattern, producing fragmented parliaments even immediately following a presidential win.",
+      },
+      {
+        id: "fr-cs-campaign-finance-limits",
+        title: "Strict, publicly financed campaign spending limits",
+        explanation:
+          "French presidential campaign spending is tightly capped by law, with a substantial portion of qualifying candidates' expenses reimbursed from public funds (more generously for candidates who clear a minimum vote-share threshold) — a considerably more regulated and less privately-dominated system than US campaign finance.",
+        whyItMatters:
+          "This significantly reduces the importance of large-scale private fundraising as a campaign strategy lever compared to systems with more permissive spending rules — French campaigns compete more on message, media presence, and organization within firm spending ceilings than on raw financial resource advantage.",
+        example:
+          "A French presidential candidate cannot simply outspend opponents through unlimited fundraising the way is more possible in less-regulated systems — hitting the legal spending cap is a real, binding constraint every serious campaign has to plan carefully around.",
+      },
+      {
+        id: "fr-cs-temps-de-parole",
+        title: "Temps de parole — regulated equal airtime",
+        explanation:
+          "France's broadcasting regulator (Arcom, formerly the CSA) enforces equal-time rules ensuring candidates receive proportionate or equal airtime on television and radio during the campaign period, similar in spirit to Germany's public-broadcasting fairness rules but with its own specific French regulatory mechanics and enforcement.",
+        whyItMatters:
+          "This limits how much a well-funded or media-favored candidate can simply dominate broadcast media exposure compared to rivals — campaign media strategy has to work within these mandated fairness constraints rather than around unlimited paid media access.",
+        example:
+          "In the period immediately before an election, Arcom actively monitors broadcasters' coverage to ensure rough parity in candidates' speaking time, a regulatory enforcement mechanism with real teeth that shapes how much unscripted media access any single candidate can secure relative to others.",
+      },
+      {
+        id: "fr-cs-front-republicain",
+        title: "Le front républicain",
+        explanation:
+          "When a far-right candidate reaches the second round, mainstream parties across the rest of the political spectrum have recurringly called on their own supporters to vote for whichever opposing candidate remains — the \"republican front\" — a strategic and normative pattern distinctive to how French electoral politics has historically handled far-right breakthroughs, though its strength and reliability have varied across different elections.",
+        whyItMatters:
+          "Anticipating whether and how strongly a republican front will materialize is a genuine, high-stakes strategic calculation for both the far-right candidate (hoping it weakens) and their second-round opponent (hoping it holds) — it's a real, actively contested political dynamic, not an automatic or guaranteed outcome.",
+        example:
+          "Multiple French presidential runoffs pitting a far-right candidate against a mainstream rival have seen explicit calls from eliminated first-round candidates across much of the rest of the political spectrum for their supporters to back the non-far-right finalist, with the actual strength of this effect varying meaningfully between different election cycles.",
+      },
+    ],
+    connections:
+      "The two-round system and the parrainages threshold both shape who even gets to compete and how — one determines eventual victory, the other determines eligibility to start. Campaign finance limits and temps de parole rules constrain how campaigns can compete once underway, keeping the contest more about message than resources. The legislative-election calendar sequencing determines what kind of parliamentary support a winning president can expect afterward, and front républicain dynamics are the recurring strategic wildcard specifically shaping second-round outcomes whenever a far-right candidate advances.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "politics/Legislative Negotiation/fr": {
+    profession: "politics",
+    category: "Legislative Negotiation",
+    jurisdiction: "fr",
+    overview:
+      "French legislative negotiation shifts dramatically depending on whether the government controls a clear National Assembly majority (fait majoritaire) or not — and since 2022's more fragmented parliaments, tools like Article 49.3 and issue-by-issue ad hoc bargaining have become far more central than the stable coalition agreements typical of consistently multi-party systems like Germany.",
+    concepts: [
+      {
+        id: "fr-ln-fait-majoritaire-vs-cohabitation",
+        title: "Fait majoritaire vs. cohabitation",
+        explanation:
+          "When the president's party or coalition controls the National Assembly (the historical norm, the \"fait majoritaire\"), legislative negotiation is comparatively top-down and executive-driven — the government can generally count on passing its program. During cohabitation (an opposing majority), or in a fragmented parliament with no majority at all, real negotiation becomes unavoidable.",
+        whyItMatters:
+          "Whether fait majoritaire currently holds is the single most important variable for predicting how French legislative negotiation will actually work in a given period — the same formal constitutional powers produce very different practical negotiating dynamics depending on this underlying parliamentary arithmetic.",
+        example:
+          "Governments enjoying a comfortable fait majoritaire have historically been able to pass their legislative program with minimal formal negotiation with opposition parties; more recent fragmented parliaments with no single majority have forced governments into genuine, sustained negotiation or reliance on tools like Article 49.3 simply to pass ordinary legislation.",
+      },
+      {
+        id: "fr-ln-article-49-3-negotiation",
+        title: "Article 49.3 as a negotiation-bypassing tool",
+        explanation:
+          "Article 49.3 lets the government force a bill through without a direct vote, subject only to a no-confidence motion (motion de censure) — increasingly used by governments lacking a clear majority specifically because ordinary vote-by-vote negotiation with a fragmented parliament often can't reliably produce passage.",
+        whyItMatters:
+          "This tool changes the negotiation calculus entirely — rather than needing to build affirmative majority support for a bill's substance, a government using 49.3 only needs to prevent a majority from voting no confidence, a materially different (and often easier) political threshold to clear.",
+        example:
+          "French governments without a parliamentary majority have used Article 49.3 repeatedly on major legislation (including pension reform), surviving the resulting no-confidence votes each time because opposition parties, despite disliking the bill, couldn't assemble enough votes to actually bring down the government.",
+      },
+      {
+        id: "fr-ln-navette-parlementaire",
+        title: "La navette parlementaire",
+        explanation:
+          "A bill \"shuttles\" (navette) between the National Assembly and Senate, each chamber amending and passing its own version, until an identical text clears both — or, if agreement can't be reached, the government can ultimately let the National Assembly have the final word, since it holds procedural primacy over the Senate.",
+        whyItMatters:
+          "Because the National Assembly ultimately has the decisive say if the chambers can't agree, Senate negotiating leverage in the navette process is real but bounded — unlike systems where an upper chamber holds an equal or even superior check, French Senate objections can ultimately be overridden by Assembly primacy.",
+        example:
+          "A bill that goes through several rounds of navette between the Assembly and Senate without reaching identical text can ultimately be adopted based on the National Assembly's final version alone, once the government invokes the relevant procedure — a clear illustration of the Assembly's ultimate procedural primacy over the Senate.",
+      },
+      {
+        id: "fr-ln-commission-mixte-paritaire",
+        title: "The commission mixte paritaire",
+        explanation:
+          "When the two chambers disagree, a joint committee with equal representation from both the National Assembly and Senate (commission mixte paritaire) attempts to negotiate a compromise text both chambers can accept — functionally similar in purpose to Germany's Vermittlungsausschuss, though operating within France's distinct constitutional framework, including the Assembly's ultimate override power if the committee fails.",
+        whyItMatters:
+          "Because the Assembly can ultimately prevail regardless, the commission mixte paritaire's negotiating dynamic is shaped by that backstop — Senate negotiators have real incentive to reach a genuine compromise rather than simply holding out, since holding out doesn't guarantee they'll get their way the way a body with true equal veto power might expect.",
+        example:
+          "Significant legislation affecting both chambers' interests often reaches a negotiated compromise in the commission mixte paritaire specifically because Senate negotiators know an unresolved standoff ultimately favors the government's Assembly-based fallback option, giving them a real incentive to settle.",
+      },
+      {
+        id: "fr-ln-ordonnances",
+        title: "Legislating by ordonnance (Article 38)",
+        explanation:
+          "Parliament can authorize the government to legislate directly by ordonnance (a decree with the force of law) in specified domains and for a limited time, with the ordonnances later requiring parliamentary ratification — letting the executive bypass the normal bill-by-bill legislative negotiation process for defined policy areas.",
+        whyItMatters:
+          "This is a distinctive delegation mechanism that concentrates substantial temporary lawmaking authority in the executive for specific, pre-approved domains — rather than negotiating each individual measure through parliament, the government negotiates the scope of delegated authority once, then implements largely unilaterally within it.",
+        example:
+          "Significant labor law reforms have been implemented via ordonnance after parliament granted the government authorization to legislate in that domain — a materially faster process than negotiating each individual provision through ordinary parliamentary debate and amendment.",
+      },
+      {
+        id: "fr-ln-fragmented-parliament-bargaining",
+        title: "Ad hoc bargaining in a fragmented, no-majority parliament",
+        explanation:
+          "Since the 2022 elections produced a National Assembly with no single party or bloc holding a majority, French governments have increasingly needed to negotiate issue-by-issue support from various opposition parties for individual pieces of legislation, rather than relying on a single, pre-negotiated formal coalition agreement the way multi-party systems like Germany typically do.",
+        whyItMatters:
+          "This is a genuinely different, more fluid and less predictable negotiating style than Germany's Koalitionsvertrag model — French negotiators can't rely on one binding, comprehensive pre-agreed program, but instead must rebuild working majorities issue by issue, sometimes with different partners on different bills.",
+        example:
+          "A French government facing a fragmented parliament might need one set of opposition votes to pass a budget bill and an entirely different combination of support to pass an unrelated piece of social legislation — a materially more improvisational negotiating pattern than a single stable coalition agreement would produce.",
+      },
+    ],
+    connections:
+      "Whether fait majoritaire currently holds determines the whole negotiating environment — a clear majority means top-down governance, its absence forces genuine bargaining. Article 49.3, the navette parlementaire, and the commission mixte paritaire are all tools for pushing legislation through despite disagreement, at different points in the process (within a single chamber's vote, between chambers, and at final reconciliation respectively). Legislating by ordonnance is a way of bypassing much of this negotiation machinery entirely for defined policy domains, and the shift toward ad hoc, fragmented-parliament bargaining since 2022 shows how all of these tools have become more actively and frequently used as stable majorities have become less reliable.",
     source: "claude",
     generatedAt: "2026-09-10",
   },
