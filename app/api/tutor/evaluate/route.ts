@@ -5,7 +5,7 @@ import { getFundamentals } from "@/lib/caseStudyFundamentals";
 import { geminiErrorResponse } from "@/lib/gemini";
 import type { TutorNewsItem } from "@/lib/tutorNews";
 import type { TutorProfile } from "@/lib/tutorProfile";
-import type { LawJurisdiction } from "@/lib/legalJurisdiction";
+import type { CountryCode } from "@/lib/countryContext";
 
 /**
  * POST /api/tutor/evaluate
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
   const caseId = formData.get("caseId")?.toString();
   const newsItemRaw = formData.get("newsItem")?.toString();
   const profileRaw = formData.get("profile")?.toString();
-  const jurisdiction = formData.get("jurisdiction")?.toString() as LawJurisdiction | undefined;
+  const jurisdiction = formData.get("jurisdiction")?.toString() as CountryCode | undefined;
   const audio = formData.get("audio");
 
   if (!profession || !category) {

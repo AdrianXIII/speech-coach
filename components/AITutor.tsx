@@ -11,7 +11,9 @@ import type { TeachingContent } from "@/lib/tutorTeachingContent";
 import type { TutorNewsItem } from "@/lib/tutorNews";
 import { loadTutorProfile, type TutorProfile } from "@/lib/tutorProfile";
 import { saveTutorFlag } from "@/lib/tutorFlags";
-import { jurisdictionForLanguage, JURISDICTION_LABELS } from "@/lib/legalJurisdiction";
+import { JURISDICTION_LABELS } from "@/lib/legalJurisdiction";
+import { POLITICAL_SYSTEM_LABELS } from "@/lib/politicalSystem";
+import { countryForLanguage } from "@/lib/countryContext";
 import { matchSpokenLabel, matchesCommand } from "@/lib/voiceMatch";
 import { ProfessionPicker, PROFESSION_LABELS } from "@/components/shared/ProfessionPicker";
 import { CategoryPicker } from "@/components/shared/CategoryPicker";
@@ -51,12 +53,14 @@ export function AITutor() {
   const [teaching, setTeaching] = useState<TeachingContent | null>(null);
   const [teachStepIndex, setTeachStepIndex] = useState(-1); // -1 = overview, 0..N-1 = concepts, N = connections/handoff
 
-  // Law is jurisdiction-bound (see lib/legalJurisdiction.ts) — every other
-  // profession ignores this. Derived from the app language, not stored
-  // separately, so it always tracks the language picker.
-  const jurisdiction = profession === "law" ? jurisdictionForLanguage(language) : undefined;
+  // Law and Politics are both country-bound (see lib/legalJurisdiction.ts,
+  // lib/politicalSystem.ts) — Business ignores this. Derived from the app
+  // language, not stored separately, so it always tracks the language picker.
+  const isCountryBound = profession === "law" || profession === "politics";
+  const jurisdiction = isCountryBound ? countryForLanguage(language) : undefined;
   const isJurisdictionFallback =
-    profession === "law" && !!teaching?.jurisdiction && teaching.jurisdiction !== jurisdiction;
+    isCountryBound && !!teaching?.jurisdiction && teaching.jurisdiction !== jurisdiction;
+  const jurisdictionLabels = profession === "politics" ? POLITICAL_SYSTEM_LABELS : JURISDICTION_LABELS;
 
   const [profile, setProfile] = useState<TutorProfile | null>(null);
   const [editingProfile, setEditingProfile] = useState(false);
@@ -107,7 +111,7 @@ export function AITutor() {
     // Grade against whatever jurisdiction was actually taught, not just what
     // was requested — they can differ if that jurisdiction isn't populated
     // yet and Teach fell back to the US default (see isJurisdictionFallback).
-    if (profession === "law") {
+    if (profession === "law" || profession === "politics") {
       const actualJurisdiction = teaching?.jurisdiction ?? jurisdiction;
       if (actualJurisdiction) formData.append("jurisdiction", actualJurisdiction);
     }
@@ -342,7 +346,7 @@ export function AITutor() {
 
       {isJurisdictionFallback && jurisdiction && (
         <p className="text-xs text-brass-text">
-          Showing {JURISDICTION_LABELS[teaching!.jurisdiction!]} — {JURISDICTION_LABELS[jurisdiction]} content
+          Showing {jurisdictionLabels[teaching!.jurisdiction!]} — {jurisdictionLabels[jurisdiction]} content
           isn&rsquo;t available yet.
         </p>
       )}

@@ -1,6 +1,6 @@
 import type { CaseProfession } from "@/lib/caseStudyContent";
 import { GENERATED_TEACHING_CONTENT } from "@/lib/tutorTeachingContent.generated";
-import type { LawJurisdiction } from "@/lib/legalJurisdiction";
+import type { CountryCode } from "@/lib/countryContext";
 
 /**
  * The AI Tutor's deep-dive teaching content — the "what you need to know
@@ -24,17 +24,16 @@ import type { LawJurisdiction } from "@/lib/legalJurisdiction";
  * `scripts/generate-tutor-content.mjs`, which bulk-generates via this app's
  * own GEMINI_API_KEY for whatever isn't yet in SKIP_KEYS/hand-authored).
  *
- * JURISDICTION (Law only): unlike Business/Politics, legal content is
- * jurisdiction-bound — see lib/legalJurisdiction.ts for why. Every existing
- * Law entry is U.S. common law (`jurisdiction: "us"`), keyed without a
- * jurisdiction suffix. A jurisdiction-specific entry (e.g. German contract
- * law) gets keyed `law/<category>/<jurisdiction>` and takes priority over
- * the US default when that jurisdiction is requested — see contentKey() and
- * getTeachingContent() below. As of this writing, only the US content
- * exists; German/French/Spanish/Swedish law entries are not yet populated,
- * so every non-English language currently falls back to US content with an
- * honest on-screen notice (see AITutor.tsx) rather than silently presenting
- * US law as if it were the visitor's own jurisdiction.
+ * COUNTRY (Law and Politics): unlike Business, legal and political content
+ * are country-bound — see lib/legalJurisdiction.ts and lib/politicalSystem.ts
+ * for why. Every existing Law/Politics entry defaults to the United States
+ * (`jurisdiction: "us"`), keyed without a country suffix. A country-specific
+ * entry (e.g. German contract law, or German federal politics) gets keyed
+ * `<profession>/<category>/<country>` and takes priority over the US
+ * default when that country is requested — see contentKey() and
+ * getTeachingContent() below, with an honest on-screen notice (see
+ * AITutor.tsx) when a request falls back rather than silently presenting US
+ * content as if it were the visitor's own country.
  */
 
 export interface TeachingConcept {
@@ -51,8 +50,8 @@ export interface TeachingConcept {
 export interface TeachingContent {
   profession: CaseProfession;
   category: string;
-  /** Only meaningful for profession === "law" — see the jurisdiction note above. */
-  jurisdiction?: LawJurisdiction;
+  /** Only meaningful for profession === "law" or "politics" — see the country note above. */
+  jurisdiction?: CountryCode;
   /** 2-3 sentence framing read before the first concept. */
   overview: string;
   /** In deliberate teaching order — later concepts often build on earlier ones. */
@@ -63,9 +62,11 @@ export interface TeachingContent {
   generatedAt: string;
 }
 
-function contentKey(profession: CaseProfession, category: string, jurisdiction?: LawJurisdiction): string {
-  if (profession === "law" && jurisdiction && jurisdiction !== "us") {
-    return `law/${category}/${jurisdiction}`;
+const COUNTRY_BOUND_PROFESSIONS: CaseProfession[] = ["law", "politics"];
+
+function contentKey(profession: CaseProfession, category: string, jurisdiction?: CountryCode): string {
+  if (COUNTRY_BOUND_PROFESSIONS.includes(profession) && jurisdiction && jurisdiction !== "us") {
+    return `${profession}/${category}/${jurisdiction}`;
   }
   return `${profession}/${category}`;
 }
@@ -162,6 +163,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
   "politics/Foreign Policy & Diplomacy": {
     profession: "politics",
     category: "Foreign Policy & Diplomacy",
+    jurisdiction: "us",
     overview:
       "Foreign policy is the art of pursuing a state's interests in a world with no higher authority to enforce agreements — every tool below exists because states can't simply sue each other in court when things go wrong. A strong foreign policy analyst can explain not just what a state did, but why that choice was rational given its interests, constraints, and the absence of a global enforcer.",
     concepts: [
@@ -1866,6 +1868,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
   "politics/Domestic Policy": {
     profession: "politics",
     category: "Domestic Policy",
+    jurisdiction: "us",
     overview:
       "Domestic policy is about how a government actually gets things done within its own borders — turning a political goal into a functioning program, budget, and set of incentives that survive contact with a legislature, courts, bureaucracy, and shifting public opinion.",
     concepts: [
@@ -1939,6 +1942,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
   "politics/Crisis Response": {
     profession: "politics",
     category: "Crisis Response",
+    jurisdiction: "us",
     overview:
       "Political crisis response is about managing a fast-moving, high-uncertainty event (a disaster, scandal, security incident, or public health emergency) while the public and media are watching in real time and demanding both immediate action and honest information — two things that are sometimes in tension.",
     concepts: [
@@ -2012,6 +2016,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
   "politics/Campaign Strategy": {
     profession: "politics",
     category: "Campaign Strategy",
+    jurisdiction: "us",
     overview:
       "Campaign strategy is about allocating scarce resources — money, candidate time, volunteer effort, and message — toward the specific combination of voters and turnout needed to win, which is a different and more disciplined problem than simply persuading as many people as possible of everything.",
     concepts: [
@@ -2085,6 +2090,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
   "politics/Legislative Negotiation": {
     profession: "politics",
     category: "Legislative Negotiation",
+    jurisdiction: "us",
     overview:
       "Legislative negotiation is about assembling enough votes to pass something through a body where no single actor has full control — which almost always requires trading, compromise, and understanding each player's real constraints and incentives, not just the stated policy positions.",
     concepts: [
@@ -2176,9 +2182,9 @@ export const TEACHING_CONTENT: Record<string, TeachingContent> = {
 export function getTeachingContent(
   profession: CaseProfession,
   category: string,
-  jurisdiction?: LawJurisdiction,
+  jurisdiction?: CountryCode,
 ): TeachingContent | null {
-  if (profession === "law" && jurisdiction) {
+  if (COUNTRY_BOUND_PROFESSIONS.includes(profession) && jurisdiction) {
     const specific = TEACHING_CONTENT[contentKey(profession, category, jurisdiction)];
     if (specific) return specific;
   }

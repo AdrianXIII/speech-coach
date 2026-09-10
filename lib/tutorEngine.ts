@@ -5,7 +5,9 @@ import { pickRandom } from "@/lib/random";
 import type { TutorProfile } from "@/lib/tutorProfile";
 import type { TutorNewsItem } from "@/lib/tutorNews";
 import { getTeachingContent, type TeachingContent } from "@/lib/tutorTeachingContent";
-import { JURISDICTION_LABELS, type LawJurisdiction } from "@/lib/legalJurisdiction";
+import { JURISDICTION_LABELS } from "@/lib/legalJurisdiction";
+import { POLITICAL_SYSTEM_LABELS } from "@/lib/politicalSystem";
+import type { CountryCode } from "@/lib/countryContext";
 
 /**
  * One generic tutor engine, parameterized by profession/category — no
@@ -27,16 +29,16 @@ export interface TeachingBrief {
 /**
  * Zero API calls — pulled directly from the domain's existing static
  * content, never regenerated per session. `jurisdiction` only matters for
- * Law (see lib/legalJurisdiction.ts) — the returned brief's `teaching`
- * entry carries its own `.jurisdiction` field, which may differ from what
- * was requested if that jurisdiction isn't populated yet and the lookup
- * fell back to the US default; callers should surface that honestly rather
- * than assuming the request was satisfied.
+ * Law and Politics (see lib/legalJurisdiction.ts, lib/politicalSystem.ts) —
+ * the returned brief's `teaching` entry carries its own `.jurisdiction`
+ * field, which may differ from what was requested if that country isn't
+ * populated yet and the lookup fell back to the US default; callers should
+ * surface that honestly rather than assuming the request was satisfied.
  */
 export function buildTeachingBrief(
   profession: CaseProfession,
   category: string,
-  jurisdiction?: LawJurisdiction,
+  jurisdiction?: CountryCode,
 ): TeachingBrief {
   const fundamentals = getFundamentals(profession, category);
   const cases = casesForCategory(profession, category);
@@ -111,8 +113,8 @@ export interface EvaluateArgs {
   newsItem?: TutorNewsItem | null;
   profile?: TutorProfile | null;
   audio?: { base64: string; mimeType: string };
-  /** Law only — should match whatever jurisdiction the Teach step actually showed (see lib/legalJurisdiction.ts), so grading stays consistent with what was taught rather than silently assuming the student's own jurisdiction. */
-  jurisdiction?: LawJurisdiction;
+  /** Law and Politics only — should match whatever jurisdiction the Teach step actually showed (see lib/legalJurisdiction.ts, lib/politicalSystem.ts), so grading stays consistent with what was taught rather than silently assuming the student's own country. */
+  jurisdiction?: CountryCode;
 }
 
 function buildPrompt(args: EvaluateArgs): string {
@@ -121,7 +123,9 @@ function buildPrompt(args: EvaluateArgs): string {
   const jurisdictionNote =
     profession === "law" && args.jurisdiction
       ? `\nJURISDICTION: Grade strictly against ${JURISDICTION_LABELS[args.jurisdiction]} — do not apply concepts or terminology from a different legal system, even if they sound similar.\n`
-      : "";
+      : profession === "politics" && args.jurisdiction
+        ? `\nPOLITICAL SYSTEM: Grade strictly against ${POLITICAL_SYSTEM_LABELS[args.jurisdiction]} — do not apply institutions, offices, or procedures from a different country's political system, even if they sound similar.\n`
+        : "";
 
   const fundamentalsList =
     fundamentals.map((f) => `- ${f.label}`).join("\n") || "(no fundamentals catalogued for this category yet)";

@@ -20,22 +20,26 @@
  * tutorTeachingContent.ts and add its key to SKIP_KEYS below — that's what
  * protects it from being silently overwritten by a future run.
  *
- * JURISDICTION-SPECIFIC LAW CONTENT: pass --jurisdiction=de|fr|es|se to
- * generate Law content for one non-US jurisdiction instead of the normal
- * full run (see lib/legalJurisdiction.ts) — e.g.:
+ * COUNTRY-SPECIFIC LAW/POLITICS CONTENT: pass --jurisdiction=de|fr|es|se
+ * (optionally with --profession=law|politics, default law) to generate
+ * content for one non-US country instead of the normal full run (see
+ * lib/legalJurisdiction.ts, lib/politicalSystem.ts) — e.g.:
  *   node --no-warnings scripts/generate-tutor-content.mjs --jurisdiction=de
- * This mode ONLY generates Law categories, keyed `law/<category>/<code>`,
- * and skips Business/Politics entirely. IMPORTANT: legal content is
- * higher-stakes than business/politics content — an LLM has no license to
- * practice law anywhere, and civil-law systems (Germany/France/Spain/
- * Sweden) use fundamentally different doctrines than the common-law content
- * already in this file, not just different local details. Treat generated
- * output here as a rough draft that needs real review (ideally by someone
- * with actual knowledge of that jurisdiction) before it's trusted the way
- * the hand-authored US content is — don't promote it into
- * HAND_AUTHORED_CONTENT without that review. Each run overwrites the whole
- * generated file, so don't mix a jurisdiction run with a normal full run
- * without merging their output by hand first.
+ *   node --no-warnings scripts/generate-tutor-content.mjs --jurisdiction=de --profession=politics
+ * This mode ONLY generates categories for that one profession, keyed
+ * `<profession>/<category>/<code>`, and skips everything else. IMPORTANT:
+ * legal and political-system content is higher-stakes than business
+ * content — an LLM has no license to practice law anywhere, civil-law
+ * systems (Germany/France/Spain/Sweden) use fundamentally different
+ * doctrines than the common-law Law content already in this file (not just
+ * different local details), and each country's political institutions
+ * (parliamentary vs. presidential vs. semi-presidential) work structurally
+ * differently too. Treat generated output here as a rough draft that needs
+ * real review (ideally by someone with actual knowledge of that country)
+ * before it's trusted the way the hand-authored US content is — don't
+ * promote it into HAND_AUTHORED_CONTENT without that review. Each run
+ * overwrites the whole generated file, so don't mix a country run with a
+ * normal full run without merging their output by hand first.
  */
 
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
@@ -45,6 +49,7 @@ import path from "node:path";
 import { CASE_CATEGORIES, casesForCategory } from "../lib/caseStudyContent.ts";
 import { getFundamentals } from "../lib/caseStudyFundamentals.ts";
 import { JURISDICTION_LABELS } from "../lib/legalJurisdiction.ts";
+import { POLITICAL_SYSTEM_LABELS } from "../lib/politicalSystem.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -90,11 +95,18 @@ const SKIP_KEYS = new Set([
 
 const FORCE = process.argv.includes("--force");
 const JURISDICTION_ARG = process.argv.find((a) => a.startsWith("--jurisdiction="))?.split("=")[1];
-if (JURISDICTION_ARG && !(JURISDICTION_ARG in JURISDICTION_LABELS)) {
-  throw new Error(`Unknown --jurisdiction "${JURISDICTION_ARG}" — expected one of: ${Object.keys(JURISDICTION_LABELS).join(", ")}`);
-}
-if (JURISDICTION_ARG === "us") {
-  throw new Error("US Law content already exists in HAND_AUTHORED_CONTENT — no need to generate it.");
+const JURISDICTION_PROFESSION = process.argv.find((a) => a.startsWith("--profession="))?.split("=")[1] ?? "law";
+const LABELS_FOR_PROFESSION = JURISDICTION_PROFESSION === "politics" ? POLITICAL_SYSTEM_LABELS : JURISDICTION_LABELS;
+if (JURISDICTION_ARG) {
+  if (!["law", "politics"].includes(JURISDICTION_PROFESSION)) {
+    throw new Error(`--profession must be "law" or "politics", got "${JURISDICTION_PROFESSION}"`);
+  }
+  if (!(JURISDICTION_ARG in LABELS_FOR_PROFESSION)) {
+    throw new Error(`Unknown --jurisdiction "${JURISDICTION_ARG}" — expected one of: ${Object.keys(LABELS_FOR_PROFESSION).join(", ")}`);
+  }
+  if (JURISDICTION_ARG === "us") {
+    throw new Error(`US ${JURISDICTION_PROFESSION} content already exists in HAND_AUTHORED_CONTENT — no need to generate it.`);
+  }
 }
 
 function loadGeminiApiKey() {
@@ -144,7 +156,12 @@ function buildPrompt(profession, category, fundamentalLabels, sampleScenario, ju
     : "No pre-existing concept list exists for this category — use your own judgment for what a competent professional must know.";
 
   const jurisdictionInstruction = jurisdiction
-    ? `\nJURISDICTION: Write this specifically for ${JURISDICTION_LABELS[jurisdiction]}. Use that
+    ? profession === "politics"
+      ? `\nCOUNTRY: Write this specifically for ${POLITICAL_SYSTEM_LABELS[jurisdiction]}'s actual political
+system, institutions, and offices — do NOT translate or adapt US institutions (e.g. don't describe a
+"Senate filibuster" as if a country without one has an equivalent). If a US concept doesn't map cleanly,
+describe that country's own real equivalent institution or process instead.\n`
+      : `\nJURISDICTION: Write this specifically for ${JURISDICTION_LABELS[jurisdiction]}. Use that
 jurisdiction's actual legal doctrines, terminology, and (where relevant) statute/code names — do NOT
 translate or adapt US/common-law concepts (e.g. do not describe "consideration" as if it applies in a
 civil-law system that doesn't use that doctrine). If a concept doesn't map cleanly, describe the
@@ -183,9 +200,9 @@ async function main() {
 
   const targets = [];
   if (JURISDICTION_ARG) {
-    for (const category of CASE_CATEGORIES.law) {
-      const key = `law/${category}/${JURISDICTION_ARG}`;
-      targets.push({ profession: "law", category, key, jurisdiction: JURISDICTION_ARG });
+    for (const category of CASE_CATEGORIES[JURISDICTION_PROFESSION]) {
+      const key = `${JURISDICTION_PROFESSION}/${category}/${JURISDICTION_ARG}`;
+      targets.push({ profession: JURISDICTION_PROFESSION, category, key, jurisdiction: JURISDICTION_ARG });
     }
   } else {
     for (const profession of Object.keys(CASE_CATEGORIES)) {
@@ -199,7 +216,7 @@ async function main() {
 
   console.log(
     JURISDICTION_ARG
-      ? `Generating Law content for ${JURISDICTION_LABELS[JURISDICTION_ARG]} (${targets.length} categories) — remember this needs real legal review before being trusted.`
+      ? `Generating ${JURISDICTION_PROFESSION} content for ${LABELS_FOR_PROFESSION[JURISDICTION_ARG]} (${targets.length} categories) — remember this needs real review before being trusted.`
       : `Generating teaching content for ${targets.length} categories (skipping ${SKIP_KEYS.size} already hand-authored)...`,
   );
 
@@ -243,7 +260,7 @@ export const GENERATED_TEACHING_CONTENT: Record<string, TeachingContent> = ${JSO
   console.log(`\nWrote ${Object.keys(results).length} categories to ${path.relative(ROOT, OUTPUT_PATH)}`);
   if (JURISDICTION_ARG) {
     console.log(
-      `\nThis is a first draft for ${JURISDICTION_LABELS[JURISDICTION_ARG]} — review it (ideally with someone who actually knows that jurisdiction's law) before promoting any of it into HAND_AUTHORED_CONTENT.`,
+      `\nThis is a first draft for ${LABELS_FOR_PROFESSION[JURISDICTION_ARG]} — review it (ideally with someone who actually knows that country's ${JURISDICTION_PROFESSION}) before promoting any of it into HAND_AUTHORED_CONTENT.`,
     );
   }
 }

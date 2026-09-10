@@ -1,22 +1,14 @@
-import type { LanguageCode } from "@/lib/languages";
+import { COUNTRY_LABELS, countryForLanguage, type CountryCode } from "@/lib/countryContext";
 
 /**
- * Law is jurisdiction-bound in a way Business and Politics content mostly
- * isn't — common law (US) and civil law (Germany, France, Spain, Sweden)
- * aren't just "the same law with local details," they use different core
- * doctrines (German contract formation has no "consideration" concept at
- * all, for instance). The AI Tutor's Law content therefore needs a
- * jurisdiction dimension that Business/Politics don't.
- *
- * IMPORTANT SIMPLIFICATION: language is not the same as jurisdiction —
- * French is spoken in France, Belgium, Switzerland, and Quebec, each with
- * different law; German in Germany, Austria, and Switzerland likewise. This
- * maps each app language to ONE representative jurisdiction as a practical
- * default, not a claim that e.g. "French" content covers Belgian law too.
- * A real per-country picker (independent of the language switch) is the
- * natural next step if that distinction ever matters to users.
+ * Law's country concept — a thin, Law-flavored alias over the shared
+ * lib/countryContext.ts (Politics uses that module directly, with its own
+ * labels, since "Germany" needs a legal-system label here but a
+ * political-system label there). Kept as its own module so existing
+ * imports (LawJurisdiction, JURISDICTION_LABELS, jurisdictionForLanguage)
+ * didn't need to change when Politics gained the same country dimension.
  */
-export type LawJurisdiction = "us" | "de" | "fr" | "es" | "se";
+export type LawJurisdiction = CountryCode;
 
 export const JURISDICTION_LABELS: Record<LawJurisdiction, string> = {
   us: "United States (common law)",
@@ -26,15 +18,6 @@ export const JURISDICTION_LABELS: Record<LawJurisdiction, string> = {
   se: "Sweden (Nordic civil law)",
 };
 
-const JURISDICTION_FOR_LANGUAGE: Record<LanguageCode, LawJurisdiction> = {
-  en: "us",
-  de: "de",
-  fr: "fr",
-  es: "es",
-  sv: "se",
-};
+export const jurisdictionForLanguage = countryForLanguage;
 
-/** The default jurisdiction for a given app language — see the simplification note above. */
-export function jurisdictionForLanguage(language: LanguageCode): LawJurisdiction {
-  return JURISDICTION_FOR_LANGUAGE[language];
-}
+export { COUNTRY_LABELS };
