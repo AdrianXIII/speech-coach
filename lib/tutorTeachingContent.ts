@@ -2309,6 +2309,376 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     generatedAt: "2026-09-10",
   },
 
+  "law/Contract Law/es": {
+    profession: "law",
+    category: "Contract Law",
+    jurisdiction: "es",
+    overview:
+      "Spanish contract law runs on the 1889 Código Civil, still largely intact after well over a century — and unlike France (which dropped its equivalent doctrine in 2016), Spain still requires a valid \"causa\" for a contract to be enforceable. Spain's mortgage-crisis-era \"floor clause\" litigation also produced some of the most consequential unfair-terms case law anywhere in Europe.",
+    concepts: [
+      {
+        id: "es-contract-consentimiento-objeto-causa",
+        title: "Consentimiento, objeto, causa — the three requirements of Article 1261",
+        explanation:
+          "Article 1261 of the Código Civil requires three elements for a valid contract: consentimiento (consent — matching offer and acceptance), objeto (a lawful, possible, determinate object), and causa (a valid underlying cause — the legal justification for the obligation, whether onerosa in an exchange contract, remuneratoria for services, or de pura beneficencia for a gift). Unlike France post-2016, Spain retained causa as a distinct formal requirement.",
+        whyItMatters:
+          "This is a live doctrinal difference between two civil-law neighbors — Spanish and French contract law can no longer be assumed to work identically just because both are civil-law systems descended from similar Napoleonic-era codes; Spain's 1889 code kept causa where France's 2016 reform explicitly dropped it.",
+        example:
+          "A contract lacking any genuine causa — for instance, a sham transaction disguising an illegal purpose — can be void under Article 1275 Código Civil for want of a lawful causa, a distinct formal ground of invalidity that no longer exists as such in current French contract doctrine.",
+      },
+      {
+        id: "es-contract-buena-fe",
+        title: "Buena fe (good faith) under Article 1258",
+        explanation:
+          "Article 1258 Código Civil provides that contracts bind not only to what's expressly agreed but to everything good faith, custom, and law require to follow from the nature of the obligation — a broad, codified general good-faith principle running through contract performance, similar in function to France's Article 1104 and Germany's Treu und Glauben.",
+        whyItMatters:
+          "This gives Spanish courts a general interpretive and gap-filling tool that extends contractual obligations beyond the literal text — a party can be held to obligations that good faith implies were part of the deal, even without an explicit clause covering the situation.",
+        example:
+          "A party who technically complies with a contract's literal wording while deliberately undermining its evident purpose can still face liability under the Article 1258 good-faith principle, which looks past strict literal compliance to what the obligation's nature actually requires.",
+      },
+      {
+        id: "es-contract-incumplimiento-remedies",
+        title: "Incumplimiento contractual and the remedy menu",
+        explanation:
+          "For breach of reciprocal (synallagmatic) obligations, Article 1124 Código Civil gives the aggrieved party a choice between cumplimiento forzoso (specific performance — compelling actual performance) and resolución (termination/rescission of the contract), in both cases with a claim for damages (indemnización de daños y perjuicios) available alongside.",
+        whyItMatters:
+          "Like France, Spanish civil law treats specific performance as a genuinely available, first-order remedy rather than the exceptional, discretionary equitable remedy common law reserves mainly for unique goods or real estate — reflecting the shared civil-law tradition's different default assumption about what \"enforcing a contract\" should mean.",
+        example:
+          "A buyer facing a seller's non-delivery can choose to sue for cumplimiento forzoso (compelling actual delivery) rather than simply accepting damages and buying elsewhere — a genuinely available first-choice remedy, not a fallback only for irreplaceable goods.",
+      },
+      {
+        id: "es-contract-clausulas-suelo",
+        title: "Cláusulas abusivas and the cláusulas suelo (mortgage floor clause) litigation",
+        explanation:
+          "Spain's unfair-terms consumer protection framework became globally significant through the \"cláusulas suelo\" saga: mortgage contracts with clauses setting a minimum (\"floor\") interest rate that prevented borrowers from benefiting when reference rates fell sharply after the 2008 financial crisis. Spanish courts and ultimately the CJEU found these clauses could be abusive for lacking sufficient transparency, triggering mass litigation and bank refund obligations.",
+        whyItMatters:
+          "This is one of the most consequential consumer-protection legal sagas in recent European history — it produced a huge volume of case law on what \"transparency\" requires for a term to survive unfair-terms scrutiny, and it's a frequently cited real-world illustration of Spanish/EU consumer protection law actually working at massive scale.",
+        example:
+          "The Spanish Supreme Court's 2013 ruling on cláusulas suelo found the clauses could be valid in principle but abusive in practice where banks hadn't made their real effect sufficiently transparent to borrowers — a nuanced \"transparency,\" not blanket-illegality, standard later reinforced by CJEU rulings requiring fuller consumer refunds than Spanish courts had initially allowed.",
+      },
+      {
+        id: "es-contract-rebus-sic-stantibus",
+        title: "Rebus sic stantibus (hardship doctrine)",
+        explanation:
+          "Spanish courts have long recognized, as judge-made doctrine (not originally codified), a narrow rebus sic stantibus principle allowing contract modification when a truly extraordinary, unforeseeable change in circumstances makes performance excessively burdensome — historically applied very restrictively, but Spanish courts (notably during the 2008 financial crisis and the COVID-19 pandemic) have applied it somewhat more flexibly in genuinely severe disruption cases.",
+        whyItMatters:
+          "Unlike France's 2016 codification of a hardship doctrine (Article 1195), Spain's rebus sic stantibus remains primarily case-law-based rather than a clean statutory rule — its exact boundaries are shaped by evolving judicial interpretation rather than a fixed legislative text, so its application can be less predictable.",
+        example:
+          "Spanish courts applied rebus sic stantibus more readily than historical practice would have suggested to commercial lease contracts severely disrupted by COVID-19 lockdown closures, allowing rent reductions or suspensions in some cases — an example of the doctrine's flexible, crisis-responsive judicial application.",
+      },
+      {
+        id: "es-contract-capacidad",
+        title: "Capacidad (capacity to contract)",
+        explanation:
+          "Spanish law sets 18 as the general age of full contractual capacity, with specific emancipation rules (emancipación) allowing minors from 16 to gain expanded (though not entirely full) legal capacity under defined circumstances, and separate rules governing contracts by persons with judicially modified capacity (previously \"incapacitados,\" terminology and framework reformed in 2021 to emphasize supported decision-making rather than substitute decision-making).",
+        whyItMatters:
+          "The 2021 reform (Ley 8/2021) marked a significant, relatively recent modernization — moving away from a paternalistic \"incapacitation\" model toward one centered on supporting the person's own decision-making wherever possible, which meaningfully changes how contracts involving people with cognitive or intellectual disabilities are analyzed compared to older Spanish legal materials.",
+        example:
+          "A person with an intellectual disability today is presumed to retain contractual capacity with appropriate support measures tailored to their specific needs, rather than being subject to a blanket substitute-decision-maker regime — a framework that looks quite different from how Spanish law approached the same situation before the 2021 reform.",
+      },
+    ],
+    connections:
+      "Consentimiento, objeto, and causa answer the threshold question of contract validity — Spain's retention of causa is a genuine point of divergence from France's more modernized approach. Buena fe shapes how obligations are interpreted and extended in performance, and the Article 1124 remedy menu (specific performance, resolución, damages) governs what happens when performance fails. Cláusulas abusivas (illustrated vividly by the cláusulas suelo saga) and rebus sic stantibus are both correctives for situations the core framework doesn't handle well on its own — structurally unequal consumer bargaining power, and genuinely extraordinary unforeseen hardship, respectively.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "law/Corporate & Compliance/es": {
+    profession: "law",
+    category: "Corporate & Compliance",
+    jurisdiction: "es",
+    overview:
+      "Spanish corporate law centers on the Ley de Sociedades de Capital, and its most distinctive recent feature is a 2010s reform introducing genuine corporate criminal liability — a company itself, not just its individual officers, can now be criminally prosecuted, with an adequate compliance program serving as a real legal defense.",
+    concepts: [
+      {
+        id: "es-corp-sa-vs-sl",
+        title: "SA vs. SL: the two main company forms",
+        explanation:
+          "The Sociedad de Responsabilidad Limitada (SL) is the dominant company form for Spanish businesses of essentially all sizes, including many large ones, due to its simpler governance and lower minimum capital requirements. The Sociedad Anónima (SA) is reserved mainly for companies planning to list publicly or needing to raise capital more broadly, with more formal governance requirements.",
+        whyItMatters:
+          "Unlike Germany (where the equivalent GmbH/AG split correlates more strongly with actual company size and public-market intentions), the Spanish SL form is used remarkably broadly, including by quite large private companies — SL vs. SA choice in Spain often reflects governance and capital-raising preferences more than a strict size threshold.",
+        example:
+          "Many substantial Spanish private companies, including large family-owned businesses, operate as an SL rather than an SA, reserving the SA form specifically for when public listing or broader capital markets access becomes a real objective.",
+      },
+      {
+        id: "es-corp-consejo-administracion",
+        title: "The Consejo de administración (one-tier board)",
+        explanation:
+          "Spanish companies generally use a one-tier board structure (Consejo de administración), unlike Germany's mandatory two-tier split — management and oversight functions sit within the same board, though listed companies' governance codes (Código de Buen Gobierno) recommend a meaningful proportion of independent directors for oversight functions.",
+        whyItMatters:
+          "This aligns Spain more closely with France's optional one-tier model (and with US/UK unitary boards) than with Germany's mandatory structural separation — a useful anchor point when comparing Spanish corporate governance to its European neighbors.",
+        example:
+          "A Spanish listed company's Consejo de administración typically includes both executive directors (running the company) and independent/external directors (providing oversight) within the same single body, rather than splitting these functions into legally separate boards the way German law requires.",
+      },
+      {
+        id: "es-corp-regla-discrecionalidad-empresarial",
+        title: "Directors' duties and the 2014 business-judgment reform",
+        explanation:
+          "The Ley de Sociedades de Capital (LSC) imposes a duty of diligent administration (diligencia de un ordenado empresario) and loyalty duties on directors. A 2014 reform introduced Article 226 LSC's \"regla de discrecionalidad empresarial\" (business discretion rule) — a business-judgment-rule-style protection for good-faith, informed strategic decisions made without a personal conflict of interest.",
+        whyItMatters:
+          "Like Germany's codified business judgment rule (§93 AktG), Spain's version is explicit statutory text rather than judge-made doctrine built up over decades the way Delaware's is — meaning the precise statutory wording of Article 226 LSC, not accumulated case precedent, defines the protection's actual boundaries.",
+        example:
+          "A Spanish director who approves a strategic decision after adequate deliberation, acting in good faith and without a personal conflicting interest, is protected under Article 226 LSC even if the decision later proves costly — provided the decision falls within the scope of genuine strategic business judgment the rule covers.",
+      },
+      {
+        id: "es-corp-responsabilidad-penal-personas-juridicas",
+        title: "Corporate criminal liability (responsabilidad penal de las personas jurídicas)",
+        explanation:
+          "A 2010 reform of the Código Penal, expanded in 2015, introduced genuine corporate criminal liability in Spain — companies themselves, not just the individuals who acted, can now be criminally prosecuted and sanctioned for certain offenses committed on their behalf, a significant departure from the traditional civil-law principle that only natural persons can be criminally culpable.",
+        whyItMatters:
+          "This was a genuinely novel development for a civil-law jurisdiction historically resistant to corporate criminal liability as a concept — the 2015 reform's explicit recognition that having an adequate compliance program (modelo de organización y gestión) can serve as either an exemption or mitigating factor gave Spanish companies a strong, concrete legal incentive to build real compliance programs, not just aspirational policies.",
+        example:
+          "A Spanish company facing prosecution for an employee's bribery offense committed nominally on the company's behalf can argue as a defense that it had implemented an adequate, genuinely functioning compliance program meeting the Código Penal's specific criteria — a defense with no equivalent before the 2010/2015 reforms existed.",
+      },
+      {
+        id: "es-corp-cnmv",
+        title: "CNMV regulation of listed companies",
+        explanation:
+          "The Comisión Nacional del Mercado de Valores (CNMV) is Spain's securities market regulator, overseeing listed companies' disclosure obligations, market conduct, and compliance with the Código de Buen Gobierno corporate governance recommendations on a comply-or-explain basis.",
+        whyItMatters:
+          "The comply-or-explain model (rather than strictly mandatory governance rules) means Spanish listed companies have real flexibility to deviate from specific governance recommendations, provided they publicly explain why — a softer regulatory approach than a fully mandatory rulebook, giving companies meaningful room to justify departures based on their specific circumstances.",
+        example:
+          "A Spanish listed company that deviates from a Código de Buen Gobierno recommendation (for instance, on board independence composition) must publicly disclose and justify that deviation in its annual corporate governance report — non-compliance itself isn't prohibited, but unexplained non-compliance is.",
+      },
+      {
+        id: "es-corp-buen-gobierno-corporativo",
+        title: "Código de Buen Gobierno (corporate governance code)",
+        explanation:
+          "Spain's corporate governance code sets recommendations on board composition, director independence, executive compensation transparency, and shareholder rights for listed companies — updated periodically to reflect evolving governance expectations, most recently incorporating stronger diversity and sustainability-related governance recommendations.",
+        whyItMatters:
+          "Because this operates through comply-or-explain rather than binding statute, understanding Spanish corporate governance in practice requires looking at actual company disclosure practices, not just the code's text — the code sets the expected baseline, but the real governance picture depends on how consistently companies actually comply versus explain deviations.",
+        example:
+          "Recommendations on gender diversity in Spanish listed company boardrooms operate through the Código de Buen Gobierno's comply-or-explain framework rather than a hard legal quota, meaning actual board composition varies by how seriously individual companies treat the recommendation.",
+      },
+    ],
+    connections:
+      "Company form (SA vs. SL) and the one-tier Consejo de administración structure are the foundational governance choices a Spanish business makes. The 2014 business-discretion rule sets the liability standard directors operate under, while the CNMV and Código de Buen Gobierno add an additional regulatory and soft-governance layer specifically for listed companies. Corporate criminal liability is the most structurally novel recent addition — it changes what's at stake for the company itself, not just its individual officers, which is precisely why building an adequate compliance program has become such a concrete legal priority rather than just good practice.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "law/Civil Litigation/es": {
+    profession: "law",
+    category: "Civil Litigation",
+    jurisdiction: "es",
+    overview:
+      "Spanish civil litigation runs under the 2000 Ley de Enjuiciamiento Civil (LEC), without a jury, and — unlike France's only-partial cost recovery — generally applies a fuller loser-pays rule for both court costs and attorney fees, giving Spanish litigants a cost-risk profile closer to Germany's than to France's.",
+    concepts: [
+      {
+        id: "es-civ-lec-2000",
+        title: "The Ley de Enjuiciamiento Civil (LEC) as the modern procedural framework",
+        explanation:
+          "Spain's current civil procedure code, the LEC (Law 1/2000), substantially modernized and streamlined civil procedure when it replaced the older 19th-century framework — establishing clearer, more structured hearing and evidence procedures than the code it replaced.",
+        whyItMatters:
+          "Because this is a relatively modern, comprehensively restructured code (not an incrementally amended 19th-century original the way Spain's Código Civil largely still is), Spanish civil procedure reflects more contemporary European procedural thinking than some of Spain's substantive civil law.",
+        example:
+          "The LEC introduced clearer oral-hearing (juicio) procedures and more structured evidence presentation rules than the fragmented, heavily-amended 19th-century procedural code it replaced in 2000 — a genuine modernization, not just a renumbering exercise.",
+      },
+      {
+        id: "es-civ-court-hierarchy",
+        title: "Court hierarchy: Juzgados, Audiencias Provinciales, Tribunal Supremo",
+        explanation:
+          "Civil cases generally start at a Juzgado de Primera Instancia (first-instance court), can be appealed to the Audiencia Provincial (provincial appellate court, reviewing facts and law), and in limited circumstances reach the Tribunal Supremo's civil chamber for cassation-style review of legal questions — separate entirely from the Tribunal Constitucional, which handles constitutional matters specifically.",
+        whyItMatters:
+          "Access to the Tribunal Supremo in civil matters is genuinely limited (via recurso de casación, generally requiring the case to meet specific significance or value thresholds) — most civil disputes are fully and finally resolved at the Audiencia Provincial level, not because the legal questions aren't important, but because the Supreme Court's civil docket is deliberately reserved for cases meeting stricter criteria.",
+        example:
+          "A civil dispute resolved at the Audiencia Provincial level often has no realistic further avenue to the Tribunal Supremo unless it meets specific cassation-admissibility criteria (like a sufficiently high amount in dispute or genuine legal significance), meaning the provincial appellate decision is frequently the practical end of the line.",
+      },
+      {
+        id: "es-civ-libre-valoracion-prueba",
+        title: "No jury; libre valoración de la prueba",
+        explanation:
+          "Spanish civil cases are decided by professional judges, with no jury — evidence is assessed under the principle of libre valoración de la prueba (free evaluation of evidence), meaning the judge weighs all evidence according to reasoned judicial judgment rather than following rigid, mechanical evidentiary weighting rules for most evidence types.",
+        whyItMatters:
+          "This gives Spanish civil judges considerable interpretive latitude in weighing conflicting evidence, similar in spirit to other continental systems' judge-centered evidence evaluation, but litigants should understand their case is ultimately being assessed by a single judge's (or panel's) reasoned judgment, not a lay jury's collective view.",
+        example:
+          "In a contract dispute with conflicting witness testimony, a Spanish judge weighs the credibility and coherence of each account under libre valoración de la prueba and must provide reasoned justification for which version they found more persuasive — a fundamentally different fact-finding process than an unreasoned jury verdict.",
+      },
+      {
+        id: "es-civ-costas-vencimiento",
+        title: "Costas procesales and the criterio del vencimiento",
+        explanation:
+          "Article 394 LEC generally applies the \"criterio del vencimiento\" — the losing party pays the winning party's litigation costs, including a meaningful (though capped) portion of attorney fees, with limited exceptions for cases presenting genuine legal doubt or partial success by both sides.",
+        whyItMatters:
+          "Spain's cost-shifting rule is generally fuller and more predictable than France's discretionary, often-partial Article 700 approach — closer in practical effect to Germany's statutory loser-pays system, meaning litigation risk calculus in Spain leans more heavily against filing weak or marginal claims than in France's more partial-recovery model.",
+        example:
+          "A party who loses a Spanish civil lawsuit typically must reimburse a substantial share of the winning side's actual attorney costs (subject to statutory caps tied to the case's value), a real financial deterrent against pursuing weak claims that's more predictable than the more judge-discretionary partial recovery under French Article 700.",
+      },
+      {
+        id: "es-civ-diligencias-preliminares",
+        title: "Diligencias preliminares (limited pretrial evidence measures)",
+        explanation:
+          "Spain has no broad American-style discovery, but the LEC allows diligencias preliminares — narrow, specifically defined pretrial measures letting a prospective claimant secure particular pieces of evidence or information (like obtaining a specific document or identifying a defendant) before formally filing suit.",
+        whyItMatters:
+          "Like France's injonction de communiquer, this is a targeted tool for specific, identified evidentiary needs, not a broad fishing-expedition mechanism — understanding this narrower scope matters for setting realistic expectations about what pretrial evidence-gathering is actually available in Spanish litigation.",
+        example:
+          "A prospective claimant who needs to confirm a specific counterparty's identity or obtain a particular contract document before filing suit can request a diligencia preliminar for that specific, narrow purpose — but can't use the mechanism to broadly explore the other side's general files.",
+      },
+      {
+        id: "es-civ-arbitraje-mediacion",
+        title: "Arbitraje and Spain's growth as an arbitration seat",
+        explanation:
+          "Governed by the 2003 Ley de Arbitraje (modeled on the UNCITRAL framework, similar to Germany's approach), arbitration has grown significantly in Spain, with Madrid developing as a notable seat for international arbitration, particularly for disputes involving Latin American parties given Spain's linguistic and commercial ties to the region.",
+        whyItMatters:
+          "Spain's specific positioning as an arbitration hub for Ibero-American disputes (leveraging shared language and legal tradition with Latin America) is a distinctive niche compared to other European arbitration centers, relevant for understanding why parties from that region might specifically choose Madrid as a seat.",
+        example:
+          "Commercial contracts between Spanish and Latin American parties frequently specify arbitration seated in Madrid specifically, leveraging shared language and Spain's growing institutional arbitration infrastructure (like the Corte Española de Arbitraje) rather than choosing a seat in London, Paris, or elsewhere.",
+      },
+    ],
+    connections:
+      "The LEC 2000 modernized the procedural framework the court hierarchy operates within, and libre valoración de la prueba describes how judges (not juries) actually weigh evidence within that framework. Costas procesales' fuller loser-pays rule shapes the financial risk calculus of litigating in the first place, diligencias preliminares provide narrow pretrial evidence tools within a system that otherwise lacks broad discovery, and arbitraje offers an alternative track entirely — one Spain has specifically cultivated a competitive advantage in for Ibero-American commercial disputes.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "law/Criminal Law/es": {
+    profession: "law",
+    category: "Criminal Law",
+    jurisdiction: "es",
+    overview:
+      "Spanish criminal law shares Germany's three-tier analytical structure (Spanish criminal law theory was heavily influenced by German dogmática penal) and, distinctively among the four European countries covered here, has both an investigating-judge system like France's and a genuine citizen jury for specific serious crimes — but structured differently from France's integrated jury-judge model.",
+    concepts: [
+      {
+        id: "es-crim-tipicidad-antijuridicidad-culpabilidad",
+        title: "Tipicidad, antijuridicidad, culpabilidad — the three-tier structure",
+        explanation:
+          "Spanish criminal law analyzes every offense through tipicidad (whether the act matches the statutory definition of a crime), antijuridicidad (unlawfulness — whether a justification like self-defense applies), and culpabilidad (culpability — whether the person can be personally blamed) — a structure very close to Germany's Tatbestand/Rechtswidrigkeit/Schuld, reflecting Spanish criminal law theory's substantial historical borrowing from German legal scholarship.",
+        whyItMatters:
+          "Recognizing this German theoretical lineage is genuinely useful — Spanish criminal law scholarship and case law often engages directly with concepts and debates originating in German criminal law theory, more so than with French or common-law criminal law thinking.",
+        example:
+          "Someone who kills in genuine self-defense satisfies the tipicidad of homicide but the act isn't antijurídico (unlawful) because of legítima defensa — the same two-step \"the act happened, but it was justified\" logic structuring German self-defense analysis under Notwehr.",
+      },
+      {
+        id: "es-crim-juez-instruccion",
+        title: "The juez de instrucción (investigating judge)",
+        explanation:
+          "Like France's juge d'instruction, Spain has an investigating judge (juez de instrucción) who directs the formal investigation phase for many criminal cases — deciding on investigative measures, hearing initial evidence, and determining whether the case should proceed to trial — combining investigative and judicial functions in a way common-law systems generally split between police/prosecutors and courts.",
+        whyItMatters:
+          "This is a structural similarity Spain shares with France but not with Germany (where prosecutors, not judges, direct investigations) — useful for correctly grouping which countries share which investigative-model features rather than assuming all civil-law systems investigate crimes the same way.",
+        example:
+          "A serious or complex criminal case in Spain is typically assigned to a juez de instrucción who personally directs months of investigation — ordering searches, hearing witnesses, and ultimately deciding whether to send the case to trial (apertura de juicio oral) or dismiss it (sobreseimiento).",
+      },
+      {
+        id: "es-crim-tribunal-jurado",
+        title: "The Tribunal del Jurado — jury trial for specific serious crimes",
+        explanation:
+          "The 1995 Ley Orgánica del Tribunal del Jurado introduced citizen jury trials for a specific, statutorily defined list of serious crimes (including homicide and certain crimes against public officials) — nine citizen jurors decide guilt alone, with a professional judge handling legal rulings and sentencing separately, a different structural split than France's cour d'assises, where jurors and judges deliberate together on both guilt and sentence.",
+        whyItMatters:
+          "Spain's jury system is narrower in scope (only specific listed crimes, unlike the broader category of French \"crimes\") and structurally more separated (jury decides guilt alone; judge alone decides sentence) than France's more integrated model — the two shouldn't be assumed to work the same way just because both involve citizen jurors.",
+        example:
+          "A homicide case in Spain may be tried before the Tribunal del Jurado, with nine citizen jurors deliberating and returning a verdict on guilt alone; if convicted, the professional judge — not the jury — then determines the actual sentence, a clearly separated two-stage process.",
+      },
+      {
+        id: "es-crim-presuncion-inocencia",
+        title: "Presunción de inocencia (Article 24.2 CE)",
+        explanation:
+          "The presumption of innocence is an explicit constitutional right under Article 24.2 of the 1978 Constitution (Constitución Española), among Spain's broader catalogue of due-process guarantees in criminal proceedings, alongside the right to a defense, to be informed of charges, and to use relevant evidence.",
+        whyItMatters:
+          "Having this and related due-process guarantees anchored directly in the Constitution (not just ordinary criminal procedure statute) means the Tribunal Constitucional can directly review criminal process violations as constitutional matters, via recurso de amparo, giving these protections an especially robust enforcement pathway.",
+        example:
+          "A criminal defendant who believes their presumption of innocence was violated by, for instance, prejudicial pretrial publicity or an inadequately reasoned conviction can potentially raise this as a constitutional matter via recurso de amparo to the Tribunal Constitucional, not just as an ordinary appellate argument.",
+      },
+      {
+        id: "es-crim-prision-provisional",
+        title: "Prisión provisional (pretrial detention)",
+        explanation:
+          "Pretrial detention in Spain is governed by strict proportionality and necessity requirements — it must be justified by specific risks (flight, evidence tampering, reoffending) rather than imposed routinely, with defined maximum duration limits that scale with the seriousness of the potential sentence.",
+        whyItMatters:
+          "The proportionality-first framing means prisión provisional is meant to function as a genuinely exceptional measure justified by specific case circumstances, not a default response to any serious charge — a framing with real practical stakes for how routinely Spanish courts should be ordering it.",
+        example:
+          "A defendant facing serious charges but posing no credible flight or evidence-tampering risk (say, someone with strong community ties and no prior record) has a real legal argument against prisión provisional, since the measure requires specific risk-based justification, not automatic imposition based on charge severity alone.",
+      },
+      {
+        id: "es-crim-responsabilidad-penal-corporativa",
+        title: "Corporate criminal liability in criminal procedure",
+        explanation:
+          "Following the 2010/2015 Código Penal reforms establishing corporate criminal liability (also covered in Corporate & Compliance), Spanish criminal procedure now accommodates companies as defendants in their own right, with specific procedural adaptations for how a legal entity participates in criminal proceedings alongside or instead of individual defendants.",
+        whyItMatters:
+          "This is a genuinely recent structural addition to Spanish criminal procedure — prosecuting a company as a defendant, with its own defense rights and potential sanctions (fines, activity restrictions, even dissolution in extreme cases), didn't have an established procedural framework in Spain before these reforms.",
+        example:
+          "A company facing prosecution alongside an individual employee for the same underlying offense (like bribery) participates in the criminal proceeding through its own legal representation and can raise its own defenses (including an adequate-compliance-program defense), distinct from the individual employee's separate defense.",
+      },
+    ],
+    connections:
+      "The tipicidad/antijuridicidad/culpabilidad structure is the analytical backbone for any offense, reflecting Spain's German-influenced criminal law theory. The juez de instrucción directs investigation for serious cases (a structural link to France rather than Germany), and the Tribunal del Jurado handles trial for the specific serious crimes on its statutory list, with guilt and sentencing structurally separated between jury and judge. Presunción de inocencia and prisión provisional's proportionality requirements both protect the accused throughout this process, and corporate criminal liability extends the whole framework to companies as defendants in their own right, a genuinely novel addition layered onto the traditional individual-focused system.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "law/Constitutional & Regulatory/es": {
+    profession: "law",
+    category: "Constitutional & Regulatory",
+    jurisdiction: "es",
+    overview:
+      "Spanish constitutional law runs on the 1978 Constitution that established democracy after the Franco dictatorship, with a centralized constitutional court similar in structure to Germany's, and a genuinely distinctive territorial structure — the Estado de las Autonomías — that devolves real power asymmetrically across 17 regions rather than uniformly, unlike Germany's federal Länder.",
+    concepts: [
+      {
+        id: "es-const-1978-transition",
+        title: "The 1978 Constitution and the transition to democracy",
+        explanation:
+          "Spain's current constitution was adopted in 1978, three years after Franco's death, establishing a parliamentary constitutional monarchy through a negotiated, consensus-seeking transition process (the \"Transición\") that deliberately balanced competing political forces to secure broad legitimacy for the new democratic order.",
+        whyItMatters:
+          "Understanding the Constitution's origin in negotiated consensus (not a revolutionary break or externally imposed settlement) explains some of its structural features — the constitutional monarchy compromise, the deliberately flexible territorial framework — as products of what was politically achievable at that specific historical moment, not necessarily an idealized theoretical design.",
+        example:
+          "The Constitution's monarchy provisions reflected an actual political compromise of the transition period — the monarchy retained as a unifying, legitimizing symbol of continuity while the substance of governing power shifted to democratically elected institutions.",
+      },
+      {
+        id: "es-const-tribunal-constitucional",
+        title: "The Tribunal Constitucional and recurso de amparo",
+        explanation:
+          "Spain centralizes constitutional review in a dedicated Tribunal Constitucional, structurally similar to Germany's Bundesverfassungsgericht — individuals can bring a recurso de amparo directly challenging violations of specific fundamental rights (after exhausting ordinary judicial remedies), while a separate recurso de inconstitucionalidad (available mainly to designated political actors) challenges a law's constitutionality more generally.",
+        whyItMatters:
+          "The direct individual-complaint pathway (recurso de amparo) gives Spanish citizens meaningfully direct constitutional-court access for fundamental rights violations, similar in spirit to Germany's Verfassungsbeschwerde — a more accessible route than systems requiring rights claims to work up through the ordinary court system with no dedicated constitutional-complaint mechanism.",
+        example:
+          "A person whose fundamental rights (like free expression or due process) were violated by a final judicial decision, after exhausting ordinary appeals, can bring a recurso de amparo directly to the Tribunal Constitucional specifically targeting that rights violation.",
+      },
+      {
+        id: "es-const-estado-autonomias",
+        title: "El Estado de las Autonomías",
+        explanation:
+          "Spain's 1978 Constitution created a distinctive quasi-federal structure of 17 Comunidades Autónomas (autonomous communities), each governed by its own Estatuto de Autonomía (organic law defining its specific devolved powers) — critically, with asymmetric devolution: different communities hold meaningfully different powers, not a uniform allocation the way German Länder share essentially identical constitutional authority.",
+        whyItMatters:
+          "This asymmetry is the single most important structural feature distinguishing Spain's territorial model from Germany's federalism — comparing a Spanish Comunidad Autónoma directly to a German Land risks real error, since Spanish regions' actual powers vary considerably from one to another rather than being constitutionally uniform.",
+        example:
+          "The Basque Country and Navarre have unique historical fiscal arrangements (the Concierto Económico and Convenio Económico respectively) giving them their own tax collection authority that most other Spanish autonomous communities don't have — a level of asymmetric fiscal autonomy with no equivalent among Germany's uniformly-treated Länder.",
+      },
+      {
+        id: "es-const-estatutos-autonomia",
+        title: "Estatutos de Autonomía as foundational regional law",
+        explanation:
+          "Each autonomous community's Estatuto de Autonomía is a specific organic law (requiring enhanced parliamentary procedures to pass or amend) defining that community's institutional structure and the specific competencies it holds — functioning as something like a regional constitution, but subordinate to and interpreted within the national Constitution's framework.",
+        whyItMatters:
+          "Disputes over the precise scope of a region's powers frequently turn on interpreting its specific Estatuto de Autonomía against the national Constitution — this is genuinely community-specific analysis, not a single uniform federal-versus-state competency framework applicable identically everywhere in Spain.",
+        example:
+          "Catalonia's 2006 Estatuto de Autonomía reform, which included expanded self-government language, was partially struck down by the Tribunal Constitucional in a highly consequential 2010 ruling — a decision widely seen as a significant catalyst for the subsequent Catalan independence movement's intensification.",
+      },
+      {
+        id: "es-const-estado-alarma-excepcion-sitio",
+        title: "Estado de alarma, excepción, and sitio — graduated emergency powers",
+        explanation:
+          "Article 116 of the Constitution provides three graduated levels of emergency powers: estado de alarma (the mildest, for situations like natural disasters or health crises), estado de excepción (broader restrictions on rights, requiring Congress authorization), and estado de sitio (martial-law-level powers for the most extreme threats). The COVID-19 pandemic saw Spain's first major test of this framework in decades.",
+        whyItMatters:
+          "The Tribunal Constitucional's July 2021 ruling that key provisions of the first COVID-19 estado de alarma decree (specifically the strict home-confinement measures) exceeded what that particular emergency level could constitutionally authorize — finding those measures should have required the stricter estado de excepción instead — is essential, genuinely recent context: it shows the graduated framework has real, judicially enforced teeth, not just formal textual distinctions.",
+        example:
+          "The Tribunal Constitucional's 2021 ruling found the strict nationwide home-confinement measures imposed under Spain's first COVID-19 estado de alarma exceeded that emergency level's constitutional scope — a landmark, relatively recent decision confirming the different emergency tiers carry real, judicially enforceable limits on what each can authorize.",
+      },
+      {
+        id: "es-const-tension-territorial",
+        title: "Ongoing territorial tension: the Catalan independence question",
+        explanation:
+          "The scope of autonomous community powers, and specifically Catalonia's push for independence — including the October 2017 unilateral independence referendum the Tribunal Constitucional had already declared unconstitutional and suspended before it took place — represents an ongoing, unresolved constitutional and political tension at the core of Spain's territorial model.",
+        whyItMatters:
+          "This isn't a resolved historical footnote — the underlying tension between the Estado de las Autonomías's asymmetric devolution and demands for greater (or full) Catalan self-determination remains a live, actively contested feature of Spanish constitutional politics, directly shaping ongoing national-level political negotiation and coalition-building (see the Politics content for this connection).",
+        example:
+          "Several Catalan pro-independence political figures involved in the 2017 referendum faced criminal prosecution (with outcomes ranging from lengthy prison sentences to later pardons and amnesty debates), illustrating how this constitutional tension has produced real, high-stakes, and still politically contested legal consequences.",
+      },
+    ],
+    connections:
+      "The 1978 Constitution's negotiated-transition origins shaped its flexible territorial framework, which the Estado de las Autonomías and each community's specific Estatuto de Autonomía then implement asymmetrically rather than uniformly. The Tribunal Constitucional is the institution enforcing the whole framework's limits — via recurso de amparo for individual rights and more general review for structural questions like the graduated emergency-powers framework and the boundaries of regional autonomy. The ongoing Catalan territorial tension shows this framework isn't just historical design but an active, still-contested area of Spanish constitutional and political life today.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
   "law/Corporate & Compliance": {
     profession: "law",
     category: "Corporate & Compliance",
@@ -3341,6 +3711,376 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     ],
     connections:
       "Whether fait majoritaire currently holds determines the whole negotiating environment — a clear majority means top-down governance, its absence forces genuine bargaining. Article 49.3, the navette parlementaire, and the commission mixte paritaire are all tools for pushing legislation through despite disagreement, at different points in the process (within a single chamber's vote, between chambers, and at final reconciliation respectively). Legislating by ordonnance is a way of bypassing much of this negotiation machinery entirely for defined policy domains, and the shift toward ad hoc, fragmented-parliament bargaining since 2022 shows how all of these tools have become more actively and frequently used as stable majorities have become less reliable.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "politics/Foreign Policy & Diplomacy/es": {
+    profession: "politics",
+    category: "Foreign Policy & Diplomacy",
+    jurisdiction: "es",
+    overview:
+      "Spanish foreign policy since the 1978 transition to democracy has centered on consolidating that democratic legitimacy through EU and NATO membership, while maintaining a genuinely distinctive soft-power role in Latin America that gives Spain a global reach and influence disproportionate to a country its size.",
+    concepts: [
+      {
+        id: "es-fp-eu-nato-integration",
+        title: "EU and NATO membership as democratic consolidation",
+        explanation:
+          "Spain joined the EU (then EEC) in 1986 and NATO in 1982 — both seen domestically as ways to consolidate and internationally validate Spain's new democracy after decades of Franco-era isolation, though NATO membership was genuinely controversial and was ultimately confirmed by a 1986 national referendum.",
+        whyItMatters:
+          "Unlike Germany's post-war multilateralism (rooted in preventing renewed German aggression) or France's more sovereignty-conscious integration approach, Spain's EU/NATO membership was specifically framed around democratic legitimacy and modernization after dictatorship — a distinct historical motivation worth understanding on its own terms.",
+        example:
+          "The 1986 Spanish referendum confirming NATO membership passed despite significant public opposition and Socialist party ambivalence (the governing party had actually opposed NATO membership before taking office, then reversed position) — reflecting how genuinely contested this consolidation choice was domestically.",
+      },
+      {
+        id: "es-fp-ibero-america",
+        title: "The Ibero-American special relationship",
+        explanation:
+          "Spain's historical, linguistic, and cultural ties to Latin America give it a distinctive diplomatic and economic role there — formalized through annual Cumbres Iberoamericanas (Ibero-American Summits) and reflected in major Spanish corporate investment presence across the region (banking, telecommunications, energy).",
+        whyItMatters:
+          "This gives Spain a genuine global diplomatic reach and economic influence network that other mid-sized European powers, including Germany, simply don't have at comparable scale — a distinctive lever rooted in shared language and history, functionally similar in kind (though different in specific geography) to France's Francophonie network.",
+        example:
+          "Major Spanish companies (in banking, telecommunications, and energy) have historically maintained some of their largest international investment positions in Latin American markets, giving Spanish foreign policy real economic stakes and corresponding diplomatic engagement across the region beyond what pure EU-partner status would suggest.",
+      },
+      {
+        id: "es-fp-mediterranean-north-africa",
+        title: "Mediterranean and North African focus",
+        explanation:
+          "Spain's geographic position gives it distinctive, high-stakes foreign-policy relationships with North Africa — particularly Morocco, given the sensitive status of Ceuta and Melilla (Spanish-administered enclaves on the North African coast) and Spain's role as a primary EU entry point for migration from Africa — alongside the long-running Gibraltar sovereignty dispute with the United Kingdom.",
+        whyItMatters:
+          "These are genuinely distinctive Spanish foreign-policy preoccupations with limited parallel among the other European countries covered here — no other country in this comparison set has an equivalent combination of contested territorial enclaves, a major land border with Africa, and a comparable frontline migration-management role.",
+        example:
+          "Diplomatic tensions between Spain and Morocco have periodically flared over Ceuta and Melilla's status and migration-control cooperation, including episodes of large-scale attempted border crossings that became major bilateral and EU-level diplomatic incidents.",
+      },
+      {
+        id: "es-fp-eu-integration-enthusiasm",
+        title: "Historically strong EU integration enthusiasm",
+        explanation:
+          "Spain has historically ranked among the more enthusiastically pro-EU-integration member states, reflecting the strong association between EU membership and Spain's own post-Franco modernization and democratic consolidation — a generally more integration-friendly disposition than some other member states more cautious about ceding sovereignty.",
+        whyItMatters:
+          "This general disposition shapes how Spain tends to position itself in EU-level debates over further integration (like fiscal union or defense cooperation) — typically less resistant to deeper integration than some sovereignty-cautious member states, reflecting the deep post-transition association between \"more Europe\" and Spain's own successful democratic modernization.",
+        example:
+          "Spain has generally supported deeper EU fiscal and political integration proposals (such as joint EU debt instruments during crisis responses) more readily than some other member states more protective of national fiscal sovereignty.",
+      },
+      {
+        id: "es-fp-nato-integration-history",
+        title: "Spain's gradual NATO integration",
+        explanation:
+          "Unlike most NATO members, Spain initially joined without integrating into NATO's unified military command structure — the 1986 referendum that confirmed continued NATO membership specifically excluded full integrated-command participation, which Spain only joined later, in 1996, after further domestic political consensus developed.",
+        whyItMatters:
+          "This gradual, domestically negotiated integration pattern reflects how genuinely contested NATO membership was in Spanish domestic politics — a useful corrective to assuming Spain's current, now largely uncontroversial NATO membership was always straightforward or uncontested.",
+        example:
+          "Spain's ten-year gap between confirming NATO membership (1986) and fully joining the integrated military command (1996) illustrates a gradual, politically cautious integration path quite different from how many other NATO members joined the alliance more completely from the outset.",
+      },
+      {
+        id: "es-fp-western-sahara",
+        title: "Western Sahara policy",
+        explanation:
+          "Spain's historical role as Western Sahara's former colonial administrator gives it a distinctive, sensitive ongoing foreign-policy stake in the territory's unresolved status — a dispute between Morocco and the Polisario Front independence movement — with Spanish policy shifts on the issue (including a notable 2022 shift toward supporting Morocco's autonomy proposal) generating real domestic political controversy.",
+        whyItMatters:
+          "This is a genuinely Spain-specific foreign-policy sensitivity tied directly to its own colonial history, illustrating how a country's specific historical entanglements (not just its current alliance memberships) continue shaping foreign-policy dilemmas most other European countries don't face at all regarding this particular territory.",
+        example:
+          "Spain's 2022 shift toward endorsing Morocco's autonomy plan for Western Sahara (departing from Spain's previous more neutral historical stance) was domestically controversial and affected Spain's relations with Algeria, illustrating how this legacy colonial-era issue continues generating real, current diplomatic consequences.",
+      },
+    ],
+    connections:
+      "EU and NATO integration are the foundational post-transition foreign-policy achievements that both reflect and reinforce Spain's broader EU integration enthusiasm. The Ibero-American relationship and Mediterranean/North African focus are Spain's two most distinctive regional foreign-policy dimensions, rooted in language/history and geography respectively, and Western Sahara policy shows how specific unresolved colonial-era legacies continue generating live foreign-policy dilemmas layered on top of Spain's broader European and Atlantic alliance commitments.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "politics/Domestic Policy/es": {
+    profession: "politics",
+    category: "Domestic Policy",
+    jurisdiction: "es",
+    overview:
+      "Spanish domestic policy runs through the asymmetric Estado de las Autonomías, a party landscape that fragmented sharply after 2015 (making genuine coalition government far more common than it once was), and an investiture and no-confidence process with real structural safeguards borrowed directly from the German model.",
+    concepts: [
+      {
+        id: "es-dp-estado-autonomias-implementation",
+        title: "Estado de las Autonomías and policy implementation",
+        explanation:
+          "Health, education, and policing are substantially devolved to Spain's 17 Comunidades Autónomas — but, critically, not uniformly: different communities hold different specific competencies (the Basque Country and Navarre's unique fiscal autonomy being the most extreme example), unlike Germany's more uniform Länder powers.",
+        whyItMatters:
+          "National domestic policy debates in Spain often can't be resolved by a single national decision the way more centralized systems can — implementation genuinely varies by region both in degree of autonomy and in how each region chooses to exercise its specific powers, making \"Spanish policy\" on many issues really a patchwork of 17 different regional policies operating within a shared national framework.",
+        example:
+          "Healthcare policy and resource allocation is managed separately by each Comunidad Autónoma's own health service, coordinated only loosely through the Consejo Interterritorial del Sistema Nacional de Salud — producing real, sometimes significant variation in healthcare provision and policy across different Spanish regions.",
+      },
+      {
+        id: "es-dp-fragmentation-coalition",
+        title: "Post-2015 party fragmentation and the shift to coalition government",
+        explanation:
+          "Spain's political landscape, historically dominated by two major parties (PSOE and PP) often forming single-party governments, fragmented significantly from 2015 onward with the rise of new parties — making formal coalition government (rather than single-party minority or majority rule) considerably more common in recent years than in most of Spain's post-1978 democratic history.",
+        whyItMatters:
+          "This is a genuinely recent structural shift — domestic policy analysis assuming Spain still operates like the historically dominant two-party, single-party-government era would miss how much more negotiation-dependent Spanish governance has become since the mid-2010s.",
+        example:
+          "Spain's government formed after the 2019 elections marked its first formal coalition government (between PSOE and Unidas Podemos) since the transition to democracy — a genuinely notable departure from the historical single-party governing norm.",
+      },
+      {
+        id: "es-dp-investidura",
+        title: "The investidura (investiture) process",
+        explanation:
+          "A Prime Minister candidate needs an absolute majority of the Congreso de los Diputados in a first investiture vote, or — if that fails — only a simple majority (more affirmative than negative votes) in a second vote held at least 48 hours later, a graduated threshold that makes minority government formation genuinely possible if a candidate can secure enough abstentions rather than outright majority support.",
+        whyItMatters:
+          "The second-round simple-majority threshold is a crucial structural feature enabling minority governments — a candidate doesn't necessarily need a governing majority's active support, just enough abstentions to ensure opposing votes don't outnumber supporting ones, a materially different bar than requiring genuine majority backing.",
+        example:
+          "Several recent Spanish Prime Ministers have taken office via the second-round simple-majority threshold specifically by securing regional or minor parties' abstention (rather than active support) in exchange for policy concessions, rather than assembling an outright majority coalition.",
+      },
+      {
+        id: "es-dp-mocion-censura-constructiva",
+        title: "Moción de censura constructiva (constructive no-confidence motion)",
+        explanation:
+          "Modeled directly on Germany's constructive vote of no confidence (konstruktives Misstrauensvotum), a Spanish no-confidence motion against the sitting Prime Minister must simultaneously name a specific alternative candidate who would take office if the motion succeeds — preventing a purely destructive vote that topples a government without an agreed replacement ready to govern.",
+        whyItMatters:
+          "This structurally raises the bar for successfully removing a government — opposition parties need to agree not just that the current PM should go, but on who specifically should replace them, a much harder political consensus to achieve than simple opposition to the incumbent.",
+        example:
+          "Spain has seen successful constructive no-confidence motions (notably in 2018, when Pedro Sánchez became PM by successfully naming himself as the alternative candidate in a motion against Mariano Rajoy) — a relatively rare event precisely because of the higher bar this constructive-motion requirement creates.",
+      },
+      {
+        id: "es-dp-catalan-tension-policy-driver",
+        title: "Catalan independence tension as a recurring domestic policy driver",
+        explanation:
+          "The unresolved Catalan independence question shapes Spanish domestic policy well beyond Catalonia itself — national governments' need for Catalan regional parties' parliamentary support (for budgets, investitures, or ordinary legislation) means Catalan-related concessions and controversies recur constantly across otherwise unrelated domestic policy negotiations.",
+        whyItMatters:
+          "Understanding Spanish domestic policy negotiation often requires tracking this dimension specifically — a national government's need for Catalan (or Basque) regional party votes can shape policy compromises on completely unrelated topics, since those parties' support is frequently the deciding factor in minority-government legislative math.",
+        example:
+          "Spanish state budgets have periodically depended on securing Catalan regional parties' parliamentary support, with budget negotiations becoming entangled with unrelated Catalan-specific political demands (like language policy, fiscal arrangements, or amnesty questions) as part of the broader bargain.",
+      },
+      {
+        id: "es-dp-pactos-moncloa-legacy",
+        title: "The Pactos de la Moncloa legacy",
+        explanation:
+          "The 1977 Pactos de la Moncloa — broad political, social, and economic consensus agreements negotiated across the political spectrum during Spain's democratic transition, addressing economic crisis and political stabilization simultaneously — remain a frequently invoked historical template for cross-party consensus-building during later crises.",
+        whyItMatters:
+          "This historical reference point gets invoked recurringly in Spanish political discourse whenever cross-party consensus on a major structural issue is proposed — understanding the Pactos de la Moncloa's actual history helps calibrate how ambitious (and how historically rare) genuinely achieving that kind of broad consensus has proven to be since.",
+        example:
+          "Proposals for a broad cross-party \"new Pactos de la Moncloa\" have been periodically floated during subsequent Spanish economic or political crises, invoking the 1977 precedent as an aspirational model — though actually achieving comparable cross-party consensus has proven considerably harder in Spain's more fragmented recent political landscape.",
+      },
+    ],
+    connections:
+      "Estado de las Autonomías implementation determines how much of domestic policy is actually decided regionally rather than nationally, and Catalan independence tension is the most consequential recurring manifestation of that territorial structure's unresolved questions. Post-2015 fragmentation explains why investidura and moción de censura constructiva's specific procedural thresholds have become so much more practically consequential recently — genuine coalition and minority-government formation now happens routinely, unlike in the historically dominant two-party era, and the Pactos de la Moncloa legacy is the recurring historical reference point for whether genuine cross-party consensus on major issues remains achievable in this more fragmented landscape.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "politics/Crisis Response/es": {
+    profession: "politics",
+    category: "Crisis Response",
+    jurisdiction: "es",
+    overview:
+      "Spanish crisis response has to navigate the same central-regional coordination challenge that runs through so much of Spanish governance — sharpened by a landmark 2021 constitutional ruling that found the government's own flagship COVID-19 response measure had exceeded its legal authority, a rare, direct judicial check on crisis-era executive action.",
+    concepts: [
+      {
+        id: "es-cr-estado-alarma-covid-ruling",
+        title: "The estado de alarma and its constitutional limits",
+        explanation:
+          "Spain's central legal tool for the COVID-19 response was the estado de alarma — but the Tribunal Constitucional's July 2021 ruling found that the strict nationwide home-confinement measures under the first alarma decree exceeded what that emergency tier could constitutionally authorize, since such a severe restriction on freedom of movement should have required the stricter estado de excepción instead; a later ruling found aspects of the second declared state of alarm unconstitutional too.",
+        whyItMatters:
+          "This is a genuinely significant, relatively recent precedent — it demonstrates Spain's graduated emergency-powers framework carries real judicial teeth, holding the government accountable after the fact for using an insufficiently strong legal tool for measures that severe, even though the measures themselves were aimed at a genuine public health emergency.",
+        example:
+          "The Constitutional Court's 2021 ruling didn't strike down the pandemic response as unjustified policy, but specifically found the legal vehicle used (estado de alarma rather than estado de excepción) was constitutionally inadequate for authorizing home confinement that severe — a distinction between the legitimacy of the goal and the legality of the specific means used to pursue it.",
+      },
+      {
+        id: "es-cr-central-regional-coordination",
+        title: "Central-regional coordination in health crises",
+        explanation:
+          "Because healthcare is a devolved competency managed by each Comunidad Autónoma's own health service, national health crisis response requires coordination through bodies like the Consejo Interterritorial del Sistema Nacional de Salud — a genuine negotiation and consensus-building forum, not a body with unilateral command authority over the regions.",
+        whyItMatters:
+          "This mirrors the same central-versus-regional tension seen in German and French crisis response, but with Spain's own asymmetric devolution structure — some regions have historically pushed back more forcefully than others on nationally coordinated measures, reflecting the underlying asymmetric autonomy the Estado de las Autonomías already produces in ordinary governance.",
+        example:
+          "During COVID-19, Spanish autonomous communities implemented differing specific restriction levels and timelines even under broadly coordinated national frameworks, reflecting both their devolved health authority and, at points, genuine disagreement over the appropriate regional response.",
+      },
+      {
+        id: "es-cr-2004-madrid-bombings",
+        title: "The 2004 Madrid train bombings (11-M) as a formative crisis moment",
+        explanation:
+          "The March 2004 Madrid commuter train bombings, days before a general election, became a formative and politically consequential crisis — the government's initial public attribution of responsibility (later found incorrect) and the ensuing controversy over how the crisis was communicated became a major factor in the imminent election's outcome.",
+        whyItMatters:
+          "This remains a foundational reference point in Spanish political memory for how catastrophically a government's crisis communication can backfire if information handling is perceived as politically motivated or inaccurate — a cautionary case study in the stakes of getting crisis communication right, especially under acute electoral timing pressure.",
+        example:
+          "The government's initial statements attributing the 2004 bombings to Basque separatist group ETA, later revealed to be the work of an Islamist terrorist cell, became a major point of public controversy in the days before the election — widely seen as contributing to the governing party's unexpected electoral defeat shortly afterward.",
+      },
+      {
+        id: "es-cr-dana-flooding",
+        title: "DANA flooding events and disaster response coordination",
+        explanation:
+          "Spain's Mediterranean coast is periodically struck by DANA (aislada en niveles altos — isolated depression at high levels) weather events causing severe, sometimes catastrophic flooding, testing the same central-regional coordination structure — regional emergency services, central government resources, and the specialized military emergency unit potentially all involved simultaneously.",
+        whyItMatters:
+          "Major DANA flooding disasters have repeatedly generated public controversy specifically over coordination failures and warning-system adequacy between regional and national authorities — a recurring pattern illustrating that the central-regional coordination challenge in Spanish crisis response isn't hypothetical but has produced real, sometimes fatal, response gaps.",
+        example:
+          "Severe DANA flooding events affecting Mediterranean coastal regions have generated significant public and political controversy over whether regional and national emergency-alert systems and response coordination were adequate, with criticism directed at both levels of government over communication and response-timing failures.",
+      },
+      {
+        id: "es-cr-layered-police-jurisdiction",
+        title: "Layered police jurisdiction in crisis response",
+        explanation:
+          "Security and public-order crisis response in Spain can involve multiple, jurisdictionally overlapping police forces depending on the region — the national Policía Nacional and Guardia Civil, alongside autonomous regional police forces with their own primary jurisdiction in specific communities, most notably the Mossos d'Esquadra in Catalonia and the Ertzaintza in the Basque Country.",
+        whyItMatters:
+          "This layered jurisdiction adds a further coordination dimension unique to Spain's asymmetric devolution — crisis response in Catalonia or the Basque Country involves genuinely different primary police authorities than crisis response in most other Spanish regions, which rely more directly on national forces.",
+        example:
+          "Major security incidents in Catalonia primarily engage the Mossos d'Esquadra as the primary regional police force with jurisdiction, requiring specific coordination protocols with national forces for aspects of response that exceed regional police authority — a jurisdictional layering most other Spanish regions, relying on national police forces directly, don't need to navigate.",
+      },
+      {
+        id: "es-cr-ume",
+        title: "The UME (Unidad Militar de Emergencias)",
+        explanation:
+          "Spain's Unidad Militar de Emergencias is a dedicated armed forces unit created specifically for civil disaster response (wildfires, floods, and other major emergencies) — deployable nationally under central government authority regardless of regional boundaries, functioning as a centralizing crisis-response tool operating alongside the otherwise substantially devolved emergency-response landscape.",
+        whyItMatters:
+          "The UME represents a deliberate central-government capability specifically designed to cut across regional jurisdictional boundaries during major crises — a notable centralizing exception within a broader system where most ordinary emergency response sits at the regional and local level.",
+        example:
+          "During major wildfire seasons or severe flooding events, UME units are deployed to whichever Spanish region faces the most severe crisis, operating under national military command regardless of which autonomous community they're deployed to — a direct central-government response capability that bypasses the ordinary devolved emergency-response structure.",
+      },
+    ],
+    connections:
+      "The estado de alarma/excepción/sitio framework and its 2021 constitutional test are the overarching legal structure any major Spanish crisis response operates within. Central-regional coordination challenges (visible in both health crises and DANA flooding events) and layered police jurisdiction both stem from the same underlying Estado de las Autonomías structure that shapes ordinary Spanish governance, while the UME represents a deliberate centralizing exception built specifically to cut across that devolved structure when major crises demand it. The 2004 Madrid bombings remain the foundational cautionary reference point for how much is at stake in getting crisis communication right, regardless of which structural tools are otherwise in play.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "politics/Campaign Strategy/es": {
+    profession: "politics",
+    category: "Campaign Strategy",
+    jurisdiction: "es",
+    overview:
+      "Spanish campaigns run on closed provincial party-list proportional representation using the D'Hondt method, with rural provinces structurally over-represented relative to population — and since the post-2015 fragmentation of what was once a stable two-party system, regional nationalist parties have become genuine kingmakers whose anticipated post-election leverage now shapes national campaign strategy itself.",
+    concepts: [
+      {
+        id: "es-cs-dhondt-provincial-lists",
+        title: "D'Hondt method and closed provincial lists",
+        explanation:
+          "Spanish general elections use closed party lists (voters choose a party, not individual candidates, and can't reorder the list) allocated by province using the D'Hondt method — a proportional allocation formula that, combined with Spain's many small-population provinces each guaranteed a minimum number of seats, produces meaningful over-representation of rural, sparsely populated provinces relative to their population share.",
+        whyItMatters:
+          "This structural rural over-representation means national vote-share alone doesn't translate cleanly into seats — campaign resource allocation has to account for where votes actually convert most efficiently into seats under this system, not just where the most total votes are available.",
+        example:
+          "A smaller party can win a meaningful number of seats concentrated in a few provinces where it runs strongly, even with a modest national vote share overall, while a party with broader but thinner national support spread evenly across large provinces might convert votes to seats less efficiently under the same D'Hondt provincial system.",
+      },
+      {
+        id: "es-cs-post-2015-fragmentation",
+        title: "Post-2015 party system fragmentation",
+        explanation:
+          "Spain's historically stable two-party dominance (PSOE and PP alternating in government) fragmented significantly starting around 2015 with the emergence and growth of new parties across the political spectrum — permanently changing campaign strategy from a primarily two-way contest into genuine multi-party competition requiring post-election coalition-building calculations built into campaign strategy itself.",
+        whyItMatters:
+          "Campaigns since this fragmentation can no longer credibly promise straightforward single-party governance the way pre-2015 campaigns often could — voters and campaign strategists alike now factor likely post-election negotiating scenarios into their calculations well before votes are even cast.",
+        example:
+          "Multiple general elections since 2015 have required lengthy post-election coalition or support negotiations before a government could actually be formed, a stark contrast to the pre-2015 era's much more predictable single-party government formation.",
+      },
+      {
+        id: "es-cs-regional-parties-kingmaker",
+        title: "Regional/nationalist parties as kingmakers",
+        explanation:
+          "Catalan and Basque regional parties frequently hold decisive parliamentary leverage in a fragmented Congreso — their support (or at minimum abstention) is often mathematically necessary for either major national bloc to reach an investiture majority, giving them outsized influence over government formation despite representing only their specific regions.",
+        whyItMatters:
+          "National campaign strategy increasingly has to implicitly account for this — a campaign message or policy position that would alienate potential Catalan or Basque parliamentary partners can carry real post-election costs, even though those parties aren't competing nationally, making national and regional-party dynamics genuinely intertwined in a way pure two-party competition never required.",
+        example:
+          "National party leaders have had to calibrate campaign positions on issues like Catalan self-government or fiscal arrangements with an eye toward the post-election negotiating relationship they might need with Catalan parties, rather than campaigning purely on their own national platform in isolation.",
+      },
+      {
+        id: "es-cs-financing-lofpp",
+        title: "Party financing under the LOFPP",
+        explanation:
+          "The Ley Orgánica de Financiación de Partidos Políticos (LOFPP) regulates Spanish party financing through a mix of public subsidies (tied partly to prior electoral results) and regulated private donations, with campaign spending caps tied to population figures for the relevant constituencies being contested.",
+        whyItMatters:
+          "Like France and Germany's more regulated financing models, this constrains how much campaign strategy can rely on simply outspending rivals — public financing tied to past electoral performance also means an established party's financial base is somewhat self-reinforcing, a structural advantage newer parties have to campaign around.",
+        example:
+          "Newer parties without a strong prior electoral track record receive proportionally less public financing than established parties with a track record of past results, a structural financing disadvantage that newer entrants to Spanish politics have had to overcome through other campaign strategies (like heavier reliance on earned media and social media presence).",
+      },
+      {
+        id: "es-cs-televised-debates",
+        title: "Televised leader debates",
+        explanation:
+          "Televised debates among leading candidates (Cara a Cara head-to-head formats, or multi-candidate formats reflecting the fragmented field) have become an increasingly central campaign moment in Spanish elections, though — unlike France's more institutionalized two-round debate tradition — Spanish debate formats and participation have varied more inconsistently across different election cycles.",
+        whyItMatters:
+          "Because debate formats and even whether debates happen at all have varied more from election to election than in some other European systems, campaign strategists can't assume a fixed, predictable debate structure the way they might in a more institutionally settled system — negotiating debate participation and format is itself part of campaign strategy.",
+        example:
+          "Different Spanish general election cycles have featured varying debate formats — sometimes strict head-to-head Cara a Cara debates between the two leading candidates, other times broader multi-candidate formats including smaller parties' leaders — reflecting ongoing negotiation over debate structure rather than a fixed institutional format.",
+      },
+      {
+        id: "es-cs-personalization-trend",
+        title: "The growing personalization of politics around party leaders",
+        explanation:
+          "Since the post-2015 fragmentation era, Spanish political campaigns have shown a marked trend toward personalization — campaigns increasingly center on individual party leaders' personal brands and images (sometimes informally labeled with the leader's surname, like \"Sanchismo\") rather than purely on party institutional identity or platform.",
+        whyItMatters:
+          "This shift means individual leader popularity and personal image management has become a more central campaign strategy consideration than in the more institutionally/party-brand-centered pre-2015 era — leadership personality and media presence now carry campaign weight that party identity alone previously carried more of.",
+        example:
+          "Recent Spanish general election campaigns have often been framed publicly and in media coverage substantially around the personal contest between leading party figures, with individual leaders' personal approval ratings and media performance treated as central campaign metrics in a way less pronounced in the more party-centered pre-2015 political era.",
+      },
+    ],
+    connections:
+      "The D'Hondt provincial-list system defines the basic seat-allocation math every campaign strategy has to work within, and post-2015 fragmentation is what transformed that math from a fairly predictable two-party contest into genuine multi-party competition. Regional parties' kingmaker role is a direct consequence of that fragmentation combined with Spain's territorial structure, financing rules under the LOFPP shape what resources are available to compete within all of this, and televised debates and the personalization trend are both about how campaigns actually communicate and compete for attention within these structural constraints.",
+    source: "claude",
+    generatedAt: "2026-09-10",
+  },
+
+  "politics/Legislative Negotiation/es": {
+    profession: "politics",
+    category: "Legislative Negotiation",
+    jurisdiction: "es",
+    overview:
+      "Spanish legislative negotiation since the post-2015 fragmentation has come to center on bilateral deal-making with Catalan and Basque regional parties for pivotal votes — a genuinely distinctive dynamic tied directly to Spain's asymmetric territorial structure — operating within a system where the Senado's weak formal role leaves the Congreso as the real locus of negotiation.",
+    concepts: [
+      {
+        id: "es-ln-investidura-negotiation",
+        title: "Investidura negotiation in a fragmented Congreso",
+        explanation:
+          "Forming a government requires securing either an absolute majority in a first investiture vote or a simple majority (more yes than no votes, abstentions not counting against) in a second vote — increasingly requiring explicit negotiated deals, often involving specific policy concessions, with regional or minor parties willing to vote yes or simply abstain.",
+        whyItMatters:
+          "The simple-majority second-round threshold specifically enables minority governments built on negotiated abstentions rather than full coalition partnership — a materially different (and often easier) negotiating target than assembling an outright governing majority, shaping what kind of deals get struck and with whom.",
+        example:
+          "Recent Spanish investitures have depended on securing specific regional parties' abstention (not active support) through negotiated concessions, a distinct minority-government-formation strategy that a stricter absolute-majority-only requirement would foreclose.",
+      },
+      {
+        id: "es-ln-bilateral-pacts-regional-parties",
+        title: "Bilateral pacts with Catalan and Basque parties",
+        explanation:
+          "Because Catalan (like ERC or Junts) and Basque (like PNV or Bildu) parties frequently hold decisive parliamentary leverage, governments regularly negotiate specific bilateral pacts with them for budget or investiture support — often trading concrete concessions on fiscal arrangements, language policy, or (in periods of acute tension) amnesty-related questions, in exchange for pivotal votes.",
+        whyItMatters:
+          "This is a genuinely distinctive Spanish negotiation dynamic tied directly to the country's asymmetric territorial structure — unlike Germany's broad multi-party Koalitionsvertrag covering a comprehensive governing program, these are often narrower, more transactional bilateral deals focused on specific concessions tied to specific votes.",
+        example:
+          "Spanish governments lacking a majority have negotiated specific fiscal-arrangement or language-policy concessions with Catalan or Basque parties in direct exchange for crucial budget or investiture votes — narrower, transaction-specific bargains rather than a comprehensive shared governing program.",
+      },
+      {
+        id: "es-ln-senado-weak-role",
+        title: "The Senado's genuinely limited role",
+        explanation:
+          "Spain's upper house, the Senado, has considerably less legislative power than Germany's Bundesrat or even France's Senate — it can propose amendments or veto legislation, but the Congreso de los Diputados can override a Senado veto with an absolute majority, making the Senado's practical negotiating leverage over ordinary legislation genuinely limited.",
+        whyItMatters:
+          "This means the Congreso is where the real legislative negotiation happens for most ordinary legislation — unlike Germany, where Bundesrat consent requirements give the upper chamber genuine veto power over a meaningful category of laws, Spanish legislative strategists don't generally need to treat the Senado as a comparable co-equal negotiating partner.",
+        example:
+          "Legislation that faces Senado amendments or even an outright Senado veto can still become law if the Congreso reaffirms it by absolute majority — a structural override that means Senado opposition, while it can delay legislation, rarely functions as a genuine, final blocking mechanism the way German Bundesrat consent requirements can.",
+      },
+      {
+        id: "es-ln-real-decreto-ley",
+        title: "Real Decreto-Ley (executive decree-law)",
+        explanation:
+          "In cases of \"extraordinary and urgent need,\" the government can issue a Real Decreto-Ley with immediate legal force, bypassing the ordinary legislative process — but it must be submitted to the Congreso for ratification (or rejection) within 30 days, or it lapses.",
+        whyItMatters:
+          "This gives the executive a genuine fast-track tool for urgent measures without prior legislative negotiation — but the mandatory 30-day ratification requirement means the government still needs to eventually secure Congreso support (or at least avoid an outright rejection), so it delays rather than eliminates the need for legislative negotiation.",
+        example:
+          "Urgent economic-crisis measures have repeatedly been implemented via Real Decreto-Ley for immediate effect, with the government then needing to secure Congreso ratification within the 30-day window — sometimes successfully, sometimes facing genuine risk of rejection if the government lacks reliable parliamentary support.",
+      },
+      {
+        id: "es-ln-mocion-censura-as-negotiation-tool",
+        title: "The constructive no-confidence motion as a negotiation backdrop",
+        explanation:
+          "Because a moción de censura constructiva requires naming a specific alternative Prime Minister candidate, its mere availability shapes ongoing legislative negotiation even when it's not actually being used — a government facing a genuinely viable alternative candidate that opposition parties could plausibly unite behind negotiates from a weaker position than one facing only fragmented, uncoordinated opposition.",
+        whyItMatters:
+          "Understanding this as a background threat shaping day-to-day negotiating leverage (not just an occasionally-used formal procedure) is important — the credibility of a potential constructive no-confidence threat affects how much a government needs to concede in ordinary legislative negotiations, independent of whether the motion is ever actually filed.",
+        example:
+          "A government facing a fragmented opposition with no single credible alternative Prime Minister candidate that could unite a majority behind them faces less real no-confidence pressure than one facing a more unified opposition capable of coordinating around a viable constructive alternative — a difference that shapes ordinary legislative bargaining leverage well before any actual motion is filed.",
+      },
+      {
+        id: "es-ln-pactos-de-estado",
+        title: "Pactos de Estado — the aspiration for cross-party structural consensus",
+        explanation:
+          "Spain has an inconsistently realized tradition of seeking broad \"Pactos de Estado\" — cross-party agreements on major structural issues (like counter-terrorism policy, pension system reform, or judicial reform) intended to transcend normal term-by-term legislative politics and provide durable, broadly legitimate policy on especially sensitive matters.",
+        whyItMatters:
+          "The gap between this aspiration and actual practice matters — genuine Pactos de Estado have been achieved on some issues (like counter-terrorism cooperation) but have failed or stalled on others (like comprehensive judicial system reform), so their invocation in political rhetoric shouldn't be assumed to reliably predict actual cross-party consensus being reached.",
+        example:
+          "Judicial system reform has been repeatedly proposed as a candidate for a Pacto de Estado given its structural, non-partisan importance, but has more often become entangled in ordinary partisan negotiation and stalemate than genuinely achieving the durable cross-party consensus the Pacto de Estado concept aspires to.",
+      },
+    ],
+    connections:
+      "Investidura negotiation and bilateral pacts with regional parties are where most of the real deal-making in a fragmented Congreso actually happens, with the constructive no-confidence motion's mere availability shaping the background leverage in all of it. The Senado's weak formal role means virtually none of this negotiation needs to route through the upper chamber the way it would in Germany, Real Decreto-Ley offers the executive a way to act first and negotiate ratification after rather than before, and Pactos de Estado represent the (inconsistently achieved) aspiration to transcend this whole transactional, fragmented-parliament negotiating dynamic entirely for a select few especially significant structural issues.",
     source: "claude",
     generatedAt: "2026-09-10",
   },
