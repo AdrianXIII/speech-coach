@@ -17,8 +17,25 @@ const sourceSans = Source_Sans_3({
 });
 
 export const metadata: Metadata = {
-  title: "Speech Coach",
-  description: "AI-powered public speaking practice: record, get feedback, and rehearse on a virtual stage.",
+  title: "MasterSpeak",
+  description: "AI-powered public speaking coaching for professionals who want domain knowledge and confident communication.",
+  manifest: "/manifest.webmanifest",
+  applicationName: "MasterSpeak",
+  appleWebApp: {
+    capable: true,
+    title: "MasterSpeak",
+    statusBarStyle: "default",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  keywords: [
+    "public speaking",
+    "business English",
+    "AI coaching",
+    "professionals",
+    "speech practice",
+  ],
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -26,6 +43,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       className={`${sourceSerif.variable} ${sourceSans.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-paper text-ink font-body">
         <LanguageProvider>

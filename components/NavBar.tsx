@@ -15,7 +15,7 @@ export function NavBar() {
       <div className="mx-auto flex max-w-4xl flex-col gap-2 px-4 py-3 sm:px-8">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <span className="font-display text-base font-semibold tracking-wide whitespace-nowrap text-cream">
-            Speech Coach
+            MasterSpeak
           </span>
           <div className="flex flex-wrap items-center gap-2">
             {LANGUAGES.map((l) => (

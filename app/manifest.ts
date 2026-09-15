@@ -1,0 +1,22 @@
+import type { MetadataRoute } from "next";
+
+export default function manifest(): MetadataRoute.Manifest {
+  return {
+    name: "MasterSpeak",
+    short_name: "MasterSpeak",
+    description:
+      "AI-powered public speaking coaching for professionals who want deeper domain knowledge and confident communication.",
+    start_url: "/",
+    display: "standalone",
+    background_color: "#0b1220",
+    theme_color: "#0b1220",
+    orientation: "portrait",
+    icons: [
+      {
+        src: "/icon.svg",
+        sizes: "any",
+        type: "image/svg+xml",
+      },
+    ],
+  };
+}

@@ -1,10 +1,9 @@
 import postgres from "postgres";
 
 /**
- * Postgres client for the one thing this app persists server-side: AI Tutor
- * content flags (see app/api/tutor/flag/route.ts). Everything else in the
- * app stays local-first (localStorage) by design — this is the single
- * exception, because flags need to be reviewable across devices/sessions.
+ * Postgres client for AI Tutor review records and content flags. The teaching
+ * source remains in the repository; the database stores review snapshots,
+ * sources, agent assessments, and human edits.
  *
  * Reads whichever connection string Vercel's database integration injects —
  * DATABASE_URL (current Neon-on-Vercel-Marketplace integration) or
@@ -31,7 +30,7 @@ function getClient() {
   return client;
 }
 
-/** Creates the tutor_flags table if it doesn't exist yet — idempotent, cheap, no manual migration step needed. */
+/** Creates the review tables if they don't exist yet. */
 function ensureSchema(sql: ReturnType<typeof postgres>): Promise<void> {
   if (!schemaReady) {
     schemaReady = sql`
@@ -42,6 +41,43 @@ function ensureSchema(sql: ReturnType<typeof postgres>): Promise<void> {
         concept_id TEXT,
         concept_title TEXT,
         reason TEXT NOT NULL,
+        note TEXT,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+      );
+
+      CREATE TABLE IF NOT EXISTS tutor_content_reviews (
+        id SERIAL PRIMARY KEY,
+        content_key TEXT NOT NULL,
+        version INTEGER NOT NULL,
+        content JSONB NOT NULL,
+        status TEXT NOT NULL DEFAULT 'draft',
+        reviewer_summary TEXT,
+        improvement_suggestions JSONB NOT NULL DEFAULT '[]'::jsonb,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+        UNIQUE(content_key, version)
+      );
+
+      CREATE TABLE IF NOT EXISTS tutor_content_reviewers (
+        id SERIAL PRIMARY KEY,
+        review_id INTEGER NOT NULL REFERENCES tutor_content_reviews(id) ON DELETE CASCADE,
+        agent_name TEXT NOT NULL,
+        model TEXT,
+        scores JSONB NOT NULL,
+        verdict TEXT NOT NULL,
+        contradictions JSONB NOT NULL DEFAULT '[]'::jsonb,
+        missing_topics JSONB NOT NULL DEFAULT '[]'::jsonb,
+        sources JSONB NOT NULL DEFAULT '[]'::jsonb,
+        suggestions JSONB NOT NULL DEFAULT '[]'::jsonb,
+        raw_output JSONB,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+      );
+
+      CREATE TABLE IF NOT EXISTS tutor_content_edits (
+        id SERIAL PRIMARY KEY,
+        review_id INTEGER NOT NULL REFERENCES tutor_content_reviews(id) ON DELETE CASCADE,
+        editor_name TEXT NOT NULL,
+        edited_content JSONB NOT NULL,
         note TEXT,
         created_at TIMESTAMPTZ NOT NULL DEFAULT now()
       )

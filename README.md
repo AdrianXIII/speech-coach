@@ -48,6 +48,29 @@ English-only (see its section below).
 
 ## What it does
 
+### AI Tutor content review
+
+The active tutor material remains in the repository and is never overwritten by
+an AI review. Open `/tutor-review` to download `ai-tutor-review-export.json`.
+The export contains the teaching concepts, fundamentals, standard cases, all
+country-specific Law/Politics variants, and one shared review rubric. Send that
+JSON and rubric to several AI agents, then paste each agent's JSON assessment
+back into the review page. Assessments are stored against the same content
+version; mixed or contradictory verdicts are automatically marked
+`needs_expert`, while agreement is marked `ai_consensus`. A human can save an
+edited review copy, but it does not become active app content automatically.
+
+Review records require a server-side `DATABASE_URL` (or `POSTGRES_URL`). The
+database tables are created automatically on first use. The review page can
+run every configured server-side reviewer (`GEMINI_API_KEY` and optionally
+`OPENAI_API_KEY`, and optionally `ANTHROPIC_API_KEY`) against the selected category. Secrets must never use a
+`NEXT_PUBLIC_` name. Each reviewer result is stored separately; new claims and
+enrichment are marked for expert review. An expert edits a review copy, the
+owner explicitly approves it, and `/api/tutor/content-review/approved-export`
+produces the implementation candidates. Nothing writes those candidates back
+into the active TypeScript content automatically: send the approved export for
+manual implementation and a new build.
+
 **Record & Analyze** (`/`)
 Two modes sharing one recording/analysis pipeline, toggled at the top of
 the page:
