@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { LANGUAGES, type LanguageCode } from "@/lib/languages";
 
 interface ContentRow { contentKey: string; profession: string; category: string; teaching: { concepts: { title: string }[] } | null; cases: unknown[] }
 interface AgentReview { agentName: string; model?: string; verdict: string; scores: Record<string, number>; contradictions: string[]; missingTopics: string[]; sources: unknown[]; suggestions: string[] }
@@ -9,6 +10,7 @@ interface SavedReview { id: number; content_key: string; version: number; status
 export default function TutorReviewPage() {
   const [content, setContent] = useState<ContentRow[]>([]);
   const [selected, setSelected] = useState("");
+  const [language, setLanguage] = useState<LanguageCode>("en");
   const [reviews, setReviews] = useState<SavedReview[]>([]);
   const [databaseConfigured, setDatabaseConfigured] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -25,22 +27,24 @@ export default function TutorReviewPage() {
     }).catch(() => setError("Could not load tutor content."));
   }, []);
 
+  const fullKey = (baseKey: string, lang: LanguageCode = language) => (lang === "en" ? baseKey : `${baseKey}::${lang}`);
+
   useEffect(() => {
     if (!selected) return;
-    fetch(`/api/tutor/content-review?contentKey=${encodeURIComponent(selected)}`).then((res) => res.json())
+    fetch(`/api/tutor/content-review?contentKey=${encodeURIComponent(fullKey(selected))}`).then((res) => res.json())
       .then((data) => setReviews(data.reviews ?? [])).catch(() => setError("Could not load review history."));
-  }, [selected]);
+  }, [selected, language]);
 
   const selectedContent = content.find((row) => row.contentKey === selected);
   async function submitAgentReview() {
     const review = reviews[0];
     try {
       const assessment = JSON.parse(agentJson);
-      const response = await fetch("/api/tutor/content-review", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...assessment, contentKey: selected, ...(review ? { reviewId: review.id } : {}) }) });
+      const response = await fetch("/api/tutor/content-review", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...assessment, contentKey: fullKey(selected), ...(review ? { reviewId: review.id } : {}) }) });
       if (!response.ok) throw new Error((await response.json()).error ?? "Could not save review.");
       setMessage("Agent review saved.");
       setAgentJson("");
-      const refreshed = await fetch(`/api/tutor/content-review?contentKey=${encodeURIComponent(selected)}`).then((res) => res.json());
+      const refreshed = await fetch(`/api/tutor/content-review?contentKey=${encodeURIComponent(fullKey(selected))}`).then((res) => res.json());
       setReviews(refreshed.reviews ?? []);
     } catch (err) { setError(err instanceof Error ? err.message : "Invalid review JSON."); }
   }
@@ -74,7 +78,7 @@ export default function TutorReviewPage() {
         const response = await fetch("/api/tutor/content-review/run", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ contentKey: row.contentKey }),
+          body: JSON.stringify({ contentKey: fullKey(row.contentKey) }),
         });
         if (response.status === 429) {
           setMessage("Daily review limit reached. Run this again tomorrow; completed categories are saved.");
@@ -87,7 +91,7 @@ export default function TutorReviewPage() {
       setBatchProgress((current) => ({ done: current.done + 1, total: current.total, failed }));
     }
     setRunningAll(false);
-    setMessage(failed ? `Finished with ${failed} failed categories. You can run them again.` : "Finished reviewing all categories.");
+    setMessage(failed ? `Finished with ${failed} failed categories in ${language}. You can run them again.` : `Finished reviewing all categories in ${language}.`);
   }
   return (
     <main className="min-h-screen bg-paper px-4 py-12 sm:px-8">
@@ -101,14 +105,18 @@ export default function TutorReviewPage() {
         <div className="flex flex-wrap gap-3">
           <a className="rounded-lg bg-navy px-4 py-2 text-sm font-semibold text-white" href="/api/tutor/content-review/export">Download review export</a>
           <a className="rounded-lg border border-hairline bg-surface px-4 py-2 text-sm font-semibold text-ink" href="/api/tutor/content-review/approved-export">Download approved changes</a>
+          <select className="rounded-lg border border-hairline bg-surface px-3 py-2 text-sm" value={language} onChange={(event) => setLanguage(event.target.value as LanguageCode)} title="Language to validate — non-English content is translated on the fly and checked against the English source">
+            {LANGUAGES.map((lang) => <option key={lang.code} value={lang.code}>{lang.name}</option>)}
+          </select>
           <button className="rounded-lg bg-brass px-4 py-2 text-sm font-semibold text-ink disabled:opacity-50" disabled={runningAll || !databaseConfigured} onClick={runAllReviews}>
-            {runningAll ? `Reviewing ${batchProgress.done}/${batchProgress.total}` : "Run all AI reviews"}
+            {runningAll ? `Reviewing ${batchProgress.done}/${batchProgress.total}` : `Run all AI reviews (${language})`}
           </button>
           <select className="rounded-lg border border-hairline bg-surface px-3 py-2 text-sm" value={selected} onChange={(event) => setSelected(event.target.value)}>
             <option value="">Select domain and category</option>
             {content.map((row) => <option key={row.contentKey} value={row.contentKey}>{row.profession} / {row.category}</option>)}
           </select>
         </div>
+        {language !== "en" && <p className="text-sm text-ink-muted">Non-English content is translated live via Gemini, then reviewed for accuracy against the English source and for translation quality.</p>}
         {runningAll && <p className="text-sm text-ink-muted">This runs one category at a time to avoid rate limits. You can leave this page open while it works.</p>}
         {selectedContent && <section className="rounded-lg border border-hairline bg-surface p-5">
           <h2 className="font-display text-lg font-semibold text-ink">{selectedContent.profession} / {selectedContent.category}</h2>
@@ -128,7 +136,7 @@ export default function TutorReviewPage() {
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
             <button className="rounded-lg bg-brass px-3 py-2 text-xs font-semibold text-ink" onClick={approveReview}>Approve latest expert edit</button>
-              <button className="rounded-lg border border-hairline px-3 py-2 text-xs font-semibold text-ink" onClick={async () => { const response = await fetch(`/api/tutor/content-review/run`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ contentKey: selected }) }); if (!response.ok) setError((await response.json()).error ?? "AI review failed."); else setMessage("AI review completed and saved."); }}>Run AI review</button>
+              <button className="rounded-lg border border-hairline px-3 py-2 text-xs font-semibold text-ink" onClick={async () => { const response = await fetch(`/api/tutor/content-review/run`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ contentKey: fullKey(selected) }) }); if (!response.ok) setError((await response.json()).error ?? "AI review failed."); else setMessage(`AI review completed and saved (${language}).`); }}>Run AI review ({language})</button>
           </div>
         </section>}
       </div>

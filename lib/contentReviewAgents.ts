@@ -25,7 +25,14 @@ and official sources. Law and politics must be judged for the supplied jurisdict
 The content should be substantial enough to teach a capable beginner and useful to a professional,
 but concise enough for a voice tutor. Return at most 3 items in each array, one short sentence per item.
 Identify repetition, missing essentials, unsupported claims, excessive length, and thin material.
-Compare concepts with the case studies and fundamentals. Return JSON only:
+Compare concepts with the case studies and fundamentals.
+${content.language !== "en" ? `
+This content's "teaching" and "cases" fields are in ${content.language} (a live translation of the
+English original, given below as "englishReference"). In addition to the checks above, verify the
+translation: it must be accurate (no lost, added, or distorted meaning), and read naturally and
+idiomatically for a native speaker rather than as a literal word-for-word rendering. Report any
+mistranslation as a "contradiction", quoting the English phrase and the mistranslated phrase together.
+` : ""}Return JSON only:
 {"agentName":"...","model":"...","verdict":"agree|mixed|contradiction","scores":{"factualAccuracy":0,"relevance":0,"depth":0,"clarity":0,"usefulness":0,"balance":0},"contradictions":[],"missingTopics":[],"sources":[{"title":"...","author":"...","year":"...","url":"...","kind":"book|journal|official|other","note":"..."}],"suggestions":[],"enrichment":[],"summary":"..."}
 
 CONTENT TO REVIEW:

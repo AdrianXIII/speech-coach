@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb, hasDatabase } from "@/lib/db";
-import { getReviewableTutorContent, listReviewableTutorContent } from "@/lib/tutorContentReview";
+import { resolveReviewableContent, listReviewableTutorContent } from "@/lib/tutorContentReview";
 
 export async function GET(req: NextRequest) {
   const key = new URL(req.url).searchParams.get("contentKey");
-  const content = key ? getReviewableTutorContent(key) : listReviewableTutorContent();
+  const content = key ? await resolveReviewableContent(key) : listReviewableTutorContent();
   if (!hasDatabase()) return NextResponse.json({ content, reviews: [], databaseConfigured: false });
   const sql = await getDb();
   const reviews = key
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
   if (!body?.contentKey || !body?.agentName || !body?.scores || !body?.verdict) {
     return NextResponse.json({ error: "contentKey, agentName, scores, and verdict are required." }, { status: 400 });
   }
-  const content = getReviewableTutorContent(body.contentKey);
+  const content = await resolveReviewableContent(body.contentKey);
   if (!content) return NextResponse.json({ error: "Unknown contentKey." }, { status: 404 });
 
   const sql = await getDb();

@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb, hasDatabase } from "@/lib/db";
-import { getReviewableTutorContent } from "@/lib/tutorContentReview";
+import { resolveReviewableContent } from "@/lib/tutorContentReview";
 import { reviewWithConfiguredAgents } from "@/lib/contentReviewAgents";
 import { configuredReviewAgentCount } from "@/lib/contentReviewAgents";
 
 export async function POST(req: NextRequest) {
   if (!hasDatabase()) return NextResponse.json({ error: "DATABASE_URL is not configured." }, { status: 503 });
   const body = await req.json().catch(() => null);
-  const content = body?.contentKey ? getReviewableTutorContent(body.contentKey) : undefined;
+  const content = body?.contentKey ? await resolveReviewableContent(body.contentKey) : undefined;
   if (!content) return NextResponse.json({ error: "Unknown contentKey." }, { status: 404 });
 
   const sql = await getDb();
