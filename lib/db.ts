@@ -33,7 +33,11 @@ function getClient() {
 /** Creates the review tables if they don't exist yet. */
 function ensureSchema(sql: ReturnType<typeof postgres>): Promise<void> {
   if (!schemaReady) {
-    schemaReady = sql`
+    // sql.unsafe uses the simple query protocol, which (unlike a tagged-template
+    // call) allows multiple semicolon-separated statements in one round trip —
+    // required for this multi-CREATE-TABLE block, and safe here since it takes
+    // no interpolated parameters.
+    schemaReady = sql.unsafe(`
       CREATE TABLE IF NOT EXISTS tutor_flags (
         id SERIAL PRIMARY KEY,
         profession TEXT NOT NULL,
@@ -81,7 +85,7 @@ function ensureSchema(sql: ReturnType<typeof postgres>): Promise<void> {
         note TEXT,
         created_at TIMESTAMPTZ NOT NULL DEFAULT now()
       )
-    `.then(() => undefined);
+    `).then(() => undefined);
   }
   return schemaReady;
 }
