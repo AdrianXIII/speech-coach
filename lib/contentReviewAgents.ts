@@ -78,7 +78,15 @@ ${JSON.stringify(content)}`;
 
 function parseAssessment(raw: string, agentName: string, model: string): AgentAssessment {
   const cleaned = raw.trim().replace(/^```(?:json)?\s*|\s*```$/g, "");
-  const parsed = JSON.parse(cleaned) as Partial<AgentAssessment>;
+  let parsed: Partial<AgentAssessment>;
+  try {
+    parsed = JSON.parse(cleaned) as Partial<AgentAssessment>;
+  } catch (err) {
+    // Surface which agent/response actually failed to parse (e.g. output
+    // truncated at the max_tokens cap) instead of a bare "Unexpected end of
+    // JSON input" that gives no clue which of the parallel calls broke.
+    throw new Error(`${agentName} (${model}) returned unparseable JSON (${cleaned.length} chars): ${(err as Error).message}`);
+  }
   const contradictions = parsed.contradictions ?? [];
   // EXPERT_REVIEW_REQUIRED is a real signal, not decoration: the prompt asks
   // agents to write it wherever they have a claim with no source behind it.
@@ -111,12 +119,15 @@ async function reviewWithOpenAI(prompt: string): Promise<AgentAssessment> {
     body: JSON.stringify({
       model: process.env.OPENAI_REVIEW_MODEL ?? "gpt-4o-mini",
       temperature: 0.1,
-      max_tokens: 1800,
+      // Denser content (more citations, more specific claims to weigh in on)
+      // produces a longer review response — 1800 was tight enough to
+      // truncate mid-JSON for longer entries, silently failing that agent.
+      max_tokens: 4096,
       response_format: { type: "json_object" },
       messages: [{ role: "system", content: "You are a rigorous academic content reviewer." }, { role: "user", content: prompt }],
     }),
   });
-  if (!response.ok) throw new Error(`OpenAI review failed (${response.status}).`);
+  if (!response.ok) throw new Error(`OpenAI review failed (${response.status}): ${await response.text()}`);
   const data = await response.json();
   return parseAssessment(data.choices?.[0]?.message?.content ?? "{}", "OpenAI", process.env.OPENAI_REVIEW_MODEL ?? "gpt-4o-mini");
 }
@@ -130,9 +141,11 @@ async function reviewWithClaude(prompt: string): Promise<AgentAssessment> {
       "anthropic-version": "2023-06-01",
       "content-type": "application/json",
     },
-    body: JSON.stringify({ model, max_tokens: 1800, temperature: 0.1, system: "You are a rigorous academic content reviewer. Return JSON only.", messages: [{ role: "user", content: prompt }] }),
+    // Same reasoning as OpenAI above: give enough headroom that a longer,
+    // more heavily cited review target can't truncate the JSON response.
+    body: JSON.stringify({ model, max_tokens: 4096, temperature: 0.1, system: "You are a rigorous academic content reviewer. Return JSON only.", messages: [{ role: "user", content: prompt }] }),
   });
-  if (!response.ok) throw new Error(`Claude review failed (${response.status}).`);
+  if (!response.ok) throw new Error(`Claude review failed (${response.status}): ${await response.text()}`);
   const data = await response.json();
   return parseAssessment(data.content?.[0]?.text ?? "{}", "Claude", model);
 }
