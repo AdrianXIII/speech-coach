@@ -3927,7 +3927,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "de-ln-fraktionsdisziplin",
         title: "Fraktionsdisziplin and the constitutional free mandate",
         explanation:
-          "In practice, German parliamentary groups (Fraktionen) maintain fairly strong voting discipline on most legislation, coordinated through the Fraktion's internal processes — but Article 38 GG constitutionally guarantees each member a free mandate (freies Mandat), meaning they cannot be formally, legally bound to vote a particular way, unlike some systems with enforceable party-line requirements.",
+          "In practice, German parliamentary groups (Fraktionen) maintain fairly strong voting discipline on most legislation, coordinated through the Fraktion's internal processes — but Article 38 GG [1] constitutionally guarantees each member a free mandate (freies Mandat), meaning they cannot be formally, legally bound to vote a particular way, unlike some systems with enforceable party-line requirements.",
         whyItMatters:
           "This creates a real (if usually latent) tension: coalition negotiators need reasonable confidence their agreements will translate into actual votes, but no member can be legally compelled to comply — which is why select highly sensitive issues (like end-of-life legislation) are sometimes explicitly released from Fraktionsdisziplin as Gewissensentscheidungen (conscience votes).",
         example:
@@ -3978,6 +3978,9 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "The Koalitionsvertrag is where most substantive legislative negotiation actually happens, before a government even forms — Fraktionsdisziplin and the constitutional free mandate determine how reliably that agreement translates into actual votes once governing begins. The Bundesrat's Zustimmungsgesetze power and the Vermittlungsausschuss process add a further negotiation layer specifically for legislation touching state interests, and multi-party coalition dynamics compound all of this by requiring the original Koalitionsvertrag negotiation itself to satisfy three (or more) parties simultaneously rather than two.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Grundgesetz, Article 38", author: "Bundesrepublik Deutschland", url: "https://www.gesetze-im-internet.de/gg/" },
+    ],
   },
 
   "politics/Foreign Policy & Diplomacy/fr": {
