@@ -4928,7 +4928,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "se-cr-swedish-covid-approach",
         title: "The \"Swedish approach\" to COVID-19",
         explanation:
-          "Sweden's COVID-19 response was internationally notable for avoiding a full mandatory lockdown, relying considerably more on voluntary public recommendations issued by the Public Health Agency (Folkhälsomyndigheten) than on mandatory legal restrictions — a genuinely distinctive approach among European countries, later the subject of extensive domestic and international debate and an official government Corona Commission review.",
+          "Sweden's COVID-19 response was internationally notable for avoiding a full mandatory lockdown, relying considerably more on voluntary public recommendations issued by the Public Health Agency (Folkhälsomyndigheten) than on mandatory legal restrictions — a genuinely distinctive approach among European countries, later the subject of extensive domestic and international debate and an official government Corona Commission review (SOU 2022:10) [1].",
         whyItMatters:
           "This wasn't simply a different policy preference chosen by politicians — it reflected the deeper structural reality of förvaltningsmodellen (discussed next): the constitutionally independent Public Health Agency had substantial authority to shape the actual response, with government ministers constitutionally limited in how directly they could override or instruct the agency's case-specific judgments.",
         example:
@@ -4968,7 +4968,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "se-cr-2018-wildfires",
         title: "The 2018 wildfire season as a capability-gap case study",
         explanation:
-          "Sweden's severe 2018 wildfire season exposed real gaps in domestic firefighting capacity, requiring Sweden to request international assistance through the EU Civil Protection Mechanism, including firefighting aircraft and personnel from other European countries — a notable moment revealing the practical limits of Sweden's own crisis-response infrastructure at the time.",
+          "Sweden's severe 2018 wildfire season exposed real gaps in domestic firefighting capacity, requiring Sweden to request international assistance through the EU Civil Protection Mechanism [2], including firefighting aircraft and personnel from other European countries — a notable moment revealing the practical limits of Sweden's own crisis-response infrastructure at the time.",
         whyItMatters:
           "This is a useful concrete case study in how even a well-governed, well-resourced country can face genuine capability gaps during an unusually severe crisis — and how EU-level mutual assistance mechanisms can function as a real, practically significant crisis-response resource beyond a single country's own domestic capacity.",
         example:
@@ -4989,6 +4989,10 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Förvaltningsmodellen's constitutional independence for agencies is the structural key to understanding Swedish crisis response generally, most visibly illustrated by the \"Swedish approach\" to COVID-19 being substantially agency-driven rather than directly politically commanded. MSB coordinates crisis response across Sweden's genuinely autonomous kommuner and regioner within this same structural model, totalförsvaret's revival reflects the broader security-environment shift also driving NATO membership, the 2018 wildfires show a real capability gap this structure didn't fully cover on its own, and gang violence illustrates how the crisis-response framing itself has expanded to cover a sustained security problem rather than only discrete, acute events.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Sverige under pandemin (Coronakommissionen), SOU 2022:10", author: "Coronakommissionen" },
+      { id: 2, title: "EU Civil Protection Mechanism, Decision No 1313/2013/EU", author: "European Union", year: "2013" },
+    ],
   },
 
   "politics/Campaign Strategy/se": {
