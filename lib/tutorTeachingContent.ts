@@ -4383,7 +4383,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "es-fp-eu-nato-integration",
         title: "EU and NATO membership as democratic consolidation",
         explanation:
-          "Spain joined the EU (then EEC) in 1986 and NATO in 1982 — both seen domestically as ways to consolidate and internationally validate Spain's new democracy after decades of Franco-era isolation, though NATO membership was genuinely controversial and was ultimately confirmed by a 1986 national referendum.",
+          "Spain joined the EU (then EEC) in 1986 and NATO (under the North Atlantic Treaty [1]) in 1982 — both seen domestically as ways to consolidate and internationally validate Spain's new democracy after decades of Franco-era isolation, though NATO membership was genuinely controversial and was ultimately confirmed by a 1986 national referendum.",
         whyItMatters:
           "Unlike Germany's post-war multilateralism (rooted in preventing renewed German aggression) or France's more sovereignty-conscious integration approach, Spain's EU/NATO membership was specifically framed around democratic legitimacy and modernization after dictatorship — a distinct historical motivation worth understanding on its own terms.",
         example:
@@ -4433,7 +4433,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "es-fp-western-sahara",
         title: "Western Sahara policy",
         explanation:
-          "Spain's historical role as Western Sahara's former colonial administrator gives it a distinctive, sensitive ongoing foreign-policy stake in the territory's unresolved status — a dispute between Morocco and the Polisario Front independence movement — with Spanish policy shifts on the issue (including a notable 2022 shift toward supporting Morocco's autonomy proposal) generating real domestic political controversy.",
+          "Spain's historical role as Western Sahara's former colonial administrator gives it a distinctive, sensitive ongoing foreign-policy stake in the territory's unresolved status — the UN still lists Western Sahara as a Non-Self-Governing Territory [2] — a dispute between Morocco and the Polisario Front independence movement — with Spanish policy shifts on the issue (including a notable 2022 shift toward supporting Morocco's autonomy proposal) generating real domestic political controversy.",
         whyItMatters:
           "This is a genuinely Spain-specific foreign-policy sensitivity tied directly to its own colonial history, illustrating how a country's specific historical entanglements (not just its current alliance memberships) continue shaping foreign-policy dilemmas most other European countries don't face at all regarding this particular territory.",
         example:
@@ -4444,6 +4444,10 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "EU and NATO integration are the foundational post-transition foreign-policy achievements that both reflect and reinforce Spain's broader EU integration enthusiasm. The Ibero-American relationship and Mediterranean/North African focus are Spain's two most distinctive regional foreign-policy dimensions, rooted in language/history and geography respectively, and Western Sahara policy shows how specific unresolved colonial-era legacies continue generating live foreign-policy dilemmas layered on top of Spain's broader European and Atlantic alliance commitments.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "North Atlantic Treaty", author: "NATO", year: "1949" },
+      { id: 2, title: "United Nations List of Non-Self-Governing Territories", author: "United Nations", url: "https://www.un.org/dppa/decolonization/en/nsgt" },
+    ],
   },
 
   "politics/Domestic Policy/es": {
