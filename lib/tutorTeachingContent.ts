@@ -5006,7 +5006,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "se-cs-four-percent-threshold",
         title: "The 4% national threshold",
         explanation:
-          "Sweden's 349-seat Riksdag is elected via party-list proportional representation, with parties needing at least 4% of the national vote (or 12% in a single constituency) to win seats — a somewhat lower bar than Germany's 5% threshold, though functioning similarly as a mechanism to limit extreme party fragmentation while still allowing smaller parties a genuine path to representation.",
+          "Sweden's 349-seat Riksdag is elected via party-list proportional representation under the Vallagen (Election Act) [1], with parties needing at least 4% of the national vote (or 12% in a single constituency) to win seats — a somewhat lower bar than Germany's 5% threshold, though functioning similarly as a mechanism to limit extreme party fragmentation while still allowing smaller parties a genuine path to representation.",
         whyItMatters:
           "As with Germany's threshold, campaign strategy for smaller Swedish parties often concentrates heavily on \"threshold survival\" messaging — but the somewhat lower 4% bar (versus Germany's 5%) has historically allowed a slightly larger number of smaller parties to maintain parliamentary representation over time.",
         example:
@@ -5046,7 +5046,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "se-cs-party-financing-transparency-reform",
         title: "Party financing and post-2014 transparency reforms",
         explanation:
-          "Swedish party financing includes significant public subsidies with comparatively less reliance on large private donations than less-regulated systems, but Sweden's donation-transparency rules were historically notably less strict than its Nordic neighbors' — a gap addressed through stricter transparency reforms enacted from 2014 onward requiring clearer disclosure of party funding sources.",
+          "Swedish party financing includes significant public subsidies with comparatively less reliance on large private donations than less-regulated systems, but Sweden's donation-transparency rules were historically notably less strict than its Nordic neighbors' — a gap addressed through the Lag (2018:90) om insyn i finansiering av partier [2], enacted after a reform push starting around 2014, requiring clearer disclosure of party funding sources.",
         whyItMatters:
           "This is a genuinely notable point of contrast worth flagging — Sweden's reputation for strong institutional transparency (offentlighetsprincipen) didn't automatically extend to party campaign financing specifically, which required its own dedicated, relatively recent reform push to catch up to comparable Nordic transparency standards.",
         example:
@@ -5067,6 +5067,10 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "The 4% threshold sets the basic seat-allocation math, and high turnout culture means campaign strategy leans relatively more toward persuasion than turnout mobilization compared to lower-turnout systems. Valstuga culture and SVT/SR equal-time debate norms both reflect a low-key, structurally balanced campaign media environment that limits how much any single campaign can dominate through spending alone — reinforced by the post-2014 financing transparency reforms. The Sweden Democrats' disruption of traditional bloc politics is the single biggest recent change to how campaigns actually have to strategize, since the old predictable two-bloc framing this whole system used to operate within no longer reliably holds.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Vallagen (2005:837)", author: "Sveriges riksdag", year: "2005" },
+      { id: 2, title: "Lag (2018:90) om insyn i finansiering av partier", author: "Sveriges riksdag", year: "2018" },
+    ],
   },
 
   "politics/Legislative Negotiation/se": {
