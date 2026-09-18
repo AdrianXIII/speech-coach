@@ -1795,7 +1795,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "de-corp-geschaeftsfuehrerhaftung",
         title: "Director liability and the German business judgment rule",
         explanation:
-          "§93(1) AktG (for AG Vorstand members) and §43 GmbHG (for GmbH Geschäftsführer) impose a duty of care, with a business-judgment-rule-style safe harbor codified since the 2005 UMAG reform — protecting good-faith, adequately informed decisions made in the company's interest from being second-guessed later, tracing back to the landmark ARAG/Garmenbeck decision.",
+          "§93(1) AktG [1] (for AG Vorstand members) and §43 GmbHG [2] (for GmbH Geschäftsführer) impose a duty of care, with a business-judgment-rule-style safe harbor codified since the 2005 UMAG reform — protecting good-faith, adequately informed decisions made in the company's interest from being second-guessed later, tracing back to the landmark ARAG/Garmenbeck decision [3].",
         whyItMatters:
           "Unlike the US business judgment rule, which developed almost entirely through case law (mainly Delaware), Germany's version is explicitly written into statute — meaning the exact wording of §93(1) AktG itself, not accumulated case precedent alone, defines the safe harbor's boundaries.",
         example:
@@ -1805,7 +1805,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "de-corp-mitbestimmung",
         title: "Mitbestimmung (codetermination)",
         explanation:
-          "German law requires worker representation on the Aufsichtsrat for larger companies: the Mitbestimmungsgesetz (1976) mandates parity codetermination (equal shareholder and employee representatives) for companies with more than 2,000 employees, while the Drittelbeteiligungsgesetz requires one-third employee representation for companies with 500-2,000 employees.",
+          "German law requires worker representation on the Aufsichtsrat for larger companies: the Mitbestimmungsgesetz (1976) [4] mandates parity codetermination (equal shareholder and employee representatives) for companies with more than 2,000 employees, while the Drittelbeteiligungsgesetz [5] requires one-third employee representation for companies with 500-2,000 employees.",
         whyItMatters:
           "This gives organized labor formal, legally mandated board-level power over major corporate decisions in a way that has no real equivalent in US corporate governance, where worker board representation is essentially unheard of outside voluntary or crisis-driven exceptions.",
         example:
@@ -1815,7 +1815,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "de-corp-compliance-organisation",
         title: "Compliance organization without a single omnibus statute",
         explanation:
-          "Germany has no single comprehensive compliance statute equivalent to Sarbanes-Oxley — obligations instead derive from §91(2) AktG (requiring a risk-monitoring system) and case law, most importantly the 2013 Neubürger (Siemens) decision, which established that management board members can be personally liable for failing to set up an adequate compliance organization.",
+          "Germany has no single comprehensive compliance statute equivalent to Sarbanes-Oxley — obligations instead derive from §91(2) AktG (requiring a risk-monitoring system) and case law, most importantly the 2013 Neubürger (Siemens) decision [6], which established that management board members can be personally liable for failing to set up an adequate compliance organization.",
         whyItMatters:
           "Because the legal basis is more diffuse (statute plus case law) than a single detailed compliance code, German compliance practice leans heavily on interpreting what courts have found \"adequate\" in specific past cases like Neubürger, rather than checking boxes against one comprehensive rulebook.",
         example:
@@ -1836,6 +1836,14 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "The two-tier board and Mitbestimmung together define who has formal power over the company and how oversight is structurally separated from management. GmbH-vs-AG is the foundational choice of governance regime a business makes at formation. Director liability sets the standard officers are held to within whichever structure applies, compliance organization requirements (per Neubürger) flow from that same duty of care, and Konzernrecht extends the whole framework to groups of affiliated companies rather than a single standalone entity.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Aktiengesetz (AktG) — German Stock Corporation Act", author: "Bundesrepublik Deutschland", url: "https://www.gesetze-im-internet.de/aktg/" },
+      { id: 2, title: "GmbH-Gesetz (GmbHG)", author: "Bundesrepublik Deutschland", url: "https://www.gesetze-im-internet.de/gmbhg/" },
+      { id: 3, title: "BGH, ARAG/Garmenbeck, II ZR 175/95", author: "Bundesgerichtshof", year: "1997" },
+      { id: 4, title: "Mitbestimmungsgesetz (MitbestG)", author: "Bundesrepublik Deutschland", year: "1976" },
+      { id: 5, title: "Drittelbeteiligungsgesetz (DrittelbG)", author: "Bundesrepublik Deutschland", year: "2004" },
+      { id: 6, title: "LG München I, Neubürger (Siemens), 5HK O 1387/10", author: "Landgericht München I", year: "2013" },
+    ],
   },
 
   "law/Civil Litigation/de": {
@@ -1843,7 +1851,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     category: "Civil Litigation",
     jurisdiction: "de",
     overview:
-      "German civil procedure (Zivilprozessordnung, ZPO) gives judges a more active, structuring role than the adversarial US model, has no jury and no broad American-style discovery, and — unlike the US — generally makes the losing party pay the winner's statutory legal costs.",
+      "German civil procedure (Zivilprozessordnung, ZPO) [1] gives judges a more active, structuring role than the adversarial US model, has no jury and no broad American-style discovery, and — unlike the US — generally makes the losing party pay the winner's statutory legal costs.",
     concepts: [
       {
         id: "de-civ-procedural-model",
@@ -1899,7 +1907,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "de-civ-schiedsverfahren",
         title: "Schiedsverfahren and Mediation (arbitration and mediation)",
         explanation:
-          "Arbitration is governed by §1025 ff. ZPO (closely modeled on the UNCITRAL Model Law, making Germany a common seat for international arbitration), and mediation has grown steadily as an alternative, particularly for commercial and family disputes, encouraged by the Mediationsgesetz (Mediation Act).",
+          "Arbitration is governed by §1025 ff. ZPO (closely modeled on the UNCITRAL Model Law [2], making Germany a common seat for international arbitration), and mediation has grown steadily as an alternative, particularly for commercial and family disputes, encouraged by the Mediationsgesetz (Mediation Act) [3].",
         whyItMatters:
           "Because ordinary litigation lacks broad discovery and offers less party control over procedure than arbitration, sophisticated commercial parties (especially in cross-border deals) frequently opt into arbitration by contract specifically to get more procedural flexibility and confidentiality than German state courts provide by default.",
         example:
@@ -1910,6 +1918,11 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "The judge-directed procedural model and court hierarchy define how a case is structured and where it's heard. Beweislast and the absence of broad discovery shape what evidence each side can actually bring to bear within that structure, and Kostenerstattung's loser-pays rule shapes the financial risk calculus of filing or defending a claim in the first place. Mahnverfahren and arbitration/mediation are both alternative tracks that sidestep full ordinary litigation — one for simple undisputed debts, the other for parties who want more control and flexibility than the ZPO's default process provides.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Zivilprozessordnung (ZPO) — German Code of Civil Procedure", author: "Bundesrepublik Deutschland", url: "https://www.gesetze-im-internet.de/zpo/" },
+      { id: 2, title: "UNCITRAL Model Law on International Commercial Arbitration", author: "United Nations Commission on International Trade Law", year: "1985" },
+      { id: 3, title: "Mediationsgesetz (Mediation Act)", author: "Bundesrepublik Deutschland", year: "2012" },
+    ],
   },
 
   "law/Criminal Law/de": {
