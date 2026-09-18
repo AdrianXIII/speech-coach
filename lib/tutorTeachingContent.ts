@@ -4315,7 +4315,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fr-ln-article-49-3-negotiation",
         title: "Article 49.3 as a negotiation-bypassing tool",
         explanation:
-          "Article 49.3 lets the government force a bill through without a direct vote, subject only to a no-confidence motion (motion de censure) — increasingly used by governments lacking a clear majority specifically because ordinary vote-by-vote negotiation with a fragmented parliament often can't reliably produce passage.",
+          "Article 49.3 [1] lets the government force a bill through without a direct vote, subject only to a no-confidence motion (motion de censure) — increasingly used by governments lacking a clear majority specifically because ordinary vote-by-vote negotiation with a fragmented parliament often can't reliably produce passage.",
         whyItMatters:
           "This tool changes the negotiation calculus entirely — rather than needing to build affirmative majority support for a bill's substance, a government using 49.3 only needs to prevent a majority from voting no confidence, a materially different (and often easier) political threshold to clear.",
         example:
@@ -4345,7 +4345,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fr-ln-ordonnances",
         title: "Legislating by ordonnance (Article 38)",
         explanation:
-          "Parliament can authorize the government to legislate directly by ordonnance (a decree with the force of law) in specified domains and for a limited time, with the ordonnances later requiring parliamentary ratification — letting the executive bypass the normal bill-by-bill legislative negotiation process for defined policy areas.",
+          "Parliament can authorize the government to legislate directly by ordonnance [2] (a decree with the force of law) in specified domains and for a limited time, with the ordonnances later requiring parliamentary ratification — letting the executive bypass the normal bill-by-bill legislative negotiation process for defined policy areas.",
         whyItMatters:
           "This is a distinctive delegation mechanism that concentrates substantial temporary lawmaking authority in the executive for specific, pre-approved domains — rather than negotiating each individual measure through parliament, the government negotiates the scope of delegated authority once, then implements largely unilaterally within it.",
         example:
@@ -4366,6 +4366,10 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Whether fait majoritaire currently holds determines the whole negotiating environment — a clear majority means top-down governance, its absence forces genuine bargaining. Article 49.3, the navette parlementaire, and the commission mixte paritaire are all tools for pushing legislation through despite disagreement, at different points in the process (within a single chamber's vote, between chambers, and at final reconciliation respectively). Legislating by ordonnance is a way of bypassing much of this negotiation machinery entirely for defined policy domains, and the shift toward ad hoc, fragmented-parliament bargaining since 2022 shows how all of these tools have become more actively and frequently used as stable majorities have become less reliable.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Constitution of 4 October 1958, Article 49", author: "République française", year: "1958" },
+      { id: 2, title: "Constitution of 4 October 1958, Article 38", author: "République française", year: "1958" },
+    ],
   },
 
   "politics/Foreign Policy & Diplomacy/es": {
