@@ -133,7 +133,9 @@ async function reviewWithOpenAI(prompt: string): Promise<AgentAssessment> {
 }
 
 async function reviewWithClaude(prompt: string): Promise<AgentAssessment> {
-  const model = process.env.ANTHROPIC_REVIEW_MODEL ?? "claude-3-5-haiku-latest";
+  // claude-3-5-haiku-latest was retired (Anthropic now 404s on it); Haiku
+  // 4.5 is the current directly-comparable cost/speed tier for this job.
+  const model = process.env.ANTHROPIC_REVIEW_MODEL ?? "claude-haiku-4-5-20251001";
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
