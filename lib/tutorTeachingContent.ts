@@ -4850,7 +4850,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "se-dp-folkhemmet-legacy",
         title: "The folkhemmet (\"people's home\") legacy",
         explanation:
-          "The \"folkhemmet\" concept — Sweden as a shared, caring \"people's home\" — underpinned Swedish social democracy's dominant 20th-century influence over domestic policy, shaping the development of a comprehensive, universal welfare state model (as opposed to a more means-tested or residual welfare approach) that continues to shape policy debate and expectations even as the specific governing party has changed over time.",
+          "The \"folkhemmet\" concept — Sweden as a shared, caring \"people's home,\" coined in Per Albin Hansson's famous 1928 Riksdag speech [1] — underpinned Swedish social democracy's dominant 20th-century influence over domestic policy, shaping the development of a comprehensive, universal welfare state model (as opposed to a more means-tested or residual welfare approach) that continues to shape policy debate and expectations even as the specific governing party has changed over time.",
         whyItMatters:
           "This historical framing remains a genuine reference point in Swedish domestic policy debate across the political spectrum — even parties that have moved away from social democratic dominance generally operate within, and are measured against, the comprehensive welfare-state expectations this legacy established, rather than proposing to dismantle it wholesale.",
         example:
@@ -4870,7 +4870,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "se-dp-kommuner-regioner-autonomy",
         title: "Kommuner and regioner autonomy",
         explanation:
-          "Swedish municipalities (kommuner) and regions (regioner) have strong, constitutionally protected local self-government with genuine taxation power — notably kommunalskatt, a municipal income tax — and implement much of the actual welfare state (regioner primarily run healthcare, kommuner run schools and social services).",
+          "Swedish municipalities (kommuner) and regions (regioner), governed by the Kommunallagen [2], have strong, constitutionally protected local self-government with genuine taxation power — notably kommunalskatt, a municipal income tax — and implement much of the actual welfare state (regioner primarily run healthcare, kommuner run schools and social services).",
         whyItMatters:
           "As in Germany's federalism, much of what's popularly understood as \"Swedish\" welfare policy is actually implemented with real local variation and genuine local fiscal autonomy — national policy debates on healthcare or education quality often can't be resolved by a single national decision alone, since kommuner and regioner retain real implementing authority and their own tax base.",
         example:
@@ -4911,6 +4911,10 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "The folkhemmet legacy sets the broad welfare-state policy expectations Swedish domestic politics operates within, implemented substantially through kommuner and regioner's genuine local fiscal autonomy. Minority government as the historical norm means securing support for policy has traditionally required ongoing negotiation rather than one binding coalition agreement, a dynamic the Sweden Democrats' bloc-scrambling rise has made considerably more complex in recent years. The remiss consultation process and offentlighetsprincipen's transparency together mean much of the real policy-shaping negotiation happens visibly, before formal parliamentary debate even begins — a genuinely distinctive, thorough, and unusually public deliberative culture.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Folkhemstalet (Riksdag speech)", author: "Hansson, P. A.", year: "1928" },
+      { id: 2, title: "Kommunallagen (2017:725)", author: "Sveriges riksdag", year: "2017" },
+    ],
   },
 
   "politics/Crisis Response/se": {
