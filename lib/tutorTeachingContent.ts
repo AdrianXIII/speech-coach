@@ -3357,7 +3357,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "civ-pleading-burden-of-proof",
         title: "Pleading standards and burden of proof",
         explanation:
-          "A civil complaint must state a 'plausible' claim (not just conceivable) under modern federal pleading standards. Unlike criminal cases, civil plaintiffs generally only need to prove their case by a 'preponderance of the evidence' — more likely than not, a far lower bar than 'beyond a reasonable doubt.'",
+          "A civil complaint must state a 'plausible' claim (not just conceivable) under modern federal pleading standards, established in Bell Atlantic Corp. v. Twombly (2007) [2]. Unlike criminal cases, civil plaintiffs generally only need to prove their case by a 'preponderance of the evidence' — more likely than not, a far lower bar than 'beyond a reasonable doubt.'",
         whyItMatters:
           "This lower burden is why civil liability can attach even when someone is acquitted of a related crime — the O.J. Simpson civil case is the famous example, since 'more likely than not' is a much easier bar to clear than 'beyond a reasonable doubt.'",
         example:
@@ -3377,7 +3377,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "civ-discovery",
         title: "Discovery",
         explanation:
-          "Discovery is the pre-trial process where each side obtains evidence from the other: interrogatories (written questions), depositions (sworn oral testimony), and requests for documents. It's designed to prevent trial by ambush — each side should know the other's evidence before trial.",
+          "Discovery [1] is the pre-trial process where each side obtains evidence from the other: interrogatories (written questions), depositions (sworn oral testimony), and requests for documents. It's designed to prevent trial by ambush — each side should know the other's evidence before trial.",
         whyItMatters:
           "Discovery is often where cases are actually won or lost — a damaging document or a bad deposition answer can force a settlement long before trial, and discovery costs themselves are a major factor in settlement decisions regardless of the underlying merits.",
         example:
@@ -3401,7 +3401,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         whyItMatters:
           "Settlement value isn't just about the merits — it's a function of litigation cost, time, risk tolerance, and reputational exposure on both sides, which is why even strong cases often settle for less than a jury might have awarded.",
         example:
-          "Many consumer and employment contracts now include mandatory arbitration clauses, which courts generally enforce — meaning a dispute that looks headed for a public jury trial is often actually resolved in private, binding arbitration instead.",
+          "Many consumer and employment contracts now include mandatory arbitration clauses, which courts generally enforce under the Federal Arbitration Act (1925) [3] — meaning a dispute that looks headed for a public jury trial is often actually resolved in private, binding arbitration instead.",
       },
       {
         id: "civ-damages-remedies",
@@ -3418,6 +3418,11 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Jurisdiction and standing are threshold gatekeepers — no case proceeds without clearing them. Once past that, pleading standards determine whether a complaint survives to discovery, discovery generates the evidence that dispositive motions (and eventually a jury) will evaluate against the burden of proof, and throughout all of it, settlement/ADR dynamics are constantly weighing whether to keep litigating toward the damages a case might ultimately be worth.",
     source: "claude",
     generatedAt: "2026-09-09",
+    sources: [
+      { id: 1, title: "Federal Rules of Civil Procedure", author: "Administrative Office of the U.S. Courts", url: "https://www.uscourts.gov/rules-policies/current-rules-practice-procedure/federal-rules-civil-procedure" },
+      { id: 2, title: "Bell Atlantic Corp. v. Twombly, 550 U.S. 544", author: "U.S. Supreme Court", year: "2007" },
+      { id: 3, title: "Federal Arbitration Act", author: "United States Congress", year: "1925" },
+    ],
   },
 
   "law/Criminal Law": {
