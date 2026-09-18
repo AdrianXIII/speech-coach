@@ -5417,7 +5417,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "ln-procedural-leverage",
         title: "Procedural leverage: committee control, filibuster, reconciliation",
         explanation:
-          "Legislative procedure itself is a major source of power, independent of raw vote counts: committee chairs control what gets a hearing or markup, the U.S. Senate filibuster effectively requires 60 votes for most legislation, and budget reconciliation allows certain fiscal measures to bypass the filibuster with a simple majority.",
+          "Legislative procedure itself is a major source of power, independent of raw vote counts: committee chairs control what gets a hearing or markup, the U.S. Senate filibuster (Senate Rule XXII) [2] effectively requires 60 votes for most legislation, and budget reconciliation (under the Congressional Budget Act of 1974) [3] allows certain fiscal measures to bypass the filibuster with a simple majority.",
         whyItMatters:
           "Understanding which procedural path a piece of legislation is using explains outcomes that raw public support numbers alone can't — a policy with majority public and even majority legislative support can still fail if it can't clear a specific procedural hurdle like a supermajority threshold.",
         example:
@@ -5427,7 +5427,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "ln-baker-batna",
         title: "BATNA and walk-away points",
         explanation:
-          "As in any negotiation, understanding your Best Alternative To a Negotiated Agreement (BATNA) — what happens if no deal is reached — shapes how much you should concede. A party with a strong BATNA (a good outcome even without a deal) has more leverage to hold firm than one whose alternative to a deal is much worse.",
+          "As in any negotiation, understanding your Best Alternative To a Negotiated Agreement (BATNA) [1] — what happens if no deal is reached — shapes how much you should concede. A party with a strong BATNA (a good outcome even without a deal) has more leverage to hold firm than one whose alternative to a deal is much worse.",
         whyItMatters:
           "Misjudging your own or the other side's BATNA leads to bad deals in both directions — conceding too much when you actually had more leverage than you realized, or holding out for terms the other side has no real reason to ever accept.",
         example:
@@ -5458,6 +5458,11 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Vote counting tells you whether you have the numbers; if you don't, logrolling and omnibus bundling, BATNA-aware concessions, and constituent-pressure management are the tools for getting there. Procedural leverage (committee control, filibuster, reconciliation) determines which path a bill can even take to a vote, and conference committees are where remaining differences get resolved after initial passage — all of it ultimately measured against the same question of whether you can actually count to a majority (or the relevant threshold) when it matters.",
     source: "claude",
     generatedAt: "2026-09-09",
+    sources: [
+      { id: 1, title: "Getting to Yes: Negotiating Agreement Without Giving In", author: "Fisher, R., & Ury, W.", year: "1981" },
+      { id: 2, title: "Standing Rules of the United States Senate, Rule XXII", author: "United States Senate" },
+      { id: 3, title: "Congressional Budget and Impoundment Control Act", author: "United States Congress", year: "1974" },
+    ],
   },
 };
 
