@@ -3616,7 +3616,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "de-fp-parlamentsvorbehalt",
         title: "Parlamentsvorbehalt (parliamentary reservation on military deployment)",
         explanation:
-          "German Bundeswehr deployments abroad generally require prior Bundestag authorization — a constitutional-court-derived principle (Parlamentsvorbehalt) that gives parliament, not just the executive, a direct check on committing German forces overseas.",
+          "German Bundeswehr deployments abroad generally require prior Bundestag authorization — a constitutional-court-derived principle (Parlamentsvorbehalt), established by the Bundesverfassungsgericht's 1994 AWACS/Somalia ruling (BVerfGE 90, 286) [1], that gives parliament, not just the executive, a direct check on committing German forces overseas.",
         whyItMatters:
           "This is structurally different from many countries where the executive can deploy forces with far less immediate parliamentary constraint — German chancellors cannot simply order troops abroad the way heads of government elsewhere sometimes can, without first securing a parliamentary vote.",
         example:
@@ -3626,7 +3626,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "de-fp-ostpolitik-legacy",
         title: "The Ostpolitik legacy: \"Wandel durch Handel\"",
         explanation:
-          "Willy Brandt's Ostpolitik in the 1970s — engaging diplomatically and economically with the Soviet Bloc rather than pure containment — left a lasting instinct in German foreign policy toward \"Wandel durch Handel\" (change through trade): the belief that economic engagement gradually liberalizes and stabilizes relations with difficult states.",
+          "Willy Brandt's Ostpolitik in the 1970s — engaging diplomatically and economically with the Soviet Bloc rather than pure containment, building on Egon Bahr's 1963 \"Wandel durch Annäherung\" speech [2] — left a lasting instinct in German foreign policy toward \"Wandel durch Handel\" (change through trade): the belief that economic engagement gradually liberalizes and stabilizes relations with difficult states.",
         whyItMatters:
           "This historical legacy explains why Germany pursued deep energy and trade ties with Russia for decades even amid growing security concerns from allies — it wasn't naivety so much as a specific, historically successful diplomatic philosophy being applied to a new and, it turned out, poorly analogous case.",
         example:
@@ -3667,6 +3667,10 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Multilateral embedding is the overarching post-war posture, with Parlamentsvorbehalt as one of its concrete institutional expressions (parliament checking executive military action). The Ostpolitik legacy explains the instinct toward engagement-over-isolation that shaped decades of policy, including the economic-diplomacy ties that Zeitenwende suddenly and dramatically reassessed after 2022. EU coordination constrains how independently Germany can act on any of this, since major moves are typically negotiated within the EU/Franco-German framework rather than announced unilaterally.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "BVerfGE 90, 286 (AWACS/Somalia)", author: "Bundesverfassungsgericht", year: "1994" },
+      { id: 2, title: "Wandel durch Annäherung (Tutzing speech)", author: "Bahr, E.", year: "1963" },
+    ],
   },
 
   "politics/Domestic Policy/de": {
