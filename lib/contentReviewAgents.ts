@@ -87,7 +87,22 @@ function parseAssessment(raw: string, agentName: string, model: string): AgentAs
     // JSON input" that gives no clue which of the parallel calls broke.
     throw new Error(`${agentName} (${model}) returned unparseable JSON (${cleaned.length} chars): ${(err as Error).message}`);
   }
-  const contradictions = parsed.contradictions ?? [];
+  // Despite the prompt asking for plain strings, agents sometimes return an
+  // array entry as an object (e.g. {"item": "...", "source": "..."}) —
+  // already worked around on the display side (app/tutor-review/page.tsx's
+  // suggestionText()); normalizing here too means every consumer of these
+  // arrays (string methods, DEBATE_PROMPT's .join(), the DB) sees a plain
+  // string instead of crashing or rendering "[object Object]".
+  const toText = (entry: unknown): string => {
+    if (typeof entry === "string") return entry;
+    if (entry && typeof entry === "object") {
+      const obj = entry as Record<string, unknown>;
+      const text = obj.item ?? obj.text ?? obj.suggestion ?? obj.description ?? obj.note;
+      if (typeof text === "string") return text;
+    }
+    return JSON.stringify(entry);
+  };
+  const contradictions = (parsed.contradictions ?? []).map(toText);
   // EXPERT_REVIEW_REQUIRED is a real signal, not decoration: the prompt asks
   // agents to write it wherever they have a claim with no source behind it.
   // That's exactly what a contradiction means for disagreement-detection
@@ -104,10 +119,10 @@ function parseAssessment(raw: string, agentName: string, model: string): AgentAs
       hasUnsourcedClaim && !alreadyNoted
         ? [...contradictions, "Contains a claim marked EXPERT_REVIEW_REQUIRED (no source given)."]
         : contradictions,
-    missingTopics: parsed.missingTopics ?? [],
+    missingTopics: (parsed.missingTopics ?? []).map(toText),
     sources: parsed.sources ?? [],
-    suggestions: parsed.suggestions ?? [],
-    enrichment: parsed.enrichment ?? [],
+    suggestions: (parsed.suggestions ?? []).map(toText),
+    enrichment: (parsed.enrichment ?? []).map(toText),
     summary: parsed.summary ?? "",
   };
 }
