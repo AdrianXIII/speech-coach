@@ -5092,7 +5092,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "cr-incident-command-structure",
         title: "Incident command and clear chains of authority",
         explanation:
-          "Effective crisis response requires a clear command structure — who has authority to make which decisions, and how information flows up to decision-makers and back down to those executing the response (formalized in the U.S. as the Incident Command System for emergency management). The legal backbone for federal involvement is the Robert T. Stafford Disaster Relief and Emergency Assistance Act (1988), which sets out how a governor requests a federal disaster declaration, and what federal assistance (through FEMA) becomes available once the president grants one — a state generally cannot access major federal disaster funding without going through this process.",
+          "Effective crisis response requires a clear command structure — who has authority to make which decisions, and how information flows up to decision-makers and back down to those executing the response (formalized in the U.S. as the Incident Command System for emergency management). The legal backbone for federal involvement is the Robert T. Stafford Disaster Relief and Emergency Assistance Act (1988) [1], which sets out how a governor requests a federal disaster declaration, and what federal assistance (through FEMA) becomes available once the president grants one — a state generally cannot access major federal disaster funding without going through this process.",
         whyItMatters:
           "Crises expose unclear authority structures brutally and immediately — when multiple agencies or levels of government aren't sure who's actually in charge of what, response gets slower and more contradictory exactly when speed and clarity matter most.",
         example:
@@ -5136,13 +5136,17 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         whyItMatters:
           "Without honest post-crisis review, the same structural failures (unclear authority, communication breakdowns, resource gaps) tend to recur in the next crisis, since nothing about the underlying system actually changed.",
         example:
-          "The 9/11 Commission's report is a widely cited model of post-crisis review specifically because it focused heavily on structural and institutional failures (intelligence-sharing gaps between agencies) that led directly to concrete reforms, rather than stopping at individual blame.",
+          "The 9/11 Commission's report [2] is a widely cited model of post-crisis review specifically because it focused heavily on structural and institutional failures (intelligence-sharing gaps between agencies) that led directly to concrete reforms, rather than stopping at individual blame.",
       },
     ],
     connections:
       "Scenario planning and incident command structure are what you build before a crisis hits, so that when it does, decisions about accountability, speed-versus-accuracy in communication, and managing uncertainty under worst-case framing can be executed against a prepared structure rather than improvised — and post-crisis review is what feeds lessons from this crisis back into better preparation for the next one.",
     source: "claude",
     generatedAt: "2026-09-09",
+    sources: [
+      { id: 1, title: "Robert T. Stafford Disaster Relief and Emergency Assistance Act", author: "United States Congress", year: "1988" },
+      { id: 2, title: "The 9/11 Commission Report", author: "National Commission on Terrorist Attacks Upon the United States", year: "2004" },
+    ],
   },
 
   "politics/Campaign Strategy": {
