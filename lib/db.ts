@@ -84,6 +84,21 @@ function ensureSchema(sql: ReturnType<typeof postgres>): Promise<void> {
         edited_content JSONB NOT NULL,
         note TEXT,
         created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+      );
+
+      CREATE TABLE IF NOT EXISTS tutor_news_cache (
+        id SERIAL PRIMARY KEY,
+        profession TEXT NOT NULL,
+        category TEXT NOT NULL,
+        country TEXT NOT NULL DEFAULT '',
+        language TEXT NOT NULL,
+        headline TEXT NOT NULL,
+        summary TEXT NOT NULL,
+        connection TEXT NOT NULL,
+        applied_question TEXT NOT NULL,
+        source_url TEXT NOT NULL,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+        UNIQUE (profession, category, country, language)
       )
     `).then(() => undefined);
   }

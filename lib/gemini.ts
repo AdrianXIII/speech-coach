@@ -40,10 +40,11 @@ export interface GeminiTurn {
   parts: GeminiPart[];
 }
 
-async function callGemini(
+/** Raw Gemini generateContent call — parsed JSON body, nothing extracted yet. */
+async function callGeminiRaw(
   contents: GeminiTurn[],
   options?: { responseMimeType?: string; tools?: Record<string, unknown>[] },
-): Promise<string> {
+): Promise<Record<string, unknown>> {
   const res = await fetch(`${GEMINI_URL}?key=${process.env.GEMINI_API_KEY}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -65,10 +66,22 @@ async function callGemini(
     throw new Error(`Gemini request failed (${res.status}): ${err}`);
   }
 
-  const data = await res.json();
-  const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+  return res.json();
+}
+
+function extractText(data: Record<string, unknown>): string {
+  const candidates = data.candidates as Array<{ content?: { parts?: Array<{ text?: string }> } }> | undefined;
+  const text = candidates?.[0]?.content?.parts?.[0]?.text;
   if (!text) throw new Error("Gemini returned an empty response.");
   return text;
+}
+
+async function callGemini(
+  contents: GeminiTurn[],
+  options?: { responseMimeType?: string; tools?: Record<string, unknown>[] },
+): Promise<string> {
+  const data = await callGeminiRaw(contents, options);
+  return extractText(data);
 }
 
 /**
@@ -96,4 +109,32 @@ export async function generateContent(
  */
 export async function generateChat(history: GeminiTurn[]): Promise<string> {
   return callGemini(history);
+}
+
+export interface ContentWithSource {
+  text: string;
+  /** First real source URL from Google Search grounding, or null if none was returned. */
+  sourceUrl: string | null;
+}
+
+/**
+ * Like generateContent, but also surfaces a real source URL from Google
+ * Search grounding metadata (only present when `tools: [{ google_search: {} }]`
+ * is passed) instead of discarding it. Use this wherever a claim needs a
+ * verifiable link: an LLM-typed "url" field inside the JSON response proves
+ * nothing, since it's exactly as easy to invent as any other text — this
+ * reads the URL the model's search actually found.
+ */
+export async function generateContentWithSources(
+  parts: GeminiPart[],
+  options?: { responseMimeType?: string; tools?: Record<string, unknown>[] },
+): Promise<ContentWithSource> {
+  const data = await callGeminiRaw([{ role: "user", parts }], options);
+  const text = extractText(data);
+  const candidates = data.candidates as
+    | Array<{ groundingMetadata?: { groundingChunks?: Array<{ web?: { uri?: string } }> } }>
+    | undefined;
+  const chunks = candidates?.[0]?.groundingMetadata?.groundingChunks ?? [];
+  const sourceUrl = chunks.find((chunk) => chunk.web?.uri)?.web?.uri ?? null;
+  return { text, sourceUrl };
 }

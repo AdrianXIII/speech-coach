@@ -303,14 +303,14 @@ export function AITutor() {
     resetRecorder();
     recognition.reset();
 
-    if (activeMode === "news" && profile) {
+    if (activeMode === "news") {
       setIsFetchingNews(true);
       setNewsFallbackNotice(false);
       try {
         const res = await fetch("/api/tutor/news", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ profession, category, profile, language, country: jurisdiction }),
+          body: JSON.stringify({ profession, category, language, country: jurisdiction }),
         });
         const data: { newsItem: TutorNewsItem | null } = await res.json();
         if (data.newsItem) {
@@ -322,11 +322,19 @@ export function AITutor() {
           return;
         }
       } catch {
-        // fall through to the standard-case fallback below
+        // fall through to the "not available" state below
       }
-      // Graceful fallback: news fetch failed or returned nothing — use a standard case instead.
+      // No verifiable news case is available right now — tell the student
+      // instead of silently swapping them into standard mode; they chose
+      // Live News, so switching mode is their call, not ours (a button in
+      // the "not available" block below calls beginChallenge("core")).
+      setNewsItem(null);
+      setCurrentCase(null);
+      setCaseDisplay(null);
       setNewsFallbackNotice(true);
       setIsFetchingNews(false);
+      setPhase("challenge");
+      return;
     }
 
     setNewsItem(null);
@@ -503,6 +511,24 @@ export function AITutor() {
         />
       )}
 
+      {phase === "challenge" && newsFallbackNotice && !currentCase && !newsItem && (
+        <div className="flex flex-col items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-4">
+          <p className="text-sm text-amber-800">
+            Just nu finns inte nyhetsartiklar som är lämpliga för det här området. Prova igen om en stund, eller
+            fortsätt med ett standardfall.
+          </p>
+          <button
+            onClick={() => {
+              setMode("core");
+              beginChallenge("core");
+            }}
+            className="rounded-lg bg-brass px-4 py-2 text-sm font-semibold text-navy"
+          >
+            Använd standardfall istället
+          </button>
+        </div>
+      )}
+
       {(phase === "challenge" || phase === "recording") && profession && category && (currentCase || newsItem) && (
         <ChallengeStep
           profession={profession}
@@ -511,7 +537,6 @@ export function AITutor() {
           caseDisplay={caseDisplay}
           isLocalizingCase={isLocalizingCase}
           newsItem={newsItem}
-          newsFallbackNotice={newsFallbackNotice}
           phase={phase}
           transcript={recognition.transcript}
           canSpeak={recognition.isSupported}
@@ -1003,7 +1028,6 @@ function ChallengeStep({
   caseDisplay,
   isLocalizingCase,
   newsItem,
-  newsFallbackNotice,
   phase,
   transcript,
   canSpeak,
@@ -1021,7 +1045,6 @@ function ChallengeStep({
   /** True while /api/tutor/localize-case is translating the case for a non-English language. */
   isLocalizingCase: boolean;
   newsItem: TutorNewsItem | null;
-  newsFallbackNotice: boolean;
   phase: "challenge" | "recording";
   transcript: string;
   canSpeak: boolean;
@@ -1041,12 +1064,6 @@ function ChallengeStep({
           ← Change category
         </button>
       </div>
-
-      {newsFallbackNotice && (
-        <p className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-          Couldn&rsquo;t fetch a live news story — here&rsquo;s a standard case instead.
-        </p>
-      )}
 
       {isLocalizingCase ? (
         <div className="flex flex-col items-center gap-3 py-6">
