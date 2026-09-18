@@ -38,6 +38,10 @@ export async function POST(req: NextRequest) {
   if (!content) return NextResponse.json({ error: "Unknown contentKey." }, { status: 404 });
 
   const sql = await getDb();
+  // sql.json()'s JSONValue constraint doesn't structurally match our named
+  // interfaces (no index signature) even though they're plain serializable
+  // data at runtime — this local helper is the one place that bypasses it.
+  const j = (value: unknown) => sql!.json(value as never);
   let review;
   if (body.reviewId) {
     review = await sql!`select id, content_key, version, status, created_at from tutor_content_reviews where id = ${body.reviewId}`;
@@ -47,13 +51,15 @@ export async function POST(req: NextRequest) {
     const version = Number(existing[0].version) + 1;
     review = await sql!`
       insert into tutor_content_reviews (content_key, version, content, status, reviewer_summary, improvement_suggestions)
-      values (${body.contentKey}, ${version}, ${JSON.stringify(content)}, ${body.status ?? "ai_reviewed"}, ${body.summary ?? null}, ${JSON.stringify(body.suggestions ?? [])})
+      values (${body.contentKey}, ${version}, ${j(content)}, ${body.status ?? "ai_reviewed"}, ${body.summary ?? null}, ${j(body.suggestions ?? [])})
       returning id, content_key, version, status, created_at
     `;
   }
+  // Same rule as run/route.ts: use sql.json() for jsonb columns, never
+  // JSON.stringify() first (that double-encodes them).
   await sql!`
     insert into tutor_content_reviewers (review_id, agent_name, model, scores, verdict, contradictions, missing_topics, sources, suggestions, raw_output)
-    values (${review[0].id}, ${body.agentName}, ${body.model ?? null}, ${JSON.stringify(body.scores)}, ${body.verdict}, ${JSON.stringify(body.contradictions ?? [])}, ${JSON.stringify(body.missingTopics ?? [])}, ${JSON.stringify(body.sources ?? [])}, ${JSON.stringify(body.suggestions ?? [])}, ${body.rawOutput ? JSON.stringify(body.rawOutput) : null})
+    values (${review[0].id}, ${body.agentName}, ${body.model ?? null}, ${j(body.scores)}, ${body.verdict}, ${j(body.contradictions ?? [])}, ${j(body.missingTopics ?? [])}, ${j(body.sources ?? [])}, ${j(body.suggestions ?? [])}, ${body.rawOutput ? j(body.rawOutput) : null})
   `;
   const verdicts = await sql!`select verdict from tutor_content_reviewers where review_id = ${review[0].id}`;
   const hasContradiction = verdicts.some((row) => row.verdict === "contradiction" || row.verdict === "mixed");

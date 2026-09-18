@@ -15,10 +15,27 @@ interface SavedReview { id: number; content_key: string; version: number; status
 interface OverviewRow {
   content_key: string;
   status: string;
-  agents: { agentName: string; scores: Record<string, number>; suggestions: string[]; missingTopics: string[] }[];
+  agents: { agentName: string; scores: Record<string, number>; suggestions: unknown[]; missingTopics: unknown[] }[];
 }
 
 const SCORE_CRITERIA = ["factualAccuracy", "relevance", "depth", "clarity", "usefulness", "balance", "professionalCredibility"] as const;
+
+/**
+ * Review agents are asked for plain-string suggestion arrays, but a model
+ * occasionally returns objects instead (e.g. {"item": "..."}) despite the
+ * prompt's schema. Normalize either shape to displayable text rather than
+ * rendering "[object Object]" or crashing.
+ */
+function suggestionText(entry: unknown): string {
+  if (typeof entry === "string") return entry;
+  if (entry && typeof entry === "object") {
+    const obj = entry as Record<string, unknown>;
+    const value = obj.item ?? obj.text ?? obj.suggestion ?? obj.description;
+    if (typeof value === "string") return value;
+    return JSON.stringify(entry);
+  }
+  return String(entry);
+}
 
 export default function TutorReviewPage() {
   const [content, setContent] = useState<ContentRow[]>([]);
@@ -160,7 +177,9 @@ export default function TutorReviewPage() {
             <ul className="mt-3 flex flex-col gap-3">
               {overview.map((row) => {
                 const [baseKey, lang] = row.content_key.split("::");
-                const suggestions = Array.from(new Set(row.agents.flatMap((a) => [...a.suggestions, ...a.missingTopics])));
+                const suggestions = Array.from(
+                  new Set(row.agents.flatMap((a) => [...a.suggestions, ...a.missingTopics]).map(suggestionText)),
+                );
                 return (
                   <li key={row.content_key} className={`rounded-lg border p-3 text-sm ${row.status === "needs_expert" ? "border-red-200 bg-red-50" : "border-hairline bg-paper"}`}>
                     <button
@@ -214,7 +233,7 @@ export default function TutorReviewPage() {
               </div>
               {review.agents.some((a) => a.contradictions.length > 0) && (
                 <ul className="mt-2 list-disc pl-5 text-xs text-red-700">
-                  {review.agents.flatMap((a) => a.contradictions.map((c, i) => <li key={`${a.agentName}-${i}`}>{a.agentName}: {c}</li>))}
+                  {review.agents.flatMap((a) => a.contradictions.map((c, i) => <li key={`${a.agentName}-${i}`}>{a.agentName}: {suggestionText(c)}</li>))}
                 </ul>
               )}
               {review.debate_info?.ran && (

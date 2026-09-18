@@ -18,6 +18,10 @@ export async function POST(req: NextRequest) {
   if (!content) return NextResponse.json({ error: "Unknown contentKey." }, { status: 404 });
 
   const sql = await getDb();
+  // sql.json()'s JSONValue constraint doesn't structurally match our named
+  // interfaces (no index signature) even though they're plain serializable
+  // data at runtime — this local helper is the one place that bypasses it.
+  const j = (value: unknown) => sql!.json(value as never);
   const configuredLimit = Number(process.env.REVIEW_DAILY_CATEGORY_LIMIT ?? "0");
   if (configuredLimit > 0) {
     const today = await sql!`
@@ -65,20 +69,26 @@ export async function POST(req: NextRequest) {
 
   const existing = await sql!`select coalesce(max(version), 0) as version from tutor_content_reviews where content_key = ${content.contentKey}`;
   const version = Number(existing[0].version) + 1;
+  // Note: use sql.json() for jsonb columns — it serializes arrays/objects
+  // correctly and satisfies postgres.js's parameter typing. Calling
+  // JSON.stringify() first (the previous bug here) double-encodes them
+  // instead (the column ends up holding a jsonb *string* that contains JSON
+  // text, not a jsonb array/object), which silently breaks any reader that
+  // expects to iterate the value as an array.
   const review = await sql!`
     insert into tutor_content_reviews (content_key, version, content, status, reviewer_summary, improvement_suggestions, debate_info)
     values (
-      ${content.contentKey}, ${version}, ${JSON.stringify(content)}, ${status},
+      ${content.contentKey}, ${version}, ${j(content)}, ${status},
       ${assessments.map((item) => item.summary).join("\n\n")},
-      ${JSON.stringify(assessments.flatMap((item) => [...item.suggestions, ...item.enrichment]))},
-      ${debateInfo ? JSON.stringify(debateInfo) : null}
+      ${j(assessments.flatMap((item) => [...item.suggestions, ...item.enrichment]))},
+      ${debateInfo ? j(debateInfo) : null}
     )
     returning id, content_key, version, status, created_at
   `;
   for (const assessment of assessments) {
     await sql!`
       insert into tutor_content_reviewers (review_id, agent_name, model, scores, verdict, contradictions, missing_topics, sources, suggestions, raw_output)
-      values (${review[0].id}, ${assessment.agentName}, ${assessment.model}, ${JSON.stringify(assessment.scores)}, ${assessment.verdict}, ${JSON.stringify(assessment.contradictions)}, ${JSON.stringify(assessment.missingTopics)}, ${JSON.stringify(assessment.sources)}, ${JSON.stringify([...assessment.suggestions, ...assessment.enrichment])}, ${JSON.stringify(assessment)})
+      values (${review[0].id}, ${assessment.agentName}, ${assessment.model}, ${j(assessment.scores)}, ${assessment.verdict}, ${j(assessment.contradictions)}, ${j(assessment.missingTopics)}, ${j(assessment.sources)}, ${j([...assessment.suggestions, ...assessment.enrichment])}, ${j(assessment)})
     `;
   }
 
