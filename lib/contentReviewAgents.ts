@@ -76,16 +76,52 @@ ${RESPONSE_SHAPE}
 CONTENT:
 ${JSON.stringify(content)}`;
 
+/**
+ * Some responses (seen in production) append trailing content after a
+ * perfectly valid JSON object — a stray note, or the model continuing to
+ * "think out loud" past the closing brace — which fails a plain
+ * JSON.parse even though the actual object is intact. Scans for the first
+ * balanced {...} span (respecting strings/escapes so a brace inside a
+ * quoted value doesn't miscount) and parses just that.
+ */
+function extractFirstJsonObject(text: string): string {
+  const start = text.indexOf("{");
+  if (start === -1) return text;
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+  for (let i = start; i < text.length; i++) {
+    const ch = text[i];
+    if (inString) {
+      if (escaped) escaped = false;
+      else if (ch === "\\") escaped = true;
+      else if (ch === '"') inString = false;
+      continue;
+    }
+    if (ch === '"') inString = true;
+    else if (ch === "{") depth++;
+    else if (ch === "}") {
+      depth--;
+      if (depth === 0) return text.slice(start, i + 1);
+    }
+  }
+  return text.slice(start);
+}
+
 function parseAssessment(raw: string, agentName: string, model: string): AgentAssessment {
   const cleaned = raw.trim().replace(/^```(?:json)?\s*|\s*```$/g, "");
   let parsed: Partial<AgentAssessment>;
   try {
     parsed = JSON.parse(cleaned) as Partial<AgentAssessment>;
-  } catch (err) {
-    // Surface which agent/response actually failed to parse (e.g. output
-    // truncated at the max_tokens cap) instead of a bare "Unexpected end of
-    // JSON input" that gives no clue which of the parallel calls broke.
-    throw new Error(`${agentName} (${model}) returned unparseable JSON (${cleaned.length} chars): ${(err as Error).message}`);
+  } catch {
+    try {
+      parsed = JSON.parse(extractFirstJsonObject(cleaned)) as Partial<AgentAssessment>;
+    } catch (err) {
+      // Surface which agent/response actually failed to parse (e.g. output
+      // truncated at the max_tokens cap) instead of a bare "Unexpected end
+      // of JSON input" that gives no clue which of the parallel calls broke.
+      throw new Error(`${agentName} (${model}) returned unparseable JSON (${cleaned.length} chars): ${(err as Error).message}`);
+    }
   }
   // Despite the prompt asking for plain strings, agents sometimes return an
   // array entry as an object (e.g. {"item": "...", "source": "..."}) —
@@ -137,7 +173,7 @@ async function reviewWithOpenAI(prompt: string): Promise<AgentAssessment> {
       // Denser content (more citations, more specific claims to weigh in on)
       // produces a longer review response — 1800 was tight enough to
       // truncate mid-JSON for longer entries, silently failing that agent.
-      max_tokens: 4096,
+      max_tokens: 8192,
       response_format: { type: "json_object" },
       messages: [{ role: "system", content: "You are a rigorous academic content reviewer." }, { role: "user", content: prompt }],
     }),
@@ -160,7 +196,7 @@ async function reviewWithClaude(prompt: string): Promise<AgentAssessment> {
     },
     // Same reasoning as OpenAI above: give enough headroom that a longer,
     // more heavily cited review target can't truncate the JSON response.
-    body: JSON.stringify({ model, max_tokens: 4096, temperature: 0.1, system: "You are a rigorous academic content reviewer. Return JSON only.", messages: [{ role: "user", content: prompt }] }),
+    body: JSON.stringify({ model, max_tokens: 8192, temperature: 0.1, system: "You are a rigorous academic content reviewer. Return JSON only.", messages: [{ role: "user", content: prompt }] }),
   });
   if (!response.ok) throw new Error(`Claude review failed (${response.status}): ${await response.text()}`);
   const data = await response.json();
