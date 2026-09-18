@@ -3714,7 +3714,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "de-dp-schuldenbremse",
         title: "Schuldenbremse (the constitutional debt brake)",
         explanation:
-          "Articles 109 and 115 of the Grundgesetz impose a constitutional limit on structural government deficits (the Schuldenbremse, introduced in 2009), sharply restricting how much new debt the federal and state governments can take on outside of defined emergency exceptions.",
+          "Articles 109 and 115 of the Grundgesetz [1] impose a constitutional limit on structural government deficits (the Schuldenbremse, introduced in 2009), sharply restricting how much new debt the federal and state governments can take on outside of defined emergency exceptions.",
         whyItMatters:
           "Having a fiscal rule embedded in the constitution itself — not just ordinary statute or informal political norm — makes it far harder to override than a typical budget rule, which shapes German domestic policy debates around spending and stimulus distinctively compared to countries where such limits are just legislative policy.",
         example:
@@ -3734,7 +3734,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "de-dp-subsidiaritaetsprinzip",
         title: "Subsidiaritätsprinzip (subsidiarity)",
         explanation:
-          "The principle that decisions should be made at the lowest effective level of government — local rather than state, state rather than federal, federal rather than EU — is embedded in both German federalism and the country's approach to EU integration, shaping how policy questions default to being handled.",
+          "The principle that decisions should be made at the lowest effective level of government — local rather than state, state rather than federal, federal rather than EU (codified at EU level in Article 5 of the Treaty on European Union [2]) — is embedded in both German federalism and the country's approach to EU integration, shaping how policy questions default to being handled.",
         whyItMatters:
           "This is both a legal principle and a political instinct: proposals to centralize decision-making upward (to the federal level or to the EU) routinely need to justify why the lower level can't handle the matter effectively, rather than centralization being the default assumption.",
         example:
@@ -3745,6 +3745,10 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Kooperativer Föderalismus and the Vermittlungsausschuss both flow from the same underlying federal structure — real state-level authority, and a formal mechanism for resolving federal-state legislative disagreement. Koalitionsregierung shapes what's politically achievable at the federal level in the first place, given how policy gets negotiated among coalition partners. Sozialpartnerschaft brings organized labor and business into that negotiation on economic matters specifically, the Schuldenbremse constitutionally constrains how much can be spent regardless of political agreement, and Subsidiaritätsprinzip is the underlying philosophy for why so much of this stays decentralized rather than being centralized federally or at the EU level.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Grundgesetz, Articles 109 and 115", author: "Bundesrepublik Deutschland", url: "https://www.gesetze-im-internet.de/gg/" },
+      { id: 2, title: "Treaty on European Union, Article 5", author: "European Union" },
+    ],
   },
 
   "politics/Crisis Response/de": {
