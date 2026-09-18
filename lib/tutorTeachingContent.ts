@@ -109,7 +109,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "strat-five-forces",
         title: "Porter's Five Forces",
         explanation:
-          "A framework for assessing how attractive an industry is by examining five competitive pressures: rivalry among existing competitors, the threat of new entrants, the bargaining power of suppliers, the bargaining power of buyers, and the threat of substitute products.",
+          "A framework for assessing how attractive an industry is by examining five competitive pressures: rivalry among existing competitors, the threat of new entrants, the bargaining power of suppliers, the bargaining power of buyers, and the threat of substitute products [1].",
         whyItMatters:
           "Before you decide how to compete, you need to know whether the industry itself is structurally profitable. A brilliant strategy in a terrible industry (razor-thin margins, powerful buyers, easy entry) will still struggle — the forces set the ceiling on what any competitor can earn.",
         example:
@@ -119,7 +119,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "strat-generic-strategies",
         title: "Generic strategies: cost leadership, differentiation, focus",
         explanation:
-          "Porter's second contribution: within an industry, a company generally wins by being the lowest-cost producer, by being meaningfully different in a way customers will pay for, or by dominating a narrow segment better than generalists can. Trying to do all three at once usually means doing none of them well — he called this being 'stuck in the middle.'",
+          "Porter's second contribution [2]: within an industry, a company generally wins by being the lowest-cost producer, by being meaningfully different in a way customers will pay for, or by dominating a narrow segment better than generalists can. Trying to do all three at once usually means doing none of them well — he called this being 'stuck in the middle.'",
         whyItMatters:
           "This forces discipline. Once you know which generic strategy you're pursuing, it tells you what to say no to — a cost leader shouldn't chase every custom feature request, and a differentiator shouldn't compete on price.",
         example:
@@ -129,7 +129,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "strat-resource-based-view",
         title: "Resource-based view (VRIN)",
         explanation:
-          "Where the Five Forces looks outward at the industry, this looks inward: sustainable advantage comes from resources or capabilities that are Valuable, Rare, hard to Imitate, and Non-substitutable (VRIN). A resource that fails any one of these tests won't sustain an edge for long.",
+          "Where the Five Forces looks outward at the industry, this looks inward: sustainable advantage comes from resources or capabilities that are Valuable, Rare, hard to Imitate, and Non-substitutable (VRIN) [3]. A resource that fails any one of these tests won't sustain an edge for long.",
         whyItMatters:
           "It explains why some companies keep winning even in unattractive industries — their internal capability, not the industry structure, is doing the work. It also warns you: a resource competitors can easily copy or replace isn't really a moat, no matter how valuable it looks today.",
         example:
@@ -159,7 +159,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "strat-blue-ocean-value-innovation",
         title: "Blue ocean strategy / value innovation",
         explanation:
-          "Instead of competing head-on in an existing market ('red ocean,' bloody from competition), a company can create uncontested market space by simultaneously pursuing differentiation and low cost — dropping some factors the industry competes on entirely while raising or creating others customers actually value.",
+          "Instead of competing head-on in an existing market ('red ocean,' bloody from competition), a company can create uncontested market space [4] by simultaneously pursuing differentiation and low cost — dropping some factors the industry competes on entirely while raising or creating others customers actually value.",
         whyItMatters:
           "It reframes strategy as not always a zero-sum fight against named rivals — sometimes the better move is redefining what's being competed on at all, which sidesteps the Five Forces pressures of an existing industry rather than fighting through them.",
         example:
@@ -169,7 +169,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "strat-disruption-theory",
         title: "Disruptive innovation",
         explanation:
-          "Clayton Christensen's theory: disruptors don't usually beat incumbents by being better at what incumbents already do well — they enter at the bottom of the market (or a new market entirely) with a product that's worse on the traditional metrics but cheaper, simpler, or more accessible, then improve until it's good enough for the mainstream.",
+          "Clayton Christensen's theory [5]: disruptors don't usually beat incumbents by being better at what incumbents already do well — they enter at the bottom of the market (or a new market entirely) with a product that's worse on the traditional metrics but cheaper, simpler, or more accessible, then improve until it's good enough for the mainstream.",
         whyItMatters:
           "It explains why well-run incumbents get blindsided: they rationally ignore the disruptor because it looks inferior and unprofitable by their own current customers' standards — right up until it isn't. Knowing this pattern is the main defense against it.",
         example:
@@ -180,6 +180,13 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "These fit together as a sequence, not a menu: Five Forces tells you whether the industry is worth competing in at all; generic strategy tells you how you'll compete within it; the resource-based view checks whether you actually have (or can build) what that requires; and diversification, build-vs-buy, blue ocean, and disruption theory are all different answers to the same underlying question — how do you get or defend an advantage the forces and your competitors can't easily erode.",
     source: "claude",
     generatedAt: "2026-09-09",
+    sources: [
+      { id: 1, title: "Competitive Strategy: Techniques for Analyzing Industries and Competitors", author: "Porter, M. E.", year: "1980" },
+      { id: 2, title: "Competitive Advantage: Creating and Sustaining Superior Performance", author: "Porter, M. E.", year: "1985" },
+      { id: 3, title: "Firm Resources and Sustained Competitive Advantage", author: "Barney, J.", year: "1991" },
+      { id: 4, title: "Blue Ocean Strategy", author: "Kim, W. C., & Mauborgne, R.", year: "2005" },
+      { id: 5, title: "The Innovator's Dilemma", author: "Christensen, C. M.", year: "1997" },
+    ],
   },
 
   "politics/Foreign Policy & Diplomacy": {
@@ -364,7 +371,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fin-npv-irr-payback",
         title: "NPV, IRR, and payback period",
         explanation:
-          "Net present value (NPV) discounts a project's future cash flows to today's dollars and subtracts the initial investment — positive NPV means the project creates value. Internal rate of return (IRR) is the discount rate at which NPV equals zero. Payback period is simply how long until the investment is recouped, ignoring the time value of money.",
+          "Net present value (NPV) discounts a project's future cash flows to today's dollars and subtracts the initial investment — positive NPV means the project creates value. Internal rate of return (IRR) is the discount rate at which NPV equals zero. Payback period is simply how long until the investment is recouped, ignoring the time value of money. [1]",
         whyItMatters:
           "NPV and IRR can disagree on ranking mutually exclusive projects (especially with different sizes or cash flow timing) — NPV is generally the more reliable decision rule since it directly measures value created in dollar terms, while IRR can be misleading for unconventional cash flow patterns.",
         example:
@@ -374,7 +381,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fin-capital-structure-leverage",
         title: "Capital structure: debt vs. equity",
         explanation:
-          "A company can fund itself with debt (must be repaid with interest, but doesn't dilute ownership) or equity (no repayment obligation, but dilutes ownership and is more expensive since equity investors demand higher returns for taking more risk). Leverage — using debt — magnifies both returns and risk to equity holders.",
+          "A company can fund itself with debt (must be repaid with interest, but doesn't dilute ownership) or equity [2] (no repayment obligation, but dilutes ownership and is more expensive since equity investors demand higher returns for taking more risk). Leverage — using debt — magnifies both returns and risk to equity holders.",
         whyItMatters:
           "More debt increases returns to equity holders when things go well (since debt has a fixed cost and equity captures the upside) but also increases the risk of financial distress or bankruptcy when they don't — capital structure decisions are really about how much of that amplified risk a company can safely carry.",
         example:
@@ -384,7 +391,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fin-wacc-cost-of-capital",
         title: "WACC and the cost of capital",
         explanation:
-          "The weighted average cost of capital (WACC) blends the cost of debt and the cost of equity, weighted by how much of each a company uses, into a single discount rate representing the minimum return a project must clear to be worth doing — since that's the return capital providers require for the risk they're taking.",
+          "The weighted average cost of capital (WACC) [3] blends the cost of debt and the cost of equity, weighted by how much of each a company uses, into a single discount rate representing the minimum return a project must clear to be worth doing — since that's the return capital providers require for the risk they're taking.",
         whyItMatters:
           "WACC is the hurdle rate used in NPV calculations — get it wrong (too low) and you'll approve value-destroying projects that look attractive on paper; get it too high and you'll reject genuinely good projects.",
         example:
@@ -423,6 +430,11 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     ],
     connections:
       "NPV, IRR, and payback are the decision tools for evaluating any individual investment, but they only work correctly once you know your WACC — the true cost of the capital being invested, which itself depends on the debt/equity mix chosen in your capital structure. The cash conversion cycle is a reminder that accounting profit and actual cash aren't the same thing, valuation methods extend the same NPV logic to valuing an entire company rather than a single project, and financial statement analysis is the diagnostic skill that ties all of it back to what a business's real financial health actually looks like.",
+    sources: [
+      { id: 1, title: "Principles of Corporate Finance", author: "Brealey, R. A., Myers, S. C., & Allen, F." },
+      { id: 2, title: "The Cost of Capital, Corporation Finance and the Theory of Investment", author: "Modigliani, F., & Miller, M. H.", year: "1958" },
+      { id: 3, title: "Capital Asset Prices: A Theory of Market Equilibrium under Conditions of Risk", author: "Sharpe, W. F.", year: "1964" },
+    ],
     source: "claude",
     generatedAt: "2026-09-09",
   },
@@ -437,7 +449,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "mktg-stp",
         title: "Segmentation, targeting, and positioning (STP)",
         explanation:
-          "Segmentation divides a broad market into groups with similar needs; targeting selects which segment(s) to actually pursue; positioning defines how the product should be perceived relative to alternatives in the targeted segment's mind. Trying to serve everyone with one undifferentiated position usually serves no one especially well.",
+          "Segmentation divides a broad market into groups with similar needs [1]; targeting selects which segment(s) to actually pursue; positioning defines how the product should be perceived relative to alternatives in the targeted segment's mind. Trying to serve everyone with one undifferentiated position usually serves no one especially well.",
         whyItMatters:
           "Most marketing failures trace back to skipping or rushing this step — a great product with a confused or overly broad target market struggles to build a coherent message, since 'everyone' isn't a customer segment with a shared, addressable need.",
         example:
@@ -447,7 +459,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "mktg-brand-equity",
         title: "Brand equity",
         explanation:
-          "Brand equity is the added value a brand name gives a product beyond its functional attributes — the premium customers will pay, or the preference they show, purely because of the brand. It's built over time through consistent quality, positioning, and experience, and can be damaged quickly by a single bad episode.",
+          "Brand equity [2] is the added value a brand name gives a product beyond its functional attributes — the premium customers will pay, or the preference they show, purely because of the brand. It's built over time through consistent quality, positioning, and experience, and can be damaged quickly by a single bad episode.",
         whyItMatters:
           "Brand equity is a genuine balance-sheet-relevant asset (even when not formally capitalized) — it's why the same physical product can command different prices under different brand names, and why companies protect it so aggressively even at real short-term cost.",
         example:
@@ -477,7 +489,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "mktg-marketing-mix",
         title: "The marketing mix (4Ps)",
         explanation:
-          "Product, price, place (distribution), and promotion — the classic framework for the tactical decisions that execute a chosen positioning. Each element should reinforce the same positioning; misalignment (a premium-positioned product sold through discount channels, for instance) undermines the whole strategy.",
+          "Product, price, place (distribution), and promotion [3] — the classic framework for the tactical decisions that execute a chosen positioning. Each element should reinforce the same positioning; misalignment (a premium-positioned product sold through discount channels, for instance) undermines the whole strategy.",
         whyItMatters:
           "It's a useful checklist precisely because inconsistency across the 4Ps is one of the most common ways a coherent strategy falls apart in execution — a strong brand position can be quietly eroded by a distribution or pricing decision that contradicts it.",
         example:
@@ -498,6 +510,11 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "STP is the foundational choice — who you're serving and how you want to be perceived — that everything else should reinforce. Brand equity is what accumulates from consistently executing that positioning well over time. Value-based pricing and the CLV:CAC relationship determine whether the resulting business is actually profitable, the marketing mix is the tactical checklist for consistent execution, and go-to-market strategy is how a specific new product enters the market in a way that's aligned with all of the above.",
     source: "claude",
     generatedAt: "2026-09-09",
+    sources: [
+      { id: 1, title: "Product Differentiation and Market Segmentation as Alternative Marketing Strategies", author: "Smith, W. R.", year: "1956" },
+      { id: 2, title: "Managing Brand Equity", author: "Aaker, D. A.", year: "1991" },
+      { id: 3, title: "Basic Marketing: A Managerial Approach", author: "McCarthy, E. J.", year: "1960" },
+    ],
   },
 
   "business/Operations": {
