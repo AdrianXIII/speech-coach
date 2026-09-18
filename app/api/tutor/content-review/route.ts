@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
   const reviews = key
     ? await sql!`
         select r.id, r.content_key, r.version, r.status, r.reviewer_summary,
-               r.improvement_suggestions, r.created_at, r.updated_at,
+               r.improvement_suggestions, r.debate_info, r.created_at, r.updated_at,
                coalesce(json_agg(json_build_object(
                  'id', a.id, 'agentName', a.agent_name, 'model', a.model,
                  'scores', a.scores, 'verdict', a.verdict,

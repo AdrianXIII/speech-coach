@@ -62,6 +62,10 @@ function ensureSchema(sql: ReturnType<typeof postgres>): Promise<void> {
         UNIQUE(content_key, version)
       );
 
+      -- Added after tutor_content_reviews already existed in some deployments,
+      -- so a plain CREATE TABLE IF NOT EXISTS above wouldn't add it there.
+      ALTER TABLE tutor_content_reviews ADD COLUMN IF NOT EXISTS debate_info JSONB;
+
       CREATE TABLE IF NOT EXISTS tutor_content_reviewers (
         id SERIAL PRIMARY KEY,
         review_id INTEGER NOT NULL REFERENCES tutor_content_reviews(id) ON DELETE CASCADE,
@@ -99,6 +103,16 @@ function ensureSchema(sql: ReturnType<typeof postgres>): Promise<void> {
         source_url TEXT NOT NULL,
         created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
         UNIQUE (profession, category, country, language)
+      );
+
+      CREATE TABLE IF NOT EXISTS tutor_content_sources (
+        id SERIAL PRIMARY KEY,
+        content_key TEXT NOT NULL,
+        title TEXT NOT NULL,
+        author TEXT,
+        year TEXT,
+        url TEXT,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT now()
       )
     `).then(() => undefined);
   }

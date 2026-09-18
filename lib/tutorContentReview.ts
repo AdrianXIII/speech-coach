@@ -20,6 +20,8 @@ export interface ReviewCriterionScores {
   clarity: number;
   usefulness: number;
   balance: number;
+  /** Would a working professional/professor in this field recognize this as the essential core — not superficial, not exhaustive? */
+  professionalCredibility: number;
 }
 
 export interface ReviewSource {
@@ -113,16 +115,19 @@ export async function resolveReviewableContent(contentKey: string): Promise<Revi
 }
 
 export const REVIEW_INSTRUCTIONS = `Review the supplied university/professional AI Tutor content.
-Score each criterion from 0 to 2: factualAccuracy, relevance, depth, clarity, usefulness, balance.
-0 = unacceptable, 1 = acceptable with reservations, 2 = strong. Check every factual claim against
-academic books, peer-reviewed journals, or official sources where possible. Treat law and politics as
-jurisdiction-specific. Flag contradictions, unsupported claims, missing important concepts, excessive
-length, and content that is too thin. Aim for enough depth for university students and professionals,
-without turning a teaching step into a textbook chapter. If "language" is not "en", the content is a
-translation of "englishReference" — also verify it is accurate, natural for a native speaker, and adds
-or loses no meaning versus the English original; treat any mistranslation as a contradiction. Return
-JSON only with this shape:
-{"agentName":"...","model":"...","verdict":"agree|mixed|contradiction","scores":{"factualAccuracy":0,"relevance":0,"depth":0,"clarity":0,"usefulness":0,"balance":0},"contradictions":[],"missingTopics":[],"sources":[{"title":"...","author":"...","year":"...","url":"...","kind":"book|journal|official|other","note":"..."}],"suggestions":[],"summary":"..."}`;
+Score each criterion from 0 to 2: factualAccuracy, relevance, depth, clarity, usefulness, balance,
+professionalCredibility. 0 = unacceptable, 1 = acceptable with reservations, 2 = strong. Check every
+factual claim against academic books, peer-reviewed journals, or official sources where possible; for
+every proposed fact or enrichment, give a source or mark it "EXPERT_REVIEW_REQUIRED". Treat law and
+politics as jurisdiction-specific. Flag contradictions, unsupported claims, missing important
+concepts, excessive length, and content that is too thin. For professionalCredibility specifically:
+would a working professional or professor in this exact field recognize this as the essential core
+someone in this role should know — not superficial, and not padded beyond that core? Aim for enough
+depth for university students and professionals, without turning a teaching step into a textbook
+chapter. If "language" is not "en", the content is a translation of "englishReference" — also verify
+it is accurate, natural for a native speaker, and adds or loses no meaning versus the English
+original; treat any mistranslation as a contradiction. Return JSON only with this shape:
+{"agentName":"...","model":"...","verdict":"agree|mixed|contradiction","scores":{"factualAccuracy":0,"relevance":0,"depth":0,"clarity":0,"usefulness":0,"balance":0,"professionalCredibility":0},"contradictions":[],"missingTopics":[],"sources":[{"title":"...","author":"...","year":"...","url":"...","kind":"book|journal|official|other","note":"..."}],"suggestions":[],"summary":"..."}`;
 
 export function reviewExport(): { exportedAt: string; reviewInstructions: string; content: ReviewableTutorContent[] } {
   return { exportedAt: new Date().toISOString(), reviewInstructions: REVIEW_INSTRUCTIONS, content: listReviewableTutorContent() };

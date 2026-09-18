@@ -5,7 +5,15 @@ import { LANGUAGES, type LanguageCode } from "@/lib/languages";
 
 interface ContentRow { contentKey: string; profession: string; category: string; teaching: { concepts: { title: string }[] } | null; cases: unknown[] }
 interface AgentReview { agentName: string; model?: string; verdict: string; scores: Record<string, number>; contradictions: string[]; missingTopics: string[]; sources: unknown[]; suggestions: string[] }
-interface SavedReview { id: number; content_key: string; version: number; status: string; agents: AgentReview[] }
+interface DebateInfo {
+  ran: boolean;
+  before: AgentReview[];
+  after?: AgentReview[];
+  tieBreak?: { finding: string; sourceUrl: string | null };
+}
+interface SavedReview { id: number; content_key: string; version: number; status: string; agents: AgentReview[]; debate_info?: DebateInfo | null }
+
+const SCORE_CRITERIA = ["factualAccuracy", "relevance", "depth", "clarity", "usefulness", "balance", "professionalCredibility"] as const;
 
 export default function TutorReviewPage() {
   const [content, setContent] = useState<ContentRow[]>([]);
@@ -123,7 +131,54 @@ export default function TutorReviewPage() {
           <p className="mt-2 text-sm text-ink-muted">{selectedContent.teaching?.concepts.length ?? 0} teaching concepts, {selectedContent.cases.length} cases.</p>
           <p className="mt-3 text-sm text-ink-muted">Export this content to several AI agents. Submit each agent&apos;s JSON assessment to the review API using the same <code>reviewId</code> after the first submission.</p>
           {message && <p className="mt-4 text-sm text-green-700">{message}</p>}
-          {reviews.length === 0 ? <p className="mt-4 text-sm text-ink-muted">No saved reviews for this category.</p> : reviews.map((review) => <div className="mt-4 border-t border-hairline pt-4" key={review.id}><p className="text-sm font-semibold text-ink">Version {review.version} · {review.status}</p><p className="mt-1 text-xs text-ink-muted">{review.agents.length} agent assessments saved. Contradictions require expert review.</p></div>)}
+          {reviews.length === 0 ? <p className="mt-4 text-sm text-ink-muted">No saved reviews for this category.</p> : reviews.map((review) => (
+            <div className="mt-4 border-t border-hairline pt-4" key={review.id}>
+              <p className="text-sm font-semibold text-ink">Version {review.version} · {review.status}</p>
+              <div className="mt-2 overflow-x-auto">
+                <table className="min-w-full text-xs">
+                  <thead>
+                    <tr className="text-left text-ink-muted">
+                      <th className="pr-3 py-1">Agent</th>
+                      <th className="pr-3 py-1">Verdict</th>
+                      {SCORE_CRITERIA.map((c) => <th key={c} className="pr-3 py-1">{c}</th>)}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {review.agents.map((agent) => (
+                      <tr key={agent.agentName} className="border-t border-hairline/50">
+                        <td className="pr-3 py-1 font-semibold text-ink">{agent.agentName}</td>
+                        <td className="pr-3 py-1 text-ink">{agent.verdict}</td>
+                        {SCORE_CRITERIA.map((c) => <td key={c} className="pr-3 py-1 text-ink">{agent.scores[c] ?? "—"}</td>)}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {review.agents.some((a) => a.contradictions.length > 0) && (
+                <ul className="mt-2 list-disc pl-5 text-xs text-red-700">
+                  {review.agents.flatMap((a) => a.contradictions.map((c, i) => <li key={`${a.agentName}-${i}`}>{a.agentName}: {c}</li>))}
+                </ul>
+              )}
+              {review.debate_info?.ran && (
+                <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
+                  <p className="font-semibold">Reviewers disagreed on factual accuracy — a debate round ran.</p>
+                  {review.debate_info.after && (
+                    <p className="mt-1">
+                      Revised factualAccuracy: {review.debate_info.after.map((a) => `${a.agentName}=${a.scores.factualAccuracy ?? "?"}`).join(", ")}
+                    </p>
+                  )}
+                  {review.debate_info.tieBreak && (
+                    <p className="mt-1">
+                      Tie-break search: {review.debate_info.tieBreak.finding}
+                      {review.debate_info.tieBreak.sourceUrl && (
+                        <> (<a className="underline" href={review.debate_info.tieBreak.sourceUrl} target="_blank" rel="noreferrer">source</a>)</>
+                      )}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             <label className="text-sm text-ink">Paste one agent&apos;s JSON assessment
               <textarea className="mt-2 min-h-40 w-full rounded-lg border border-hairline bg-paper p-3 font-mono text-xs" value={agentJson} onChange={(event) => setAgentJson(event.target.value)} placeholder='{"agentName":"...","verdict":"agree",...}' />
