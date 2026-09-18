@@ -5104,7 +5104,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "se-ln-budgetprocessen",
         title: "Budgetprocessen — the all-or-nothing budget framework vote",
         explanation:
-          "Sweden's budget process, reformed after a 1990s fiscal crisis, requires the Riksdag to first vote on the overall budget framework (fastställande av utgiftsramar) as a single package before voting on individual spending allocations within it — a structural rule that has, notably in 2014, produced situations where the government's own proposed framework lost to an opposition-negotiated alternative.",
+          "Sweden's budget process, reformed after a 1990s fiscal crisis and codified in the Riksdagsordningen [1], requires the Riksdag to first vote on the overall budget framework (fastställande av utgiftsramar) as a single package before voting on individual spending allocations within it — a structural rule that has, notably in 2014, produced situations where the government's own proposed framework lost to an opposition-negotiated alternative.",
         whyItMatters:
           "This structural rule creates unusually high-stakes, winner-take-all budget negotiation dynamics — because the framework vote is essentially all-or-nothing, a government lacking secured majority support risks its entire budget being replaced by an opposition alternative in one vote, rather than losing more narrowly on individual line items.",
         example:
@@ -5145,6 +5145,9 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Minority government negotiation is the default mode Swedish legislative politics has long operated in, occasionally formalized into explicit arrangements like the December and January Agreements when informal ad hoc negotiation alone proves insufficient. The budgetprocessen's all-or-nothing framework vote raises the stakes of budget negotiation specifically, while remiss consultation and Lagrådet review both shape legislation substantially before or alongside formal inter-party bargaining, adding informal negotiation layers most purely majoritarian systems lack. The Sweden Democrats cooperation question now cuts across all of this, reshaping which negotiating coalitions are practically available on almost any given piece of legislation.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Riksdagsordningen (2014:801)", author: "Sveriges riksdag", year: "2014" },
+    ],
   },
 
   "politics/Domestic Policy": {
