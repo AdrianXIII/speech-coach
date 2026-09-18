@@ -12,6 +12,11 @@ interface DebateInfo {
   tieBreak?: { finding: string; sourceUrl: string | null };
 }
 interface SavedReview { id: number; content_key: string; version: number; status: string; agents: AgentReview[]; debate_info?: DebateInfo | null }
+interface OverviewRow {
+  content_key: string;
+  status: string;
+  agents: { agentName: string; scores: Record<string, number>; suggestions: string[]; missingTopics: string[] }[];
+}
 
 const SCORE_CRITERIA = ["factualAccuracy", "relevance", "depth", "clarity", "usefulness", "balance", "professionalCredibility"] as const;
 
@@ -27,13 +32,24 @@ export default function TutorReviewPage() {
   const [message, setMessage] = useState<string | null>(null);
   const [runningAll, setRunningAll] = useState(false);
   const [batchProgress, setBatchProgress] = useState({ done: 0, total: 0, failed: 0 });
+  const [overview, setOverview] = useState<OverviewRow[]>([]);
+  const [overviewLoading, setOverviewLoading] = useState(false);
 
   useEffect(() => {
     fetch("/api/tutor/content-review").then((res) => res.json()).then((data) => {
       setContent(data.content ?? []);
       setDatabaseConfigured(data.databaseConfigured);
     }).catch(() => setError("Could not load tutor content."));
+    loadOverview();
   }, []);
+
+  function loadOverview() {
+    setOverviewLoading(true);
+    fetch("/api/tutor/content-review/overview").then((res) => res.json())
+      .then((data) => setOverview(data.rows ?? []))
+      .catch(() => setError("Could not load the weak-content overview."))
+      .finally(() => setOverviewLoading(false));
+  }
 
   const fullKey = (baseKey: string, lang: LanguageCode = language) => (lang === "en" ? baseKey : `${baseKey}::${lang}`);
 
@@ -100,6 +116,7 @@ export default function TutorReviewPage() {
     }
     setRunningAll(false);
     setMessage(failed ? `Finished with ${failed} failed categories in ${language}. You can run them again.` : `Finished reviewing all categories in ${language}.`);
+    loadOverview();
   }
   return (
     <main className="min-h-screen bg-paper px-4 py-12 sm:px-8">
@@ -126,6 +143,47 @@ export default function TutorReviewPage() {
         </div>
         {language !== "en" && <p className="text-sm text-ink-muted">Non-English content is translated live via Gemini, then reviewed for accuracy against the English source and for translation quality.</p>}
         {runningAll && <p className="text-sm text-ink-muted">This runs one category at a time to avoid rate limits. You can leave this page open while it works.</p>}
+
+        <section className="rounded-lg border border-hairline bg-surface p-5">
+          <div className="flex items-center justify-between">
+            <h2 className="font-display text-lg font-semibold text-ink">Weak-content worklist</h2>
+            <button className="text-xs font-semibold text-brass-text hover:underline" onClick={loadOverview} disabled={overviewLoading}>
+              {overviewLoading ? "Refreshing…" : "Refresh"}
+            </button>
+          </div>
+          <p className="mt-1 text-sm text-ink-muted">
+            Every reviewed category&apos;s latest result, needs_expert first — what to make more substantial, and each agent&apos;s concrete suggestions for it.
+          </p>
+          {overview.length === 0 ? (
+            <p className="mt-3 text-sm text-ink-muted">No reviews saved yet — run some above to populate this list.</p>
+          ) : (
+            <ul className="mt-3 flex flex-col gap-3">
+              {overview.map((row) => {
+                const [baseKey, lang] = row.content_key.split("::");
+                const suggestions = Array.from(new Set(row.agents.flatMap((a) => [...a.suggestions, ...a.missingTopics])));
+                return (
+                  <li key={row.content_key} className={`rounded-lg border p-3 text-sm ${row.status === "needs_expert" ? "border-red-200 bg-red-50" : "border-hairline bg-paper"}`}>
+                    <button
+                      className="text-left font-semibold text-ink hover:underline"
+                      onClick={() => {
+                        setSelected(baseKey);
+                        setLanguage((lang as LanguageCode) ?? "en");
+                      }}
+                    >
+                      {row.content_key} — {row.status}
+                    </button>
+                    {suggestions.length > 0 && (
+                      <ul className="mt-1 list-disc pl-5 text-xs text-ink-muted">
+                        {suggestions.slice(0, 5).map((s, i) => <li key={i}>{s}</li>)}
+                      </ul>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </section>
+
         {selectedContent && <section className="rounded-lg border border-hairline bg-surface p-5">
           <h2 className="font-display text-lg font-semibold text-ink">{selectedContent.profession} / {selectedContent.category}</h2>
           <p className="mt-2 text-sm text-ink-muted">{selectedContent.teaching?.concepts.length ?? 0} teaching concepts, {selectedContent.cases.length} cases.</p>
@@ -191,7 +249,7 @@ export default function TutorReviewPage() {
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
             <button className="rounded-lg bg-brass px-3 py-2 text-xs font-semibold text-ink" onClick={approveReview}>Approve latest expert edit</button>
-              <button className="rounded-lg border border-hairline px-3 py-2 text-xs font-semibold text-ink" onClick={async () => { const response = await fetch(`/api/tutor/content-review/run`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ contentKey: fullKey(selected) }) }); if (!response.ok) setError((await response.json()).error ?? "AI review failed."); else setMessage(`AI review completed and saved (${language}).`); }}>Run AI review ({language})</button>
+              <button className="rounded-lg border border-hairline px-3 py-2 text-xs font-semibold text-ink" onClick={async () => { const response = await fetch(`/api/tutor/content-review/run`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ contentKey: fullKey(selected) }) }); if (!response.ok) setError((await response.json()).error ?? "AI review failed."); else { setMessage(`AI review completed and saved (${language}).`); loadOverview(); } }}>Run AI review ({language})</button>
           </div>
         </section>}
       </div>
