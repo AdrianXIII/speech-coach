@@ -4725,7 +4725,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "es-ln-real-decreto-ley",
         title: "Real Decreto-Ley (executive decree-law)",
         explanation:
-          "In cases of \"extraordinary and urgent need,\" the government can issue a Real Decreto-Ley with immediate legal force, bypassing the ordinary legislative process — but it must be submitted to the Congreso for ratification (or rejection) within 30 days, or it lapses.",
+          "Under Article 86 of the Constitution [1], in cases of \"extraordinary and urgent need,\" the government can issue a Real Decreto-Ley with immediate legal force, bypassing the ordinary legislative process — but it must be submitted to the Congreso for ratification (or rejection) within 30 days, or it lapses.",
         whyItMatters:
           "This gives the executive a genuine fast-track tool for urgent measures without prior legislative negotiation — but the mandatory 30-day ratification requirement means the government still needs to eventually secure Congreso support (or at least avoid an outright rejection), so it delays rather than eliminates the need for legislative negotiation.",
         example:
@@ -4756,6 +4756,9 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Investidura negotiation and bilateral pacts with regional parties are where most of the real deal-making in a fragmented Congreso actually happens, with the constructive no-confidence motion's mere availability shaping the background leverage in all of it. The Senado's weak formal role means virtually none of this negotiation needs to route through the upper chamber the way it would in Germany, Real Decreto-Ley offers the executive a way to act first and negotiate ratification after rather than before, and Pactos de Estado represent the (inconsistently achieved) aspiration to transcend this whole transactional, fragmented-parliament negotiating dynamic entirely for a select few especially significant structural issues.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Constitución Española, Artículo 86", author: "Reino de España", year: "1978" },
+    ],
   },
 
   "politics/Foreign Policy & Diplomacy/se": {
