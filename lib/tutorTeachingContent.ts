@@ -51,6 +51,22 @@ export interface TeachingConcept {
   example: string;
 }
 
+/**
+ * A category-level numbered bibliography entry. `id` is the stable "[N]"
+ * printed inline in `explanation`/`whyItMatters` text right after the claim
+ * it supports, and in the per-category PDF's Sources section — the same
+ * number in both places is what makes the citation traceable. Never
+ * translated (see lib/tutorTranslate.ts): a cited work's title/author stay
+ * in their original language regardless of the lesson's language.
+ */
+export interface TeachingSource {
+  id: number;
+  title: string;
+  author?: string;
+  year?: string;
+  url?: string;
+}
+
 export interface TeachingContent {
   profession: CaseProfession;
   category: string;
@@ -64,6 +80,8 @@ export interface TeachingContent {
   connections: string;
   source: "claude" | "gemini";
   generatedAt: string;
+  /** Category-level numbered bibliography — absent for categories with no cited sources yet. */
+  sources?: TeachingSource[];
 }
 
 const COUNTRY_BOUND_PROFESSIONS: CaseProfession[] = ["law", "politics"];
@@ -518,7 +536,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "ops-bottleneck-throughput",
         title: "Bottleneck / throughput analysis (Theory of Constraints)",
         explanation:
-          "In any multi-step process, one step (the bottleneck) limits the throughput of the entire system — improving any other step doesn't increase total output, only improving the actual bottleneck does. Eliyahu Goldratt formalized this as the Theory of Constraints, notably in his 1984 business novel 'The Goal', laying out a five-step process for identifying and systematically elevating the constraint.",
+          "In any multi-step process, one step (the bottleneck) limits the throughput of the entire system — improving any other step doesn't increase total output, only improving the actual bottleneck does. Eliyahu Goldratt formalized this as the Theory of Constraints, notably in his 1984 business novel 'The Goal' [1], laying out a five-step process for identifying and systematically elevating the constraint.",
         whyItMatters:
           "Effort spent optimizing non-bottleneck steps is often wasted effort dressed up as productivity — a common operational mistake is improving the parts of a process that are easiest to improve rather than the one step that's actually limiting overall output.",
         example:
@@ -538,7 +556,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "ops-jit-inventory",
         title: "Just-in-time vs. buffer inventory tradeoffs",
         explanation:
-          "Just-in-time (JIT) inventory minimizes carrying cost by holding minimal stock, ordering just enough just in time for use — efficient when supply is reliable, but fragile when it isn't. The approach originates with Taiichi Ohno's development of the Toyota Production System in the decades after WWII. Buffer/safety inventory sacrifices some efficiency for resilience against demand or supply variability.",
+          "Just-in-time (JIT) inventory minimizes carrying cost by holding minimal stock, ordering just enough just in time for use — efficient when supply is reliable, but fragile when it isn't. The approach originates with Taiichi Ohno's development of the Toyota Production System in the decades after WWII [2]. Buffer/safety inventory sacrifices some efficiency for resilience against demand or supply variability.",
         whyItMatters:
           "The right level on this spectrum isn't universal — it depends on how volatile and consequential a stockout would be for that specific input, which is why sophisticated operations apply different inventory policies to different components rather than one blanket approach.",
         example:
@@ -549,6 +567,10 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Capacity planning and supply risk mitigation address uncertainty on the input and demand side; make-vs-buy determines which parts of the process you even control directly. Bottleneck analysis tells you where to focus improvement effort once a process exists, root cause analysis is how you actually fix problems that surface (including at the bottleneck), and JIT-vs-buffer tradeoffs run through nearly all of these decisions as the recurring efficiency-versus-resilience tension.",
     source: "claude",
     generatedAt: "2026-09-09",
+    sources: [
+      { id: 1, title: "The Goal: A Process of Ongoing Improvement", author: "Goldratt, E. M.", year: "1984" },
+      { id: 2, title: "Toyota Production System: Beyond Large-Scale Production", author: "Ohno, T.", year: "1988" },
+    ],
   },
 
   "business/Leadership & HR": {
@@ -561,7 +583,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "hr-toxic-high-performer",
         title: "Managing a toxic high performer",
         explanation:
-          "A high performer whose behavior damages team morale or drives away colleagues creates a real dilemma: their individual output looks valuable, but the team-level cost (attrition, disengagement, chilled psychological safety) is often larger and harder to measure. Acting requires documented behavioral evidence, not just performance metrics. Research by Housman and Minor (Harvard Business School, 2015) estimated the cost of a toxic worker to a team — driven mainly by the attrition and productivity loss they cause in others — at roughly twice the value a star performer adds, a useful counterweight to the intuitive pull of protecting someone for their output alone.",
+          "A high performer whose behavior damages team morale or drives away colleagues creates a real dilemma: their individual output looks valuable, but the team-level cost (attrition, disengagement, chilled psychological safety) is often larger and harder to measure. Acting requires documented behavioral evidence, not just performance metrics. Research by Housman and Minor (Harvard Business School, 2015) [1] estimated the cost of a toxic worker to a team — driven mainly by the attrition and productivity loss they cause in others — at roughly twice the value a star performer adds, a useful counterweight to the intuitive pull of protecting someone for their output alone.",
         whyItMatters:
           "Leaders who tolerate toxic behavior because of strong individual output routinely underestimate the real cost — quiet attrition of other good employees who won't work under those conditions, which is a slower but often larger loss than the toxic employee's individual contribution.",
         example:
@@ -601,7 +623,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "hr-psychological-safety",
         title: "Psychological safety",
         explanation:
-          "Psychological safety is a shared belief that a team is safe for interpersonal risk-taking — that raising a concern, admitting a mistake, or challenging an idea won't be punished or embarrassing, a construct Amy Edmondson defined and popularized through her research (notably 'The Fearless Organization', 2018). It's a well-researched predictor of team learning, innovation, and — critically — of problems actually surfacing before they become crises.",
+          "Psychological safety is a shared belief that a team is safe for interpersonal risk-taking — that raising a concern, admitting a mistake, or challenging an idea won't be punished or embarrassing, a construct Amy Edmondson defined and popularized through her research (notably 'The Fearless Organization', 2018) [2]. It's a well-researched predictor of team learning, innovation, and — critically — of problems actually surfacing before they become crises.",
         whyItMatters:
           "Teams without psychological safety don't have fewer problems — they have the same problems, just hidden longer, since people are afraid to raise them until it's too late to address them cheaply, which is why so many organizational failures are traced back afterward to warnings that existed but went unspoken.",
         example:
@@ -622,6 +644,10 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Performance documentation is the foundation that makes it possible to act fairly on both a toxic high performer and a broader workforce reduction decision. Psychological safety and genuine culture change both depend on the same underlying truth — what's actually rewarded and tolerated (not stated) shapes behavior — and post-merger cultural integration is a concentrated, high-stakes test of all of this at once, since two different reward and behavior systems are being forced together simultaneously.",
     source: "claude",
     generatedAt: "2026-09-09",
+    sources: [
+      { id: 1, title: "The True Cost of a Toxic Employee", author: "Housman, M., & Minor, D.", year: "2015" },
+      { id: 2, title: "The Fearless Organization", author: "Edmondson, A. C.", year: "2018" },
+    ],
   },
 
   "business/Crisis Management": {
@@ -883,7 +909,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "sales-pipeline-qualification",
         title: "Deal qualification discipline (MEDDIC/BANT)",
         explanation:
-          "Structured qualification frameworks (like MEDDIC: Metrics, Economic buyer, Decision criteria, Decision process, Identify pain, Champion — developed at PTC in the 1990s by Jack Napoli and Dick Dunkel, or the simpler BANT: Budget, Authority, Need, Timeline, originated at IBM) force a rep to verify a deal is real and winnable before investing further time, rather than chasing every lead equally.",
+          "Structured qualification frameworks (like MEDDIC: Metrics, Economic buyer, Decision criteria, Decision process, Identify pain, Champion — developed at PTC in the 1990s by Jack Napoli and Dick Dunkel [1], or the simpler BANT: Budget, Authority, Need, Timeline, originated at IBM) force a rep to verify a deal is real and winnable before investing further time, rather than chasing every lead equally.",
         whyItMatters:
           "Unqualified pipeline — deals that look active but lack real budget, authority, or urgency — wastes sales capacity and produces the false confidence that leads to inflated forecasts; qualification discipline is what keeps pipeline numbers honest.",
         example:
@@ -914,6 +940,9 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Qualification discipline is what makes forecasting honest in the first place — pipeline built on unqualified deals produces unreliable forecasts regardless of methodology. Churn diagnosis and value-based selling both push toward addressing the real underlying cause of a problem instead of a generic fix (a discount), compensation design shapes what behavior the whole sales organization actually optimizes for day to day, and win-loss analysis is the feedback loop that improves all of the above over time by turning individual deal outcomes into organizational learning.",
     source: "claude",
     generatedAt: "2026-09-09",
+    sources: [
+      { id: 1, title: "MEDDIC Sales Qualification Methodology", author: "Napoli, J., & Dunkel, D. (Parametric Technology Corporation)", year: "1996" },
+    ],
   },
 
   "business/Supply Chain & Logistics": {
@@ -936,7 +965,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "sc-bullwhip-effect",
         title: "The bullwhip effect",
         explanation:
-          "Small fluctuations in actual consumer demand get amplified as they propagate upstream through a supply chain — each link (retailer, distributor, manufacturer, raw material supplier) adds a buffer to protect against uncertainty, and those buffers compound, causing large swings in orders far upstream from relatively small real demand changes. The dynamic was first modeled by Jay Forrester (MIT, 1961) and later popularized as the 'bullwhip effect' by Hau Lee, V. Padmanabhan, and Seungjin Whang in their widely-cited 1997 Sloan Management Review / Management Science research.",
+          "Small fluctuations in actual consumer demand get amplified as they propagate upstream through a supply chain — each link (retailer, distributor, manufacturer, raw material supplier) adds a buffer to protect against uncertainty, and those buffers compound, causing large swings in orders far upstream from relatively small real demand changes. The dynamic was first modeled by Jay Forrester (MIT, 1961) [1] and later popularized as the 'bullwhip effect' by Hau Lee, V. Padmanabhan, and Seungjin Whang in their widely-cited 1997 Sloan Management Review / Management Science research [2].",
         whyItMatters:
           "This explains a lot of supply chain volatility that looks irrational in isolation — upstream suppliers can see wild order swings even when actual end-consumer demand barely moved, purely because of how uncertainty and buffering compound through each link in the chain.",
         example:
@@ -966,7 +995,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "sc-concentration-risk",
         title: "Supply chain concentration risk",
         explanation:
-          "Over-reliance on a single port, carrier, supplier, or customer creates a structural vulnerability — a single point of failure that can halt operations regardless of how well-run the rest of the supply chain is, independent of any individual supplier's quality or reliability. Hau Lee's 'Triple-A Supply Chain' framework (Harvard Business Review, 2004) frames the mitigation for this and related risks around three properties — agility, adaptability, and alignment — arguing supply chains need all three, not just the efficiency that concentration often optimizes for.",
+          "Over-reliance on a single port, carrier, supplier, or customer creates a structural vulnerability — a single point of failure that can halt operations regardless of how well-run the rest of the supply chain is, independent of any individual supplier's quality or reliability. Hau Lee's 'Triple-A Supply Chain' framework (Harvard Business Review, 2004) [3] frames the mitigation for this and related risks around three properties — agility, adaptability, and alignment — arguing supply chains need all three, not just the efficiency that concentration often optimizes for.",
         whyItMatters:
           "Concentration risk is often invisible until the single point of failure actually fails — companies that never experienced a disruption at their sole supplier had no reason to notice the risk, right up until they did.",
         example:
@@ -987,6 +1016,11 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Total landed cost and concentration risk are both about seeing the true cost and risk of a sourcing decision beyond the headline price — which is what motivates the reshoring/nearshoring/hybrid tradeoff. The bullwhip effect explains why demand signals get distorted as they move upstream, safety stock policy and S&OP are the two main tools for managing that distortion and uncertainty (buffer inventory, and cross-functional coordination) so the whole network stays aligned rather than each function planning against its own separate assumptions.",
     source: "claude",
     generatedAt: "2026-09-09",
+    sources: [
+      { id: 1, title: "Industrial Dynamics", author: "Forrester, J. W.", year: "1961" },
+      { id: 2, title: "The Bullwhip Effect in Supply Chains", author: "Lee, H. L., Padmanabhan, V., & Whang, S.", year: "1997", url: "https://sloanreview.mit.edu/article/the-bullwhip-effect-in-supply-chains/" },
+      { id: 3, title: "The Triple-A Supply Chain", author: "Lee, H. L.", year: "2004", url: "https://hbr.org/2004/10/the-triple-a-supply-chain" },
+    ],
   },
 
   "business/IT & Technology Management": {
@@ -999,7 +1033,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "it-build-vs-buy",
         title: "Build vs. buy: the core-vs-context framework",
         explanation:
-          "A useful lens for technology investment decisions, drawn from Geoffrey Moore's 'core vs. context' framework: build (invest real engineering effort) in what's genuinely core to competitive advantage; buy (use a vendor solution) for context — necessary but not differentiating — capabilities, where a mature vendor product is usually faster and cheaper than custom development.",
+          "A useful lens for technology investment decisions, drawn from Geoffrey Moore's 'core vs. context' framework [1]: build (invest real engineering effort) in what's genuinely core to competitive advantage; buy (use a vendor solution) for context — necessary but not differentiating — capabilities, where a mature vendor product is usually faster and cheaper than custom development.",
         whyItMatters:
           "Building custom software for non-differentiating needs wastes scarce engineering capacity that could go toward genuinely core capabilities — the core-vs-context distinction is what prevents 'we can build it ourselves' from being applied indiscriminately to everything.",
         example:
@@ -1019,7 +1053,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "it-technical-debt",
         title: "Quantifying technical debt's business cost",
         explanation:
-          "Technical debt — a metaphor Ward Cunningham originated in 1992 to describe shortcuts taken to ship faster that accumulate ongoing cost (slower development velocity, more bugs, harder onboarding) — is easiest to ignore because its cost is diffuse and gradual rather than a single visible expense, unlike a line item in a budget.",
+          "Technical debt — a metaphor Ward Cunningham originated in 1992 [2] to describe shortcuts taken to ship faster that accumulate ongoing cost (slower development velocity, more bugs, harder onboarding) — is easiest to ignore because its cost is diffuse and gradual rather than a single visible expense, unlike a line item in a budget.",
         whyItMatters:
           "Quantifying technical debt's actual business cost (in velocity lost, incidents caused, or churn from a buggy product) is what makes the case for investing time in paying it down, since 'the code is messy' alone rarely wins against pressure to ship new features.",
         example:
@@ -1029,7 +1063,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "it-cyber-risk-quantification",
         title: "Quantifying cyber risk in financial terms",
         explanation:
-          "Frameworks like FAIR (Factor Analysis of Information Risk) translate cybersecurity risk into estimated financial terms — expected loss given a breach's likelihood and impact — so security investment can be justified and prioritized against other capital priorities using the same language as the rest of the business. The NIST Cybersecurity Framework is a complementary, widely adopted approach: rather than quantifying risk in dollars, it organizes security maturity into functions (Identify, Protect, Detect, Respond, Recover), and organizations often use both together — NIST to structure the program, FAIR to justify its budget.",
+          "Frameworks like FAIR (Factor Analysis of Information Risk) translate cybersecurity risk into estimated financial terms — expected loss given a breach's likelihood and impact — so security investment can be justified and prioritized against other capital priorities using the same language as the rest of the business. The NIST Cybersecurity Framework [3] is a complementary, widely adopted approach: rather than quantifying risk in dollars, it organizes security maturity into functions (Identify, Protect, Detect, Respond, Recover), and organizations often use both together — NIST to structure the program, FAIR to justify its budget.",
         whyItMatters:
           "Security requests framed purely in technical terms ('we need better endpoint protection') compete poorly for budget against initiatives with clear ROI — framing cyber risk in expected-financial-loss terms lets it compete on equal footing in capital allocation decisions.",
         example:
@@ -1060,6 +1094,11 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "The core-vs-context framework decides what should be built at all — TCO analysis is how you properly compare the build-vs-buy options for everything else. Technical debt is the accumulating cost of past build decisions, cyber risk quantification and vendor lock-in are both about surfacing risks that are easy to underweight because they're not immediately visible line items, and AI/initiative prioritization applies the same value-versus-feasibility discipline to deciding what gets built or bought next.",
     source: "claude",
     generatedAt: "2026-09-09",
+    sources: [
+      { id: 1, title: "Living on the Fault Line: Managing for Shareholder Value in the Age of the Internet", author: "Moore, G. A.", year: "2000" },
+      { id: 2, title: "The WyCash Portfolio Management System", author: "Cunningham, W.", year: "1992" },
+      { id: 3, title: "Framework for Improving Critical Infrastructure Cybersecurity", author: "National Institute of Standards and Technology (NIST)", year: "2014", url: "https://www.nist.gov/cyberframework" },
+    ],
   },
 
   "business/Manufacturing & Production": {
@@ -1145,7 +1184,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "product-jtbd-discovery",
         title: "Jobs-to-be-done and customer discovery",
         explanation:
-          "The jobs-to-be-done framework reframes product decisions around the underlying task or problem a customer is trying to accomplish, rather than the specific feature they asked for — customer discovery (interviews, observation) is how you actually validate that a real, painful problem exists before committing engineering investment to solve it. Clayton Christensen popularized the framework (building on earlier work by Tony Ulwick and others), most notably through the 'milkshake marketing' study described in his 2016 book 'Competing Against Luck.'",
+          "The jobs-to-be-done framework reframes product decisions around the underlying task or problem a customer is trying to accomplish, rather than the specific feature they asked for — customer discovery (interviews, observation) is how you actually validate that a real, painful problem exists before committing engineering investment to solve it. Clayton Christensen popularized the framework (building on earlier work by Tony Ulwick and others), most notably through the 'milkshake marketing' study described in his 2016 book 'Competing Against Luck' [1].",
         whyItMatters:
           "Building a well-executed feature that solves a problem customers don't actually have is a common, expensive failure mode — discovery validates the problem is real and painful enough that customers will change behavior (or pay) for a solution, before investing in building one.",
         example:
@@ -1155,7 +1194,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "product-prioritization-frameworks",
         title: "Prioritization frameworks (RICE and similar)",
         explanation:
-          "Structured prioritization frameworks (like RICE: Reach, Impact, Confidence, Effort — popularized by the product team at Intercom) score competing roadmap items on consistent criteria, providing a defensible, repeatable basis for sequencing work instead of prioritizing by whoever asked most recently, most loudly, or most senior.",
+          "Structured prioritization frameworks (like RICE: Reach, Impact, Confidence, Effort — popularized by the product team at Intercom [2]) score competing roadmap items on consistent criteria, providing a defensible, repeatable basis for sequencing work instead of prioritizing by whoever asked most recently, most loudly, or most senior.",
         whyItMatters:
           "Without a structured framework, roadmaps tend to be captured by whichever stakeholder has the most organizational power or persistence, not necessarily the highest-value work — a consistent scoring method makes tradeoffs visible and defensible.",
         example:
@@ -1165,7 +1204,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "product-mvp-expectation-setting",
         title: "MVP expectation-setting and feedback triage",
         explanation:
-          "A minimum viable product — the term and methodology Eric Ries formalized in 'The Lean Startup' (2011), building on Steve Blank's earlier customer-development work — is deliberately stripped down to test a core hypothesis with real users. This means managing expectations carefully (this isn't the finished vision) and triaging the resulting feedback to separate genuine signal about the core hypothesis from noise about missing polish that was never the point of the MVP.",
+          "A minimum viable product — the term and methodology Eric Ries formalized in 'The Lean Startup' (2011) [3], building on Steve Blank's earlier customer-development work — is deliberately stripped down to test a core hypothesis with real users. This means managing expectations carefully (this isn't the finished vision) and triaging the resulting feedback to separate genuine signal about the core hypothesis from noise about missing polish that was never the point of the MVP.",
         whyItMatters:
           "Early users often judge an MVP as if it were a finished product, generating a flood of feedback about missing features that can drown out the specific signal the MVP was actually designed to test — knowing what question you're trying to answer keeps the feedback useful.",
         example:
@@ -1206,6 +1245,11 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Jobs-to-be-done and customer discovery validate that a real problem exists before building anything; prioritization frameworks decide what to build first among many validated (or plausible) opportunities. MVP expectation-setting and statistical rigor are both about interpreting evidence honestly once something ships — resisting the pull to over-read early signal — and sustainable moat and pricing/monetization determine whether what gets built and shipped actually translates into durable, well-captured business value.",
     source: "claude",
     generatedAt: "2026-09-09",
+    sources: [
+      { id: 1, title: "Competing Against Luck", author: "Christensen, C. M.", year: "2016" },
+      { id: 2, title: "RICE: Simple Prioritization for Product Managers", author: "McClure, S. (Intercom)", year: "2016", url: "https://www.intercom.com/blog/rice-simple-prioritization-for-product-managers/" },
+      { id: 3, title: "The Lean Startup", author: "Ries, E.", year: "2011" },
+    ],
   },
 
   "business/Customer Experience": {
@@ -1301,7 +1345,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "talent-succession-planning",
         title: "Succession planning and leadership pipelines",
         explanation:
-          "Succession planning identifies and develops internal candidates for key leadership roles before a vacancy occurs — often using a '9-box' grid (performance vs. potential) to assess and develop high-potential employees systematically, rather than defaulting to an external search whenever a leadership role opens. The framework, popularized in HR practice partly through Ready, Conger, and Hill's 2010 Harvard Business Review work on identifying high-potential employees, warns against a common misreading: high current performance alone does not imply high potential for a bigger, different role — the two axes are assessed separately for a reason.",
+          "Succession planning identifies and develops internal candidates for key leadership roles before a vacancy occurs — often using a '9-box' grid (performance vs. potential) to assess and develop high-potential employees systematically, rather than defaulting to an external search whenever a leadership role opens. The framework, popularized in HR practice partly through Ready, Conger, and Hill's 2010 Harvard Business Review work on identifying high-potential employees [1], warns against a common misreading: high current performance alone does not imply high potential for a bigger, different role — the two axes are assessed separately for a reason.",
         whyItMatters:
           "Organizations without a real succession pipeline are forced into reactive, often rushed external searches when a key leader departs unexpectedly — with real costs in lost institutional knowledge, onboarding time, and cultural fit risk compared to a prepared internal candidate.",
         example:
@@ -1313,7 +1357,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         explanation:
           "A pay equity audit statistically analyzes whether pay differences correlate with protected characteristics (gender, race) after controlling for legitimate factors (role, experience, performance, location) — typically via a multiple regression model where the protected characteristic's coefficient, after those controls, is the 'unexplained' gap — and traces any unexplained gaps back to root causes across hiring, promotion, and negotiation processes, not just current pay. Audits are usually run under attorney-client privilege given the legal exposure involved, since findings can otherwise become discoverable evidence in litigation.",
         whyItMatters:
-          "Pay gaps often originate upstream of the current pay decision — in who gets hired at what starting salary, who gets promoted, or who negotiates more aggressively — so remediation that only adjusts current pay without fixing the upstream process tends to see the gap re-emerge over time. The legal backdrop varies by jurisdiction but is tightening broadly: the US Equal Pay Act (1963) and Title VII prohibit unequal pay for equal work, and the EU Pay Transparency Directive (2023/970) will require large employers to report gender pay gaps and disclose pay ranges to candidates, starting June 2026 — audits are shifting from a voluntary best practice to a compliance obligation in many markets.",
+          "Pay gaps often originate upstream of the current pay decision — in who gets hired at what starting salary, who gets promoted, or who negotiates more aggressively — so remediation that only adjusts current pay without fixing the upstream process tends to see the gap re-emerge over time. The legal backdrop varies by jurisdiction but is tightening broadly: the US Equal Pay Act (1963) [5] and Title VII prohibit unequal pay for equal work, and the EU Pay Transparency Directive (2023/970) [6] will require large employers to report gender pay gaps and disclose pay ranges to candidates, starting June 2026 — audits are shifting from a voluntary best practice to a compliance obligation in many markets.",
         example:
           "A company that finds an unexplained gender pay gap concentrated among recent hires (not tenured employees) likely has a starting-salary or negotiation-process issue, distinct from a company where the gap grows with tenure (suggesting a promotion or raise-allocation issue) — same headline finding, different root cause and fix.",
       },
@@ -1321,7 +1365,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "talent-onboarding-newhire",
         title: "Structured onboarding (e.g., 30-60-90 plans)",
         explanation:
-          "A structured onboarding plan — often organized around 30/60/90-day milestones — gives new hires clear early expectations and support, which research consistently links to lower early attrition and faster time-to-productivity compared to an unstructured, sink-or-swim start. Talya Bauer's SHRM Foundation research synthesis (2010) frames this around 'four C's': compliance (basic rules/policies), clarification (role and performance expectations), culture (norms), and connection (relationships and networks) — programs that stop at compliance and clarification but skip culture and connection tend to see weaker retention gains.",
+          "A structured onboarding plan — often organized around 30/60/90-day milestones — gives new hires clear early expectations and support, which research consistently links to lower early attrition and faster time-to-productivity compared to an unstructured, sink-or-swim start. Talya Bauer's SHRM Foundation research synthesis (2010) [2] frames this around 'four C's': compliance (basic rules/policies), clarification (role and performance expectations), culture (norms), and connection (relationships and networks) — programs that stop at compliance and clarification but skip culture and connection tend to see weaker retention gains.",
         whyItMatters:
           "Early attrition (within the first 90 days) is disproportionately expensive relative to the value gained, since the company has invested full recruiting cost with minimal productive output — good onboarding is one of the highest-leverage, lowest-cost retention investments available.",
         example:
@@ -1331,9 +1375,9 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "talent-inclusive-hiring-bias",
         title: "Structured, bias-resistant hiring",
         explanation:
-          "Unstructured interviews (different questions for different candidates, purely gut-feel evaluation) are more vulnerable to bias and less predictive of job performance than structured interviews with consistent questions and standardized scorecards applied to every candidate for a role. Schmidt and Hunter's influential meta-analysis of personnel selection methods (Psychological Bulletin, 1998) found structured interviews to be substantially more predictive of job performance than unstructured ones — one of the most-cited findings in personnel psychology on this question.",
+          "Unstructured interviews (different questions for different candidates, purely gut-feel evaluation) are more vulnerable to bias and less predictive of job performance than structured interviews with consistent questions and standardized scorecards applied to every candidate for a role. Schmidt and Hunter's influential meta-analysis of personnel selection methods (Psychological Bulletin, 1998) [3] found structured interviews to be substantially more predictive of job performance than unstructured ones — one of the most-cited findings in personnel psychology on this question.",
         whyItMatters:
-          "Beyond fairness, structured hiring is also better hiring — it's more predictive of actual job performance than unstructured 'culture fit' interviews, which is why the business case and the fairness case for structure point the same direction. It also reduces legal exposure: in the US, the Uniform Guidelines on Employee Selection Procedures (1978) hold employers accountable for adverse impact in hiring outcomes, and a documented, consistent process is far easier to defend than an ad hoc one if a selection decision is challenged.",
+          "Beyond fairness, structured hiring is also better hiring — it's more predictive of actual job performance than unstructured 'culture fit' interviews, which is why the business case and the fairness case for structure point the same direction. It also reduces legal exposure: in the US, the Uniform Guidelines on Employee Selection Procedures (1978) [4] hold employers accountable for adverse impact in hiring outcomes, and a documented, consistent process is far easier to defend than an ad hoc one if a selection decision is challenged.",
         example:
           "Companies that replaced free-form 'tell me about yourself' interviews with structured, scorecard-based interviews using the same core questions for every candidate for a role have reported both improved hiring outcomes and reduced adverse-impact risk in hiring data.",
       },
@@ -1352,6 +1396,14 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Compensation benchmarking and pay equity audits both ensure pay is fair and competitive, from different angles (external market position and internal fairness). Structured, bias-resistant hiring and onboarding determine who joins and how well they're set up to succeed, succession planning builds the pipeline for future leadership needs, and EVP design is the overall story that ties compensation, growth, and culture together into why someone should choose — and stay at — this employer over the alternatives.",
     source: "claude",
     generatedAt: "2026-09-09",
+    sources: [
+      { id: 1, title: "Are You a High Potential?", author: "Ready, D. A., Conger, J. A., & Hill, L. A.", year: "2010", url: "https://hbr.org/2010/06/are-you-a-high-potential" },
+      { id: 2, title: "Onboarding New Employees: Maximizing Success", author: "Bauer, T. N.", year: "2010" },
+      { id: 3, title: "The Validity and Utility of Selection Methods in Personnel Psychology", author: "Schmidt, F. L., & Hunter, J. E.", year: "1998", url: "https://doi.org/10.1037/0033-2909.124.2.262" },
+      { id: 4, title: "Uniform Guidelines on Employee Selection Procedures", author: "Equal Employment Opportunity Commission", year: "1978" },
+      { id: 5, title: "Equal Pay Act", author: "United States Congress", year: "1963" },
+      { id: 6, title: "Pay Transparency Directive (EU 2023/970)", author: "European Union", year: "2023" },
+    ],
   },
 
   "business/International & Global Business": {
@@ -1364,7 +1416,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "intl-entry-mode-selection",
         title: "Market entry mode selection",
         explanation:
-          "Entering a foreign market can take several forms — exporting (lowest commitment and risk, least control), licensing (a local partner produces under license), joint venture (shared ownership, often required by local law), or a wholly-owned subsidiary (full control, highest commitment and risk). The right choice trades off control, speed, cost, and risk. John Dunning's OLI (Ownership-Location-Internalization) framework offers a theoretical lens on this choice: firms favor higher-commitment modes when they hold a proprietary ownership advantage worth protecting, when the target location itself offers a specific advantage, and when internalizing the activity (rather than licensing it out) avoids the cost of transacting with an outside partner.",
+          "Entering a foreign market can take several forms — exporting (lowest commitment and risk, least control), licensing (a local partner produces under license), joint venture (shared ownership, often required by local law), or a wholly-owned subsidiary (full control, highest commitment and risk). The right choice trades off control, speed, cost, and risk. John Dunning's OLI (Ownership-Location-Internalization) framework [1] offers a theoretical lens on this choice: firms favor higher-commitment modes when they hold a proprietary ownership advantage worth protecting, when the target location itself offers a specific advantage, and when internalizing the activity (rather than licensing it out) avoids the cost of transacting with an outside partner.",
         whyItMatters:
           "Choosing too light a commitment (pure exporting) can leave a company unable to compete against local rivals with real market presence; choosing too heavy a commitment (a wholly-owned subsidiary) in an unfamiliar or risky market can be an expensive, hard-to-reverse mistake.",
         example:
@@ -1374,7 +1426,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "intl-standardization-vs-adaptation",
         title: "Standardization vs. local adaptation",
         explanation:
-          "The integration-responsiveness framework asks how much of a company's product, marketing, and operations should be globally standardized (efficiency, consistent brand) versus locally adapted (responsiveness to genuinely different local needs, tastes, and regulations). Theodore Levitt's influential 1983 Harvard Business Review essay 'The Globalization of Markets' argued consumer tastes were converging enough for standardized global products to win on cost — a claim later critiqued by scholars who pointed to persistent, real local preference differences that pure standardization ignores at its peril.",
+          "The integration-responsiveness framework asks how much of a company's product, marketing, and operations should be globally standardized (efficiency, consistent brand) versus locally adapted (responsiveness to genuinely different local needs, tastes, and regulations). Theodore Levitt's influential 1983 Harvard Business Review essay 'The Globalization of Markets' [2] argued consumer tastes were converging enough for standardized global products to win on cost — a claim later critiqued by scholars who pointed to persistent, real local preference differences that pure standardization ignores at its peril.",
         whyItMatters:
           "Over-standardizing ignores real local differences that can doom a product's reception; over-adapting sacrifices the scale efficiencies and brand consistency that made global expansion attractive in the first place — the right balance differs by product category and market.",
         example:
@@ -1394,7 +1446,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "intl-cultural-intelligence-communication",
         title: "Cross-cultural communication norms",
         explanation:
-          "Cultures differ systematically in communication style — high-context cultures rely heavily on implicit, contextual meaning (much is unsaid but understood), while low-context cultures favor explicit, direct communication, a distinction anthropologist Edward T. Hall introduced in the 1970s. Erin Meyer's 'The Culture Map' (2014) extends this into a practical, multi-dimensional tool for global managers, mapping cultures across several scales (not just high/low context) so a manager can anticipate specific friction points before they occur rather than reasoning from a single dimension alone.",
+          "Cultures differ systematically in communication style — high-context cultures rely heavily on implicit, contextual meaning (much is unsaid but understood), while low-context cultures favor explicit, direct communication, a distinction anthropologist Edward T. Hall introduced in the 1970s [3]. Erin Meyer's 'The Culture Map' (2014) [4] extends this into a practical, multi-dimensional tool for global managers, mapping cultures across several scales (not just high/low context) so a manager can anticipate specific friction points before they occur rather than reasoning from a single dimension alone.",
         whyItMatters:
           "A direct communication style that reads as efficient and honest in a low-context culture can read as rude or aggressive in a high-context one — and an indirect, contextual style that reads as polite and thoughtful in a high-context culture can read as evasive or unclear in a low-context one.",
         example:
@@ -1425,6 +1477,12 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Market entry mode selection sets the level of commitment and control a company takes on; standardization-vs-adaptation, cultural communication norms, and currency exposure are all forms of complexity that commitment level then has to manage day to day. Anti-corruption compliance and political risk assessment are both about protecting against the more severe downside risks of operating in unfamiliar legal and political environments — risks that get more serious, not less, the deeper a company's commitment (per entry mode) to that market.",
     source: "claude",
     generatedAt: "2026-09-09",
+    sources: [
+      { id: 1, title: "The Eclectic Paradigm of International Production", author: "Dunning, J. H.", year: "1988" },
+      { id: 2, title: "The Globalization of Markets", author: "Levitt, T.", year: "1983", url: "https://hbr.org/1983/05/the-globalization-of-markets" },
+      { id: 3, title: "Beyond Culture", author: "Hall, E. T.", year: "1976" },
+      { id: 4, title: "The Culture Map", author: "Meyer, E.", year: "2014" },
+    ],
   },
 
   "business/Corporate Governance & Risk": {
