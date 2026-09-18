@@ -3582,7 +3582,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "de-cs-personalisierte-verhaeltniswahl",
         title: "Personalisierte Verhältniswahl (personalized proportional representation)",
         explanation:
-          "German voters cast two votes: the Erststimme (first vote) elects a direct constituency representative (similar to a single-member-district race), while the Zweitstimme (second vote) — the one that actually determines each party's overall Bundestag seat share — is cast for a party list. Overall seat allocation is proportional, with direct-mandate wins layered in.",
+          "German voters cast two votes: the Erststimme (first vote) elects a direct constituency representative (similar to a single-member-district race), while the Zweitstimme (second vote) — the one that actually determines each party's overall Bundestag seat share, cast for a Landesliste (state party list) — is cast for a party list. Overall seat allocation is proportional, with direct-mandate wins layered in. Historically, a party winning more direct constituency seats (via Erststimme) in a state than its Zweitstimme share proportionally entitled it to created Überhangmandate (overhang seats), offset by Ausgleichsmandate (compensatory seats) for other parties to preserve overall proportionality — a mechanic that had repeatedly enlarged the Bundestag until a 2023 electoral reform (Bundeswahlgesetz §6) capped the seat count by removing certain overhang seats instead.",
         whyItMatters:
           "This means campaign math is fundamentally different from winner-take-all systems: a party's national vote share (via the Zweitstimme) is what really matters for its power in parliament, so campaigns invest heavily in national image and messaging even while local candidates also compete for direct mandates.",
         example:
@@ -3972,7 +3972,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fr-cs-legislative-follows-presidential",
         title: "Legislative elections following the presidential calendar",
         explanation:
-          "Since a 2000-2002 calendar reform, French legislative (National Assembly) elections are held shortly after the presidential election — designed to produce a supportive parliamentary majority for the newly elected president (the \"fait majoritaire\"), though this alignment has weakened notably in the most recent electoral cycles.",
+          "Since a 2000-2002 calendar reform, French legislative (National Assembly) elections are held shortly after the presidential election — designed to produce a supportive parliamentary majority for the newly elected president (the \"fait majoritaire\"), though this alignment has weakened notably in the most recent electoral cycles. The reform was a direct response to the instability that had plagued the Fourth Republic and the early Fifth Republic, where a president and an unaligned parliamentary majority (cohabitation) could leave governance fragmented for years at a time.",
         whyItMatters:
           "This calendar sequencing was specifically designed to reduce the likelihood of cohabitation (an opposing parliamentary majority), reflecting a deliberate institutional design choice to reinforce presidential authority — its recent weakening (producing fragmented, no-clear-majority parliaments even under this sequencing) is itself a significant recent development in French politics.",
         example:
@@ -3992,7 +3992,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fr-cs-temps-de-parole",
         title: "Temps de parole — regulated equal airtime",
         explanation:
-          "France's broadcasting regulator (Arcom, formerly the CSA) enforces equal-time rules ensuring candidates receive proportionate or equal airtime on television and radio during the campaign period, similar in spirit to Germany's public-broadcasting fairness rules but with its own specific French regulatory mechanics and enforcement.",
+          "France's broadcasting regulator (Arcom, formerly the CSA) enforces equal-time rules ensuring candidates receive proportionate or equal airtime on television and radio during the campaign period, similar in spirit to Germany's public-broadcasting fairness rules but with its own specific French regulatory mechanics and enforcement. The standard actually applied shifts as the campaign progresses — an early, looser 'equitable' (proportionate to each candidate's demonstrated political weight, based on polling, prior results, and declared support) standard tightens into strict numerical equality in the final weeks before the vote.",
         whyItMatters:
           "This limits how much a well-funded or media-favored candidate can simply dominate broadcast media exposure compared to rivals — campaign media strategy has to work within these mandated fairness constraints rather than around unlimited paid media access.",
         example:
@@ -4002,7 +4002,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fr-cs-front-republicain",
         title: "Le front républicain",
         explanation:
-          "When a far-right candidate reaches the second round, mainstream parties across the rest of the political spectrum have recurringly called on their own supporters to vote for whichever opposing candidate remains — the \"republican front\" — a strategic and normative pattern distinctive to how French electoral politics has historically handled far-right breakthroughs, though its strength and reliability have varied across different elections.",
+          "When a far-right candidate reaches the second round, mainstream parties across the rest of the political spectrum have recurringly called on their own supporters to vote for whichever opposing candidate remains — the \"republican front\" — a strategic and normative pattern distinctive to how French electoral politics has historically handled far-right breakthroughs, though its strength and reliability have varied across different elections. The dynamic's modern form dates to the 2002 presidential runoff, when Jean-Marie Le Pen's unexpected first-round qualification produced a near-unanimous cross-spectrum call to back Jacques Chirac, who won with over 82% of the second-round vote — the benchmark every subsequent republican-front episode is measured against, generally with a markedly weaker effect since.",
         whyItMatters:
           "Anticipating whether and how strongly a republican front will materialize is a genuine, high-stakes strategic calculation for both the far-right candidate (hoping it weakens) and their second-round opponent (hoping it holds) — it's a real, actively contested political dynamic, not an automatic or guaranteed outcome.",
         example:
@@ -4322,7 +4322,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "es-cs-dhondt-provincial-lists",
         title: "D'Hondt method and closed provincial lists",
         explanation:
-          "Spanish general elections use closed party lists (voters choose a party, not individual candidates, and can't reorder the list) allocated by province using the D'Hondt method — a proportional allocation formula that, combined with Spain's many small-population provinces each guaranteed a minimum number of seats, produces meaningful over-representation of rural, sparsely populated provinces relative to their population share.",
+          "Spanish general elections use closed party lists (voters choose a party, not individual candidates, and can't reorder the list) allocated by province using the D'Hondt method — a proportional allocation formula that, combined with Spain's many small-population provinces each guaranteed a minimum of two seats regardless of population (under the Ley Orgánica del Régimen Electoral General, LOREG), produces meaningful over-representation of rural, sparsely populated provinces relative to their population share.",
         whyItMatters:
           "This structural rural over-representation means national vote-share alone doesn't translate cleanly into seats — campaign resource allocation has to account for where votes actually convert most efficiently into seats under this system, not just where the most total votes are available.",
         example:
@@ -4332,7 +4332,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "es-cs-post-2015-fragmentation",
         title: "Post-2015 party system fragmentation",
         explanation:
-          "Spain's historically stable two-party dominance (PSOE and PP alternating in government) fragmented significantly starting around 2015 with the emergence and growth of new parties across the political spectrum — permanently changing campaign strategy from a primarily two-way contest into genuine multi-party competition requiring post-election coalition-building calculations built into campaign strategy itself.",
+          "Spain's historically stable two-party dominance (PSOE and PP alternating in government) fragmented significantly starting around 2015 with the emergence and growth of new parties across the political spectrum — Podemos on the left and Ciudadanos on the center-right first, followed by Vox on the right — permanently changing campaign strategy from a primarily two-way contest into genuine multi-party competition requiring post-election coalition-building calculations built into campaign strategy itself (see Montero, Lago & Torcal's 2016 analysis of this shift in the Spanish party system).",
         whyItMatters:
           "Campaigns since this fragmentation can no longer credibly promise straightforward single-party governance the way pre-2015 campaigns often could — voters and campaign strategists alike now factor likely post-election negotiating scenarios into their calculations well before votes are even cast.",
         example:
@@ -4998,7 +4998,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "cs-message-discipline-framing",
         title: "Message discipline and framing",
         explanation:
-          "Effective campaigns typically settle on a small number of core messages and repeat them relentlessly across every channel and surrogate, rather than trying to communicate every policy position with equal emphasis. Framing — how an issue is presented, not just what position is taken — shapes how voters interpret it.",
+          "Effective campaigns typically settle on a small number of core messages and repeat them relentlessly across every channel and surrogate, rather than trying to communicate every policy position with equal emphasis. Framing — how an issue is presented, not just what position is taken — shapes how voters interpret it. Robert Entman's influential definition (1993) describes framing as selecting certain aspects of a perceived reality and making them more salient, so as to promote a particular problem definition, causal interpretation, moral evaluation, and treatment recommendation — the same underlying facts, framed differently, can lead audiences to very different conclusions.",
         whyItMatters:
           "Voters are exposed to a message only briefly and often inattentively — a campaign that dilutes its message across too many priorities is usually outcompeted by one voters can actually summarize and remember, regardless of the substantive merit of either platform.",
         example:
@@ -5008,7 +5008,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "cs-fundamentals-vs-events",
         title: "Fundamentals vs. campaign events",
         explanation:
-          "Political science research suggests structural 'fundamentals' — the economy, incumbency, partisan lean of the electorate — predict a substantial share of election outcomes well before campaign events happen. Individual campaign moments (debates, gaffes, ads) tend to matter most at the margins, in already-close races.",
+          "Political science research suggests structural 'fundamentals' — the economy, incumbency, partisan lean of the electorate — predict a substantial share of election outcomes well before campaign events happen. Individual campaign moments (debates, gaffes, ads) tend to matter most at the margins, in already-close races. This builds on the 'Michigan Model' of voting behavior (Campbell, Converse, Miller & Stokes, 'The American Voter', 1960), which emphasized long-term partisan identification as the dominant driver of the vote, with short-term forces like candidate image and specific issues layered on top rather than driving the outcome outright.",
         whyItMatters:
           "This tempers how much weight to put on any single campaign tactic or moment — a well-run campaign in a structurally hostile environment can still lose, and a poorly run one in a favorable environment can still win, which is important context for evaluating campaign decisions after the fact.",
         example:
