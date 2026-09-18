@@ -5153,7 +5153,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "cs-message-discipline-framing",
         title: "Message discipline and framing",
         explanation:
-          "Effective campaigns typically settle on a small number of core messages and repeat them relentlessly across every channel and surrogate, rather than trying to communicate every policy position with equal emphasis. Framing — how an issue is presented, not just what position is taken — shapes how voters interpret it. Robert Entman's influential definition (1993) describes framing as selecting certain aspects of a perceived reality and making them more salient, so as to promote a particular problem definition, causal interpretation, moral evaluation, and treatment recommendation — the same underlying facts, framed differently, can lead audiences to very different conclusions.",
+          "Effective campaigns typically settle on a small number of core messages and repeat them relentlessly across every channel and surrogate, rather than trying to communicate every policy position with equal emphasis. Framing — how an issue is presented, not just what position is taken — shapes how voters interpret it. Robert Entman's influential definition (1993) [1] describes framing as selecting certain aspects of a perceived reality and making them more salient, so as to promote a particular problem definition, causal interpretation, moral evaluation, and treatment recommendation — the same underlying facts, framed differently, can lead audiences to very different conclusions.",
         whyItMatters:
           "Voters are exposed to a message only briefly and often inattentively — a campaign that dilutes its message across too many priorities is usually outcompeted by one voters can actually summarize and remember, regardless of the substantive merit of either platform.",
         example:
@@ -5163,7 +5163,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "cs-fundamentals-vs-events",
         title: "Fundamentals vs. campaign events",
         explanation:
-          "Political science research suggests structural 'fundamentals' — the economy, incumbency, partisan lean of the electorate — predict a substantial share of election outcomes well before campaign events happen. Individual campaign moments (debates, gaffes, ads) tend to matter most at the margins, in already-close races. This builds on the 'Michigan Model' of voting behavior (Campbell, Converse, Miller & Stokes, 'The American Voter', 1960), which emphasized long-term partisan identification as the dominant driver of the vote, with short-term forces like candidate image and specific issues layered on top rather than driving the outcome outright.",
+          "Political science research suggests structural 'fundamentals' — the economy, incumbency, partisan lean of the electorate — predict a substantial share of election outcomes well before campaign events happen. Individual campaign moments (debates, gaffes, ads) tend to matter most at the margins, in already-close races. This builds on the 'Michigan Model' of voting behavior (Campbell, Converse, Miller & Stokes, 'The American Voter', 1960) [2], which emphasized long-term partisan identification as the dominant driver of the vote, with short-term forces like candidate image and specific issues layered on top rather than driving the outcome outright.",
         whyItMatters:
           "This tempers how much weight to put on any single campaign tactic or moment — a well-run campaign in a structurally hostile environment can still lose, and a poorly run one in a favorable environment can still win, which is important context for evaluating campaign decisions after the fact.",
         example:
@@ -5204,6 +5204,10 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Fundamentals set the baseline conditions a campaign is operating within — targeting and resource allocation (battlegrounds, persuasion vs. turnout) determine where effort goes given those conditions, message discipline and framing determine what voters actually hear, opposition research and rapid response defend and attack within that message battle, and GOTV/ground game converts all of the above into actual votes cast.",
     source: "claude",
     generatedAt: "2026-09-09",
+    sources: [
+      { id: 1, title: "Framing: Toward Clarification of a Fractured Paradigm", author: "Entman, R. M.", year: "1993" },
+      { id: 2, title: "The American Voter", author: "Campbell, A., Converse, P. E., Miller, W. E., & Stokes, D. E.", year: "1960" },
+    ],
   },
 
   "politics/Legislative Negotiation": {
