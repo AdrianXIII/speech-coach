@@ -41,7 +41,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ skipped: true, reason: "Already reviewed", review: previous[0] });
   }
 
-  let assessments = await reviewWithConfiguredAgents(content);
+  const initialResult = await reviewWithConfiguredAgents(content);
+  let assessments = initialResult.assessments;
   const expectedAgents = configuredReviewAgentCount();
   const complete = expectedAgents > 0 && assessments.length === expectedAgents;
 
@@ -114,6 +115,11 @@ export async function POST(req: NextRequest) {
       review: review[0],
       agents: assessments.map(({ agentName, model, verdict, scores }) => ({ agentName, model, verdict, scores })),
       debated: Boolean(debateInfo?.ran),
+      // Temporary diagnostic: an agent failure is otherwise silently
+      // dropped (Promise.allSettled), so the only symptom is a status stuck
+      // on needs_retry with no clue why. Remove once the current review
+      // agent failures are root-caused.
+      ...(initialResult.failures.length ? { agentFailures: initialResult.failures } : {}),
     },
     { status: 201 },
   );

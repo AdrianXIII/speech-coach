@@ -181,13 +181,20 @@ function configuredAgentTasks(prompt: string): Promise<AgentAssessment>[] {
   return tasks;
 }
 
-export async function reviewWithConfiguredAgents(content: ReviewableTutorContent): Promise<AgentAssessment[]> {
+export interface ReviewAgentResult {
+  assessments: AgentAssessment[];
+  /** Rejected-agent error messages, surfaced to the caller for diagnostics — an agent failure is otherwise silently dropped by design (see Promise.allSettled below). */
+  failures: string[];
+}
+
+export async function reviewWithConfiguredAgents(content: ReviewableTutorContent): Promise<ReviewAgentResult> {
   const tasks = configuredAgentTasks(REVIEW_PROMPT(content));
   if (!tasks.length) throw new Error("No review agent is configured. Set GEMINI_API_KEY, OPENAI_API_KEY and/or ANTHROPIC_API_KEY.");
   const results = await Promise.allSettled(tasks);
-  const successful = results.filter((result): result is PromiseFulfilledResult<AgentAssessment> => result.status === "fulfilled").map((result) => result.value);
-  if (!successful.length) throw new Error("All configured review agents failed.");
-  return successful;
+  const assessments = results.filter((result): result is PromiseFulfilledResult<AgentAssessment> => result.status === "fulfilled").map((result) => result.value);
+  const failures = results.filter((result): result is PromiseRejectedResult => result.status === "rejected").map((result) => (result.reason instanceof Error ? result.reason.message : String(result.reason)));
+  if (!assessments.length) throw new Error(`All configured review agents failed: ${failures.join(" | ")}`);
+  return { assessments, failures };
 }
 
 /**
