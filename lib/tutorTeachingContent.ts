@@ -1146,7 +1146,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "mfg-root-cause-analysis",
         title: "Root cause analysis (5 Whys, fishbone, SPC)",
         explanation:
-          "Structured root-cause methods — repeated 'why' questioning, fishbone diagrams categorizing potential causes, and statistical process control (SPC) monitoring for unusual variation — distinguish a systemic cause from a one-off event, which determines whether a fix actually prevents recurrence.",
+          "Structured root-cause methods — repeated 'why' questioning, fishbone diagrams categorizing potential causes, and statistical process control (SPC) [1] monitoring for unusual variation — distinguish a systemic cause from a one-off event, which determines whether a fix actually prevents recurrence.",
         whyItMatters:
           "A quality failure blamed on 'operator error' without deeper analysis often recurs, because the real cause (a process or design flaw that makes the error easy to make) was never addressed — root cause discipline is what actually stops repeat failures.",
         example:
@@ -1166,11 +1166,11 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "mfg-lean-continuous-improvement",
         title: "Lean / continuous improvement (Kaizen)",
         explanation:
-          "Lean manufacturing focuses on eliminating waste (excess motion, waiting, overproduction, defects) through continuous, incremental improvement (Kaizen) driven substantially by frontline workers who know the process best — not just top-down engineering redesigns.",
+          "Lean manufacturing focuses on eliminating waste (excess motion, waiting, overproduction, defects) through continuous, incremental improvement (Kaizen) [2] driven substantially by frontline workers who know the process best — not just top-down engineering redesigns.",
         whyItMatters:
           "Lean programs imposed purely top-down, without genuine frontline participation, tend to produce short-lived improvements — sustained gains generally require the people actually doing the work to be genuinely engaged in identifying and fixing waste, not just told to follow a new procedure.",
         example:
-          "Toyota's production system, the origin of much of lean manufacturing practice, is built around frontline workers having explicit authority to stop the line when they spot a problem (andon cord) — a structural, not just cultural, commitment to frontline-driven improvement.",
+          "Toyota's production system [3], the origin of much of lean manufacturing practice, is built around frontline workers having explicit authority to stop the line when they spot a problem (andon cord) — a structural, not just cultural, commitment to frontline-driven improvement.",
       },
       {
         id: "mfg-preventive-maintenance",
@@ -1207,6 +1207,11 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Root cause analysis and statistical process control are the diagnostic backbone for catching and understanding problems — lean/Kaizen applies that same discipline continuously to eliminate waste, and preventive/predictive maintenance applies it specifically to equipment reliability. Capacity planning and JIT-vs-buffer decisions are both about managing uncertainty and risk in how much flexibility and resilience to build in, which is the recurring tension underneath most manufacturing strategy decisions.",
     source: "claude",
     generatedAt: "2026-09-09",
+    sources: [
+      { id: 1, title: "Economic Control of Quality of Manufactured Product", author: "Shewhart, W. A.", year: "1931" },
+      { id: 2, title: "Kaizen: The Key to Japan's Competitive Success", author: "Imai, M.", year: "1986" },
+      { id: 3, title: "Toyota Production System: Beyond Large-Scale Production", author: "Ohno, T.", year: "1988" },
+    ],
   },
 
   "business/Product Management & Innovation": {
@@ -1307,7 +1312,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "cx-nps-driver-analysis",
         title: "NPS/CSAT driver analysis, not just the score",
         explanation:
-          "Net Promoter Score and customer satisfaction scores are useful trend indicators, but the score alone doesn't explain why it moved — proper analysis segments the data by cohort and digs into the underlying drivers rather than assuming any single initiative (like a recent feature launch) explains an aggregate shift.",
+          "Net Promoter Score [1] and customer satisfaction scores are useful trend indicators, but the score alone doesn't explain why it moved — proper analysis segments the data by cohort and digs into the underlying drivers rather than assuming any single initiative (like a recent feature launch) explains an aggregate shift.",
         whyItMatters:
           "Attributing an NPS change to the most recent visible initiative, without segmenting the actual drivers, risks both wrongly crediting something that didn't help and missing the real cause — which could be an unrelated support process change or a competitor's move.",
         example:
@@ -1317,7 +1322,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "cx-service-recovery-paradox",
         title: "The service recovery paradox",
         explanation:
-          "Research on service recovery suggests that a customer whose problem is resolved exceptionally well after a failure can end up more loyal than one who never experienced a failure at all — genuine, effective remediation converts a visible failure into a demonstration of the company's real values.",
+          "Research on service recovery [2] suggests that a customer whose problem is resolved exceptionally well after a failure can end up more loyal than one who never experienced a failure at all — genuine, effective remediation converts a visible failure into a demonstration of the company's real values.",
         whyItMatters:
           "This reframes a service failure as a genuine opportunity, not just damage control — but only if the recovery is fast, genuine, and goes beyond the bare minimum; a slow or grudging fix doesn't produce the same effect and can compound the original damage.",
         example:
@@ -1337,7 +1342,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "cx-kano-model",
         title: "The Kano model: must-haves vs. delighters",
         explanation:
-          "The Kano model classifies features into must-haves (their absence causes dissatisfaction, but their presence isn't noticed as a bonus), performance features (more is linearly better), and delighters (unexpected extras that create disproportionate satisfaction) — helping distinguish what actually deserves investment.",
+          "The Kano model [3] classifies features into must-haves (their absence causes dissatisfaction, but their presence isn't noticed as a bonus), performance features (more is linearly better), and delighters (unexpected extras that create disproportionate satisfaction) — helping distinguish what actually deserves investment.",
         whyItMatters:
           "A feedback-driven backlog can drift toward accumulating nice-to-have 'delighter' requests while genuine must-have gaps (invisible until they're missing) go unaddressed — the Kano model helps triage which feedback deserves priority.",
         example:
@@ -1347,7 +1352,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "cx-effort-score",
         title: "Customer Effort Score",
         explanation:
-          "Customer Effort Score measures how much effort a customer had to expend to get their issue resolved or task completed — a metric that often predicts loyalty and churn better than satisfaction alone, since low-effort experiences (even unremarkable ones) tend to retain customers better than high-satisfaction-but-high-effort ones.",
+          "Customer Effort Score [4] measures how much effort a customer had to expend to get their issue resolved or task completed — a metric that often predicts loyalty and churn better than satisfaction alone, since low-effort experiences (even unremarkable ones) tend to retain customers better than high-satisfaction-but-high-effort ones.",
         whyItMatters:
           "A company can score well on satisfaction (customers are happy with the eventual outcome) while still bleeding customers due to high effort required to reach that outcome — effort captures a distinct, often more predictive dimension of the experience.",
         example:
@@ -1358,6 +1363,12 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Journey mapping is the diagnostic map for where experience breaks down across the whole customer relationship — NPS/CSAT driver analysis and Customer Effort Score are the specific metrics for measuring how well or badly it's working and why. The Kano model helps decide what's actually worth fixing or adding, CLV segmentation determines how much effort to spend fixing it for which customers, and the service recovery paradox is the reminder that a well-handled failure, found through this whole system, can be turned into a genuine loyalty-building moment rather than pure damage control.",
     source: "claude",
     generatedAt: "2026-09-09",
+    sources: [
+      { id: 1, title: "The One Number You Need to Grow", author: "Reichheld, F. F.", year: "2003", url: "https://hbr.org/2003/12/the-one-number-you-need-to-grow" },
+      { id: 2, title: "The Recovery Paradox: An Examination of Consumer Satisfaction in Relation to Disconfirmation, Service Quality, and Attribution Based Theories", author: "McCollough, M. A., & Bharadwaj, S. G.", year: "1992" },
+      { id: 3, title: "Attractive Quality and Must-Be Quality", author: "Kano, N., Seraku, N., Takahashi, F., & Tsuji, S.", year: "1984" },
+      { id: 4, title: "Stop Trying to Delight Your Customers", author: "Dixon, M., Freeman, K., & Toman, N.", year: "2010", url: "https://hbr.org/2010/07/stop-trying-to-delight-your-customers" },
+    ],
   },
 
   "business/HR & Talent Management": {
