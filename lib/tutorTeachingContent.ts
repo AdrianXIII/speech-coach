@@ -2052,13 +2052,13 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         whyItMatters:
           "Directors and officers in France generally face somewhat greater exposure to being second-guessed for ordinary business decisions that turn out badly than their US or German counterparts, who benefit from more explicit statutory or case-law safe harbors for good-faith, informed decisions.",
         example:
-          "A director who approves a risky but reasonably researched investment that fails might face a faute de gestion claim in France more readily than an equivalent US director would face a successful challenge under the protective Delaware business judgment rule.",
+          "A director who approves a risky but reasonably researched investment that fails might face a faute de gestion claim in France more readily than an equivalent US director would face a successful challenge under the protective Delaware business judgment rule. Distinct from ordinary faute de gestion, using company assets or credit for personal benefit is a separate criminal offense — abus de biens sociaux (Code de commerce, Art. L241-3 for SARL, L242-6 for SA).",
       },
       {
         id: "fr-corp-loi-sapin-ii",
         title: "Loi Sapin II — France's anti-corruption compliance regime",
         explanation:
-          "The 2016 Loi Sapin II requires large companies (above defined revenue/headcount thresholds) to implement an eight-pillar anti-corruption compliance program — code of conduct, whistleblower channel, risk mapping, due diligence procedures, internal accounting controls, training, disciplinary sanctions, and an internal monitoring system — enforced by the dedicated Agence Française Anticorruption (AFA).",
+          "The 2016 Loi Sapin II requires large companies (Article 17: at least 500 employees and turnover above €100 million) to implement an eight-pillar anti-corruption compliance program — code of conduct, whistleblower channel, risk mapping, due diligence procedures, internal accounting controls, training, disciplinary sanctions, and an internal monitoring system — enforced by the dedicated Agence Française Anticorruption (AFA).",
         whyItMatters:
           "This is France's structural answer to the US FCPA and Germany's more diffuse compliance case law — a single, detailed statute with specific mandatory program elements and a dedicated enforcement agency, giving companies (and regulators) a clear statutory checklist rather than relying mainly on evolving case law.",
         example:
@@ -2096,7 +2096,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     category: "Civil Litigation",
     jurisdiction: "fr",
     overview:
-      "French civil litigation runs through a dedicated court hierarchy topped by the Cour de cassation, without a jury, with an active case-managing judge, and a cost-allocation rule that sits between the American Rule and Germany's fuller loser-pays system — the losing side generally pays court costs, but attorney fees are only partially, discretionarily recoverable.",
+      "French civil litigation runs through a dedicated court hierarchy topped by the Cour de cassation, without a jury, with an active case-managing judge, and a cost-allocation rule that sits between the American Rule and Germany's fuller loser-pays system — the losing side generally pays court costs, but attorney fees are only partially, discretionarily recoverable. Procedure is largely écrite (written): under Code de procédure civile Article 16, the principe du contradictoire requires every party to have a real opportunity to see and respond to the other side's arguments and evidence, and under Article 440 et seq., most of the substantive argument happens in written submissions (conclusions) exchanged before the hearing, with the oral hearing itself often limited to summarizing or clarifying what's already on the record.",
     concepts: [
       {
         id: "fr-civ-court-hierarchy",
@@ -2270,7 +2270,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fr-const-dual-court-system",
         title: "The dual court system: judicial courts vs. Conseil d'État",
         explanation:
-          "France maintains two entirely separate court hierarchies: the ordinary judicial courts (handling private civil and criminal law, topped by the Cour de cassation) and a distinct administrative court system (handling disputes involving the state and public administration, topped by the Conseil d'État) — governed by its own body of law, droit administratif, developed substantially through the Conseil d'État's own case law.",
+          "France maintains two entirely separate court hierarchies: the ordinary judicial courts (handling private civil and criminal law, topped by the Cour de cassation) and a distinct administrative court system (handling disputes involving the state and public administration, topped by the Conseil d'État) — governed by its own body of law, droit administratif, developed substantially through the Conseil d'État's own case law. The Conseil d'État also holds a second, non-judicial role under Article 39 of the Constitution: the government must submit most draft legislation (projets de loi) to it for a formal legal-quality advisory opinion before the bill reaches parliament.",
         whyItMatters:
           "A dispute against a government body in France generally goes to an entirely different court system, applying different legal principles, than a private dispute between individuals or companies — a structural split with no equivalent in a unified common-law court system, and getting the wrong court entirely can be fatal to a claim.",
         example:
@@ -2280,7 +2280,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fr-const-bloc-de-constitutionnalite",
         title: "The bloc de constitutionnalité",
         explanation:
-          "French constitutional review doesn't rest on a single constitutional text — the \"bloc de constitutionnalité\" (constitutionality block) includes the 1958 Constitution itself, the 1789 Declaration of the Rights of Man and of the Citizen, the preamble to the 1946 Constitution (with its social/economic rights), and the 2004 Charter for the Environment.",
+          "French constitutional review doesn't rest on a single constitutional text — the \"bloc de constitutionnalité\" (constitutionality block) includes the 1958 Constitution itself, the 1789 Declaration of the Rights of Man and of the Citizen, the preamble to the 1946 Constitution (with its social/economic rights), and the 2004 Charter for the Environment. It also includes an unwritten component: the Fundamental Principles Recognized by the Laws of the Republic (PFRLR), a category of constitutional principles the Conseil constitutionnel derives from pre-1946 republican legislation rather than from any single enacted text.",
         whyItMatters:
           "This layered structure means constitutional arguments in France can draw on multiple historical texts spanning over two centuries, each potentially carrying different rights and principles — a genuinely broader and more textually layered source base than reviewing a single constitutional document.",
         example:
@@ -2630,7 +2630,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "es-const-tribunal-constitucional",
         title: "The Tribunal Constitucional and recurso de amparo",
         explanation:
-          "Spain centralizes constitutional review in a dedicated Tribunal Constitucional, structurally similar to Germany's Bundesverfassungsgericht — individuals can bring a recurso de amparo directly challenging violations of specific fundamental rights (after exhausting ordinary judicial remedies), while a separate recurso de inconstitucionalidad (available mainly to designated political actors) challenges a law's constitutionality more generally.",
+          "Spain centralizes constitutional review in a dedicated Tribunal Constitucional, structurally similar to Germany's Bundesverfassungsgericht — individuals can bring a recurso de amparo directly challenging violations of specific fundamental rights (after exhausting ordinary judicial remedies), while a separate recurso de inconstitucionalidad (available mainly to designated political actors) challenges a law's constitutionality more generally. A third, distinct jurisdiction — conflictos de competencia — lets the Tribunal Constitucional resolve disputes between the central state and an autonomous community (or between communities) over which level actually holds a given power, a frequently exercised role given the asymmetric devolution described below.",
         whyItMatters:
           "The direct individual-complaint pathway (recurso de amparo) gives Spanish citizens meaningfully direct constitutional-court access for fundamental rights violations, similar in spirit to Germany's Verfassungsbeschwerde — a more accessible route than systems requiring rights claims to work up through the ordinary court system with no dedicated constitutional-complaint mechanism.",
         example:
@@ -2644,7 +2644,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         whyItMatters:
           "This asymmetry is the single most important structural feature distinguishing Spain's territorial model from Germany's federalism — comparing a Spanish Comunidad Autónoma directly to a German Land risks real error, since Spanish regions' actual powers vary considerably from one to another rather than being constitutionally uniform.",
         example:
-          "The Basque Country and Navarre have unique historical fiscal arrangements (the Concierto Económico and Convenio Económico respectively) giving them their own tax collection authority that most other Spanish autonomous communities don't have — a level of asymmetric fiscal autonomy with no equivalent among Germany's uniformly-treated Länder.",
+          "The Basque Country and Navarre have unique historical fiscal arrangements (the Concierto Económico and Convenio Económico respectively) giving them their own tax collection authority that most other Spanish autonomous communities don't have — a level of asymmetric fiscal autonomy with no equivalent among Germany's uniformly-treated Länder. This asymmetry traces to the Constitution's own text: its first additional provision (disposición adicional primera) recognizes and protects the 'derechos históricos' (historical rights) of these territories, a distinct legal basis for their extra autonomy rather than a general devolution formula.",
       },
       {
         id: "es-const-estatutos-autonomia",
