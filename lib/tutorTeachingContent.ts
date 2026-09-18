@@ -4772,7 +4772,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "se-fp-end-of-nonalignment",
         title: "The end of two centuries of military non-alignment",
         explanation:
-          "Sweden maintained formal military non-alignment for over 200 years, avoiding binding defense alliances while still engaging internationally — a policy identity so foundational that abandoning it was almost unthinkable until Russia's February 2022 invasion of Ukraine prompted Sweden to apply for NATO membership within months, becoming the alliance's 32nd member on March 7, 2024.",
+          "Sweden maintained formal military non-alignment for over 200 years, avoiding binding defense alliances while still engaging internationally — a policy identity so foundational that abandoning it was almost unthinkable until Russia's February 2022 invasion of Ukraine prompted Sweden to apply for NATO membership within months, becoming the alliance's 32nd member under the North Atlantic Treaty [1] on March 7, 2024.",
         whyItMatters:
           "This is arguably the single most consequential Swedish foreign-policy event in modern history — understanding current Swedish security policy requires recognizing this isn't an incremental adjustment but the deliberate abandonment of a two-centuries-old core national policy identity, compressed into roughly two years.",
         example:
@@ -4822,7 +4822,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "se-fp-feminist-foreign-policy",
         title: "The feminist foreign policy experiment (2014-2022)",
         explanation:
-          "Sweden became the first country in the world to explicitly adopt a \"feminist foreign policy\" framework in 2014, aiming to systematically integrate gender-equality considerations across foreign policy, aid, and trade decisions — a distinctive, widely internationally discussed branding and policy exercise that a subsequent Swedish government formally discontinued in 2022.",
+          "Sweden became the first country in the world to explicitly adopt a \"feminist foreign policy\" framework in 2014 [2], aiming to systematically integrate gender-equality considerations across foreign policy, aid, and trade decisions — a distinctive, widely internationally discussed branding and policy exercise that a subsequent Swedish government formally discontinued in 2022.",
         whyItMatters:
           "Both the launch and the 2022 discontinuation are significant, genuinely recent developments — citing Sweden's \"feminist foreign policy\" as current without noting its 2022 discontinuation would be factually outdated, even though the underlying policy period generated substantial international attention and was influential in prompting other countries to consider similar frameworks.",
         example:
@@ -4833,6 +4833,10 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Historical neutrality through WWII and the Cold War is the deep backdrop the dramatic 2022-2024 NATO shift has to be understood against — a genuine reversal of two centuries of policy identity, closely coordinated with Finland through the Nordic cooperation framework. Multilateral/UN engagement and the feminist foreign policy experiment both reflect Sweden's longer-standing self-conception as an active, values-driven international actor, an identity that continues (feminist foreign policy's 2022 end notwithstanding) even as the underlying security posture has fundamentally changed. EU membership without the euro is a separate, settled dimension of Swedish international positioning, distinct from and unaffected by the recent NATO shift.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "North Atlantic Treaty", author: "NATO", year: "1949" },
+      { id: 2, title: "Swedish Feminist Foreign Policy in the Making: Ethics, Politics, and Gender", author: "Aggestam, K., & Bergman-Rosamond, A.", year: "2016" },
+    ],
   },
 
   "politics/Domestic Policy/se": {
