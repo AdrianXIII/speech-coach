@@ -3652,7 +3652,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "de-cr-foederalismus-friction",
         title: "Federalism friction in crisis coordination",
         explanation:
-          "Because domestic security and public health are substantially Länder competences, national crises expose a recurring tension between the federal government's desire for a unified national response and the states' constitutionally protected authority to implement measures their own way — informal coordination bodies like the Ministerpräsidentenkonferenz (conference of state premiers) exist precisely to manage this friction. The underlying legal authority is itself split across levels: federal public-health measures run through the Infektionsschutzgesetz, while disaster response (Katastrophenschutz) is governed by each state's own Katastrophenschutzgesetz — meaning there's no single statute a crisis manager can point to, but a layered set of federal and state-level legal bases that have to be coordinated alongside the political coordination.",
+          "Because domestic security and public health are substantially Länder competences, national crises expose a recurring tension between the federal government's desire for a unified national response and the states' constitutionally protected authority to implement measures their own way — informal coordination bodies like the Ministerpräsidentenkonferenz (conference of state premiers) exist precisely to manage this friction. The underlying legal authority is itself split across levels: federal public-health measures run through the Infektionsschutzgesetz [1], while disaster response (Katastrophenschutz) is governed by each state's own Katastrophenschutzgesetz [2] — meaning there's no single statute a crisis manager can point to, but a layered set of federal and state-level legal bases that have to be coordinated alongside the political coordination.",
         whyItMatters:
           "A German chancellor cannot simply order uniform nationwide crisis measures the way a more centralized executive elsewhere might — implementation genuinely depends on 16 separate state governments' cooperation, which is why crisis response often looks patchwork even when the underlying threat is the same everywhere.",
         example:
@@ -3713,6 +3713,10 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Federalism friction is the underlying structural reality every German crisis response has to work within, and the Ministerpräsidentenkonferenz is the primary tool for managing that friction toward a degree of national coherence. Katastrophenschutz's Länder/local-level responsibility is a direct consequence of that same federal structure. Expert-driven communication and Vertrauensbildung durch Transparenz are the cultural style crisis leadership is expected to follow within this structure, and the Energiekrise response shows just how much of the normal slow, deliberative pace can be overridden when genuine crisis urgency and political will align.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Infektionsschutzgesetz (IfSG)", author: "Bundesrepublik Deutschland", url: "https://www.gesetze-im-internet.de/ifsg/" },
+      { id: 2, title: "Landeskatastrophenschutzgesetze (state-level disaster protection acts)", author: "German federal states (Länder)" },
+    ],
   },
 
   "politics/Campaign Strategy/de": {
@@ -3991,7 +3995,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fr-dp-article-49-3",
         title: "Article 49.3 — forcing legislation through without a vote",
         explanation:
-          "Article 49.3 of the Constitution lets the government pass a bill without a parliamentary vote by formally engaging its responsibility on the text — the bill is deemed adopted unless the opposition immediately files (and wins) a motion of no confidence (motion de censure) within a set timeframe. Who actually directs the government wielding this tool depends on whether the president's own party controls the Assembly: during cohabitation (president and prime minister from opposing camps), domestic policy initiative shifts substantially from the president to the prime minister, who becomes the one deciding whether and how to use 49.3.",
+          "Article 49.3 of the Constitution [1] lets the government pass a bill without a parliamentary vote by formally engaging its responsibility on the text — the bill is deemed adopted unless the opposition immediately files (and wins) a motion of no confidence (motion de censure) within a set timeframe. Who actually directs the government wielding this tool depends on whether the president's own party controls the Assembly: during cohabitation (president and prime minister from opposing camps), domestic policy initiative shifts substantially from the president to the prime minister, who becomes the one deciding whether and how to use 49.3.",
         whyItMatters:
           "This is a powerful, distinctly French executive tool for pushing through domestic legislation when a government lacks a comfortable majority — used more frequently by governments without a clear parliamentary majority (as has increasingly been the case since 2022, itself a consequence of the two-round legislative election system no longer reliably producing one), it lets a government bypass normal negotiation entirely, at the calculated risk of a no-confidence vote. A bill forced through this way remains subject to the same constitutional check as any other law: the Conseil constitutionnel can still review it for constitutionality, so 49.3 bypasses the parliamentary vote, not judicial review.",
         example:
@@ -4001,7 +4005,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fr-dp-decentralisation",
         title: "Decentralization reforms since the 1980s",
         explanation:
-          "Since major reforms beginning in 1982 (the \"Loi Defferre\"), France has progressively transferred certain administrative and budgetary powers from the central state to régions and départements — real decentralization by French historical standards, though the country remains considerably more centralized than federal systems like Germany.",
+          "Since major reforms beginning in 1982 (the \"Loi Defferre\") [2], France has progressively transferred certain administrative and budgetary powers from the central state to régions and départements — real decentralization by French historical standards, though the country remains considerably more centralized than federal systems like Germany.",
         whyItMatters:
           "This matters for correctly calibrating expectations — French regional/departmental authorities have genuinely more autonomy today than a purely centralized model would suggest, but describing France as \"federal\" or comparing its regions directly to German Länder overstates their actual constitutional independence.",
         example:
@@ -4012,6 +4016,10 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "The unitary state structure and grands corps technocratic influence together explain why French domestic policy tends to be centrally designed and administratively driven, even after decentralization reforms gave régions modest real authority. The referendum tradition and grève/manifestation culture are both channels of direct popular pressure on that centralized policy-making process, operating alongside (and sometimes overriding) ordinary parliamentary politics — and Article 49.3 is the executive's own tool for pushing policy through when parliamentary negotiation alone won't secure passage, particularly relevant in a fragmented, no-clear-majority parliament.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Constitution of 4 October 1958, Article 49", author: "République française", year: "1958" },
+      { id: 2, title: "Loi n° 82-213 du 2 mars 1982 (Loi Defferre)", author: "République française", year: "1982" },
+    ],
   },
 
   "politics/Crisis Response/fr": {
@@ -4035,17 +4043,17 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fr-cr-etat-durgence",
         title: "État d'urgence (state of emergency)",
         explanation:
-          "France has a codified legal framework (Loi n° 55-385 du 3 avril 1955, most prominently invoked after the November 2015 Paris terrorist attacks and extended repeatedly) granting expanded executive powers — enhanced search authority, movement restrictions, assembly bans — during a declared state of emergency, subject to parliamentary extension requirements. Measures taken under it remain subject to judicial review by the administrative courts, with the Conseil d'État hearing urgent challenges (référés) to specific emergency measures even while the état d'urgence itself remains in force.",
+          "France has a codified legal framework (Loi n° 55-385 du 3 avril 1955 [1], most prominently invoked after the November 2015 Paris terrorist attacks and extended repeatedly) granting expanded executive powers — enhanced search authority, movement restrictions, assembly bans — during a declared state of emergency, subject to parliamentary extension requirements. Measures taken under it remain subject to judicial review by the administrative courts, with the Conseil d'État hearing urgent challenges (référés) to specific emergency measures even while the état d'urgence itself remains in force.",
         whyItMatters:
           "Having this as a specific, pre-existing codified legal framework (rather than improvised emergency measures) means the scope and limits of emergency powers are, at least formally, defined in advance and subject to known procedural checks like periodic parliamentary reauthorization — even though its extended use after 2015 drew significant civil-liberties criticism.",
         example:
-          "The état d'urgence declared after the November 2015 Paris attacks was extended multiple times by parliamentary vote over nearly two years before several of its provisions were eventually folded into permanent ordinary law (the 2017 SILT law) rather than remaining emergency-only measures.",
+          "The état d'urgence declared after the November 2015 Paris attacks was extended multiple times by parliamentary vote over nearly two years before several of its provisions were eventually folded into permanent ordinary law (the 2017 SILT law) [3] rather than remaining emergency-only measures.",
       },
       {
         id: "fr-cr-article-16",
         title: "Article 16 — extraordinary presidential emergency powers",
         explanation:
-          "Article 16 of the Constitution allows the president, under specific grave circumstances threatening the nation's institutions, independence, or territorial integrity, and when normal constitutional functioning is interrupted, to assume near-total emergency powers — used exactly once, in 1961, during the Algerian War crisis.",
+          "Article 16 of the Constitution [2] allows the president, under specific grave circumstances threatening the nation's institutions, independence, or territorial integrity, and when normal constitutional functioning is interrupted, to assume near-total emergency powers — used exactly once, in 1961, during the Algerian War crisis.",
         whyItMatters:
           "This is an extreme, rarely-invoked tool with real constitutional safeguards (consultation requirements, a role for the Conseil constitutionnel, and time-based review after 30 and 60 days) precisely because of how much power it concentrates — its single historical use is itself informative about how genuinely exceptional the circumstances need to be before it's considered appropriate.",
         example:
@@ -4086,6 +4094,11 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "The préfet system is the structural foundation giving the central government direct crisis authority down to the local level, and the Conseil de défense et de sécurité nationale is where major crisis decisions get made at the top, consistent with presidential dominance over crisis/security matters. État d'urgence and Article 16 are the two codified legal frameworks for expanding executive power during a crisis, at very different scales of severity, while sécurité civile is the operational machinery executing centrally coordinated response. Gilets jaunes shows what happens when a domestic crisis doesn't fit this top-down model at all — a genuinely decentralized, leaderless movement the normal crisis-response playbook struggled to engage with.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Loi n° 55-385 du 3 avril 1955 relative à l'état d'urgence", author: "République française", year: "1955" },
+      { id: 2, title: "Constitution of 4 October 1958, Article 16", author: "République française", year: "1958" },
+      { id: 3, title: "Loi n° 2017-1510 du 30 octobre 2017 (SILT)", author: "République française", year: "2017" },
+    ],
   },
 
   "politics/Campaign Strategy/fr": {
