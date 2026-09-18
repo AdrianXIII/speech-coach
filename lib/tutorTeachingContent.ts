@@ -1940,7 +1940,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         whyItMatters:
           "This is a more layered, sequential framework than the roughly two-part actus reus/mens rea analysis common law uses — self-defense, for instance, is analyzed as negating Rechtswidrigkeit (the act was justified) rather than as a free-standing affirmative defense raised separately, which changes how the analysis is structured, not just labeled.",
         example:
-          "Someone who kills in genuine self-defense satisfies the Tatbestand of homicide (they did cause a death, intentionally) but the act is not Rechtswidrig (not unlawful) because of Notwehr (self-defense justification, §32 StGB) — so no crime exists at the second stage, before culpability is even reached.",
+          "Someone who kills in genuine self-defense satisfies the Tatbestand of homicide (they did cause a death, intentionally) but the act is not Rechtswidrig (not unlawful) because of Notwehr (self-defense justification, §32 StGB) — so no crime exists at the second stage, before culpability is even reached. [1]",
       },
       {
         id: "de-crim-legalitaetsprinzip",
@@ -1966,7 +1966,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "de-crim-rights-of-accused",
         title: "Rights of the accused under the StPO",
         explanation:
-          "The Strafprozessordnung (StPO) guarantees the right to remain silent (Schweigerecht, §136 StPO) and the right to defense counsel, rooted in both statute and constitutional principle — functionally similar in purpose to Miranda protections, but arising from a different legal source and without the same specific \"warning\" ritual American police procedure requires.",
+          "The Strafprozessordnung (StPO) [2] guarantees the right to remain silent (Schweigerecht, §136 StPO) and the right to defense counsel, rooted in both statute and constitutional principle — functionally similar in purpose to Miranda protections, but arising from a different legal source and without the same specific \"warning\" ritual American police procedure requires.",
         whyItMatters:
           "There's no single \"Miranda moment\" concept in German procedure — the obligation to inform a suspect of these rights is built into specific StPO provisions governing interrogation, so the practical trigger points and consequences of a violation differ from the American exclusionary-rule analysis around Miranda warnings.",
         example:
@@ -1997,6 +1997,10 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "The three-tier Tatbestand/Rechtswidrigkeit/Schuld structure is the analytical backbone every case runs through. The Legalitätsprinzip determines whether a case reaches trial at all, given sufficient evidence, and the Schöffengericht system and rights of the accused shape how that trial is actually conducted. Strafzumessung determines the consequence once guilt is established, and the Berufung/Revision appeal structure determines what, if anything, can still be challenged afterward — full re-examination or law-only review, depending on the originating court.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Strafgesetzbuch (StGB) — German Criminal Code", author: "Bundesrepublik Deutschland", url: "https://www.gesetze-im-internet.de/stgb/" },
+      { id: 2, title: "Strafprozessordnung (StPO) — German Code of Criminal Procedure", author: "Bundesrepublik Deutschland", url: "https://www.gesetze-im-internet.de/stpo/" },
+    ],
   },
 
   "law/Constitutional & Regulatory/de": {
@@ -2082,7 +2086,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     category: "Contract Law",
     jurisdiction: "fr",
     overview:
-      "French contract law is codified in the Code civil, substantially modernized by a 2016 reform (ordonnance) that dropped the old \"cause\" requirement and made good faith and specific performance far more central than they are in common-law systems — including a hardship doctrine that French law had famously rejected for over a century before finally adopting it.",
+      "French contract law is codified in the Code civil [1], substantially modernized by a 2016 reform (ordonnance) [2] that dropped the old \"cause\" requirement and made good faith and specific performance far more central than they are in common-law systems — including a hardship doctrine that French law had famously rejected for over a century before finally adopting it.",
     concepts: [
       {
         id: "fr-contract-formation-2016-reform",
@@ -2118,7 +2122,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fr-contract-imprevision",
         title: "Théorie de l'imprévision (hardship doctrine)",
         explanation:
-          "For over a century, French civil courts famously refused to revise contracts for unforeseen hardship (the 1876 Canal de Craponne decision) — a party was strictly bound even if performance became ruinously more burdensome. The 2016 reform (Article 1195) finally introduced a hardship doctrine, letting a party request renegotiation, and ultimately judicial revision or termination, when unforeseen circumstances make performance excessively onerous.",
+          "For over a century, French civil courts famously refused to revise contracts for unforeseen hardship (the 1876 Canal de Craponne decision [3]) — a party was strictly bound even if performance became ruinously more burdensome. The 2016 reform (Article 1195) finally introduced a hardship doctrine, letting a party request renegotiation, and ultimately judicial revision or termination, when unforeseen circumstances make performance excessively onerous.",
         whyItMatters:
           "This is one of the most significant modernizations in recent French contract law — a doctrine long considered fundamentally foreign to the French tradition of contractual sanctity (pacta sunt servanda) is now codified, bringing France closer to (though still narrower than) some other civil-law systems' approach to unforeseen hardship.",
         example:
@@ -2149,6 +2153,11 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "The 2016 reform reshaped the whole framework — formation moved from \"cause\" to lawful content, and bonne foi became an explicit general duty running through negotiation, formation, and performance. Exécution forcée en nature is the preferred remedy once that duty is breached, with exception d'inexécution, résolution, price reduction, and damages as the broader remedy menu. Théorie de l'imprévision and clauses abusives are both relatively recent doctrines correcting for situations the classical bonne-foi-and-specific-performance framework didn't originally address well — genuinely unforeseen hardship, and structurally unequal bargaining power in standard-form contracts.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Code civil", author: "République française", url: "https://www.legifrance.gouv.fr/codes/texte_lc/LEGITEXT000006070721" },
+      { id: 2, title: "Ordonnance n° 2016-131 du 10 février 2016", author: "République française", year: "2016" },
+      { id: 3, title: "Cour de cassation, Canal de Craponne", author: "Cour de cassation", year: "1876" },
+    ],
   },
 
   "law/Corporate & Compliance/fr": {
