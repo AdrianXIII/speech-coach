@@ -4044,7 +4044,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fr-fp-un-security-council",
         title: "Permanent UN Security Council membership",
         explanation:
-          "France is one of five permanent UN Security Council members (P5) with veto power — a status dating to 1945 that gives France an institutional lever most comparably-sized countries, including Germany, lack, reinforcing France's self-conception as a genuinely global (not just regional or European) power.",
+          "France is one of five permanent UN Security Council members (P5) with veto power under the UN Charter [1] — a status dating to 1945 that gives France an institutional lever most comparably-sized countries, including Germany, lack, reinforcing France's self-conception as a genuinely global (not just regional or European) power.",
         whyItMatters:
           "This P5 status is a recurring point of both French foreign-policy identity and international friction — France actively defends this privileged institutional position (including against periodic proposals for UN Security Council reform that might dilute it), since it's central to how France projects global influence disproportionate to its population or economic size alone.",
         example:
@@ -4055,6 +4055,9 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Gaullist strategic autonomy is the foundational instinct underlying French foreign policy, expressed concretely through the independent force de frappe and, more recently, the push for European strategic autonomy at the EU level. The domaine réservé gives the president durable authority to pursue this vision even amid domestic political turbulence, and Francophonie and the UN Security Council seat are the specific institutional and soft-power tools France uses to project influence globally. The Françafrique legacy shows how this historical global orientation is now being actively renegotiated and contested, especially in Africa.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Charter of the United Nations", author: "United Nations", year: "1945" },
+    ],
   },
 
   "politics/Domestic Policy/fr": {
