@@ -4481,7 +4481,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "es-dp-investidura",
         title: "The investidura (investiture) process",
         explanation:
-          "A Prime Minister candidate needs an absolute majority of the Congreso de los Diputados in a first investiture vote, or — if that fails — only a simple majority (more affirmative than negative votes) in a second vote held at least 48 hours later, a graduated threshold that makes minority government formation genuinely possible if a candidate can secure enough abstentions rather than outright majority support.",
+          "Under Article 99 of the Constitution [1], a Prime Minister candidate needs an absolute majority of the Congreso de los Diputados in a first investiture vote, or — if that fails — only a simple majority (more affirmative than negative votes) in a second vote held at least 48 hours later, a graduated threshold that makes minority government formation genuinely possible if a candidate can secure enough abstentions rather than outright majority support.",
         whyItMatters:
           "The second-round simple-majority threshold is a crucial structural feature enabling minority governments — a candidate doesn't necessarily need a governing majority's active support, just enough abstentions to ensure opposing votes don't outnumber supporting ones, a materially different bar than requiring genuine majority backing.",
         example:
@@ -4491,7 +4491,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "es-dp-mocion-censura-constructiva",
         title: "Moción de censura constructiva (constructive no-confidence motion)",
         explanation:
-          "Modeled directly on Germany's constructive vote of no confidence (konstruktives Misstrauensvotum), a Spanish no-confidence motion against the sitting Prime Minister must simultaneously name a specific alternative candidate who would take office if the motion succeeds — preventing a purely destructive vote that topples a government without an agreed replacement ready to govern.",
+          "Modeled directly on Germany's constructive vote of no confidence (konstruktives Misstrauensvotum) and codified in Article 113 of the Constitution [2], a Spanish no-confidence motion against the sitting Prime Minister must simultaneously name a specific alternative candidate who would take office if the motion succeeds — preventing a purely destructive vote that topples a government without an agreed replacement ready to govern.",
         whyItMatters:
           "This structurally raises the bar for successfully removing a government — opposition parties need to agree not just that the current PM should go, but on who specifically should replace them, a much harder political consensus to achieve than simple opposition to the incumbent.",
         example:
@@ -4522,6 +4522,10 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Estado de las Autonomías implementation determines how much of domestic policy is actually decided regionally rather than nationally, and Catalan independence tension is the most consequential recurring manifestation of that territorial structure's unresolved questions. Post-2015 fragmentation explains why investidura and moción de censura constructiva's specific procedural thresholds have become so much more practically consequential recently — genuine coalition and minority-government formation now happens routinely, unlike in the historically dominant two-party era, and the Pactos de la Moncloa legacy is the recurring historical reference point for whether genuine cross-party consensus on major issues remains achievable in this more fragmented landscape.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Constitución Española, Artículo 99", author: "Reino de España", year: "1978" },
+      { id: 2, title: "Constitución Española, Artículo 113", author: "Reino de España", year: "1978" },
+    ],
   },
 
   "politics/Crisis Response/es": {
