@@ -216,9 +216,14 @@ export function hasFactualDisagreement(assessments: AgentAssessment[]): boolean 
  * One follow-up round, only called when hasFactualDisagreement is true.
  * Re-runs every currently-configured agent (not just the ones that
  * disagreed) against DEBATE_PROMPT, which shows each agent the others'
- * factual findings. Falls back to the original assessments if the debate
- * round itself fails outright, so a transient error never makes things
- * worse than not debating at all.
+ * factual findings. Merges by agentName rather than just returning whatever
+ * settled: an agent that fails only in this second round keeps its
+ * original (pre-debate) assessment instead of being dropped from the set
+ * entirely — losing a fine original assessment to a transient debate-round
+ * error previously turned a real, complete review into an incomplete one
+ * (silently downgrading a valid ai_consensus/needs_expert result to
+ * needs_retry, or worse, straight into needs_expert with the wrong agent
+ * missing from the record).
  */
 export async function debateFactualDisagreement(
   content: ReviewableTutorContent,
@@ -227,8 +232,12 @@ export async function debateFactualDisagreement(
   const tasks = configuredAgentTasks(DEBATE_PROMPT(content, assessments));
   if (!tasks.length) return assessments;
   const results = await Promise.allSettled(tasks);
-  const successful = results.filter((result): result is PromiseFulfilledResult<AgentAssessment> => result.status === "fulfilled").map((result) => result.value);
-  return successful.length ? successful : assessments;
+  const revisedByAgent = new Map(
+    results
+      .filter((result): result is PromiseFulfilledResult<AgentAssessment> => result.status === "fulfilled")
+      .map((result) => [result.value.agentName, result.value] as const),
+  );
+  return assessments.map((original) => revisedByAgent.get(original.agentName) ?? original);
 }
 
 export interface TieBreakResult {
