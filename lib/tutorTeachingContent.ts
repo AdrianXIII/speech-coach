@@ -721,7 +721,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "crisis-apology-accountability",
         title: "Apology and accountability framing",
         explanation:
-          "Image-repair research distinguishes genuine accountability (a clear acknowledgment of what went wrong and concrete remediation) from defensive strategies (minimizing, blame-shifting, or over-explaining) — the public generally responds far better to the former, even when the underlying failure is serious.",
+          "Image-repair research [1] distinguishes genuine accountability (a clear acknowledgment of what went wrong and concrete remediation) from defensive strategies (minimizing, blame-shifting, or over-explaining) — the public generally responds far better to the former, even when the underlying failure is serious.",
         whyItMatters:
           "A defensive or legalistic non-apology ('we regret that some customers felt...') is widely recognized by the public as evasive and often generates more anger than the original incident — genuine accountability, while it feels riskier legally, usually produces a better reputational outcome.",
         example:
@@ -731,7 +731,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "crisis-preparedness-playbook",
         title: "Building a crisis playbook before you need it",
         explanation:
-          "A crisis management protocol — pre-identified spokespeople, escalation triggers, decision authority, and communication templates — built proactively means a real crisis follows a rehearsed structure instead of being designed from scratch under maximum pressure and scrutiny.",
+          "A crisis management protocol [2] — pre-identified spokespeople, escalation triggers, decision authority, and communication templates — built proactively means a real crisis follows a rehearsed structure instead of being designed from scratch under maximum pressure and scrutiny.",
         whyItMatters:
           "The quality of decisions made under acute stress and time pressure is generally worse than decisions made calmly in advance — a playbook moves as many decisions as possible out of the crisis moment itself and into a calmer planning period.",
         example:
@@ -742,6 +742,10 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Duty of care sets the priority order everything else should follow. Disclosure timing and the precautionary principle both concern acting before full certainty — proactively, not reactively — and apology/accountability framing is what determines whether the response itself builds or destroys trust once action is taken. Business continuity planning and a pre-built crisis playbook are both about making these choices in advance, so the actual crisis moment executes a rehearsed structure rather than improvising all of the above at once.",
     source: "claude",
     generatedAt: "2026-09-09",
+    sources: [
+      { id: 1, title: "Accounts, Excuses, and Apologies: A Theory of Image Restoration Strategies", author: "Benoit, W. L.", year: "1995" },
+      { id: 2, title: "Crisis Management: Planning for the Inevitable", author: "Fink, S.", year: "1986" },
+    ],
   },
 
   "business/Mergers & Acquisitions": {
@@ -766,7 +770,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         explanation:
           "Synergies — cost savings or revenue gains only achievable by combining two companies — are routinely used to justify paying a premium above standalone value, but they need to be quantified specifically and stress-tested for realism, not simply asserted as a round percentage of combined revenue.",
         whyItMatters:
-          "Synergy estimates are famously optimistic in practice — deal teams are incentivized (consciously or not) to project synergies large enough to justify the price being discussed, which is why disciplined buyers discount initial synergy estimates and build in integration cost and delay.",
+          "Synergy estimates are famously optimistic in practice — deal teams are incentivized (consciously or not) to project synergies large enough to justify the price being discussed, which is why disciplined buyers discount initial synergy estimates and build in integration cost and delay. [1]",
         example:
           "Post-merger reviews across many large deals have found actual realized synergies falling well short of pre-deal projections — a persistent enough pattern that sophisticated acquirers now often apply a standard 'haircut' to management's synergy case before valuing a deal.",
       },
@@ -784,7 +788,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "ma-cultural-due-diligence",
         title: "Cultural due diligence",
         explanation:
-          "Assessing cultural fit — decision-making pace, risk tolerance, management style — as a distinct workstream from financial and legal diligence, since a financially attractive target with an incompatible culture can still fail to integrate successfully after close.",
+          "Assessing cultural fit — decision-making pace, risk tolerance, management style [2] — as a distinct workstream from financial and legal diligence, since a financially attractive target with an incompatible culture can still fail to integrate successfully after close.",
         whyItMatters:
           "Cultural mismatch is one of the most commonly cited causes of M&A underperformance, yet it's the diligence workstream most often shortchanged relative to financial and legal review, since it's harder to quantify in a spreadsheet.",
         example:
@@ -804,7 +808,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "ma-antitrust-strategy",
         title: "Antitrust and regulatory strategy",
         explanation:
-          "Larger deals face antitrust review, which can result in a 'second request' for extensive information, required divestitures to preserve competition, or in some cases outright blocking. Deal timelines and structure (including breakup fees if the deal fails to close) need to account for this risk from the start.",
+          "Larger deals face antitrust review under the Hart-Scott-Rodino Antitrust Improvements Act [3], which can result in a 'second request' for extensive information, required divestitures to preserve competition, or in some cases outright blocking. Deal timelines and structure (including breakup fees if the deal fails to close) need to account for this risk from the start.",
         whyItMatters:
           "Antitrust risk isn't binary pass/fail — it shapes deal terms directly, including how much walk-away risk each side accepts and what divestiture commitments a buyer is willing to make in advance to smooth regulatory approval.",
         example:
@@ -815,6 +819,11 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Valuation and synergy quantification together determine what a fair price actually is — get either wrong and you overpay regardless of how good the strategic logic sounds. Cultural due diligence and post-merger integration planning determine whether that projected value is actually realized after close, earnouts are one tool for managing valuation disagreement risk between the parties, and antitrust strategy is the regulatory gate the whole deal has to clear before any of the above can even be executed.",
     source: "claude",
     generatedAt: "2026-09-09",
+    sources: [
+      { id: 1, title: "Unlocking Shareholder Value: The Keys to Success", author: "KPMG", year: "1999" },
+      { id: 2, title: "The Role of Culture Compatibility in Successful Organizational Marriage", author: "Cartwright, S., & Cooper, C. L.", year: "1993" },
+      { id: 3, title: "Hart-Scott-Rodino Antitrust Improvements Act", author: "United States Congress", year: "1976" },
+    ],
   },
 
   "business/Entrepreneurship & Startups": {
@@ -831,13 +840,13 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         whyItMatters:
           "Scaling (spending heavily on growth/sales) before genuine product-market fit is one of the most common ways startups burn through capital without building a durable business — growth spending amplifies whatever retention and engagement already exist, good or bad.",
         example:
-          "The 'Sean Ellis test' — asking users how they'd feel if they could no longer use the product, with a benchmark of roughly 40% saying 'very disappointed' — is a widely used rough signal that real product-market fit may exist before committing to aggressive scaling.",
+          "The 'Sean Ellis test' [1] — asking users how they'd feel if they could no longer use the product, with a benchmark of roughly 40% saying 'very disappointed' — is a widely used rough signal that real product-market fit may exist before committing to aggressive scaling.",
       },
       {
         id: "startup-mvp-testing",
         title: "MVP testing before committing engineering investment",
         explanation:
-          "A minimum viable product tests a core hypothesis with the least investment needed to get a real signal — sometimes not even a working product (a landing page measuring signup interest, or a manually-delivered 'concierge' version) before building the real thing.",
+          "A minimum viable product [2] tests a core hypothesis with the least investment needed to get a real signal — sometimes not even a working product (a landing page measuring signup interest, or a manually-delivered 'concierge' version) before building the real thing — a direct application of Steve Blank's customer development methodology [3].",
         whyItMatters:
           "Building a fully-featured product before validating that anyone actually wants it is one of the most common and expensive startup mistakes — an MVP's entire purpose is learning cheaply, which requires resisting the urge to over-build it.",
         example:
@@ -888,6 +897,11 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Runway and burn multiple set the clock a startup is racing against — MVP testing and honestly recognizing (or not yet having) product-market fit are how that limited time gets spent efficiently rather than wastefully. Unit economics is the check on whether growth, once it starts, is actually building a sustainable business or just burning cash faster. Fundraising strategy determines how much runway and pressure a company takes on in the first place, and equity vesting protects the ownership structure everyone is working (and betting their time) against.",
     source: "claude",
     generatedAt: "2026-09-09",
+    sources: [
+      { id: 1, title: "Find a Growth Hacker for Your Startup", author: "Ellis, S.", year: "2010" },
+      { id: 2, title: "The Lean Startup", author: "Ries, E.", year: "2011" },
+      { id: 3, title: "The Four Steps to the Epiphany", author: "Blank, S.", year: "2005" },
+    ],
   },
 
   "business/Sales & Business Development": {
