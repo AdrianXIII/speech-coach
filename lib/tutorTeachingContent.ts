@@ -271,13 +271,13 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     category: "Contract Law",
     jurisdiction: "us",
     overview:
-      "Contract law exists to make promises enforceable — but not every promise, and not in every circumstance. The core doctrines below define which promises the law will enforce, what happens when one side breaks its promise, and when the law will excuse a party from a promise it would otherwise have to keep. The doctrines below are primarily common law; contracts for the sale of goods (as opposed to services or real estate) are instead governed by Article 2 of the Uniform Commercial Code (UCC), which departs from common law in several places — notably UCC § 2-207's 'battle of the forms,' which can form a contract even when an acceptance adds or changes terms, unlike the common law's strict mirror-image rule.",
+      "Contract law exists to make promises enforceable — but not every promise, and not in every circumstance. The core doctrines below define which promises the law will enforce, what happens when one side breaks its promise, and when the law will excuse a party from a promise it would otherwise have to keep. The doctrines below are primarily common law; contracts for the sale of goods (as opposed to services or real estate) are instead governed by Article 2 of the Uniform Commercial Code (UCC), which departs from common law in several places — notably UCC § 2-207's 'battle of the forms,' which can form a contract even when an acceptance adds or changes terms, unlike the common law's strict mirror-image rule [1].",
     concepts: [
       {
         id: "contract-formation",
         title: "Formation: offer, acceptance, consideration",
         explanation:
-          "A binding contract requires an offer (a clear proposal with definite terms), acceptance (an unambiguous agreement to those exact terms — under the traditional 'mirror image rule,' a response that changes terms is a counteroffer, not an acceptance), and consideration (something of value exchanged by both sides — a promise given for a promise, not a one-sided gift). Where consideration is missing, promissory estoppel can still make a promise enforceable if the promisor should reasonably have expected reliance, the promisee actually relied, and injustice can only be avoided by enforcing it (Restatement (Second) of Contracts § 90). Certain contracts — for the sale of land, for goods over $500 under UCC § 2-201, or not performable within one year — must also satisfy the Statute of Frauds by being in writing to be enforceable at all.",
+          "A binding contract requires an offer (a clear proposal with definite terms), acceptance (an unambiguous agreement to those exact terms — under the traditional 'mirror image rule,' a response that changes terms is a counteroffer, not an acceptance), and consideration (something of value exchanged by both sides — a promise given for a promise, not a one-sided gift). Where consideration is missing, promissory estoppel can still make a promise enforceable if the promisor should reasonably have expected reliance, the promisee actually relied, and injustice can only be avoided by enforcing it (Restatement (Second) of Contracts § 90) [2]. Certain contracts — for the sale of land, for goods over $500 under UCC § 2-201 [1], or not performable within one year — must also satisfy the Statute of Frauds by being in writing to be enforceable at all.",
         whyItMatters:
           "This is the gatekeeping test for whether a contract exists at all — before arguing about breach or remedies, you have to establish there was an enforceable agreement in the first place. Disputes often turn on whether a genuine offer was ever made, or whether a reply counted as acceptance or a counteroffer that killed the original offer.",
         example:
@@ -348,6 +348,10 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Formation, capacity, and legality answer the threshold question — is there an enforceable contract at all. Terms (express, implied, and what the parol evidence rule locks in) define exactly what was promised. Breach classification determines what happens when a promise is broken, and remedies determine what the injured party actually gets. Excuses are the narrow escape hatches from an otherwise-binding promise, and third-party rights extend the whole framework to people beyond the original two parties.",
     source: "claude",
     generatedAt: "2026-09-09",
+    sources: [
+      { id: 1, title: "Uniform Commercial Code, Article 2 (Sales)", author: "Uniform Law Commission", url: "https://www.law.cornell.edu/ucc/2" },
+      { id: 2, title: "Restatement (Second) of Contracts", author: "American Law Institute", year: "1981" },
+    ],
   },
 
   "business/Finance": {
@@ -3126,7 +3130,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         whyItMatters:
           "This is why process matters as much as outcome: a director who gets bad legal advice after asking the right questions is protected by the business judgment rule; one who rubber-stamps a decision without reading the materials is not, even if the decision happened to work out.",
         example:
-          "In the Disney/Ovitz executive severance litigation, the Delaware courts scrutinized whether the board was adequately informed when approving a huge severance package — ultimately finding no breach, but only after years of litigation over exactly how informed 'informed' needs to be.",
+          "In the Disney/Ovitz executive severance litigation [1], the Delaware courts scrutinized whether the board was adequately informed when approving a huge severance package — ultimately finding no breach, but only after years of litigation over exactly how informed 'informed' needs to be.",
       },
       {
         id: "corp-veil-limited-liability",
@@ -3142,11 +3146,11 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "corp-compliance-programs",
         title: "Effective compliance programs",
         explanation:
-          "Regulators (and the U.S. Sentencing Guidelines) evaluate compliance programs on concrete factors: written standards, a senior compliance officer with real authority, employee training, a confidential reporting channel, consistent enforcement, and periodic auditing — not just a policy binder on a shelf.",
+          "Regulators (and the U.S. Sentencing Guidelines [2]) evaluate compliance programs on concrete factors: written standards, a senior compliance officer with real authority, employee training, a confidential reporting channel, consistent enforcement, and periodic auditing — not just a policy binder on a shelf.",
         whyItMatters:
           "Whether a company had a genuinely 'effective' program (versus a paper one) is often the difference between a warning and criminal charges when misconduct is discovered — regulators explicitly credit real programs with reduced penalties.",
         example:
-          "The DOJ's Evaluation of Corporate Compliance Programs guidance is used by prosecutors to decide charging and penalty decisions — a company that can show its program was resourced, tested, and actually acted on, not just written, fares dramatically better after a violation surfaces.",
+          "The DOJ's Evaluation of Corporate Compliance Programs guidance [3] is used by prosecutors to decide charging and penalty decisions — a company that can show its program was resourced, tested, and actually acted on, not just written, fares dramatically better after a violation surfaces.",
       },
       {
         id: "corp-insider-trading",
@@ -3162,7 +3166,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "corp-fcpa-anti-bribery",
         title: "Anti-bribery and anti-corruption (FCPA)",
         explanation:
-          "The Foreign Corrupt Practices Act prohibits U.S. companies (and many foreign companies with U.S. ties) from bribing foreign officials to obtain or retain business, and separately requires accurate books and records. Liability extends to bribes paid by third-party agents and distributors acting on the company's behalf.",
+          "The Foreign Corrupt Practices Act (1977) [4] prohibits U.S. companies (and many foreign companies with U.S. ties) from bribing foreign officials to obtain or retain business, and separately requires accurate books and records. Liability extends to bribes paid by third-party agents and distributors acting on the company's behalf.",
         whyItMatters:
           "Using a local 'consultant' or distributor to make a payment doesn't create distance from liability — regulators explicitly look for this pattern, and a company can be liable for what its intermediaries do if it should have known.",
         example:
@@ -3172,7 +3176,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "corp-whistleblower-internal-investigations",
         title: "Whistleblower protections and internal investigations",
         explanation:
-          "Whistleblower laws (Sarbanes-Oxley, Dodd-Frank, and others) protect employees who report suspected violations from retaliation, and in some cases (like SEC whistleblower programs) offer financial rewards. A credible internal investigation must be independent of anyone implicated and preserve evidence properly.",
+          "Whistleblower laws (Sarbanes-Oxley (2002) [5], Dodd-Frank (2010) [6], and others) protect employees who report suspected violations from retaliation, and in some cases (like SEC whistleblower programs) offer financial rewards. A credible internal investigation must be independent of anyone implicated and preserve evidence properly.",
         whyItMatters:
           "Retaliating against a whistleblower — even subtly, like a bad performance review timed suspiciously close to a report — creates a second, often easier-to-prove legal claim layered on top of whatever the original report was about, and mishandled investigations can destroy privilege protections.",
         example:
@@ -3183,6 +3187,14 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Fiduciary duties and the corporate veil define the basic internal accountability structure — who's responsible to whom, and when that separation between company and owner can be disregarded. Compliance programs are the practical machinery for catching problems (like insider trading or FCPA violations) before they become scandals, and whistleblower protections are the release valve that surfaces problems the compliance program missed — all of it ultimately tested by how a company documents and responds when something goes wrong.",
     source: "claude",
     generatedAt: "2026-09-09",
+    sources: [
+      { id: 1, title: "In re Walt Disney Co. Derivative Litigation, 906 A.2d 27", author: "Delaware Supreme Court", year: "2006" },
+      { id: 2, title: "U.S. Sentencing Guidelines Manual § 8B2.1 (Effective Compliance and Ethics Program)", author: "United States Sentencing Commission" },
+      { id: 3, title: "Evaluation of Corporate Compliance Programs", author: "U.S. Department of Justice", url: "https://www.justice.gov/criminal/criminal-fraud/page/file/937501/download" },
+      { id: 4, title: "Foreign Corrupt Practices Act", author: "United States Congress", year: "1977" },
+      { id: 5, title: "Sarbanes-Oxley Act", author: "United States Congress", year: "2002" },
+      { id: 6, title: "Dodd-Frank Wall Street Reform and Consumer Protection Act", author: "United States Congress", year: "2010" },
+    ],
   },
 
   "law/Civil Litigation": {
@@ -3270,7 +3282,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "crim-actus-reus-mens-rea",
         title: "Elements of a crime: actus reus and mens rea",
         explanation:
-          "Most crimes require both a guilty act (actus reus — a voluntary act or, sometimes, a failure to act where there's a legal duty to act) and a guilty mind (mens rea — the required mental state, such as intent, knowledge, recklessness, or negligence, which varies by crime).",
+          "Most crimes require both a guilty act (actus reus — a voluntary act or, sometimes, a failure to act where there's a legal duty to act) and a guilty mind (mens rea — the required mental state, such as intent, knowledge, recklessness, or negligence, which varies by crime), a framework the Model Penal Code [1] formalized into four standard mental-state tiers (purposely, knowingly, recklessly, negligently) that most U.S. jurisdictions now use or closely track.",
         whyItMatters:
           "The required mens rea is often the whole case: the same act (causing someone's death) is murder, manslaughter, or not a crime at all depending on whether it was intentional, reckless, or a pure accident — the physical act alone doesn't determine the charge.",
         example:
@@ -3290,7 +3302,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "crim-fourth-amendment",
         title: "Fourth Amendment: search and seizure",
         explanation:
-          "The Fourth Amendment protects against unreasonable searches and seizures, generally requiring a warrant based on probable cause — with numerous exceptions (consent, plain view, exigent circumstances, search incident to arrest). Evidence obtained in violation of it can be excluded from trial under the exclusionary rule.",
+          "The Fourth Amendment [2] protects against unreasonable searches and seizures, generally requiring a warrant based on probable cause — with numerous exceptions (consent, plain view, exigent circumstances, search incident to arrest). Evidence obtained in violation of it can be excluded from trial under the exclusionary rule.",
         whyItMatters:
           "Strong physical evidence can become worthless if it was obtained illegally — this is why 'the search itself' is so often the actual battleground in criminal defense, separate from the question of what the evidence shows.",
         example:
@@ -3300,7 +3312,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "crim-fifth-amendment-miranda",
         title: "Fifth Amendment and Miranda rights",
         explanation:
-          "The Fifth Amendment protects against self-incrimination. Miranda v. Arizona requires police to inform a suspect in custodial interrogation of their right to remain silent and to an attorney — statements obtained without a proper Miranda warning during custodial interrogation generally can't be used in the prosecution's case-in-chief.",
+          "The Fifth Amendment [3] protects against self-incrimination. Miranda v. Arizona (1966) [4] requires police to inform a suspect in custodial interrogation of their right to remain silent and to an attorney — statements obtained without a proper Miranda warning during custodial interrogation generally can't be used in the prosecution's case-in-chief.",
         whyItMatters:
           "Miranda only applies to custodial interrogation — a common misconception is that police must always 'read you your rights' immediately upon arrest, when actually the requirement is specifically tied to combining custody with interrogation.",
         example:
@@ -3331,6 +3343,12 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Actus reus and mens rea define what the prosecution must prove; the beyond-a-reasonable-doubt standard defines how convincingly they must prove it. Fourth and Fifth Amendment protections constrain how that evidence can be gathered in the first place, and defenses (self-defense, insanity, duress) are ways to defeat the case even when the underlying act isn't disputed. Plea bargaining sits over all of it as the practical mechanism by which most cases actually resolve, shaped by how strong each side's position is on the elements above.",
     source: "claude",
     generatedAt: "2026-09-09",
+    sources: [
+      { id: 1, title: "Model Penal Code", author: "American Law Institute", year: "1962" },
+      { id: 2, title: "U.S. Constitution, Fourth Amendment", author: "United States", year: "1791" },
+      { id: 3, title: "U.S. Constitution, Fifth Amendment", author: "United States", year: "1791" },
+      { id: 4, title: "Miranda v. Arizona, 384 U.S. 436", author: "U.S. Supreme Court", year: "1966" },
+    ],
   },
 
   "law/Constitutional & Regulatory": {
@@ -3344,7 +3362,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "const-separation-of-powers",
         title: "Separation of powers and checks and balances",
         explanation:
-          "Government power is divided among the legislative (makes law), executive (enforces law), and judicial (interprets law) branches, each with tools to check the others — veto, judicial review, impeachment, appointment/confirmation, and the power of the purse. A separate structural axis, federalism, divides power vertically instead of horizontally — between the federal government and the states, with the Tenth Amendment reserving to the states (or the people) whatever power the Constitution doesn't delegate to the federal government.",
+          "Government power is divided among the legislative (makes law), executive (enforces law), and judicial (interprets law) branches, each with tools to check the others — veto, judicial review, impeachment, appointment/confirmation, and the power of the purse. A separate structural axis, federalism, divides power vertically instead of horizontally — between the federal government and the states, with the Tenth Amendment reserving to the states (or the people) whatever power the Constitution doesn't delegate to the federal government [1].",
         whyItMatters:
           "Most high-stakes constitutional disputes are really about which branch has authority to act at all, not just whether an action is wise — a president or agency doing something Congress never authorized is a separation-of-powers problem even if the action itself might otherwise be reasonable.",
         example:
@@ -3354,17 +3372,17 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "const-judicial-review",
         title: "Judicial review",
         explanation:
-          "Established by Marbury v. Madison (1803), judicial review is the power of courts to declare a law or government action unconstitutional. It's not explicitly written into the Constitution's text — it was the Supreme Court's own interpretation of its role that established the practice.",
+          "Established by Marbury v. Madison (1803) [2], judicial review is the power of courts to declare a law or government action unconstitutional. It's not explicitly written into the Constitution's text — it was the Supreme Court's own interpretation of its role that established the practice.",
         whyItMatters:
           "This is the foundational mechanism that makes constitutional rights actually enforceable rather than aspirational — without judicial review, a legislature's or executive's judgment about its own constitutional limits would be essentially final.",
         example:
-          "Brown v. Board of Education (1954) is a landmark exercise of judicial review — the Court struck down state segregation laws as unconstitutional even though those laws had been duly enacted through ordinary legislative process.",
+          "Brown v. Board of Education (1954) [3] is a landmark exercise of judicial review — the Court struck down state segregation laws as unconstitutional even though those laws had been duly enacted through ordinary legislative process.",
       },
       {
         id: "const-levels-of-scrutiny",
         title: "Levels of scrutiny",
         explanation:
-          "Courts apply different levels of scrutiny depending on the right or classification at issue: rational basis (most government action, easy for the government to satisfy — just needs a legitimate purpose and a rational connection), intermediate scrutiny (e.g., gender classifications, requires an important government interest), and strict scrutiny (fundamental rights or suspect classifications like race, requires a compelling interest and narrow tailoring — the hardest for the government to satisfy). This tiered framework is how courts operationalize the Fourteenth Amendment's Equal Protection Clause, which bars states from denying any person equal protection of the laws — the clause itself just says 'equal protection'; the scrutiny tiers are the doctrine that gives it teeth.",
+          "Courts apply different levels of scrutiny depending on the right or classification at issue: rational basis (most government action, easy for the government to satisfy — just needs a legitimate purpose and a rational connection), intermediate scrutiny (e.g., gender classifications, requires an important government interest), and strict scrutiny (fundamental rights or suspect classifications like race, requires a compelling interest and narrow tailoring — the hardest for the government to satisfy). This tiered framework is how courts operationalize the Fourteenth Amendment's Equal Protection Clause [4], which bars states from denying any person equal protection of the laws — the clause itself just says 'equal protection'; the scrutiny tiers are the doctrine that gives it teeth.",
         whyItMatters:
           "Which level of scrutiny applies is often outcome-determinative before the merits are even argued — laws that easily survive rational basis review are frequently struck down under strict scrutiny, so classifying the right level is usually the real fight.",
         example:
@@ -3378,13 +3396,13 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         whyItMatters:
           "Nearly every major federal regulatory statute needs a constitutional hook, and the Commerce Clause is usually it — a serious Commerce Clause challenge questions not whether a regulation is good policy, but whether the federal government (as opposed to the states) has the authority to impose it at all.",
         example:
-          "In NFIB v. Sebelius (2012), the individual mandate in the Affordable Care Act was found to exceed Commerce Clause authority (though it was ultimately upheld as a valid exercise of the taxing power instead) — illustrating how a policy can survive only by finding an alternative constitutional basis.",
+          "In NFIB v. Sebelius (2012) [5], the individual mandate in the Affordable Care Act was found to exceed Commerce Clause authority (though it was ultimately upheld as a valid exercise of the taxing power instead) — illustrating how a policy can survive only by finding an alternative constitutional basis.",
       },
       {
         id: "const-administrative-deference",
         title: "Administrative law and agency deference (post-Chevron)",
         explanation:
-          "Federal agencies (EPA, SEC, FDA, and others) implement statutes through regulations and interpret ambiguous statutory language. For 40 years, Chevron deference required courts to defer to a reasonable agency interpretation of an ambiguous statute; the Supreme Court's 2024 decision in Loper Bright Enterprises v. Raimondo overruled Chevron, holding that courts must exercise independent judgment on statutory meaning rather than defer to the agency, though an agency's interpretation can still carry persuasive weight (Skidmore-style) where it reflects genuine expertise.",
+          "Federal agencies (EPA, SEC, FDA, and others) implement statutes through regulations and interpret ambiguous statutory language. For 40 years, Chevron deference required courts to defer to a reasonable agency interpretation of an ambiguous statute; the Supreme Court's 2024 decision in Loper Bright Enterprises v. Raimondo [6] overruled Chevron, holding that courts must exercise independent judgment on statutory meaning rather than defer to the agency, though an agency's interpretation can still carry persuasive weight (Skidmore-style) where it reflects genuine expertise.",
         whyItMatters:
           "This is a major, recent shift: regulations that might once have survived a court challenge simply because they were a 'reasonable' agency reading of an ambiguous statute are now reviewed with courts making their own independent call on what the statute means — significantly raising litigation risk for agency rules built on debatable statutory interpretations.",
         example:
@@ -3398,13 +3416,22 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         whyItMatters:
           "The distinction matters for what kind of challenge to bring: a procedural due process claim argues the process was unfair (e.g., no hearing before termination of benefits); a substantive due process claim argues the government simply shouldn't be able to do this at all, no matter how fair the process.",
         example:
-          "Goldberg v. Kelly (1970) established that welfare benefits couldn't be terminated without a hearing first — a procedural due process case about the process owed, not about whether the underlying benefits program itself was constitutionally required.",
+          "Goldberg v. Kelly (1970) [7] established that welfare benefits couldn't be terminated without a hearing first — a procedural due process case about the process owed, not about whether the underlying benefits program itself was constitutionally required.",
       },
     ],
     connections:
       "Separation of powers sets the stage for asking which branch or agency may act; judicial review is the mechanism courts use to police that boundary. The level of scrutiny applied determines how hard it is for a challenged government action to survive, the Commerce Clause is the usual source of federal regulatory authority being tested, administrative deference (or its recent absence, post-Chevron) determines how much benefit of the doubt an agency's own interpretation gets, and due process protections constrain how — and whether — government can act against an individual even within all of the above.",
     source: "claude",
     generatedAt: "2026-09-09",
+    sources: [
+      { id: 1, title: "U.S. Constitution, Tenth Amendment", author: "United States", year: "1791" },
+      { id: 2, title: "Marbury v. Madison, 5 U.S. 137", author: "U.S. Supreme Court", year: "1803" },
+      { id: 3, title: "Brown v. Board of Education, 347 U.S. 483", author: "U.S. Supreme Court", year: "1954" },
+      { id: 4, title: "U.S. Constitution, Fourteenth Amendment", author: "United States", year: "1868" },
+      { id: 5, title: "National Federation of Independent Business v. Sebelius, 567 U.S. 519", author: "U.S. Supreme Court", year: "2012" },
+      { id: 6, title: "Loper Bright Enterprises v. Raimondo, 603 U.S. 369", author: "U.S. Supreme Court", year: "2024" },
+      { id: 7, title: "Goldberg v. Kelly, 397 U.S. 254", author: "U.S. Supreme Court", year: "1970" },
+    ],
   },
 
   "politics/Foreign Policy & Diplomacy/de": {
