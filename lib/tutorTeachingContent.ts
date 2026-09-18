@@ -2170,7 +2170,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     category: "Criminal Law",
     jurisdiction: "fr",
     overview:
-      "French criminal law classifies offenses by severity into a three-tier system that determines which court hears the case, uniquely still uses a genuine citizen jury (alongside professional judges) for its most serious crimes, and gives investigating magistrates a distinctive, judge-led role in serious cases with no real common-law equivalent.",
+      "French criminal law classifies offenses by severity into a three-tier system that determines which court hears the case, uniquely still uses a genuine citizen jury (alongside professional judges) for its most serious crimes, and gives investigating magistrates a distinctive, judge-led role in serious cases with no real common-law equivalent. Prosecutions are brought by the Procureur de la République, and a distinctive procedural feature lets a crime victim join the criminal proceeding directly as a partie civile to seek damages within that same case, rather than needing a wholly separate civil lawsuit.",
     concepts: [
       {
         id: "fr-crim-three-elements",
@@ -2178,7 +2178,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         explanation:
           "French criminal analysis requires an élément légal (a legal basis — the act must actually be defined as a crime by statute, reflecting the principle of legality), an élément matériel (the physical act itself), and an élément moral (the mental/fault element — intent or, for some offenses, negligence) — a structured three-part framework distinct in its specific organization from both common-law and German analysis.",
         whyItMatters:
-          "The explicit, separate élément légal requirement reflects French law's strong commitment to the principle of legality (nullum crimen sine lege) — an act simply cannot be criminal, however harmful, without an existing statute defining it as such at the time it occurred.",
+          "The explicit, separate élément légal requirement reflects French law's strong commitment to the principle of legality (nullum crimen sine lege) — an act simply cannot be criminal, however harmful, without an existing statute defining it as such at the time it occurred. This is reinforced above the level of ordinary statute by Article 7 of the European Convention on Human Rights, which independently prohibits punishment without a pre-existing legal basis.",
         example:
           "A genuinely harmful act that wasn't defined as a criminal offense under any statute at the time it was committed cannot be prosecuted, no matter how clearly the material and moral elements might otherwise be present — the missing élément légal is fatal to any prosecution.",
       },
@@ -2206,7 +2206,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fr-crim-garde-a-vue",
         title: "Garde à vue (police custody) safeguards",
         explanation:
-          "Garde à vue is the period a suspect can be held in police custody for questioning before being released or brought before a prosecutor/judge — significantly reformed in 2011 after European Court of Human Rights pressure to guarantee the right to a lawyer's presence during questioning, which wasn't previously reliably available.",
+          "Garde à vue is the period a suspect can be held in police custody for questioning before being released or brought before a prosecutor/judge — significantly reformed in 2011 (Law of 14 April 2011) after European Court of Human Rights pressure, notably the Court's Salduz v. Turkey (2008) judgment finding a fair-trial violation where a suspect lacked legal assistance during police questioning, to guarantee the right to a lawyer's presence during questioning, which wasn't previously reliably available.",
         whyItMatters:
           "The 2011 reform marked a significant, relatively recent expansion of suspects' rights during police custody specifically because the prior regime had been found wanting under European human rights standards — a useful example of European-level human rights law directly reshaping French domestic criminal procedure.",
         example:
@@ -2540,13 +2540,13 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     category: "Criminal Law",
     jurisdiction: "es",
     overview:
-      "Spanish criminal law shares Germany's three-tier analytical structure (Spanish criminal law theory was heavily influenced by German dogmática penal) and, distinctively among the four European countries covered here, has both an investigating-judge system like France's and a genuine citizen jury for specific serious crimes — but structured differently from France's integrated jury-judge model.",
+      "Spanish criminal law shares Germany's three-tier analytical structure (Spanish criminal law theory was heavily influenced by German dogmática penal) and, distinctively among the four European countries covered here, has both an investigating-judge system like France's (the juez de instrucción, codified in the Ley de Enjuiciamiento Criminal, LECrim) and a genuine citizen jury for specific serious crimes — but structured differently from France's integrated jury-judge model. Criminal prosecutions are brought by the Ministerio Fiscal (Public Prosecutor's Office), which — unlike prosecutors in some other systems — is constitutionally tasked with promoting justice and the public interest, not simply securing convictions.",
     concepts: [
       {
         id: "es-crim-tipicidad-antijuridicidad-culpabilidad",
         title: "Tipicidad, antijuridicidad, culpabilidad — the three-tier structure",
         explanation:
-          "Spanish criminal law analyzes every offense through tipicidad (whether the act matches the statutory definition of a crime), antijuridicidad (unlawfulness — whether a justification like self-defense applies), and culpabilidad (culpability — whether the person can be personally blamed) — a structure very close to Germany's Tatbestand/Rechtswidrigkeit/Schuld, reflecting Spanish criminal law theory's substantial historical borrowing from German legal scholarship.",
+          "Spanish criminal law analyzes every offense through tipicidad (whether the act matches the statutory definition of a crime), antijuridicidad (unlawfulness — whether a justification like self-defense applies), and culpabilidad (culpability — whether the person can be personally blamed) — a structure very close to Germany's Tatbestand/Rechtswidrigkeit/Schuld, reflecting Spanish criminal law theory's substantial historical borrowing from German legal scholarship, as documented extensively in Santiago Mir Puig's influential treatise 'Derecho Penal: Parte General.'",
         whyItMatters:
           "Recognizing this German theoretical lineage is genuinely useful — Spanish criminal law scholarship and case law often engages directly with concepts and debates originating in German criminal law theory, more so than with French or common-law criminal law thinking.",
         example:
@@ -2768,7 +2768,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "se-corp-aktiebolag-forms",
         title: "Aktiebolag: privat (private) and publikt (public)",
         explanation:
-          "The Aktiebolagslagen (2005 Companies Act) governs the aktiebolag (AB), Sweden's main limited-liability company form, split into private (simply \"AB\") and public (\"AB (publ)\") companies — public companies face stricter capital and governance requirements, particularly if listed, similar in general spirit to the private/public company splits in Germany, France, and Spain but with Sweden's own specific statutory rules.",
+          "The Aktiebolagslagen (ABL, 2005 Companies Act) governs the aktiebolag (AB), Sweden's main limited-liability company form, split into private (simply \"AB,\" minimum share capital SEK 25,000 under ABL Chapter 1 §5) and public (\"AB (publ),\" minimum SEK 500,000 under ABL Chapter 3 §1) companies — public companies face stricter capital and governance requirements, particularly if listed, similar in general spirit to the private/public company splits in Germany, France, and Spain but with Sweden's own specific statutory rules. Every aktiebolag must register with the Bolagsverket (the Swedish Companies Registration Office), which handles company formation and statutory filings.",
         whyItMatters:
           "As in the other countries covered, the private/public distinction determines which governance and disclosure rules apply — but Sweden's specific statutory thresholds and requirements shouldn't be assumed identical to Germany's GmbH/AG or France's SARL/SA/SAS distinctions just because the basic private/public logic is similar.",
         example:
@@ -2916,7 +2916,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "se-crim-brottsbalken-elements",
         title: "Brottsbalken and the elements of a crime",
         explanation:
-          "Sweden's 1962 Penal Code (Brottsbalken) structures criminal liability around objective and subjective elements (objektiva och subjektiva rekvisit) — broadly comparable to actus reus/mens rea — but Nordic criminal law theory organizes this analysis in a somewhat more streamlined way than Germany's more elaborately tiered Tatbestand/Rechtswidrigkeit/Schuld framework, despite sharing some underlying conceptual DNA.",
+          "Sweden's 1962 Penal Code (Brottsbalken) structures criminal liability around objective and subjective elements (objektiva och subjektiva rekvisit) — broadly comparable to actus reus/mens rea — but Nordic criminal law theory organizes this analysis in a somewhat more streamlined way than Germany's more elaborately tiered Tatbestand/Rechtswidrigkeit/Schuld framework, despite sharing some underlying conceptual DNA. The principle of legality (nulla poena sine lege — no punishment without a prior law) underpins the whole framework, ensuring a person can only be punished for conduct that was already defined as criminal when committed (see Asp, Ulväng & Jareborg, 'Kriminalrättens grunder').",
         whyItMatters:
           "Sweden shouldn't be assumed to follow the German three-tier dogmatik as precisely as Spain does — Nordic criminal law theory developed its own, somewhat less formally tiered analytical tradition, even though it shares broadly similar underlying concerns (distinguishing the act itself from justification and from personal culpability).",
         example:
@@ -2926,7 +2926,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "se-crim-namndeman-political-nomination",
         title: "Nämndemän — politically nominated lay judges",
         explanation:
-          "Swedish criminal trials, especially at the tingsrätt level, typically include nämndemän — lay judges who sit alongside a professional judge and vote on both guilt and sentence — but distinctively, nämndemän are nominated through local political parties (municipal councils propose candidates, often reflecting party political affiliation) rather than through a more civically neutral selection process.",
+          "Swedish criminal trials, especially at the tingsrätt (district court, the first-instance court in the Tingsrätt → Hovrätt → Högsta domstolen hierarchy) level, typically include nämndemän — lay judges who sit alongside a professional judge and vote on both guilt and sentence, usually one professional judge and three nämndemän, with a qualified majority needed to convict or impose a harsher sentence than the professional judge alone would — but distinctively, nämndemän are nominated through local political parties (municipal councils propose candidates, often reflecting party political affiliation) rather than through a more civically neutral selection process.",
         whyItMatters:
           "This politically-linked nomination process is genuinely distinctive and has drawn real domestic criticism and reform debate — unlike Germany's Schöffen (selected through a more depoliticized civic process) or a jury pool, Swedish nämndemän's political-party nomination pathway raises questions about political influence in individual criminal verdicts that Sweden's own legal and political establishment have actively debated.",
         example:
