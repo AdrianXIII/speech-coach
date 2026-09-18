@@ -3726,7 +3726,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "de-cs-personalisierte-verhaeltniswahl",
         title: "Personalisierte Verhältniswahl (personalized proportional representation)",
         explanation:
-          "German voters cast two votes: the Erststimme (first vote) elects a direct constituency representative (similar to a single-member-district race), while the Zweitstimme (second vote) — the one that actually determines each party's overall Bundestag seat share, cast for a Landesliste (state party list) — is cast for a party list. Overall seat allocation is proportional, with direct-mandate wins layered in. Historically, a party winning more direct constituency seats (via Erststimme) in a state than its Zweitstimme share proportionally entitled it to created Überhangmandate (overhang seats), offset by Ausgleichsmandate (compensatory seats) for other parties to preserve overall proportionality — a mechanic that had repeatedly enlarged the Bundestag until a 2023 electoral reform (Bundeswahlgesetz §6) capped the seat count by removing certain overhang seats instead.",
+          "German voters cast two votes: the Erststimme (first vote) elects a direct constituency representative (similar to a single-member-district race), while the Zweitstimme (second vote) — the one that actually determines each party's overall Bundestag seat share, cast for a Landesliste (state party list) — is cast for a party list. Overall seat allocation is proportional, with direct-mandate wins layered in. Historically, a party winning more direct constituency seats (via Erststimme) in a state than its Zweitstimme share proportionally entitled it to created Überhangmandate (overhang seats), offset by Ausgleichsmandate (compensatory seats) for other parties to preserve overall proportionality — a mechanic that had repeatedly enlarged the Bundestag until a 2023 electoral reform (Bundeswahlgesetz §6) [1] capped the seat count by removing certain overhang seats instead.",
         whyItMatters:
           "This means campaign math is fundamentally different from winner-take-all systems: a party's national vote share (via the Zweitstimme) is what really matters for its power in parliament, so campaigns invest heavily in national image and messaging even while local candidates also compete for direct mandates.",
         example:
@@ -3787,6 +3787,9 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Personalisierte Verhältniswahl and the 5% threshold define the basic electoral math every campaign has to solve — winning enough Zweitstimme share to both clear the threshold and maximize proportional seats. Parteienfinanzierung and regulated advertising shape what resources are actually available and how they can be spent, Koalitionssignale add a strategic layer unique to multi-party proportional systems, and Kanzlerkandidat debates are where multiple candidates' campaigns most visibly collide, needing to manage more than one rival at once rather than a single opponent.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Bundeswahlgesetz (Federal Election Act), §6", author: "Bundesrepublik Deutschland", url: "https://www.gesetze-im-internet.de/bwahlg/" },
+    ],
   },
 
   "politics/Legislative Negotiation/de": {
@@ -4106,7 +4109,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fr-cs-parrainages",
         title: "Parrainages — the 500-signature candidacy threshold",
         explanation:
-          "To appear on the presidential ballot, a candidate must secure 500 formal sponsorship signatures (parrainages) from elected officials (mayors, MPs, and other qualifying office-holders) spread across a minimum number of different departments — a real, sometimes strategically contested threshold with no equivalent in systems that only require a filing fee or petition of ordinary voters.",
+          "To appear on the presidential ballot, a candidate must secure 500 formal sponsorship signatures (parrainages) [1] from elected officials (mayors, MPs, and other qualifying office-holders) spread across a minimum number of different departments — a real, sometimes strategically contested threshold with no equivalent in systems that only require a filing fee or petition of ordinary voters.",
         whyItMatters:
           "Securing enough parrainages is itself an early, genuine campaign objective, not a formality — candidates without strong establishment ties can struggle to clear this bar even with real public support, and the requirement has periodically become politically contested as a barrier that can exclude candidates who poll reasonably well.",
         example:
@@ -4136,7 +4139,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fr-cs-temps-de-parole",
         title: "Temps de parole — regulated equal airtime",
         explanation:
-          "France's broadcasting regulator (Arcom, formerly the CSA) enforces equal-time rules ensuring candidates receive proportionate or equal airtime on television and radio during the campaign period, similar in spirit to Germany's public-broadcasting fairness rules but with its own specific French regulatory mechanics and enforcement. The standard actually applied shifts as the campaign progresses — an early, looser 'equitable' (proportionate to each candidate's demonstrated political weight, based on polling, prior results, and declared support) standard tightens into strict numerical equality in the final weeks before the vote.",
+          "France's broadcasting regulator (Arcom, formerly the CSA) enforces equal-time rules [1] ensuring candidates receive proportionate or equal airtime on television and radio during the campaign period, similar in spirit to Germany's public-broadcasting fairness rules but with its own specific French regulatory mechanics and enforcement. The standard actually applied shifts as the campaign progresses — an early, looser 'equitable' (proportionate to each candidate's demonstrated political weight, based on polling, prior results, and declared support) standard tightens into strict numerical equality in the final weeks before the vote.",
         whyItMatters:
           "This limits how much a well-funded or media-favored candidate can simply dominate broadcast media exposure compared to rivals — campaign media strategy has to work within these mandated fairness constraints rather than around unlimited paid media access.",
         example:
@@ -4157,6 +4160,9 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "The two-round system and the parrainages threshold both shape who even gets to compete and how — one determines eventual victory, the other determines eligibility to start. Campaign finance limits and temps de parole rules constrain how campaigns can compete once underway, keeping the contest more about message than resources. The legislative-election calendar sequencing determines what kind of parliamentary support a winning president can expect afterward, and front républicain dynamics are the recurring strategic wildcard specifically shaping second-round outcomes whenever a far-right candidate advances.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Code électoral", author: "République française", url: "https://www.legifrance.gouv.fr/codes/texte_lc/LEGITEXT000006070239" },
+    ],
   },
 
   "politics/Legislative Negotiation/fr": {
@@ -4466,7 +4472,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "es-cs-dhondt-provincial-lists",
         title: "D'Hondt method and closed provincial lists",
         explanation:
-          "Spanish general elections use closed party lists (voters choose a party, not individual candidates, and can't reorder the list) allocated by province using the D'Hondt method — a proportional allocation formula that, combined with Spain's many small-population provinces each guaranteed a minimum of two seats regardless of population (under the Ley Orgánica del Régimen Electoral General, LOREG), produces meaningful over-representation of rural, sparsely populated provinces relative to their population share.",
+          "Spanish general elections use closed party lists (voters choose a party, not individual candidates, and can't reorder the list) allocated by province using the D'Hondt method — a proportional allocation formula that, combined with Spain's many small-population provinces each guaranteed a minimum of two seats regardless of population (under the Ley Orgánica del Régimen Electoral General, LOREG [1]), produces meaningful over-representation of rural, sparsely populated provinces relative to their population share.",
         whyItMatters:
           "This structural rural over-representation means national vote-share alone doesn't translate cleanly into seats — campaign resource allocation has to account for where votes actually convert most efficiently into seats under this system, not just where the most total votes are available.",
         example:
@@ -4476,7 +4482,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "es-cs-post-2015-fragmentation",
         title: "Post-2015 party system fragmentation",
         explanation:
-          "Spain's historically stable two-party dominance (PSOE and PP alternating in government) fragmented significantly starting around 2015 with the emergence and growth of new parties across the political spectrum — Podemos on the left and Ciudadanos on the center-right first, followed by Vox on the right — permanently changing campaign strategy from a primarily two-way contest into genuine multi-party competition requiring post-election coalition-building calculations built into campaign strategy itself (see Montero, Lago & Torcal's 2016 analysis of this shift in the Spanish party system).",
+          "Spain's historically stable two-party dominance (PSOE and PP alternating in government) fragmented significantly starting around 2015 with the emergence and growth of new parties across the political spectrum — Podemos on the left and Ciudadanos on the center-right first, followed by Vox on the right — permanently changing campaign strategy from a primarily two-way contest into genuine multi-party competition requiring post-election coalition-building calculations built into campaign strategy itself (see Montero, Lago & Torcal's 2016 analysis of this shift in the Spanish party system [2]).",
         whyItMatters:
           "Campaigns since this fragmentation can no longer credibly promise straightforward single-party governance the way pre-2015 campaigns often could — voters and campaign strategists alike now factor likely post-election negotiating scenarios into their calculations well before votes are even cast.",
         example:
@@ -4496,7 +4502,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "es-cs-financing-lofpp",
         title: "Party financing under the LOFPP",
         explanation:
-          "The Ley Orgánica de Financiación de Partidos Políticos (LOFPP) regulates Spanish party financing through a mix of public subsidies (tied partly to prior electoral results) and regulated private donations, with campaign spending caps tied to population figures for the relevant constituencies being contested.",
+          "The Ley Orgánica de Financiación de Partidos Políticos (LOFPP) [3] regulates Spanish party financing through a mix of public subsidies (tied partly to prior electoral results) and regulated private donations, with campaign spending caps tied to population figures for the relevant constituencies being contested.",
         whyItMatters:
           "Like France and Germany's more regulated financing models, this constrains how much campaign strategy can rely on simply outspending rivals — public financing tied to past electoral performance also means an established party's financial base is somewhat self-reinforcing, a structural advantage newer parties have to campaign around.",
         example:
@@ -4527,6 +4533,11 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "The D'Hondt provincial-list system defines the basic seat-allocation math every campaign strategy has to work within, and post-2015 fragmentation is what transformed that math from a fairly predictable two-party contest into genuine multi-party competition. Regional parties' kingmaker role is a direct consequence of that fragmentation combined with Spain's territorial structure, financing rules under the LOFPP shape what resources are available to compete within all of this, and televised debates and the personalization trend are both about how campaigns actually communicate and compete for attention within these structural constraints.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Ley Orgánica del Régimen Electoral General (LOREG)", author: "Reino de España", year: "1985", url: "https://www.boe.es/buscar/act.php?id=BOE-A-1985-11672" },
+      { id: 2, title: "Changing Party Systems in Southern Europe: The Rise and Fall of Establishment Parties", author: "Montero, J. R., Lago, I., & Torcal, M.", year: "2016" },
+      { id: 3, title: "Ley Orgánica de Financiación de Partidos Políticos (LOFPP)", author: "Reino de España" },
+    ],
   },
 
   "politics/Legislative Negotiation/es": {
