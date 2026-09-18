@@ -3508,7 +3508,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "de-cr-foederalismus-friction",
         title: "Federalism friction in crisis coordination",
         explanation:
-          "Because domestic security and public health are substantially Länder competences, national crises expose a recurring tension between the federal government's desire for a unified national response and the states' constitutionally protected authority to implement measures their own way — informal coordination bodies like the Ministerpräsidentenkonferenz (conference of state premiers) exist precisely to manage this friction.",
+          "Because domestic security and public health are substantially Länder competences, national crises expose a recurring tension between the federal government's desire for a unified national response and the states' constitutionally protected authority to implement measures their own way — informal coordination bodies like the Ministerpräsidentenkonferenz (conference of state premiers) exist precisely to manage this friction. The underlying legal authority is itself split across levels: federal public-health measures run through the Infektionsschutzgesetz, while disaster response (Katastrophenschutz) is governed by each state's own Katastrophenschutzgesetz — meaning there's no single statute a crisis manager can point to, but a layered set of federal and state-level legal bases that have to be coordinated alongside the political coordination.",
         whyItMatters:
           "A German chancellor cannot simply order uniform nationwide crisis measures the way a more centralized executive elsewhere might — implementation genuinely depends on 16 separate state governments' cooperation, which is why crisis response often looks patchwork even when the underlying threat is the same everywhere.",
         example:
@@ -3528,7 +3528,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "de-cr-katastrophenschutz",
         title: "Katastrophenschutz (disaster response) as primarily a Länder/local competence",
         explanation:
-          "Civil disaster response in Germany is primarily organized at the state and municipal (Kommunen) level, with the federal Technisches Hilfswerk (THW) providing specialized support capacity rather than leading response efforts — a more decentralized structure than systems with a strong centralized federal emergency-management agency.",
+          "Civil disaster response in Germany is primarily organized at the state and municipal (Kommunen) level, with the federal Technisches Hilfswerk (THW) providing specialized support capacity rather than leading response efforts — a more decentralized structure than systems with a strong centralized federal emergency-management agency. A large share of Germany's actual on-the-ground disaster response capacity comes not from professional civil servants but from volunteers in organizations like the THW itself, the German Red Cross (Deutsches Rotes Kreuz), and local volunteer fire brigades (Freiwillige Feuerwehr) — integrated into the official Katastrophenschutz system rather than operating as informal, separate helpers.",
         whyItMatters:
           "Effective German disaster response depends heavily on local and state government capacity and preparedness, not primarily on federal-level readiness — a structural reality that shaped criticism of the response to major flooding disasters, which exposed gaps in state/local coordination and warning systems.",
         example:
@@ -3844,9 +3844,9 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fr-dp-article-49-3",
         title: "Article 49.3 — forcing legislation through without a vote",
         explanation:
-          "Article 49.3 of the Constitution lets the government pass a bill without a parliamentary vote by formally engaging its responsibility on the text — the bill is deemed adopted unless the opposition immediately files (and wins) a motion of no confidence (motion de censure) within a set timeframe.",
+          "Article 49.3 of the Constitution lets the government pass a bill without a parliamentary vote by formally engaging its responsibility on the text — the bill is deemed adopted unless the opposition immediately files (and wins) a motion of no confidence (motion de censure) within a set timeframe. Who actually directs the government wielding this tool depends on whether the president's own party controls the Assembly: during cohabitation (president and prime minister from opposing camps), domestic policy initiative shifts substantially from the president to the prime minister, who becomes the one deciding whether and how to use 49.3.",
         whyItMatters:
-          "This is a powerful, distinctly French executive tool for pushing through domestic legislation when a government lacks a comfortable majority — used more frequently by governments without a clear parliamentary majority (as has increasingly been the case since 2022), it lets a government bypass normal negotiation entirely, at the calculated risk of a no-confidence vote.",
+          "This is a powerful, distinctly French executive tool for pushing through domestic legislation when a government lacks a comfortable majority — used more frequently by governments without a clear parliamentary majority (as has increasingly been the case since 2022, itself a consequence of the two-round legislative election system no longer reliably producing one), it lets a government bypass normal negotiation entirely, at the calculated risk of a no-confidence vote. A bill forced through this way remains subject to the same constitutional check as any other law: the Conseil constitutionnel can still review it for constitutionality, so 49.3 bypasses the parliamentary vote, not judicial review.",
         example:
           "French governments have repeatedly used Article 49.3 to push through controversial legislation (including major pension reform) without a direct parliamentary vote on the bill's substance, surviving the resulting no-confidence motions each time — a high-stakes but recurring domestic-policy tool in a fragmented parliament.",
       },
@@ -3878,7 +3878,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fr-cr-prefet-system",
         title: "The préfet system — centralized on-the-ground authority",
         explanation:
-          "Each French département has a préfet — a state-appointed (not locally elected) representative of the central government with direct authority to coordinate local crisis response, security, and administration — giving Paris a direct chain of command down to the local level that a federal system's state governments don't provide central authorities.",
+          "Each French département has a préfet — an institution Napoleon created in 1800 as a state-appointed (not locally elected) representative of the central government with direct authority to coordinate local crisis response, security, and administration — giving Paris a direct chain of command down to the local level that a federal system's state governments don't provide central authorities.",
         whyItMatters:
           "This is a structural advantage for rapid, unified crisis response that Germany's Länder-based system genuinely lacks — the French central government can direct local crisis action through préfets without needing separate negotiation with locally elected, politically independent state governments.",
         example:
@@ -3888,7 +3888,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fr-cr-etat-durgence",
         title: "État d'urgence (state of emergency)",
         explanation:
-          "France has a codified legal framework (dating to a 1955 law, most prominently invoked after the November 2015 Paris terrorist attacks and extended repeatedly) granting expanded executive powers — enhanced search authority, movement restrictions, assembly bans — during a declared state of emergency, subject to parliamentary extension requirements.",
+          "France has a codified legal framework (Loi n° 55-385 du 3 avril 1955, most prominently invoked after the November 2015 Paris terrorist attacks and extended repeatedly) granting expanded executive powers — enhanced search authority, movement restrictions, assembly bans — during a declared state of emergency, subject to parliamentary extension requirements. Measures taken under it remain subject to judicial review by the administrative courts, with the Conseil d'État hearing urgent challenges (référés) to specific emergency measures even while the état d'urgence itself remains in force.",
         whyItMatters:
           "Having this as a specific, pre-existing codified legal framework (rather than improvised emergency measures) means the scope and limits of emergency powers are, at least formally, defined in advance and subject to known procedural checks like periodic parliamentary reauthorization — even though its extended use after 2015 drew significant civil-liberties criticism.",
         example:
