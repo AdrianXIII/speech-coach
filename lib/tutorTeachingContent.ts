@@ -1541,7 +1541,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "gov-duty-of-loyalty-fiduciary",
         title: "Fiduciary duties: loyalty and care",
         explanation:
-          "Directors owe a duty of loyalty (act in the company's interest, not a conflicting personal one) and duty of care (make informed, diligent decisions). The business judgment rule protects good-faith, well-informed decisions from being second-guessed by courts later, even if they turn out badly.",
+          "Directors owe a duty of loyalty (act in the company's interest, not a conflicting personal one) and duty of care (make informed, diligent decisions). The business judgment rule [1] protects good-faith, well-informed decisions from being second-guessed by courts later, even if they turn out badly.",
         whyItMatters:
           "This is why board process — reading materials, asking hard questions, documenting deliberation — matters as much as the ultimate decision: courts generally protect a poor outcome reached through good process far more than a good outcome reached through no real process at all.",
         example:
@@ -1551,7 +1551,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "gov-board-committee-authority",
         title: "Board committee structure",
         explanation:
-          "Boards typically delegate specific oversight functions to committees — audit (financial reporting integrity), risk, compensation, and nominating/governance — each usually composed substantially or entirely of independent (non-management) directors, providing focused oversight that the full board alone couldn't practically maintain.",
+          "Boards typically delegate specific oversight functions to committees — audit (financial reporting integrity), risk, compensation, and nominating/governance — each usually composed substantially or entirely of independent (non-management) directors, providing focused oversight that the full board alone couldn't practically maintain — the modern audit committee independence requirement stems from the Sarbanes-Oxley Act (2002) [2].",
         whyItMatters:
           "Committee structure is a real, not just symbolic, safeguard — an audit committee made up of genuinely independent directors with real financial expertise is far more likely to catch or question aggressive accounting than management alone would ever flag internally.",
         example:
@@ -1561,7 +1561,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "gov-three-lines-of-defense",
         title: "Three lines of defense (risk governance)",
         explanation:
-          "A common risk governance model: the first line (business operations) owns and manages risk day-to-day; the second line (risk management/compliance functions) sets policy and monitors; the third line (internal audit) independently verifies the first two lines are actually working, reporting up to the board.",
+          "A common risk governance model [3]: the first line (business operations) owns and manages risk day-to-day; the second line (risk management/compliance functions) sets policy and monitors; the third line (internal audit) independently verifies the first two lines are actually working, reporting up to the board.",
         whyItMatters:
           "Risk failures often trace to a breakdown in one of these lines — a first line ignoring risk limits, a second line lacking real authority to push back, or a third line whose independent findings get watered down before reaching the board — understanding which line failed clarifies what actually needs fixing.",
         example:
@@ -1602,6 +1602,11 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Fiduciary duties are the foundational accountability standard directors are held to; board committee structure and the three lines of defense are the practical organizational machinery for actually exercising that oversight. Activist investor response and ESG disclosure integrity are both tests of whether that governance structure produces genuine accountability under real external pressure, and CEO succession planning is a recurring, foreseeable governance responsibility that ties directly back to the same fiduciary duty of care the whole framework rests on.",
     source: "claude",
     generatedAt: "2026-09-09",
+    sources: [
+      { id: 1, title: "Aronson v. Lewis, 473 A.2d 805", author: "Delaware Supreme Court", year: "1984" },
+      { id: 2, title: "Sarbanes-Oxley Act", author: "United States Congress", year: "2002" },
+      { id: 3, title: "The Three Lines Model", author: "Institute of Internal Auditors (IIA)", year: "2020" },
+    ],
   },
 
   "business/Retail & E-commerce": {
@@ -1614,7 +1619,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "retail-omnichannel-attribution",
         title: "Omnichannel attribution beyond single-channel P&L",
         explanation:
-          "Customers routinely research online and buy in-store (or vice versa) — a 'halo effect' where one channel drives sales in another. Judging store or channel performance purely on that channel's direct sales, without accounting for cross-channel influence, can lead to badly wrong decisions like closing a store that was actually driving substantial online sales in its area.",
+          "Customers routinely research online and buy in-store (or vice versa) — a 'halo effect' where one channel drives sales in another [1]. Judging store or channel performance purely on that channel's direct sales, without accounting for cross-channel influence, can lead to badly wrong decisions like closing a store that was actually driving substantial online sales in its area.",
         whyItMatters:
           "Retailers that closed physical stores purely based on that store's own weak direct P&L, without measuring the halo effect on regional online sales, have sometimes seen online sales in that market drop more than expected afterward — evidence the store's true contribution wasn't visible in its own standalone numbers.",
         example:
@@ -1634,7 +1639,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "retail-platform-dependency-risk",
         title: "Marketplace/platform dependency risk",
         explanation:
-          "Selling substantially through a dominant marketplace (a large e-commerce platform) creates real dependency — that platform controls fees, search ranking algorithms, and customer relationship data, giving it significant leverage that can shift with policy changes largely outside the retailer's control.",
+          "Selling substantially through a dominant marketplace (a large e-commerce platform) creates real dependency [3] — that platform controls fees, search ranking algorithms, and customer relationship data, giving it significant leverage that can shift with policy changes largely outside the retailer's control.",
         whyItMatters:
           "A retailer heavily concentrated on one platform has limited real negotiating leverage and faces genuine business risk if the platform raises fees, changes algorithm rules, or even launches a competing private-label product in the same category.",
         example:
@@ -1654,7 +1659,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "retail-dynamic-pricing-fairness",
         title: "Dynamic pricing and perceived fairness",
         explanation:
-          "Algorithmic/dynamic pricing (adjusting prices based on demand, inventory, or even individual customer data) can optimize revenue, but customers who discover they were charged differently than another customer for the identical product often perceive this as unfair, generating real backlash even when the practice may be legal.",
+          "Algorithmic/dynamic pricing (adjusting prices based on demand, inventory, or even individual customer data) can optimize revenue, but customers who discover they were charged differently than another customer for the identical product often perceive this as unfair [2], generating real backlash even when the practice may be legal.",
         whyItMatters:
           "The technical sophistication of a dynamic pricing model doesn't protect against the reputational cost of a fairness backlash — perceived price discrimination, once publicized (often via social media screenshots comparing prices), can generate disproportionate negative attention relative to the actual revenue gained.",
         example:
@@ -1675,6 +1680,11 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Omnichannel attribution and fully-loaded unit economics are both about seeing the real, complete picture of profitability across channels rather than a misleadingly narrow slice. Platform dependency risk and inventory sync/oversell are operational risks that come with selling across multiple channels at scale, and dynamic pricing fairness and markdown cadence are both about the long-term reputational and behavioral costs of pricing decisions that look individually rational but can undermine customer trust or full-price sales over time.",
     source: "claude",
     generatedAt: "2026-09-09",
+    sources: [
+      { id: 1, title: "Adding Bricks to Clicks: Predicting the Patterns of Cross-Channel Elasticities Over Time", author: "Avery, J., Steenburgh, T. J., Deighton, J., & Caravella, M.", year: "2012" },
+      { id: 2, title: "The Price Is Unfair! A Conceptual Framework of Price Fairness Perceptions", author: "Xia, L., Monroe, K. B., & Cox, J. L.", year: "2004" },
+      { id: 3, title: "Platform Revolution", author: "Parker, G. G., Van Alstyne, M. W., & Choudary, S. P.", year: "2016" },
+    ],
   },
 
   "law/Contract Law/de": {
