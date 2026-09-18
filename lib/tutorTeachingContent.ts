@@ -3035,7 +3035,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     category: "Civil Litigation",
     jurisdiction: "se",
     overview:
-      "Swedish civil litigation runs under the 1942 Rättegångsbalken — unusually, a single procedural code covering both civil and criminal process together — with a fairly full loser-pays cost rule and an unusually widespread practical funding mechanism: most Swedes carry legal-expense insurance bundled into their home insurance.",
+      "Swedish civil litigation runs under the 1942 Rättegångsbalken [1] — unusually, a single procedural code covering both civil and criminal process together — with a fairly full loser-pays cost rule and an unusually widespread practical funding mechanism: most Swedes carry legal-expense insurance bundled into their home insurance.",
     concepts: [
       {
         id: "se-civ-rattegangsbalken",
@@ -3102,6 +3102,9 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "The unified Rättegångsbalken is the procedural foundation for both civil and criminal cases, with the tingsrätt-to-Högsta domstolen hierarchy and its prövningstillstånd requirements determining how far a civil case can realistically be appealed. Full loser-pays cost shifting shapes litigation risk, offset in practice for many ordinary Swedes by widespread rättsskyddsförsäkring insurance coverage — a distinctly Swedish practical funding layer. Nämndemän's more limited civil role (compared to their more prominent criminal-trial function) is worth keeping distinct, and SCC arbitration in Stockholm offers a well-established alternative track with its own specific historical niche in East-West commercial disputes.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Rättegångsbalken (1942:740)", author: "Sveriges riksdag", year: "1942", url: "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/rattegangsbalk-1942740_sfs-1942-740/" },
+    ],
   },
 
   "law/Criminal Law/se": {
@@ -3194,7 +3197,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "se-const-four-fundamental-laws",
         title: "The four grundlagar (fundamental laws)",
         explanation:
-          "Sweden's constitution consists of four separate fundamental laws with equal constitutional status: Regeringsformen (Instrument of Government, the main constitutional framework document), Successionsordningen (Act of Succession, governing royal succession), Tryckfrihetsförordningen (Freedom of the Press Act), and Yttrandefrihetsgrundlagen (Fundamental Law on Freedom of Expression) — a genuinely distinctive structural choice compared to the single-document constitutions of Germany, France, or Spain.",
+          "Sweden's constitution consists of four separate fundamental laws with equal constitutional status: Regeringsformen (Instrument of Government, the main constitutional framework document) [1], Successionsordningen (Act of Succession, governing royal succession), Tryckfrihetsförordningen (Freedom of the Press Act) [2], and Yttrandefrihetsgrundlagen (Fundamental Law on Freedom of Expression) — a genuinely distinctive structural choice compared to the single-document constitutions of Germany, France, or Spain.",
         whyItMatters:
           "Having freedom of the press and freedom of expression each elevated to their own separate constitutional-law status (not just as articles within a general rights chapter) reflects how seriously these specific freedoms are institutionally protected in Sweden — amending them requires the same enhanced constitutional procedure as amending the core government structure document.",
         example:
@@ -3255,6 +3258,10 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "The four grundlagar structure is the foundational constitutional framework, with offentlighetsprincipen and the press/expression fundamental laws reflecting just how centrally transparency and free expression sit within it. The 2010 removal of the manifest-error requirement strengthened ordinary courts' constitutional review power, while Lagrådet provides a separate, earlier, advisory-only check before legislation is even enacted — together forming a genuinely different model than Germany's single binding constitutional court. JO's ombudsman oversight and the constitutional ministerstyre prohibition both protect against improper political interference in individual administrative decisions, from two different institutional angles — one reactive complaint investigation, the other a structural bar on ministers giving case-specific orders in the first place.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Regeringsformen (1974:152)", author: "Sveriges riksdag", year: "1974", url: "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/kungorelse-1974152-om-beslutad-ny_sfs-1974-152/" },
+      { id: 2, title: "Tryckfrihetsförordningen (1949:105)", author: "Sveriges riksdag", year: "1949" },
+    ],
   },
 
   "law/Corporate & Compliance": {
