@@ -115,10 +115,11 @@ export async function POST(req: NextRequest) {
       review: review[0],
       agents: assessments.map(({ agentName, model, verdict, scores }) => ({ agentName, model, verdict, scores })),
       debated: Boolean(debateInfo?.ran),
-      // Temporary diagnostic: an agent failure is otherwise silently
-      // dropped (Promise.allSettled), so the only symptom is a status stuck
-      // on needs_retry with no clue why. Remove once the current review
-      // agent failures are root-caused.
+      // An agent failure is otherwise silently dropped (Promise.allSettled),
+      // so the only symptom would be a status stuck on needs_retry with no
+      // clue why — this field is what made five separate real failure
+      // modes (retired model, malformed JSON, etc.) diagnosable instead of
+      // guesswork, so it stays rather than reverting to a black box.
       ...(initialResult.failures.length ? { agentFailures: initialResult.failures } : {}),
     },
     { status: 201 },
