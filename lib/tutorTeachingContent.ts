@@ -253,13 +253,13 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     category: "Contract Law",
     jurisdiction: "us",
     overview:
-      "Contract law exists to make promises enforceable — but not every promise, and not in every circumstance. The core doctrines below define which promises the law will enforce, what happens when one side breaks its promise, and when the law will excuse a party from a promise it would otherwise have to keep.",
+      "Contract law exists to make promises enforceable — but not every promise, and not in every circumstance. The core doctrines below define which promises the law will enforce, what happens when one side breaks its promise, and when the law will excuse a party from a promise it would otherwise have to keep. The doctrines below are primarily common law; contracts for the sale of goods (as opposed to services or real estate) are instead governed by Article 2 of the Uniform Commercial Code (UCC), which departs from common law in several places — notably UCC § 2-207's 'battle of the forms,' which can form a contract even when an acceptance adds or changes terms, unlike the common law's strict mirror-image rule.",
     concepts: [
       {
         id: "contract-formation",
         title: "Formation: offer, acceptance, consideration",
         explanation:
-          "A binding contract requires an offer (a clear proposal with definite terms), acceptance (an unambiguous agreement to those exact terms — under the traditional 'mirror image rule,' a response that changes terms is a counteroffer, not an acceptance), and consideration (something of value exchanged by both sides — a promise given for a promise, not a one-sided gift).",
+          "A binding contract requires an offer (a clear proposal with definite terms), acceptance (an unambiguous agreement to those exact terms — under the traditional 'mirror image rule,' a response that changes terms is a counteroffer, not an acceptance), and consideration (something of value exchanged by both sides — a promise given for a promise, not a one-sided gift). Where consideration is missing, promissory estoppel can still make a promise enforceable if the promisor should reasonably have expected reliance, the promisee actually relied, and injustice can only be avoided by enforcing it (Restatement (Second) of Contracts § 90). Certain contracts — for the sale of land, for goods over $500 under UCC § 2-201, or not performable within one year — must also satisfy the Statute of Frauds by being in writing to be enforceable at all.",
         whyItMatters:
           "This is the gatekeeping test for whether a contract exists at all — before arguing about breach or remedies, you have to establish there was an enforceable agreement in the first place. Disputes often turn on whether a genuine offer was ever made, or whether a reply counted as acceptance or a counteroffer that killed the original offer.",
         example:
@@ -966,7 +966,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "sc-concentration-risk",
         title: "Supply chain concentration risk",
         explanation:
-          "Over-reliance on a single port, carrier, supplier, or customer creates a structural vulnerability — a single point of failure that can halt operations regardless of how well-run the rest of the supply chain is, independent of any individual supplier's quality or reliability.",
+          "Over-reliance on a single port, carrier, supplier, or customer creates a structural vulnerability — a single point of failure that can halt operations regardless of how well-run the rest of the supply chain is, independent of any individual supplier's quality or reliability. Hau Lee's 'Triple-A Supply Chain' framework (Harvard Business Review, 2004) frames the mitigation for this and related risks around three properties — agility, adaptability, and alignment — arguing supply chains need all three, not just the efficiency that concentration often optimizes for.",
         whyItMatters:
           "Concentration risk is often invisible until the single point of failure actually fails — companies that never experienced a disruption at their sole supplier had no reason to notice the risk, right up until they did.",
         example:
@@ -1578,7 +1578,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     category: "Contract Law",
     jurisdiction: "de",
     overview:
-      "German contract law is codified in the Bürgerliches Gesetzbuch (BGB) — a systematic civil code, not judge-made common law. The single biggest mental adjustment for someone trained on US contract law: German law has no doctrine of \"consideration\" at all. A promise can be binding without anything given in exchange for it.",
+      "German contract law is codified in the Bürgerliches Gesetzbuch (BGB) — a systematic civil code, not judge-made common law. The single biggest mental adjustment for someone trained on US contract law: German law has no doctrine of \"consideration\" at all. A promise can be binding without anything given in exchange for it. A second structural feature with no direct common-law equivalent: the general good-faith principle in §242 BGB (Treu und Glauben) is not a narrow doctrine but a pervasive standard that colors interpretation and performance of every contract, and courts also recognize pre-contractual liability (culpa in contrahendo, now codified in §311 Abs. 2 BGB) for bad-faith conduct during negotiations, before any contract is even formed.",
     concepts: [
       {
         id: "de-contract-rechtsgeschaeft-willenserklaerung",
@@ -2392,13 +2392,13 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     category: "Corporate & Compliance",
     jurisdiction: "es",
     overview:
-      "Spanish corporate law centers on the Ley de Sociedades de Capital, and its most distinctive recent feature is a 2010s reform introducing genuine corporate criminal liability — a company itself, not just its individual officers, can now be criminally prosecuted, with an adequate compliance program serving as a real legal defense.",
+      "Spanish corporate law centers on the Ley de Sociedades de Capital (LSC), and its most distinctive recent feature is a 2010 reform (Ley Orgánica 5/2010) to Article 31 bis of the Spanish Criminal Code introducing genuine corporate criminal liability — a company itself, not just its individual officers, can now be criminally prosecuted, with an adequate compliance program (modelo de organización y gestión, covering risk assessment, control measures, and a reporting channel) serving as a real legal defense if implemented and followed before the offense.",
     concepts: [
       {
         id: "es-corp-sa-vs-sl",
         title: "SA vs. SL: the two main company forms",
         explanation:
-          "The Sociedad de Responsabilidad Limitada (SL) is the dominant company form for Spanish businesses of essentially all sizes, including many large ones, due to its simpler governance and lower minimum capital requirements. The Sociedad Anónima (SA) is reserved mainly for companies planning to list publicly or needing to raise capital more broadly, with more formal governance requirements.",
+          "The Sociedad de Responsabilidad Limitada (SL) is the dominant company form for Spanish businesses of essentially all sizes, including many large ones, due to its simpler governance and lower minimum capital requirement (€3,000, under the LSC) compared to the Sociedad Anónima (SA, €60,000 minimum), which is reserved mainly for companies planning to list publicly or needing to raise capital more broadly, with more formal governance requirements.",
         whyItMatters:
           "Unlike Germany (where the equivalent GmbH/AG split correlates more strongly with actual company size and public-market intentions), the Spanish SL form is used remarkably broadly, including by quite large private companies — SL vs. SA choice in Spain often reflects governance and capital-raising preferences more than a strict size threshold.",
         example:
@@ -2688,7 +2688,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     category: "Contract Law",
     jurisdiction: "se",
     overview:
-      "Swedish contract law belongs to the distinct \"Nordic legal family\" — unlike Germany, France, or Spain, Sweden never adopted a single comprehensive civil code. Contract law instead lives in the 1915 Avtalslagen plus separate statutes for sales and consumer protection, and Swedish law traditionally treats a mere offer as binding in a way common law does not.",
+      "Swedish contract law belongs to the distinct \"Nordic legal family\" — unlike Germany, France, or Spain, Sweden never adopted a single comprehensive civil code. Contract law instead lives in the 1915 Avtalslagen plus separate statutes for sales and consumer protection, and Swedish law traditionally treats a mere offer as binding in a way common law does not. Section 36 of the Avtalslagen (generalklausulen, the general clause) gives courts a broad power to adjust or set aside a contract term that has become unreasonable — including due to later changed circumstances (a rough Swedish counterpart to rebus sic stantibus) — a flexible judicial safety valve with no single direct equivalent in the more categorical excuse doctrines of common law.",
     concepts: [
       {
         id: "se-contract-no-codification",
@@ -3286,7 +3286,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "const-separation-of-powers",
         title: "Separation of powers and checks and balances",
         explanation:
-          "Government power is divided among the legislative (makes law), executive (enforces law), and judicial (interprets law) branches, each with tools to check the others — veto, judicial review, impeachment, appointment/confirmation, and the power of the purse.",
+          "Government power is divided among the legislative (makes law), executive (enforces law), and judicial (interprets law) branches, each with tools to check the others — veto, judicial review, impeachment, appointment/confirmation, and the power of the purse. A separate structural axis, federalism, divides power vertically instead of horizontally — between the federal government and the states, with the Tenth Amendment reserving to the states (or the people) whatever power the Constitution doesn't delegate to the federal government.",
         whyItMatters:
           "Most high-stakes constitutional disputes are really about which branch has authority to act at all, not just whether an action is wise — a president or agency doing something Congress never authorized is a separation-of-powers problem even if the action itself might otherwise be reasonable.",
         example:
@@ -3306,7 +3306,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "const-levels-of-scrutiny",
         title: "Levels of scrutiny",
         explanation:
-          "Courts apply different levels of scrutiny depending on the right or classification at issue: rational basis (most government action, easy for the government to satisfy — just needs a legitimate purpose and a rational connection), intermediate scrutiny (e.g., gender classifications, requires an important government interest), and strict scrutiny (fundamental rights or suspect classifications like race, requires a compelling interest and narrow tailoring — the hardest for the government to satisfy).",
+          "Courts apply different levels of scrutiny depending on the right or classification at issue: rational basis (most government action, easy for the government to satisfy — just needs a legitimate purpose and a rational connection), intermediate scrutiny (e.g., gender classifications, requires an important government interest), and strict scrutiny (fundamental rights or suspect classifications like race, requires a compelling interest and narrow tailoring — the hardest for the government to satisfy). This tiered framework is how courts operationalize the Fourteenth Amendment's Equal Protection Clause, which bars states from denying any person equal protection of the laws — the clause itself just says 'equal protection'; the scrutiny tiers are the doctrine that gives it teeth.",
         whyItMatters:
           "Which level of scrutiny applies is often outcome-determinative before the merits are even argued — laws that easily survive rational basis review are frequently struck down under strict scrutiny, so classifying the right level is usually the real fight.",
         example:
@@ -4924,7 +4924,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "cr-incident-command-structure",
         title: "Incident command and clear chains of authority",
         explanation:
-          "Effective crisis response requires a clear command structure — who has authority to make which decisions, and how information flows up to decision-makers and back down to those executing the response (formalized in the U.S. as the Incident Command System for emergency management).",
+          "Effective crisis response requires a clear command structure — who has authority to make which decisions, and how information flows up to decision-makers and back down to those executing the response (formalized in the U.S. as the Incident Command System for emergency management). The legal backbone for federal involvement is the Robert T. Stafford Disaster Relief and Emergency Assistance Act (1988), which sets out how a governor requests a federal disaster declaration, and what federal assistance (through FEMA) becomes available once the president grants one — a state generally cannot access major federal disaster funding without going through this process.",
         whyItMatters:
           "Crises expose unclear authority structures brutally and immediately — when multiple agencies or levels of government aren't sure who's actually in charge of what, response gets slower and more contradictory exactly when speed and clarity matter most.",
         example:
