@@ -2478,7 +2478,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     category: "Corporate & Compliance",
     jurisdiction: "es",
     overview:
-      "Spanish corporate law centers on the Ley de Sociedades de Capital (LSC), and its most distinctive recent feature is a 2010 reform (Ley Orgánica 5/2010) to Article 31 bis of the Spanish Criminal Code introducing genuine corporate criminal liability — a company itself, not just its individual officers, can now be criminally prosecuted, with an adequate compliance program (modelo de organización y gestión, covering risk assessment, control measures, and a reporting channel) serving as a real legal defense if implemented and followed before the offense.",
+      "Spanish corporate law centers on the Ley de Sociedades de Capital (LSC) [1], and its most distinctive recent feature is a 2010 reform (Ley Orgánica 5/2010) to Article 31 bis of the Spanish Criminal Code [2] introducing genuine corporate criminal liability — a company itself, not just its individual officers, can now be criminally prosecuted, with an adequate compliance program (modelo de organización y gestión, covering risk assessment, control measures, and a reporting channel) serving as a real legal defense if implemented and followed before the offense.",
     concepts: [
       {
         id: "es-corp-sa-vs-sl",
@@ -2514,7 +2514,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "es-corp-responsabilidad-penal-personas-juridicas",
         title: "Corporate criminal liability (responsabilidad penal de las personas jurídicas)",
         explanation:
-          "A 2010 reform of the Código Penal, expanded in 2015, introduced genuine corporate criminal liability in Spain — companies themselves, not just the individuals who acted, can now be criminally prosecuted and sanctioned for certain offenses committed on their behalf, a significant departure from the traditional civil-law principle that only natural persons can be criminally culpable.",
+          "A 2010 reform of the Código Penal [2], expanded in 2015, introduced genuine corporate criminal liability in Spain — companies themselves, not just the individuals who acted, can now be criminally prosecuted and sanctioned for certain offenses committed on their behalf, a significant departure from the traditional civil-law principle that only natural persons can be criminally culpable.",
         whyItMatters:
           "This was a genuinely novel development for a civil-law jurisdiction historically resistant to corporate criminal liability as a concept — the 2015 reform's explicit recognition that having an adequate compliance program (modelo de organización y gestión) can serve as either an exemption or mitigating factor gave Spanish companies a strong, concrete legal incentive to build real compliance programs, not just aspirational policies.",
         example:
@@ -2534,7 +2534,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "es-corp-buen-gobierno-corporativo",
         title: "Código de Buen Gobierno (corporate governance code)",
         explanation:
-          "Spain's corporate governance code sets recommendations on board composition, director independence, executive compensation transparency, and shareholder rights for listed companies — updated periodically to reflect evolving governance expectations, most recently incorporating stronger diversity and sustainability-related governance recommendations.",
+          "Spain's corporate governance code [3] sets recommendations on board composition, director independence, executive compensation transparency, and shareholder rights for listed companies — updated periodically to reflect evolving governance expectations, most recently incorporating stronger diversity and sustainability-related governance recommendations.",
         whyItMatters:
           "Because this operates through comply-or-explain rather than binding statute, understanding Spanish corporate governance in practice requires looking at actual company disclosure practices, not just the code's text — the code sets the expected baseline, but the real governance picture depends on how consistently companies actually comply versus explain deviations.",
         example:
@@ -2545,6 +2545,11 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Company form (SA vs. SL) and the one-tier Consejo de administración structure are the foundational governance choices a Spanish business makes. The 2014 business-discretion rule sets the liability standard directors operate under, while the CNMV and Código de Buen Gobierno add an additional regulatory and soft-governance layer specifically for listed companies. Corporate criminal liability is the most structurally novel recent addition — it changes what's at stake for the company itself, not just its individual officers, which is precisely why building an adequate compliance program has become such a concrete legal priority rather than just good practice.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Ley de Sociedades de Capital (Real Decreto Legislativo 1/2010)", author: "Reino de España", year: "2010", url: "https://www.boe.es/buscar/act.php?id=BOE-A-2010-10544" },
+      { id: 2, title: "Código Penal, Artículo 31 bis (Ley Orgánica 5/2010)", author: "Reino de España", year: "2010" },
+      { id: 3, title: "Código de Buen Gobierno de las Sociedades Cotizadas", author: "Comisión Nacional del Mercado de Valores (CNMV)" },
+    ],
   },
 
   "law/Civil Litigation/es": {
@@ -2626,13 +2631,13 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     category: "Criminal Law",
     jurisdiction: "es",
     overview:
-      "Spanish criminal law shares Germany's three-tier analytical structure (Spanish criminal law theory was heavily influenced by German dogmática penal) and, distinctively among the four European countries covered here, has both an investigating-judge system like France's (the juez de instrucción, codified in the Ley de Enjuiciamiento Criminal, LECrim) and a genuine citizen jury for specific serious crimes — but structured differently from France's integrated jury-judge model. Criminal prosecutions are brought by the Ministerio Fiscal (Public Prosecutor's Office), which — unlike prosecutors in some other systems — is constitutionally tasked with promoting justice and the public interest, not simply securing convictions.",
+      "Spanish criminal law shares Germany's three-tier analytical structure (Spanish criminal law theory was heavily influenced by German dogmática penal) and, distinctively among the four European countries covered here, has both an investigating-judge system like France's (the juez de instrucción, codified in the Ley de Enjuiciamiento Criminal, LECrim [2]) and a genuine citizen jury for specific serious crimes — but structured differently from France's integrated jury-judge model. Criminal prosecutions are brought by the Ministerio Fiscal (Public Prosecutor's Office), which — unlike prosecutors in some other systems — is constitutionally tasked with promoting justice and the public interest, not simply securing convictions.",
     concepts: [
       {
         id: "es-crim-tipicidad-antijuridicidad-culpabilidad",
         title: "Tipicidad, antijuridicidad, culpabilidad — the three-tier structure",
         explanation:
-          "Spanish criminal law analyzes every offense through tipicidad (whether the act matches the statutory definition of a crime), antijuridicidad (unlawfulness — whether a justification like self-defense applies), and culpabilidad (culpability — whether the person can be personally blamed) — a structure very close to Germany's Tatbestand/Rechtswidrigkeit/Schuld, reflecting Spanish criminal law theory's substantial historical borrowing from German legal scholarship, as documented extensively in Santiago Mir Puig's influential treatise 'Derecho Penal: Parte General.'",
+          "Spanish criminal law analyzes every offense through tipicidad (whether the act matches the statutory definition of a crime), antijuridicidad (unlawfulness — whether a justification like self-defense applies), and culpabilidad (culpability — whether the person can be personally blamed) — a structure very close to Germany's Tatbestand/Rechtswidrigkeit/Schuld, reflecting Spanish criminal law theory's substantial historical borrowing from German legal scholarship, as documented extensively in Santiago Mir Puig's influential treatise 'Derecho Penal: Parte General' [1].",
         whyItMatters:
           "Recognizing this German theoretical lineage is genuinely useful — Spanish criminal law scholarship and case law often engages directly with concepts and debates originating in German criminal law theory, more so than with French or common-law criminal law thinking.",
         example:
@@ -2652,7 +2657,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "es-crim-tribunal-jurado",
         title: "The Tribunal del Jurado — jury trial for specific serious crimes",
         explanation:
-          "The 1995 Ley Orgánica del Tribunal del Jurado introduced citizen jury trials for a specific, statutorily defined list of serious crimes (including homicide and certain crimes against public officials) — nine citizen jurors decide guilt alone, with a professional judge handling legal rulings and sentencing separately, a different structural split than France's cour d'assises, where jurors and judges deliberate together on both guilt and sentence.",
+          "The 1995 Ley Orgánica del Tribunal del Jurado [3] introduced citizen jury trials for a specific, statutorily defined list of serious crimes (including homicide and certain crimes against public officials) — nine citizen jurors decide guilt alone, with a professional judge handling legal rulings and sentencing separately, a different structural split than France's cour d'assises, where jurors and judges deliberate together on both guilt and sentence.",
         whyItMatters:
           "Spain's jury system is narrower in scope (only specific listed crimes, unlike the broader category of French \"crimes\") and structurally more separated (jury decides guilt alone; judge alone decides sentence) than France's more integrated model — the two shouldn't be assumed to work the same way just because both involve citizen jurors.",
         example:
@@ -2662,7 +2667,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "es-crim-presuncion-inocencia",
         title: "Presunción de inocencia (Article 24.2 CE)",
         explanation:
-          "The presumption of innocence is an explicit constitutional right under Article 24.2 of the 1978 Constitution (Constitución Española), among Spain's broader catalogue of due-process guarantees in criminal proceedings, alongside the right to a defense, to be informed of charges, and to use relevant evidence.",
+          "The presumption of innocence is an explicit constitutional right under Article 24.2 of the 1978 Constitution (Constitución Española) [4], among Spain's broader catalogue of due-process guarantees in criminal proceedings, alongside the right to a defense, to be informed of charges, and to use relevant evidence.",
         whyItMatters:
           "Having this and related due-process guarantees anchored directly in the Constitution (not just ordinary criminal procedure statute) means the Tribunal Constitucional can directly review criminal process violations as constitutional matters, via recurso de amparo, giving these protections an especially robust enforcement pathway.",
         example:
@@ -2693,6 +2698,12 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "The tipicidad/antijuridicidad/culpabilidad structure is the analytical backbone for any offense, reflecting Spain's German-influenced criminal law theory. The juez de instrucción directs investigation for serious cases (a structural link to France rather than Germany), and the Tribunal del Jurado handles trial for the specific serious crimes on its statutory list, with guilt and sentencing structurally separated between jury and judge. Presunción de inocencia and prisión provisional's proportionality requirements both protect the accused throughout this process, and corporate criminal liability extends the whole framework to companies as defendants in their own right, a genuinely novel addition layered onto the traditional individual-focused system.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Derecho Penal: Parte General", author: "Mir Puig, S." },
+      { id: 2, title: "Ley de Enjuiciamiento Criminal (LECrim)", author: "Reino de España", year: "1882" },
+      { id: 3, title: "Ley Orgánica del Tribunal del Jurado 5/1995", author: "Reino de España", year: "1995" },
+      { id: 4, title: "Constitución Española, Artículo 24.2", author: "Reino de España", year: "1978" },
+    ],
   },
 
   "law/Constitutional & Regulatory/es": {
@@ -2700,7 +2711,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     category: "Constitutional & Regulatory",
     jurisdiction: "es",
     overview:
-      "Spanish constitutional law runs on the 1978 Constitution that established democracy after the Franco dictatorship, with a centralized constitutional court similar in structure to Germany's, and a genuinely distinctive territorial structure — the Estado de las Autonomías — that devolves real power asymmetrically across 17 regions rather than uniformly, unlike Germany's federal Länder.",
+      "Spanish constitutional law runs on the 1978 Constitution [1] that established democracy after the Franco dictatorship, with a centralized constitutional court similar in structure to Germany's, and a genuinely distinctive territorial structure — the Estado de las Autonomías — that devolves real power asymmetrically across 17 regions rather than uniformly, unlike Germany's federal Länder.",
     concepts: [
       {
         id: "es-const-1978-transition",
@@ -2746,7 +2757,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "es-const-estado-alarma-excepcion-sitio",
         title: "Estado de alarma, excepción, and sitio — graduated emergency powers",
         explanation:
-          "Article 116 of the Constitution provides three graduated levels of emergency powers: estado de alarma (the mildest, for situations like natural disasters or health crises), estado de excepción (broader restrictions on rights, requiring Congress authorization), and estado de sitio (martial-law-level powers for the most extreme threats). The COVID-19 pandemic saw Spain's first major test of this framework in decades.",
+          "Article 116 of the Constitution [1] provides three graduated levels of emergency powers: estado de alarma (the mildest, for situations like natural disasters or health crises), estado de excepción (broader restrictions on rights, requiring Congress authorization), and estado de sitio (martial-law-level powers for the most extreme threats). The COVID-19 pandemic saw Spain's first major test of this framework in decades.",
         whyItMatters:
           "The Tribunal Constitucional's July 2021 ruling that key provisions of the first COVID-19 estado de alarma decree (specifically the strict home-confinement measures) exceeded what that particular emergency level could constitutionally authorize — finding those measures should have required the stricter estado de excepción instead — is essential, genuinely recent context: it shows the graduated framework has real, judicially enforced teeth, not just formal textual distinctions.",
         example:
@@ -2767,6 +2778,9 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "The 1978 Constitution's negotiated-transition origins shaped its flexible territorial framework, which the Estado de las Autonomías and each community's specific Estatuto de Autonomía then implement asymmetrically rather than uniformly. The Tribunal Constitucional is the institution enforcing the whole framework's limits — via recurso de amparo for individual rights and more general review for structural questions like the graduated emergency-powers framework and the boundaries of regional autonomy. The ongoing Catalan territorial tension shows this framework isn't just historical design but an active, still-contested area of Spanish constitutional and political life today.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Constitución Española de 1978", author: "Reino de España", year: "1978", url: "https://www.boe.es/buscar/act.php?id=BOE-A-1978-31229" },
+    ],
   },
 
   "law/Contract Law/se": {
