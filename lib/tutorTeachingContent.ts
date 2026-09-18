@@ -200,7 +200,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fp-national-interest",
         title: "National interest as the organizing lens",
         explanation:
-          "The realist tradition in international relations starts from a simple premise: states act to secure their own survival, security, and prosperity in an anarchic system with no world government to protect them. Values and ideology matter, but they operate within — and are often overridden by — this baseline logic.",
+          "The realist tradition in international relations [1] starts from a simple premise: states act to secure their own survival, security, and prosperity in an anarchic system with no world government to protect them. Values and ideology matter, but they operate within — and are often overridden by — this baseline logic.",
         whyItMatters:
           "It's the default lens for explaining why a state does something that looks inconsistent with its stated principles: a democracy allying with an authoritarian regime, or a peace-focused country building up its military. Asking 'what interest does this serve' before assuming hypocrisy or incoherence is usually more accurate.",
         example:
@@ -210,7 +210,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fp-levels-of-analysis",
         title: "Levels of analysis: individual, state, system",
         explanation:
-          "Any foreign policy decision can be explained at three levels: the individual (a specific leader's psychology, beliefs, personal history), the state (domestic politics, bureaucratic interests, regime type), or the international system (the distribution of power among states, alliance structures).",
+          "Any foreign policy decision can be explained at three levels [2]: the individual (a specific leader's psychology, beliefs, personal history), the state (domestic politics, bureaucratic interests, regime type), or the international system (the distribution of power among states, alliance structures).",
         whyItMatters:
           "Analysts who fixate on only one level miss the full picture — over-explaining a war by one leader's personality ignores structural pressures that would have produced similar behavior from most leaders in that position, and vice versa.",
         example:
@@ -220,7 +220,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fp-deterrence-credibility",
         title: "Deterrence and credibility",
         explanation:
-          "Deterrence works by convincing an adversary that the costs of an action will outweigh the benefits — but only if the threat is credible: the adversary must believe you both have the capability and the actual will to follow through.",
+          "Deterrence [3] works by convincing an adversary that the costs of an action will outweigh the benefits — but only if the threat is credible: the adversary must believe you both have the capability and the actual will to follow through.",
         whyItMatters:
           "A deterrent threat that isn't credible is worthless and can even invite the very aggression it was meant to prevent, since the adversary calls the bluff. This is why states sometimes take costly, seemingly disproportionate actions — to preserve credibility for future threats, not just to punish the immediate act.",
         example:
@@ -242,7 +242,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         explanation:
           "An alliance is a formal commitment to mutual defense or cooperation against a shared threat; collective security is the broader idea (embodied imperfectly in the UN system) that an attack on any state should be treated as a threat to all, deterring aggression through the threat of a unified response.",
         whyItMatters:
-          "Alliances solve a real problem (no state can deter every threat alone) but create their own risks — most notably 'entrapment,' where a weaker ally's reckless behavior can drag a stronger partner into a conflict it didn't choose, because credibility requires honoring the commitment.",
+          "Alliances solve a real problem (no state can deter every threat alone) but create their own risks — most notably 'entrapment' [4], where a weaker ally's reckless behavior can drag a stronger partner into a conflict it didn't choose, because credibility requires honoring the commitment.",
         example:
           "The tangled alliance system in Europe before World War I is the textbook cautionary case: a regional crisis between Austria-Hungary and Serbia escalated into a continental war partly because allied commitments pulled in major powers that had no direct stake in the original dispute.",
       },
@@ -250,7 +250,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fp-economic-statecraft",
         title: "Economic statecraft: sanctions and trade leverage",
         explanation:
-          "States increasingly pursue foreign policy goals through economic tools short of military force — sanctions (restricting trade, finance, or travel to pressure a target), export controls, and using access to markets or currency systems as leverage.",
+          "States increasingly pursue foreign policy goals through economic statecraft [5] — sanctions (restricting trade, finance, or travel to pressure a target), export controls, and using access to markets or currency systems as leverage.",
         whyItMatters:
           "Economic tools are attractive because they're more reversible and less escalatory than military force, but they're also frequently less effective than intended: sanctioned regimes often adapt, third countries backfill lost trade, and the domestic economic pain can strengthen rather than weaken a targeted government's grip.",
         example:
@@ -271,6 +271,13 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "National interest and the levels of analysis are your diagnostic starting point — before judging a state's move, work out whose interest it serves and at which level it's best explained. Deterrence, alliances, and economic statecraft are the main tools states use to pursue those interests without war; diplomacy (bilateral, multilateral, Track II) is how they negotiate and de-escalate; and crisis management is what determines whether a breakdown in all of the above turns into an actual war or gets contained.",
     source: "claude",
     generatedAt: "2026-09-09",
+    sources: [
+      { id: 1, title: "Politics Among Nations: The Struggle for Power and Peace", author: "Morgenthau, H. J.", year: "1948" },
+      { id: 2, title: "Man, the State, and War", author: "Waltz, K. N.", year: "1959" },
+      { id: 3, title: "Arms and Influence", author: "Schelling, T. C.", year: "1966" },
+      { id: 4, title: "Alliance Politics", author: "Snyder, G. H.", year: "1997" },
+      { id: 5, title: "Economic Statecraft", author: "Baldwin, D. A.", year: "1985" },
+    ],
   },
 
   "law/Contract Law": {
