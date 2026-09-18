@@ -4539,7 +4539,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "es-cr-estado-alarma-covid-ruling",
         title: "The estado de alarma and its constitutional limits",
         explanation:
-          "Spain's central legal tool for the COVID-19 response was the estado de alarma — but the Tribunal Constitucional's July 2021 ruling found that the strict nationwide home-confinement measures under the first alarma decree exceeded what that emergency tier could constitutionally authorize, since such a severe restriction on freedom of movement should have required the stricter estado de excepción instead; a later ruling found aspects of the second declared state of alarm unconstitutional too.",
+          "Spain's central legal tool for the COVID-19 response was the estado de alarma — but the Tribunal Constitucional's July 2021 ruling (STC 148/2021) [1] found that the strict nationwide home-confinement measures under the first alarma decree exceeded what that emergency tier could constitutionally authorize, since such a severe restriction on freedom of movement should have required the stricter estado de excepción instead; a later ruling found aspects of the second declared state of alarm unconstitutional too.",
         whyItMatters:
           "This is a genuinely significant, relatively recent precedent — it demonstrates Spain's graduated emergency-powers framework carries real judicial teeth, holding the government accountable after the fact for using an insufficiently strong legal tool for measures that severe, even though the measures themselves were aimed at a genuine public health emergency.",
         example:
@@ -4600,6 +4600,9 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "The estado de alarma/excepción/sitio framework and its 2021 constitutional test are the overarching legal structure any major Spanish crisis response operates within. Central-regional coordination challenges (visible in both health crises and DANA flooding events) and layered police jurisdiction both stem from the same underlying Estado de las Autonomías structure that shapes ordinary Spanish governance, while the UME represents a deliberate centralizing exception built specifically to cut across that devolved structure when major crises demand it. The 2004 Madrid bombings remain the foundational cautionary reference point for how much is at stake in getting crisis communication right, regardless of which structural tools are otherwise in play.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Tribunal Constitucional, STC 148/2021", author: "Tribunal Constitucional", year: "2021" },
+    ],
   },
 
   "politics/Campaign Strategy/es": {
