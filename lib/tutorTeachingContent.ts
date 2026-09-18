@@ -2640,7 +2640,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     category: "Civil Litigation",
     jurisdiction: "es",
     overview:
-      "Spanish civil litigation runs under the 2000 Ley de Enjuiciamiento Civil (LEC), without a jury, and — unlike France's only-partial cost recovery — generally applies a fuller loser-pays rule for both court costs and attorney fees, giving Spanish litigants a cost-risk profile closer to Germany's than to France's.",
+      "Spanish civil litigation runs under the 2000 Ley de Enjuiciamiento Civil (LEC) [1], without a jury, and — unlike France's only-partial cost recovery — generally applies a fuller loser-pays rule for both court costs and attorney fees, giving Spanish litigants a cost-risk profile closer to Germany's than to France's.",
     concepts: [
       {
         id: "es-civ-lec-2000",
@@ -2696,7 +2696,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "es-civ-arbitraje-mediacion",
         title: "Arbitraje and Spain's growth as an arbitration seat",
         explanation:
-          "Governed by the 2003 Ley de Arbitraje (modeled on the UNCITRAL framework, similar to Germany's approach), arbitration has grown significantly in Spain, with Madrid developing as a notable seat for international arbitration, particularly for disputes involving Latin American parties given Spain's linguistic and commercial ties to the region.",
+          "Governed by the 2003 Ley de Arbitraje [2] (modeled on the UNCITRAL framework, similar to Germany's approach), arbitration has grown significantly in Spain, with Madrid developing as a notable seat for international arbitration, particularly for disputes involving Latin American parties given Spain's linguistic and commercial ties to the region.",
         whyItMatters:
           "Spain's specific positioning as an arbitration hub for Ibero-American disputes (leveraging shared language and legal tradition with Latin America) is a distinctive niche compared to other European arbitration centers, relevant for understanding why parties from that region might specifically choose Madrid as a seat.",
         example:
@@ -2707,6 +2707,10 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "The LEC 2000 modernized the procedural framework the court hierarchy operates within, and libre valoración de la prueba describes how judges (not juries) actually weigh evidence within that framework. Costas procesales' fuller loser-pays rule shapes the financial risk calculus of litigating in the first place, diligencias preliminares provide narrow pretrial evidence tools within a system that otherwise lacks broad discovery, and arbitraje offers an alternative track entirely — one Spain has specifically cultivated a competitive advantage in for Ibero-American commercial disputes.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Ley de Enjuiciamiento Civil (Ley 1/2000)", author: "Reino de España", year: "2000", url: "https://www.boe.es/buscar/act.php?id=BOE-A-2000-323" },
+      { id: 2, title: "Ley de Arbitraje (Ley 60/2003)", author: "Reino de España", year: "2003" },
+    ],
   },
 
   "law/Criminal Law/es": {
