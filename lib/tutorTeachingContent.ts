@@ -5161,7 +5161,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "dp-policy-cycle",
         title: "The policy cycle: agenda-setting, formulation, adoption, implementation, evaluation",
         explanation:
-          "Policy typically moves through stages: agenda-setting (an issue gets political attention), formulation (specific proposals are drafted), adoption (a proposal is enacted), implementation (agencies actually carry it out), and evaluation (does it work — often feeding back into agenda-setting for the next round).",
+          "Policy typically moves through stages [1]: agenda-setting (an issue gets political attention), formulation (specific proposals are drafted), adoption (a proposal is enacted), implementation (agencies actually carry it out), and evaluation (does it work — often feeding back into agenda-setting for the next round).",
         whyItMatters:
           "Most policy failures happen at implementation, not adoption — a well-designed law can fail because the implementing agency lacked funding, staff, or authority, which is why 'we passed the law' and 'the policy worked' are very different claims.",
         example:
@@ -5171,7 +5171,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "dp-incrementalism-vs-punctuated-equilibrium",
         title: "Incrementalism vs. punctuated equilibrium",
         explanation:
-          "Most policy change is incremental — small adjustments to existing programs, since large policy shifts every session are politically and administratively hard. Punctuated equilibrium theory describes how policy can occasionally undergo large, rapid shifts when a crisis, changed public attention, or a shift in governing coalition breaks the usual incremental pattern.",
+          "Most policy change is incremental — small adjustments to existing programs, since large policy shifts every session are politically and administratively hard. Punctuated equilibrium theory [2] describes how policy can occasionally undergo large, rapid shifts when a crisis, changed public attention, or a shift in governing coalition breaks the usual incremental pattern.",
         whyItMatters:
           "This explains why genuinely transformative policy usually needs a crisis or major political realignment to happen — reformers who wait for 'normal' conditions to pass ambitious change are usually waiting for something that structurally doesn't happen very often.",
         example:
@@ -5191,7 +5191,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "dp-cost-benefit-distributional",
         title: "Cost-benefit analysis and distributional impact",
         explanation:
-          "Policy analysis typically weighs aggregate costs against aggregate benefits, but a policy with a positive net benefit can still be politically explosive if the costs and benefits fall on different, identifiable groups — concentrated costs on a visible group tend to generate much louder opposition than diffuse benefits generate support.",
+          "Policy analysis typically weighs aggregate costs against aggregate benefits, but a policy with a positive net benefit can still be politically explosive if the costs and benefits fall on different, identifiable groups — concentrated costs on a visible group tend to generate much louder opposition than diffuse benefits generate support [3].",
         whyItMatters:
           "This asymmetry (concentrated costs, diffuse benefits) explains a lot of policy gridlock: a reform that would modestly benefit almost everyone but impose a real, visible cost on a smaller organized group often struggles to pass, even with a clearly positive net benefit.",
         example:
@@ -5215,13 +5215,19 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         whyItMatters:
           "Without real evaluation, a program that coincided with an improvement (or a broader trend that was already happening) gets credited or blamed inappropriately — good evaluation is what lets policymakers actually learn what works rather than just what was popular.",
         example:
-          "Early childhood education programs like Perry Preschool were tracked with genuine randomized, long-term follow-up (decades later) — producing much more credible evidence of real impact than programs evaluated only by short-term, non-randomized before-and-after comparisons.",
+          "Early childhood education programs like Perry Preschool [4] were tracked with genuine randomized, long-term follow-up (decades later) — producing much more credible evidence of real impact than programs evaluated only by short-term, non-randomized before-and-after comparisons.",
       },
     ],
     connections:
       "The policy cycle is the overall map — but incrementalism vs. punctuated equilibrium explains why most movement along that cycle is slow, with occasional exceptions. Federalism determines who actually implements a given policy once adopted, and cost-benefit/distributional analysis, interest-group coalitions, and evidence-based evaluation all shape whether — and how well — a policy survives each stage of that cycle from agenda-setting through evaluation.",
     source: "claude",
     generatedAt: "2026-09-09",
+    sources: [
+      { id: 1, title: "The Decision Process: Seven Categories of Functional Analysis", author: "Lasswell, H. D.", year: "1956" },
+      { id: 2, title: "Agendas and Instability in American Politics", author: "Baumgartner, F. R., & Jones, B. D.", year: "1993" },
+      { id: 3, title: "Political Organizations", author: "Wilson, J. Q.", year: "1973" },
+      { id: 4, title: "Lifetime Effects: The High/Scope Perry Preschool Study Through Age 40", author: "Schweinhart, L. J., et al.", year: "2005" },
+    ],
   },
 
   "politics/Crisis Response": {
