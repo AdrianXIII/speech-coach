@@ -13,7 +13,7 @@ import { loadTutorProfile, type TutorProfile } from "@/lib/tutorProfile";
 import { saveTutorFlag } from "@/lib/tutorFlags";
 import { JURISDICTION_LABELS } from "@/lib/legalJurisdiction";
 import { POLITICAL_SYSTEM_LABELS } from "@/lib/politicalSystem";
-import { countryForLanguage } from "@/lib/countryContext";
+import { countryForLanguage, type CountryCode } from "@/lib/countryContext";
 import { matchSpokenLabel } from "@/lib/voiceMatch";
 import { resolveTeachNavCommand, resolveHandoffCommand } from "@/lib/tutorVoiceCommands";
 import { categoryLabel, categoryLabels } from "@/lib/categoryLabels";
@@ -460,6 +460,7 @@ export function AITutor() {
         <TeachStep
           profession={profession}
           category={category}
+          jurisdiction={jurisdiction}
           language={language}
           fundamentals={fundamentals}
           exampleApproach={exampleApproach}
@@ -627,6 +628,7 @@ function VoiceAnswerControl({
 function TeachStep({
   profession,
   category,
+  jurisdiction,
   language,
   fundamentals,
   exampleApproach,
@@ -654,6 +656,7 @@ function TeachStep({
 }: {
   profession: CaseProfession;
   category: string;
+  jurisdiction: CountryCode | undefined;
   language: LanguageCode;
   fundamentals: Fundamental[];
   exampleApproach: string;
@@ -808,6 +811,17 @@ function TeachStep({
 
         {isSpeaking && <p className="mt-3 text-xs text-brass-text">🔊 Speaking…</p>}
       </div>
+
+      {Boolean(teaching.sources?.length) && (
+        <a
+          href={`/api/tutor/teaching-pdf?profession=${profession}&category=${encodeURIComponent(category)}&jurisdiction=${jurisdiction ?? ""}&language=${language}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="self-center text-xs font-semibold text-ink-muted hover:text-brass-text hover:underline"
+        >
+          Sources (PDF) →
+        </a>
+      )}
 
       {concept && <FlagConceptControl conceptId={concept.id} conceptTitle={concept.title} onFlag={onFlag} />}
 

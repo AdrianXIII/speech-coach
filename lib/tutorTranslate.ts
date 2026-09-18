@@ -31,8 +31,10 @@ export async function translateTeachingContent(
   const prompt = `Translate the following JSON into ${languageName} — naturally and idiomatically for
 an adult professional learner, not a literal word-for-word translation. Preserve the exact JSON
 structure and keys. Do NOT translate the "id" field values inside "concepts" (leave them exactly
-as-is — they're internal identifiers, not user-facing text). Respond with ONLY the translated JSON,
-no markdown fences, no commentary.
+as-is — they're internal identifiers, not user-facing text). Some sentences end with a citation
+marker like "[1]" or "[2]" — keep every such marker exactly as-is, attached to the same claim it
+follows in the original (do not translate, remove, renumber, or move it to a different sentence).
+Respond with ONLY the translated JSON, no markdown fences, no commentary.
 
 ${JSON.stringify(payload)}`;
 
