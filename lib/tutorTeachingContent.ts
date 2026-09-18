@@ -1939,7 +1939,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     category: "Constitutional & Regulatory",
     jurisdiction: "de",
     overview:
-      "German constitutional law is built around the Grundgesetz (Basic Law), with human dignity as its untouchable anchor, centralized constitutional review by a single specialized court, and a structured proportionality test that does the analytical work US levels-of-scrutiny doctrine does — but organized quite differently.",
+      "German constitutional law is built around the Grundgesetz (Basic Law) [1], with human dignity as its untouchable anchor, centralized constitutional review by a single specialized court, and a structured proportionality test that does the analytical work US levels-of-scrutiny doctrine does — but organized quite differently.",
     concepts: [
       {
         id: "de-const-grundgesetz-ewigkeitsklausel",
@@ -1969,7 +1969,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         whyItMatters:
           "Human dignity plays a structurally central, almost foundational role in German constitutional reasoning that has no precise parallel in US constitutional doctrine, which doesn't organize its rights framework around one supreme, explicitly foundational value in the same way.",
         example:
-          "The Bundesverfassungsgericht struck down a law that would have authorized shooting down a hijacked passenger plane to prevent a larger attack, reasoning that using the passengers' deaths merely as a means to protect others violated their human dignity under Art. 1 — dignity trumping even a plausible security justification.",
+          "The Bundesverfassungsgericht struck down a law that would have authorized shooting down a hijacked passenger plane to prevent a larger attack (BVerfGE 115, 118, 2006) [2], reasoning that using the passengers' deaths merely as a means to protect others violated their human dignity under Art. 1 — dignity trumping even a plausible security justification.",
       },
       {
         id: "de-const-foederalismus",
@@ -2006,6 +2006,10 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "The Grundgesetz and its eternity clause set the outer boundaries of what can ever be changed, anchored by Menschenwürde as the supreme value everything else is interpreted through. The Bundesverfassungsgericht is the institution that enforces all of this, including via the citizen-accessible Verfassungsbeschwerde. Föderalismus allocates power between federal and state levels within those boundaries, the proportionality test is the actual analytical tool used to check whether government action at any level goes too far, and the EU law primacy question adds a further, still-evolving layer on top of the whole domestic framework.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Grundgesetz für die Bundesrepublik Deutschland (Basic Law)", author: "Bundesrepublik Deutschland", year: "1949", url: "https://www.gesetze-im-internet.de/gg/" },
+      { id: 2, title: "BVerfGE 115, 118 (Luftsicherheitsgesetz)", author: "Bundesverfassungsgericht", year: "2006" },
+    ],
   },
 
   "law/Contract Law/fr": {
@@ -2874,7 +2878,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "se-corp-aktiebolag-forms",
         title: "Aktiebolag: privat (private) and publikt (public)",
         explanation:
-          "The Aktiebolagslagen (ABL, 2005 Companies Act) governs the aktiebolag (AB), Sweden's main limited-liability company form, split into private (simply \"AB,\" minimum share capital SEK 25,000 under ABL Chapter 1 §5) and public (\"AB (publ),\" minimum SEK 500,000 under ABL Chapter 3 §1) companies — public companies face stricter capital and governance requirements, particularly if listed, similar in general spirit to the private/public company splits in Germany, France, and Spain but with Sweden's own specific statutory rules. Every aktiebolag must register with the Bolagsverket (the Swedish Companies Registration Office), which handles company formation and statutory filings.",
+          "The Aktiebolagslagen (ABL, 2005 Companies Act) [1] governs the aktiebolag (AB), Sweden's main limited-liability company form, split into private (simply \"AB,\" minimum share capital SEK 25,000 under ABL Chapter 1 §5) and public (\"AB (publ),\" minimum SEK 500,000 under ABL Chapter 3 §1) companies — public companies face stricter capital and governance requirements, particularly if listed, similar in general spirit to the private/public company splits in Germany, France, and Spain but with Sweden's own specific statutory rules. Every aktiebolag must register with the Bolagsverket (the Swedish Companies Registration Office), which handles company formation and statutory filings.",
         whyItMatters:
           "As in the other countries covered, the private/public distinction determines which governance and disclosure rules apply — but Sweden's specific statutory thresholds and requirements shouldn't be assumed identical to Germany's GmbH/AG or France's SARL/SA/SAS distinctions just because the basic private/public logic is similar.",
         example:
@@ -2884,7 +2888,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "se-corp-valberedning",
         title: "Valberedningen — shareholder-driven board nomination",
         explanation:
-          "Swedish listed companies are governed by the Swedish Corporate Governance Code, which mandates a valberedning (nomination committee) composed primarily of representatives from the company's largest shareholders — not the existing board itself — to propose board member candidates for shareholder approval.",
+          "Swedish listed companies are governed by the Swedish Corporate Governance Code [2], which mandates a valberedning (nomination committee) composed primarily of representatives from the company's largest shareholders — not the existing board itself — to propose board member candidates for shareholder approval.",
         whyItMatters:
           "This is a genuinely distinctive governance feature — in many other systems, the existing board substantially controls or heavily influences its own succession and nomination process; Sweden's shareholder-driven valberedning model gives major owners much more direct, formal influence over board composition than is typical elsewhere.",
         example:
@@ -2914,7 +2918,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "se-corp-mbl-codetermination",
         title: "Medbestämmandelagen (MBL) — union codetermination",
         explanation:
-          "Sweden's 1976 Co-determination Act (MBL) gives labor unions extensive rights to information and negotiation before major management decisions — reflecting Sweden's historically very high union density and strong collective bargaining tradition — achieving a similar underlying goal to Germany's Mitbestimmung, but through collective-bargaining-based information/negotiation rights rather than mandatory union board seats.",
+          "Sweden's 1976 Co-determination Act (MBL) [3] gives labor unions extensive rights to information and negotiation before major management decisions — reflecting Sweden's historically very high union density and strong collective bargaining tradition — achieving a similar underlying goal to Germany's Mitbestimmung, but through collective-bargaining-based information/negotiation rights rather than mandatory union board seats.",
         whyItMatters:
           "The mechanism differs meaningfully from Germany's approach — Swedish codetermination operates primarily through negotiation and consultation obligations under collective agreements rather than guaranteed board representation, so it shouldn't be assumed to work identically just because both systems give organized labor real influence over major company decisions.",
         example:
@@ -2924,7 +2928,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "se-corp-visselblasarlagen",
         title: "Visselblåsarlagen — whistleblower protection",
         explanation:
-          "Sweden implemented the EU Whistleblower Directive through the 2021 Visselblåsarlagen, requiring larger companies (above defined employee thresholds) to establish internal reporting channels and protecting whistleblowers who report suspected wrongdoing from retaliation.",
+          "Sweden implemented the EU Whistleblower Directive through the 2021 Visselblåsarlagen [4], requiring larger companies (above defined employee thresholds) to establish internal reporting channels and protecting whistleblowers who report suspected wrongdoing from retaliation.",
         whyItMatters:
           "Because this implements an EU directive, the core substantive protections are broadly similar to what other EU member states (including France and Germany, and Spain) have implemented under the same directive — a useful point of genuine EU-wide convergence amid otherwise quite distinct national corporate law traditions.",
         example:
@@ -2935,6 +2939,12 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "The private/public aktiebolag distinction is the basic structural choice, with the valberedning's shareholder-driven nomination process and dual-class share structures (epitomized by the Wallenberg sphere) together defining Sweden's distinctive concentrated-ownership corporate governance model. The kontrollbalansräkning requirement gives directors sharp personal liability exposure tied to capital adequacy specifically, MBL's codetermination rights give organized labor a real (if structurally different from Germany's) voice in major decisions, and visselblåsarlagen adds an EU-harmonized compliance layer that looks broadly similar to equivalent obligations across the other countries covered.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Aktiebolagslagen (2005:551)", author: "Sveriges riksdag", year: "2005", url: "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/aktiebolagslag-2005551_sfs-2005-551/" },
+      { id: 2, title: "Svensk kod för bolagsstyrning (Swedish Corporate Governance Code)", author: "Kollegiet för svensk bolagsstyrning" },
+      { id: 3, title: "Lag (1976:580) om medbestämmande i arbetslivet (MBL)", author: "Sveriges riksdag", year: "1976" },
+      { id: 4, title: "Lag (2021:890) om skydd för personer som rapporterar om missförhållanden", author: "Sveriges riksdag", year: "2021" },
+    ],
   },
 
   "law/Civil Litigation/se": {
@@ -3022,7 +3032,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "se-crim-brottsbalken-elements",
         title: "Brottsbalken and the elements of a crime",
         explanation:
-          "Sweden's 1962 Penal Code (Brottsbalken) structures criminal liability around objective and subjective elements (objektiva och subjektiva rekvisit) — broadly comparable to actus reus/mens rea — but Nordic criminal law theory organizes this analysis in a somewhat more streamlined way than Germany's more elaborately tiered Tatbestand/Rechtswidrigkeit/Schuld framework, despite sharing some underlying conceptual DNA. The principle of legality (nulla poena sine lege — no punishment without a prior law) underpins the whole framework, ensuring a person can only be punished for conduct that was already defined as criminal when committed (see Asp, Ulväng & Jareborg, 'Kriminalrättens grunder').",
+          "Sweden's 1962 Penal Code (Brottsbalken) [1] structures criminal liability around objective and subjective elements (objektiva och subjektiva rekvisit) — broadly comparable to actus reus/mens rea — but Nordic criminal law theory organizes this analysis in a somewhat more streamlined way than Germany's more elaborately tiered Tatbestand/Rechtswidrigkeit/Schuld framework, despite sharing some underlying conceptual DNA. The principle of legality (nulla poena sine lege — no punishment without a prior law) underpins the whole framework, ensuring a person can only be punished for conduct that was already defined as criminal when committed (see Asp, Ulväng & Jareborg, 'Kriminalrättens grunder' [2]).",
         whyItMatters:
           "Sweden shouldn't be assumed to follow the German three-tier dogmatik as precisely as Spain does — Nordic criminal law theory developed its own, somewhat less formally tiered analytical tradition, even though it shares broadly similar underlying concerns (distinguishing the act itself from justification and from personal culpability).",
         example:
@@ -3052,7 +3062,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "se-crim-straffmatning-welfarist-tradition",
         title: "Straffmätning and Sweden's penal-welfarist tradition",
         explanation:
-          "Chapters 29-30 of the Brottsbalken provide structured sentencing factors, historically reflecting Sweden's strong penal-welfarist tradition (generally lower sentencing levels and a stronger rehabilitation emphasis than many comparable countries) — though this tradition has come under significant, genuinely recent political pressure amid a serious rise in gang-related shootings and bombings, producing real legislative moves toward harsher sentencing.",
+          "Chapters 29-30 of the Brottsbalken [1] provide structured sentencing factors, historically reflecting Sweden's strong penal-welfarist tradition (generally lower sentencing levels and a stronger rehabilitation emphasis than many comparable countries) — though this tradition has come under significant, genuinely recent political pressure amid a serious rise in gang-related shootings and bombings, producing real legislative moves toward harsher sentencing.",
         whyItMatters:
           "This is an area of genuinely live, ongoing legal and political change — describing Swedish sentencing as simply \"lenient and rehabilitation-focused\" risks being outdated, since recent reforms have specifically moved toward harsher sentencing for serious and gang-related crimes in direct response to the security crisis, a real and consequential recent shift worth flagging explicitly.",
         example:
@@ -3062,7 +3072,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "se-crim-juvenile-lvu",
         title: "Ung lagöverträdare — the juvenile diversion tradition",
         explanation:
-          "Sweden has a strong tradition of diverting young offenders (generally under 18, with softer treatment considerations extending to around 21) away from the ordinary criminal justice system and toward social services intervention under the Lagen om vård av unga (LVU, Care of Young Persons Act) — reflecting the same broader welfarist orientation as Swedish sentencing traditionally has.",
+          "Sweden has a strong tradition of diverting young offenders (generally under 18, with softer treatment considerations extending to around 21) away from the ordinary criminal justice system and toward social services intervention under the Lagen om vård av unga (LVU, Care of Young Persons Act) [3] — reflecting the same broader welfarist orientation as Swedish sentencing traditionally has.",
         whyItMatters:
           "This diversion tradition is also under real strain from the same gang-violence crisis driving broader sentencing toughening — recent debate has specifically questioned whether the traditional juvenile-diversion approach remains appropriate given documented recruitment of increasingly young children into organized gang violence, a genuinely live and consequential Swedish policy debate.",
         example:
@@ -3083,6 +3093,11 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "The Brottsbalken's objective/subjective elements structure is the analytical foundation for any offense, applied by professional judges working alongside politically-nominated nämndemän rather than a jury. Åtalsplikt determines whether a case reaches trial given sufficient evidence, and straffmätning determines the sentence — an area currently in genuine flux, moving away from the traditional welfarist orientation that the ung lagöverträdare diversion tradition also reflects. The gang violence crisis is the single most important context for understanding why so much of this traditional framework is currently being actively reconsidered and toughened.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Brottsbalken (1962:700)", author: "Sveriges riksdag", year: "1962", url: "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/brottsbalk-1962700_sfs-1962-700/" },
+      { id: 2, title: "Kriminalrättens grunder", author: "Asp, P., Ulväng, M., & Jareborg, N." },
+      { id: 3, title: "Lag (1990:52) med särskilda bestämmelser om vård av unga (LVU)", author: "Sveriges riksdag", year: "1990" },
+    ],
   },
 
   "law/Constitutional & Regulatory/se": {
