@@ -1640,7 +1640,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     category: "Contract Law",
     jurisdiction: "de",
     overview:
-      "German contract law is codified in the Bürgerliches Gesetzbuch (BGB) — a systematic civil code, not judge-made common law. The single biggest mental adjustment for someone trained on US contract law: German law has no doctrine of \"consideration\" at all. A promise can be binding without anything given in exchange for it. A second structural feature with no direct common-law equivalent: the general good-faith principle in §242 BGB (Treu und Glauben) is not a narrow doctrine but a pervasive standard that colors interpretation and performance of every contract, and courts also recognize pre-contractual liability (culpa in contrahendo, now codified in §311 Abs. 2 BGB) for bad-faith conduct during negotiations, before any contract is even formed.",
+      "German contract law is codified in the Bürgerliches Gesetzbuch (BGB) [1] — a systematic civil code, not judge-made common law. The single biggest mental adjustment for someone trained on US contract law: German law has no doctrine of \"consideration\" at all. A promise can be binding without anything given in exchange for it. A second structural feature with no direct common-law equivalent: the general good-faith principle in §242 BGB (Treu und Glauben) is not a narrow doctrine but a pervasive standard that colors interpretation and performance of every contract, and courts also recognize pre-contractual liability (culpa in contrahendo, now codified in §311 Abs. 2 BGB) for bad-faith conduct during negotiations, before any contract is even formed.",
     concepts: [
       {
         id: "de-contract-rechtsgeschaeft-willenserklaerung",
@@ -1707,6 +1707,9 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Rechtsgeschäft/Willenserklärung and Geschäftsfähigkeit answer the threshold question of whether a valid contract exists at all — no consideration required, but capacity still matters. Formvorschriften layers on formality requirements for specific transaction types. Leistungsstörungsrecht and the priority of Nacherfüllung under Gewährleistung govern what happens when performance goes wrong, and AGB-Recht is the separate, stricter control on standard-form terms that cuts across all of the above whenever boilerplate language is involved.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Bürgerliches Gesetzbuch (BGB) — German Civil Code", author: "Bundesrepublik Deutschland", url: "https://www.gesetze-im-internet.de/bgb/" },
+    ],
   },
 
   "law/Corporate & Compliance/de": {
@@ -2114,13 +2117,13 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         whyItMatters:
           "Directors and officers in France generally face somewhat greater exposure to being second-guessed for ordinary business decisions that turn out badly than their US or German counterparts, who benefit from more explicit statutory or case-law safe harbors for good-faith, informed decisions.",
         example:
-          "A director who approves a risky but reasonably researched investment that fails might face a faute de gestion claim in France more readily than an equivalent US director would face a successful challenge under the protective Delaware business judgment rule. Distinct from ordinary faute de gestion, using company assets or credit for personal benefit is a separate criminal offense — abus de biens sociaux (Code de commerce, Art. L241-3 for SARL, L242-6 for SA).",
+          "A director who approves a risky but reasonably researched investment that fails might face a faute de gestion claim in France more readily than an equivalent US director would face a successful challenge under the protective Delaware business judgment rule. Distinct from ordinary faute de gestion, using company assets or credit for personal benefit is a separate criminal offense — abus de biens sociaux (Code de commerce, Art. L241-3 for SARL, L242-6 for SA) [1].",
       },
       {
         id: "fr-corp-loi-sapin-ii",
         title: "Loi Sapin II — France's anti-corruption compliance regime",
         explanation:
-          "The 2016 Loi Sapin II requires large companies (Article 17: at least 500 employees and turnover above €100 million) to implement an eight-pillar anti-corruption compliance program — code of conduct, whistleblower channel, risk mapping, due diligence procedures, internal accounting controls, training, disciplinary sanctions, and an internal monitoring system — enforced by the dedicated Agence Française Anticorruption (AFA).",
+          "The 2016 Loi Sapin II [2] requires large companies (Article 17: at least 500 employees and turnover above €100 million) to implement an eight-pillar anti-corruption compliance program — code of conduct, whistleblower channel, risk mapping, due diligence procedures, internal accounting controls, training, disciplinary sanctions, and an internal monitoring system — enforced by the dedicated Agence Française Anticorruption (AFA).",
         whyItMatters:
           "This is France's structural answer to the US FCPA and Germany's more diffuse compliance case law — a single, detailed statute with specific mandatory program elements and a dedicated enforcement agency, giving companies (and regulators) a clear statutory checklist rather than relying mainly on evolving case law.",
         example:
@@ -2130,7 +2133,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fr-corp-devoir-de-vigilance",
         title: "Devoir de vigilance (duty of vigilance)",
         explanation:
-          "The 2017 devoir de vigilance law requires large French companies to establish and publish a vigilance plan identifying and mitigating human rights and environmental risks across their own operations, subsidiaries, and — distinctively — their subcontractors' and suppliers' operations too, with civil liability for damages caused by failure to implement an adequate plan.",
+          "The 2017 devoir de vigilance law [3] requires large French companies to establish and publish a vigilance plan identifying and mitigating human rights and environmental risks across their own operations, subsidiaries, and — distinctively — their subcontractors' and suppliers' operations too, with civil liability for damages caused by failure to implement an adequate plan.",
         whyItMatters:
           "This was one of the first laws globally to impose binding supply-chain human-rights/environmental due diligence obligations with real civil liability exposure, rather than just voluntary corporate social responsibility guidelines — it has become an influential model referenced in subsequent EU-level supply-chain due diligence legislation.",
         example:
@@ -2151,6 +2154,11 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Company form (SARL/SA/SAS) and the moniste/dualiste governance choice are the foundational structural decisions a French business makes. Faute de gestion sets the liability standard directors operate under within whichever structure is chosen. Loi Sapin II and devoir de vigilance are both relatively recent, France-specific statutory compliance regimes — one focused on anti-corruption, the other on supply-chain human rights/environmental due diligence — that layer additional, quite detailed obligations on top of ordinary corporate governance, and CSE requirements add a mandatory employee-representation dimension that cuts across company form and governance structure alike.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Code de commerce, Art. L241-3 / L242-6", author: "République française", url: "https://www.legifrance.gouv.fr/codes/texte_lc/LEGITEXT000005634379" },
+      { id: 2, title: "Loi n° 2016-1691 du 9 décembre 2016 (Loi Sapin II)", author: "République française", year: "2016" },
+      { id: 3, title: "Loi n° 2017-399 du 27 mars 2017 relative au devoir de vigilance", author: "République française", year: "2017" },
+    ],
   },
 
   "law/Civil Litigation/fr": {
@@ -2158,7 +2166,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     category: "Civil Litigation",
     jurisdiction: "fr",
     overview:
-      "French civil litigation runs through a dedicated court hierarchy topped by the Cour de cassation, without a jury, with an active case-managing judge, and a cost-allocation rule that sits between the American Rule and Germany's fuller loser-pays system — the losing side generally pays court costs, but attorney fees are only partially, discretionarily recoverable. Procedure is largely écrite (written): under Code de procédure civile Article 16, the principe du contradictoire requires every party to have a real opportunity to see and respond to the other side's arguments and evidence, and under Article 440 et seq., most of the substantive argument happens in written submissions (conclusions) exchanged before the hearing, with the oral hearing itself often limited to summarizing or clarifying what's already on the record.",
+      "French civil litigation runs through a dedicated court hierarchy topped by the Cour de cassation, without a jury, with an active case-managing judge, and a cost-allocation rule that sits between the American Rule and Germany's fuller loser-pays system — the losing side generally pays court costs, but attorney fees are only partially, discretionarily recoverable. Procedure is largely écrite (written): under Code de procédure civile Article 16 [1], the principe du contradictoire requires every party to have a real opportunity to see and respond to the other side's arguments and evidence, and under Article 440 et seq. [1], most of the substantive argument happens in written submissions (conclusions) exchanged before the hearing, with the oral hearing itself often limited to summarizing or clarifying what's already on the record.",
     concepts: [
       {
         id: "fr-civ-court-hierarchy",
@@ -2225,6 +2233,9 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "The Tribunal judiciaire-to-Cour de cassation hierarchy defines where a case is heard and what kind of review is available at each stage, with the juge de la mise en état actively managing the pretrial phase within that structure. The lack of broad discovery (offset partially by targeted tools like injonction de communiquer and référé) shapes what evidence each side can actually marshal, dépens and Article 700 shape the financial risk of litigating, and mandatory pre-litigation conciliation for smaller claims reflects a policy preference for resolving disputes before they ever reach this whole apparatus in the first place.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Code de procédure civile", author: "République française", url: "https://www.legifrance.gouv.fr/codes/texte_lc/LEGITEXT000006070716" },
+    ],
   },
 
   "law/Criminal Law/fr": {
@@ -2240,7 +2251,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         explanation:
           "French criminal analysis requires an élément légal (a legal basis — the act must actually be defined as a crime by statute, reflecting the principle of legality), an élément matériel (the physical act itself), and an élément moral (the mental/fault element — intent or, for some offenses, negligence) — a structured three-part framework distinct in its specific organization from both common-law and German analysis.",
         whyItMatters:
-          "The explicit, separate élément légal requirement reflects French law's strong commitment to the principle of legality (nullum crimen sine lege) — an act simply cannot be criminal, however harmful, without an existing statute defining it as such at the time it occurred. This is reinforced above the level of ordinary statute by Article 7 of the European Convention on Human Rights, which independently prohibits punishment without a pre-existing legal basis.",
+          "The explicit, separate élément légal requirement reflects French law's strong commitment to the principle of legality (nullum crimen sine lege) — an act simply cannot be criminal, however harmful, without an existing statute defining it as such at the time it occurred. This is reinforced above the level of ordinary statute by Article 7 of the European Convention on Human Rights [1], which independently prohibits punishment without a pre-existing legal basis.",
         example:
           "A genuinely harmful act that wasn't defined as a criminal offense under any statute at the time it was committed cannot be prosecuted, no matter how clearly the material and moral elements might otherwise be present — the missing élément légal is fatal to any prosecution.",
       },
@@ -2268,7 +2279,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fr-crim-garde-a-vue",
         title: "Garde à vue (police custody) safeguards",
         explanation:
-          "Garde à vue is the period a suspect can be held in police custody for questioning before being released or brought before a prosecutor/judge — significantly reformed in 2011 (Law of 14 April 2011) after European Court of Human Rights pressure, notably the Court's Salduz v. Turkey (2008) judgment finding a fair-trial violation where a suspect lacked legal assistance during police questioning, to guarantee the right to a lawyer's presence during questioning, which wasn't previously reliably available.",
+          "Garde à vue is the period a suspect can be held in police custody for questioning before being released or brought before a prosecutor/judge — significantly reformed in 2011 (Law of 14 April 2011) after European Court of Human Rights pressure, notably the Court's Salduz v. Turkey (2008) judgment [2] finding a fair-trial violation where a suspect lacked legal assistance during police questioning, to guarantee the right to a lawyer's presence during questioning, which wasn't previously reliably available.",
         whyItMatters:
           "The 2011 reform marked a significant, relatively recent expansion of suspects' rights during police custody specifically because the prior regime had been found wanting under European human rights standards — a useful example of European-level human rights law directly reshaping French domestic criminal procedure.",
         example:
@@ -2288,7 +2299,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fr-crim-presomption-innocence",
         title: "Présomption d'innocence",
         explanation:
-          "The presumption of innocence is explicitly codified in Article 9-1 of the Code civil (a distinctive placement in the civil code, alongside its protection under Article 6 of the European Convention on Human Rights) — the same underlying principle as in other systems, but with its own specific French statutory anchor.",
+          "The presumption of innocence is explicitly codified in Article 9-1 of the Code civil [3] (a distinctive placement in the civil code, alongside its protection under Article 6 of the European Convention on Human Rights [4]) — the same underlying principle as in other systems, but with its own specific French statutory anchor.",
         whyItMatters:
           "Placing this guarantee explicitly in the Code civil (not just constitutional or criminal-procedure text) gives individuals a specific civil-law basis to seek remedies (like damages) for public statements or media coverage that violate the presumption of innocence before any conviction — a distinctly French procedural tool.",
         example:
@@ -2299,6 +2310,12 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "The three-element analysis (légal, matériel, moral) is the analytical backbone for any offense, and the contraventions/délits/crimes classification mechanically determines which court and procedure apply — including whether the citizen-jury cour d'assises is involved. Garde à vue protections govern the investigative stage for any suspect, the juge d'instruction adds a distinctive judge-led investigative layer for serious/complex cases specifically, and présomption d'innocence runs through the whole process as a codified guarantee with its own specific civil-law enforcement mechanism.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "European Convention on Human Rights, Article 7", author: "Council of Europe", year: "1950" },
+      { id: 2, title: "Salduz v. Turkey, App. No. 36391/02", author: "European Court of Human Rights", year: "2008" },
+      { id: 3, title: "Code civil, Article 9-1", author: "République française" },
+      { id: 4, title: "European Convention on Human Rights, Article 6", author: "Council of Europe", year: "1950" },
+    ],
   },
 
   "law/Constitutional & Regulatory/fr": {
@@ -2312,7 +2329,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fr-const-fifth-republic",
         title: "The 1958 Constitution and the semi-presidential system",
         explanation:
-          "The Fifth Republic's 1958 Constitution, largely designed under Charles de Gaulle, created a semi-presidential system blending a directly elected president with real executive power and a prime minister/government answerable to parliament — a hybrid structure distinct from both a pure presidential system (like the US) and a pure parliamentary system (like Germany).",
+          "The Fifth Republic's 1958 Constitution [1], largely designed under Charles de Gaulle, created a semi-presidential system blending a directly elected president with real executive power and a prime minister/government answerable to parliament — a hybrid structure distinct from both a pure presidential system (like the US) and a pure parliamentary system (like Germany).",
         whyItMatters:
           "Understanding France as genuinely hybrid — not simply \"more presidential\" or \"more parliamentary\" — matters because real power distribution between president and prime minister shifts significantly depending on whether they're from the same political camp (see cohabitation in the Politics content), a dynamic neither pure system produces.",
         example:
@@ -2332,7 +2349,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fr-const-dual-court-system",
         title: "The dual court system: judicial courts vs. Conseil d'État",
         explanation:
-          "France maintains two entirely separate court hierarchies: the ordinary judicial courts (handling private civil and criminal law, topped by the Cour de cassation) and a distinct administrative court system (handling disputes involving the state and public administration, topped by the Conseil d'État) — governed by its own body of law, droit administratif, developed substantially through the Conseil d'État's own case law. The Conseil d'État also holds a second, non-judicial role under Article 39 of the Constitution: the government must submit most draft legislation (projets de loi) to it for a formal legal-quality advisory opinion before the bill reaches parliament.",
+          "France maintains two entirely separate court hierarchies: the ordinary judicial courts (handling private civil and criminal law, topped by the Cour de cassation) and a distinct administrative court system (handling disputes involving the state and public administration, topped by the Conseil d'État) — governed by its own body of law, droit administratif, developed substantially through the Conseil d'État's own case law. The Conseil d'État also holds a second, non-judicial role under Article 39 of the Constitution [2]: the government must submit most draft legislation (projets de loi) to it for a formal legal-quality advisory opinion before the bill reaches parliament.",
         whyItMatters:
           "A dispute against a government body in France generally goes to an entirely different court system, applying different legal principles, than a private dispute between individuals or companies — a structural split with no equivalent in a unified common-law court system, and getting the wrong court entirely can be fatal to a claim.",
         example:
@@ -2342,7 +2359,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "fr-const-bloc-de-constitutionnalite",
         title: "The bloc de constitutionnalité",
         explanation:
-          "French constitutional review doesn't rest on a single constitutional text — the \"bloc de constitutionnalité\" (constitutionality block) includes the 1958 Constitution itself, the 1789 Declaration of the Rights of Man and of the Citizen, the preamble to the 1946 Constitution (with its social/economic rights), and the 2004 Charter for the Environment. It also includes an unwritten component: the Fundamental Principles Recognized by the Laws of the Republic (PFRLR), a category of constitutional principles the Conseil constitutionnel derives from pre-1946 republican legislation rather than from any single enacted text.",
+          "French constitutional review doesn't rest on a single constitutional text — the \"bloc de constitutionnalité\" (constitutionality block) includes the 1958 Constitution itself, the 1789 Declaration of the Rights of Man and of the Citizen [3], the preamble to the 1946 Constitution (with its social/economic rights) [4], and the 2004 Charter for the Environment [5]. It also includes an unwritten component: the Fundamental Principles Recognized by the Laws of the Republic (PFRLR), a category of constitutional principles the Conseil constitutionnel derives from pre-1946 republican legislation rather than from any single enacted text.",
         whyItMatters:
           "This layered structure means constitutional arguments in France can draw on multiple historical texts spanning over two centuries, each potentially carrying different rights and principles — a genuinely broader and more textually layered source base than reviewing a single constitutional document.",
         example:
@@ -2373,6 +2390,13 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "The 1958 Constitution's semi-presidential structure sets the basic distribution of power that cohabitation periodically tests and rebalances. The Conseil constitutionnel is the institution enforcing constitutional limits, now with the QPC giving individuals direct access since 2010, drawing on the full bloc de constitutionnalité rather than a single text. The dual court system means disputes involving the state run through an entirely separate track from private law disputes, and laïcité illustrates how French constitutional principles can produce meaningfully different real-world outcomes than superficially similar-sounding principles (like US religious liberty doctrine) elsewhere.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Constitution of 4 October 1958", author: "République française", year: "1958" },
+      { id: 2, title: "Constitution of 4 October 1958, Article 39", author: "République française", year: "1958" },
+      { id: 3, title: "Declaration of the Rights of Man and of the Citizen", author: "France", year: "1789" },
+      { id: 4, title: "Preamble to the Constitution of 27 October 1946", author: "République française", year: "1946" },
+      { id: 5, title: "Charter for the Environment", author: "République française", year: "2004" },
+    ],
   },
 
   "law/Contract Law/es": {
@@ -2750,13 +2774,13 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     category: "Contract Law",
     jurisdiction: "se",
     overview:
-      "Swedish contract law belongs to the distinct \"Nordic legal family\" — unlike Germany, France, or Spain, Sweden never adopted a single comprehensive civil code. Contract law instead lives in the 1915 Avtalslagen plus separate statutes for sales and consumer protection, and Swedish law traditionally treats a mere offer as binding in a way common law does not. Section 36 of the Avtalslagen (generalklausulen, the general clause) gives courts a broad power to adjust or set aside a contract term that has become unreasonable — including due to later changed circumstances (a rough Swedish counterpart to rebus sic stantibus) — a flexible judicial safety valve with no single direct equivalent in the more categorical excuse doctrines of common law.",
+      "Swedish contract law belongs to the distinct \"Nordic legal family\" — unlike Germany, France, or Spain, Sweden never adopted a single comprehensive civil code. Contract law instead lives in the 1915 Avtalslagen [1] plus separate statutes for sales and consumer protection, and Swedish law traditionally treats a mere offer as binding in a way common law does not. Section 36 of the Avtalslagen (generalklausulen, the general clause) gives courts a broad power to adjust or set aside a contract term that has become unreasonable — including due to later changed circumstances (a rough Swedish counterpart to rebus sic stantibus) — a flexible judicial safety valve with no single direct equivalent in the more categorical excuse doctrines of common law.",
     concepts: [
       {
         id: "se-contract-no-codification",
         title: "No comprehensive civil code — the Nordic legal family",
         explanation:
-          "Sweden's contract law is governed primarily by the 1915 Avtalslagen (Contracts Act) plus separate specific statutes — the Köplagen (Sale of Goods Act) for commercial sales and the Konsumentköplagen (Consumer Sales Act) for consumer transactions — rather than one comprehensive code like Germany's BGB or France's Code civil, reflecting the Nordic legal family's own distinct historical development.",
+          "Sweden's contract law is governed primarily by the 1915 Avtalslagen (Contracts Act) [1] plus separate specific statutes — the Köplagen (Sale of Goods Act) [2] for commercial sales and the Konsumentköplagen (Consumer Sales Act) [3] for consumer transactions — rather than one comprehensive code like Germany's BGB or France's Code civil, reflecting the Nordic legal family's own distinct historical development.",
         whyItMatters:
           "This is a genuinely distinct legal family, not simply \"civil law like Germany or France\" — Nordic law developed through closer Scandinavian cross-country legislative cooperation and separate topic-specific statutes rather than a single unifying code, so assuming BGB- or Code-civil-style codification applies to Sweden is a real analytical error.",
         example:
@@ -2786,7 +2810,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         id: "se-contract-koplagen-cisg-influence",
         title: "Köplagen and CISG influence",
         explanation:
-          "Sweden's 1990 Köplagen (Sale of Goods Act) was drafted with substantial influence from the UN Convention on Contracts for the International Sale of Goods (CISG), giving Swedish commercial sales law — remedies like rättelse (cure), hävning (avoidance/termination), prisavdrag (price reduction), and skadestånd (damages) — a structure that aligns more closely with international commercial law conventions than a purely domestically developed framework might.",
+          "Sweden's 1990 Köplagen (Sale of Goods Act) [2] was drafted with substantial influence from the UN Convention on Contracts for the International Sale of Goods (CISG) [4], giving Swedish commercial sales law — remedies like rättelse (cure), hävning (avoidance/termination), prisavdrag (price reduction), and skadestånd (damages) — a structure that aligns more closely with international commercial law conventions than a purely domestically developed framework might.",
         whyItMatters:
           "This CISG alignment makes Swedish sales law relatively predictable and familiar to international commercial counterparties already used to CISG concepts, a deliberate legislative choice favoring international commercial compatibility over a purely home-grown framework.",
         example:
@@ -2817,6 +2841,12 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "The absence of a comprehensive civil code (Sweden's Nordic legal family membership) is the foundational structural fact shaping everything else — contract law lives across the Avtalslagen, Köplagen, and Konsumentköplagen rather than one code. Löftesprincipen governs formation, treating offers as binding in a distinctly Scandinavian way, § 36's unreasonableness clause and the more distributed god sed principles both police unfairness without the single-article approach France or Germany use, and standardavtal shows how much of actual Swedish commercial contracting happens through adopting established sector-specific forms rather than applying general doctrine from scratch.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Avtalslagen (1915:218)", author: "Sveriges riksdag", year: "1915", url: "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/lag-1915218-om-avtal-och-andra-rattshandlingar_sfs-1915-218/" },
+      { id: 2, title: "Köplagen (1990:931)", author: "Sveriges riksdag", year: "1990" },
+      { id: 3, title: "Konsumentköplagen (1990:932)", author: "Sveriges riksdag", year: "1990" },
+      { id: 4, title: "United Nations Convention on Contracts for the International Sale of Goods (CISG)", author: "United Nations", year: "1980" },
+    ],
   },
 
   "law/Corporate & Compliance/se": {
