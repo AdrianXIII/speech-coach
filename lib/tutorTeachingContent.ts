@@ -2482,7 +2482,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     category: "Contract Law",
     jurisdiction: "es",
     overview:
-      "Spanish contract law runs on the 1889 Código Civil, still largely intact after well over a century — and unlike France (which dropped its equivalent doctrine in 2016), Spain still requires a valid \"causa\" for a contract to be enforceable. Spain's mortgage-crisis-era \"floor clause\" litigation also produced some of the most consequential unfair-terms case law anywhere in Europe.",
+      "Spanish contract law runs on the 1889 Código Civil [1], still largely intact after well over a century — and unlike France (which dropped its equivalent doctrine in 2016), Spain still requires a valid \"causa\" for a contract to be enforceable. Spain's mortgage-crisis-era \"floor clause\" litigation also produced some of the most consequential unfair-terms case law anywhere in Europe.",
     concepts: [
       {
         id: "es-contract-consentimiento-objeto-causa",
@@ -2522,7 +2522,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         whyItMatters:
           "This is one of the most consequential consumer-protection legal sagas in recent European history — it produced a huge volume of case law on what \"transparency\" requires for a term to survive unfair-terms scrutiny, and it's a frequently cited real-world illustration of Spanish/EU consumer protection law actually working at massive scale.",
         example:
-          "The Spanish Supreme Court's 2013 ruling on cláusulas suelo found the clauses could be valid in principle but abusive in practice where banks hadn't made their real effect sufficiently transparent to borrowers — a nuanced \"transparency,\" not blanket-illegality, standard later reinforced by CJEU rulings requiring fuller consumer refunds than Spanish courts had initially allowed.",
+          "The Spanish Supreme Court's 2013 ruling [2] on cláusulas suelo found the clauses could be valid in principle but abusive in practice where banks hadn't made their real effect sufficiently transparent to borrowers — a nuanced \"transparency,\" not blanket-illegality, standard later reinforced by CJEU rulings requiring fuller consumer refunds than Spanish courts had initially allowed.",
       },
       {
         id: "es-contract-rebus-sic-stantibus",
@@ -2540,7 +2540,7 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
         explanation:
           "Spanish law sets 18 as the general age of full contractual capacity, with specific emancipation rules (emancipación) allowing minors from 16 to gain expanded (though not entirely full) legal capacity under defined circumstances, and separate rules governing contracts by persons with judicially modified capacity (previously \"incapacitados,\" terminology and framework reformed in 2021 to emphasize supported decision-making rather than substitute decision-making).",
         whyItMatters:
-          "The 2021 reform (Ley 8/2021) marked a significant, relatively recent modernization — moving away from a paternalistic \"incapacitation\" model toward one centered on supporting the person's own decision-making wherever possible, which meaningfully changes how contracts involving people with cognitive or intellectual disabilities are analyzed compared to older Spanish legal materials.",
+          "The 2021 reform (Ley 8/2021) [3] marked a significant, relatively recent modernization — moving away from a paternalistic \"incapacitation\" model toward one centered on supporting the person's own decision-making wherever possible, which meaningfully changes how contracts involving people with cognitive or intellectual disabilities are analyzed compared to older Spanish legal materials.",
         example:
           "A person with an intellectual disability today is presumed to retain contractual capacity with appropriate support measures tailored to their specific needs, rather than being subject to a blanket substitute-decision-maker regime — a framework that looks quite different from how Spanish law approached the same situation before the 2021 reform.",
       },
@@ -2549,6 +2549,11 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
       "Consentimiento, objeto, and causa answer the threshold question of contract validity — Spain's retention of causa is a genuine point of divergence from France's more modernized approach. Buena fe shapes how obligations are interpreted and extended in performance, and the Article 1124 remedy menu (specific performance, resolución, damages) governs what happens when performance fails. Cláusulas abusivas (illustrated vividly by the cláusulas suelo saga) and rebus sic stantibus are both correctives for situations the core framework doesn't handle well on its own — structurally unequal consumer bargaining power, and genuinely extraordinary unforeseen hardship, respectively.",
     source: "claude",
     generatedAt: "2026-09-10",
+    sources: [
+      { id: 1, title: "Código Civil", author: "Reino de España", year: "1889", url: "https://www.boe.es/buscar/act.php?id=BOE-A-1889-4763" },
+      { id: 2, title: "Tribunal Supremo, STS 241/2013 (cláusulas suelo)", author: "Tribunal Supremo", year: "2013" },
+      { id: 3, title: "Ley 8/2021, de 2 de junio", author: "Reino de España", year: "2021" },
+    ],
   },
 
   "law/Corporate & Compliance/es": {
