@@ -8,7 +8,6 @@ import { CASE_CATEGORIES, type CaseProfession, type CaseStudy } from "@/lib/case
 import type { Fundamental } from "@/lib/caseStudyFundamentals";
 import { buildTeachingBrief, pickChallenge, type TeachingBrief, type TutorFeedback } from "@/lib/tutorEngine";
 import type { TeachingContent } from "@/lib/tutorTeachingContent";
-import { buildTeachSteps, type TeachBlock, type TeachStep as TeachStepData } from "@/lib/teachSteps";
 import type { TutorNewsItem } from "@/lib/tutorNews";
 import { loadTutorProfile, type TutorProfile } from "@/lib/tutorProfile";
 import { saveTutorFlag } from "@/lib/tutorFlags";
@@ -55,7 +54,7 @@ export function AITutor() {
   const [fundamentals, setFundamentals] = useState<Fundamental[]>([]);
   const [exampleApproach, setExampleApproach] = useState("");
   const [teaching, setTeaching] = useState<TeachingContent | null>(null);
-  const [teachStepIndex, setTeachStepIndex] = useState(0); // index into teachSteps (see lib/teachSteps.ts)
+  const [teachStepIndex, setTeachStepIndex] = useState(-1); // -1 = overview, 0..N-1 = concepts, N = connections/handoff
   const [isLocalizingTeach, setIsLocalizingTeach] = useState(false);
   // What's actually shown/spoken for the current challenge case — translated
   // when language !== "en" (see /api/tutor/localize-case). currentCase
@@ -165,19 +164,11 @@ export function AITutor() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, profession]);
 
-  const teachSteps = useMemo(
-    () => (teaching ? buildTeachSteps(teaching, tutorStrings(language).forExample) : []),
-    [teaching, language],
-  );
-  const isLastTeachStep = teachStepIndex >= teachSteps.length - 1;
-
   useEffect(() => {
-    if (phase !== "teach" || !teachSteps.length || isLocalizingTeach) return;
-    const step = teachSteps[teachStepIndex];
-    if (!step) return;
-    tts.speak(isLastTeachStep ? `${step.speech} ${tutorStrings(language).handoffQuestion}` : step.speech);
+    if (phase !== "teach" || !teaching || isLocalizingTeach) return;
+    tts.speak(teachStepText(teaching, teachStepIndex, language));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, teachSteps, teachStepIndex, isLocalizingTeach]);
+  }, [phase, teaching, teachStepIndex, isLocalizingTeach]);
 
   // Resolves whatever the user just said, once voiceNav has settled, against
   // whichever prompt is currently pending (voiceIntent) — one mic button and
@@ -261,7 +252,7 @@ export function AITutor() {
     const brief = buildTeachingBrief(profession, cat, jurisdiction);
     setFundamentals(brief.fundamentals);
     setExampleApproach(brief.exampleApproach);
-    setTeachStepIndex(0);
+    setTeachStepIndex(-1);
     setMode("core");
     setNewsFallbackNotice(false);
 
@@ -292,17 +283,16 @@ export function AITutor() {
   }
 
   function handleTeachCommand(cmd: string) {
-    if (!teachSteps.length) return;
+    if (!teaching) return;
     if (cmd === "repeat") {
-      const step = teachSteps[teachStepIndex];
-      if (step) tts.speak(isLastTeachStep ? `${step.speech} ${tutorStrings(language).handoffQuestion}` : step.speech);
+      tts.speak(teachStepText(teaching, teachStepIndex, language));
       return;
     }
     if (cmd === "back" || cmd === "previous") {
-      setTeachStepIndex((i) => Math.max(0, i - 1));
+      setTeachStepIndex((i) => Math.max(-1, i - 1));
       return;
     }
-    setTeachStepIndex((i) => Math.min(teachSteps.length - 1, i + 1));
+    setTeachStepIndex((i) => Math.min(teaching.concepts.length, i + 1));
   }
 
   async function beginChallenge(forceMode?: Mode) {
@@ -475,7 +465,6 @@ export function AITutor() {
           fundamentals={fundamentals}
           exampleApproach={exampleApproach}
           teaching={teaching}
-          teachSteps={teachSteps}
           isLocalizing={isLocalizingTeach}
           teachStepIndex={teachStepIndex}
           isSpeaking={tts.isSpeaking}
@@ -582,61 +571,15 @@ export function AITutor() {
   );
 }
 
-/** Renders one block of a teaching step — see lib/teachSteps.ts for the shapes. */
-function TeachBlockView({ block }: { block: TeachBlock }) {
-  if (block.kind === "prose") {
-    return <p className="text-sm leading-relaxed text-ink">{block.text}</p>;
+/** The text spoken (and shown) for a given step of the rich teaching flow. */
+function teachStepText(teaching: TeachingContent, stepIndex: number, language: LanguageCode): string {
+  const t = tutorStrings(language);
+  if (stepIndex === -1) return teaching.overview;
+  if (stepIndex < teaching.concepts.length) {
+    const c = teaching.concepts[stepIndex];
+    return `${c.title}. ${c.explanation} ${c.whyItMatters} ${t.forExample} ${c.example}`;
   }
-  if (block.kind === "labelled") {
-    return (
-      <p className={`text-sm leading-relaxed ${block.muted ? "text-ink-muted" : "text-ink"}`}>
-        <span className="font-semibold text-ink">{block.label}: </span>
-        {block.text}
-      </p>
-    );
-  }
-  if (block.kind === "terms") {
-    return (
-      <div className="rounded-md bg-surface-1 p-3">
-        <p className="text-xs font-semibold uppercase tracking-wide text-brass-text">Key terms</p>
-        <dl className="mt-2 flex flex-col gap-1.5">
-          {block.terms.map((t) => (
-            <div key={t.term} className="text-sm leading-relaxed">
-              <dt className="inline font-semibold text-ink">{t.term} — </dt>
-              <dd className="inline text-ink-muted">{t.definition}</dd>
-            </div>
-          ))}
-        </dl>
-      </div>
-    );
-  }
-  if (block.kind === "pitfalls") {
-    return (
-      <div className="rounded-md bg-surface-1 p-3">
-        <p className="text-xs font-semibold uppercase tracking-wide text-brass-text">Common mistake</p>
-        <div className="mt-2 flex flex-col gap-2">
-          {block.pitfalls.map((p) => (
-            <div key={p.mistake} className="text-sm leading-relaxed">
-              <p className="text-ink-muted">{p.mistake}</p>
-              <p className="mt-1 text-ink">
-                <span className="font-semibold">Instead: </span>
-                {p.instead}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-  return (
-    <div className="flex flex-col gap-2">
-      <p className="text-sm font-semibold leading-relaxed text-ink">{block.question}</p>
-      <div className="rounded-md bg-surface-1 p-3">
-        <p className="text-xs font-semibold uppercase tracking-wide text-brass-text">How a strong answer runs</p>
-        <p className="mt-2 text-sm leading-relaxed text-ink-muted">{block.modelAnswer}</p>
-      </div>
-    </div>
-  );
+  return `${teaching.connections} ${t.handoffQuestion}`;
 }
 
 /* ─────────────────────────── Voice answer control ─────────────────────────── */
@@ -690,7 +633,6 @@ function TeachStep({
   fundamentals,
   exampleApproach,
   teaching,
-  teachSteps,
   isLocalizing,
   teachStepIndex,
   isSpeaking,
@@ -719,7 +661,6 @@ function TeachStep({
   fundamentals: Fundamental[];
   exampleApproach: string;
   teaching: TeachingContent | null;
-  teachSteps: TeachStepData[];
   /** True while /api/tutor/localize-teach is translating content for a non-English language. */
   isLocalizing: boolean;
   teachStepIndex: number;
@@ -821,11 +762,11 @@ function TeachStep({
     );
   }
 
-  const totalSteps = teachSteps.length;
-  const stepNumber = teachStepIndex + 1;
-  const isOverview = teachStepIndex === 0;
-  const isConnections = teachStepIndex === totalSteps - 1; // the handoff step
-  const step = teachSteps[teachStepIndex];
+  const totalSteps = teaching.concepts.length + 2; // overview + concepts + connections/handoff
+  const stepNumber = teachStepIndex + 2; // 1-indexed, overview = 1
+  const isOverview = teachStepIndex === -1;
+  const isConnections = teachStepIndex === teaching.concepts.length;
+  const concept = !isOverview && !isConnections ? teaching.concepts[teachStepIndex] : null;
 
   return (
     <div className="flex flex-col gap-5">
@@ -841,18 +782,32 @@ function TeachStep({
       )}
 
       <div className="rounded-lg bg-surface-2 p-5">
-        <div className="flex items-center justify-between gap-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-brass-text">{step.label}</p>
-          <span className="shrink-0 text-[10px] font-semibold text-ink-muted">
+        <div className="flex items-center justify-between">
+          <p className="text-xs font-semibold uppercase tracking-wide text-brass-text">
+            {isOverview ? "Overview" : isConnections ? "Putting it together" : concept!.title}
+          </p>
+          <span className="text-[10px] font-semibold text-ink-muted">
             {stepNumber} / {totalSteps}
           </span>
         </div>
 
-        <div className="mt-2 flex flex-col gap-2">
-          {step.blocks.map((block, i) => (
-            <TeachBlockView key={i} block={block} />
-          ))}
-        </div>
+        {isOverview && <p className="mt-2 text-sm leading-relaxed text-ink">{teaching.overview}</p>}
+
+        {concept && (
+          <div className="mt-2 flex flex-col gap-2">
+            <p className="text-sm leading-relaxed text-ink">{concept.explanation}</p>
+            <p className="text-sm leading-relaxed text-ink">
+              <span className="font-semibold">Why it matters: </span>
+              {concept.whyItMatters}
+            </p>
+            <p className="text-sm leading-relaxed text-ink-muted">
+              <span className="font-semibold text-ink">Example: </span>
+              {concept.example}
+            </p>
+          </div>
+        )}
+
+        {isConnections && <p className="mt-2 text-sm leading-relaxed text-ink">{teaching.connections}</p>}
 
         {isSpeaking && <p className="mt-3 text-xs text-brass-text">🔊 Speaking…</p>}
       </div>
@@ -868,9 +823,7 @@ function TeachStep({
         </a>
       )}
 
-      {step.conceptId && (
-        <FlagConceptControl conceptId={step.conceptId} conceptTitle={step.conceptTitle!} onFlag={onFlag} />
-      )}
+      {concept && <FlagConceptControl conceptId={concept.id} conceptTitle={concept.title} onFlag={onFlag} />}
 
       {!isConnections && (
         <div className="flex flex-col items-center gap-3">

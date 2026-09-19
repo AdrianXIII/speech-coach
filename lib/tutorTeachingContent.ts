@@ -38,55 +38,7 @@ import type { CountryCode } from "@/lib/countryContext";
  * getTeachingContent() below, with an honest on-screen notice (see
  * AITutor.tsx) when a request falls back rather than silently presenting US
  * content as if it were the visitor's own country.
- *
- * EXPANSION (in progress): the original 68 entries were written at roughly
- * 1,000 words each — about 7 spoken minutes, enough to recognise a concept
- * but not to defend an answer under interview pressure. The target is a
- * full graduate lecture session: 9-12 concepts, each carrying `sections`,
- * `keyTerms` and `pitfalls` on top of the original three fields, plus
- * category-level `prerequisites` and `drills`. Check an entry against the
- * expanded ones with estimateLectureMinutes() below — business/Strategy and
- * business/Finance land at 70-80 spoken minutes, which is the band to match;
- * an entry under about 50 is not finished. Those fields are all optional
- * precisely so the expansion can land category by category — an entry
- * without them still renders and teaches exactly as it did before.
  */
-
-/**
- * One section of a concept's lecture-depth treatment — the part that takes
- * the student past "I know this framework exists" to "I can run it under
- * questioning". Rendered and spoken as its own navigable step, so a concept
- * stays chunked into a few minutes of speech rather than one long block.
- */
-export interface ConceptSection {
-  /** Short heading, e.g. "How the analysis actually runs". */
-  heading: string;
-  body: string;
-}
-
-/** A term of art the student is expected to use correctly, unprompted. */
-export interface KeyTerm {
-  term: string;
-  definition: string;
-}
-
-/** The gap between a memorised answer and a practitioner's answer. */
-export interface Pitfall {
-  /** The weak move — what someone who only read the summary says. */
-  mistake: string;
-  /** What a strong candidate says instead, and why it lands better. */
-  instead: string;
-}
-
-/**
- * An interview-grade test of the whole category: the kind of question that
- * separates a candidate who memorised frameworks from one who can actually
- * do the job. `modelAnswer` shows the reasoning, not just the conclusion.
- */
-export interface InterviewDrill {
-  question: string;
-  modelAnswer: string;
-}
 
 export interface TeachingConcept {
   id: string;
@@ -97,10 +49,6 @@ export interface TeachingConcept {
   whyItMatters: string;
   /** A concrete real-world example. */
   example: string;
-  /** Lecture-depth body. Absent on entries not yet expanded — see EXPANSION below. */
-  sections?: ConceptSection[];
-  keyTerms?: KeyTerm[];
-  pitfalls?: Pitfall[];
 }
 
 /**
@@ -126,41 +74,14 @@ export interface TeachingContent {
   jurisdiction?: CountryCode;
   /** 2-3 sentence framing read before the first concept. */
   overview: string;
-  /** What the student is assumed to know already, so gaps are theirs to close before starting. */
-  prerequisites?: string;
   /** In deliberate teaching order — later concepts often build on earlier ones. */
   concepts: TeachingConcept[];
   /** How the concepts above connect/build on each other, read after the last one. */
   connections: string;
-  /** Hard, interview-grade tests of the whole category, read after `connections`. */
-  drills?: InterviewDrill[];
   source: "claude" | "gemini";
   generatedAt: string;
   /** Category-level numbered bibliography — absent for categories with no cited sources yet. */
   sources?: TeachingSource[];
-}
-
-/** Words per minute a listener follows unhurried spoken lecture content at. */
-const SPOKEN_WORDS_PER_MINUTE = 140;
-
-/**
- * Roughly how long this entry runs when spoken end to end. Derived rather
- * than stored so it can't drift out of sync with the content it describes —
- * used to check an entry against the ~45-minute lecture target (see
- * EXPANSION in the file header) and to set expectations in the UI.
- */
-export function estimateLectureMinutes(teaching: TeachingContent): number {
-  const texts: string[] = [teaching.overview, teaching.prerequisites ?? "", teaching.connections];
-  for (const concept of teaching.concepts) {
-    texts.push(concept.title, concept.explanation, concept.whyItMatters, concept.example);
-    for (const section of concept.sections ?? []) texts.push(section.heading, section.body);
-    for (const term of concept.keyTerms ?? []) texts.push(term.term, term.definition);
-    for (const pitfall of concept.pitfalls ?? []) texts.push(pitfall.mistake, pitfall.instead);
-  }
-  for (const drill of teaching.drills ?? []) texts.push(drill.question, drill.modelAnswer);
-
-  const words = texts.reduce((sum, text) => sum + (text.trim() ? text.trim().split(/\s+/).length : 0), 0);
-  return Math.round(words / SPOKEN_WORDS_PER_MINUTE);
 }
 
 const COUNTRY_BOUND_PROFESSIONS: CaseProfession[] = ["law", "politics"];
@@ -182,468 +103,89 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     profession: "business",
     category: "Strategy",
     overview:
-      "Strategy is about making a specific set of choices — what to do, what not to do, and why — that gives a company a defensible advantage over time. This lecture runs in four movements: first what a strategy actually is as an object (most documents called 'strategy' aren't one), then where industry structure and profit actually come from, then the sources of advantage durable enough to survive competition, and finally how you choose and commit under real uncertainty. Every framework below is a lens; the skill being taught is knowing which lens the situation in front of you calls for, and being able to defend that choice out loud.",
-    prerequisites:
-      "You should be comfortable reading an income statement and a balance sheet, know what gross margin, operating margin, and return on invested capital mean, and be able to do arithmetic on market size and share out loud. Strategy questions almost always resolve into a number somebody has to justify, and an answer that never touches the economics reads as commentary rather than analysis.",
+      "Strategy is about making a specific set of choices — what to do, what not to do, and why — that gives a company a defensible advantage over time. Every framework below is a different lens for making that choice well; a strong strategist knows which lens fits the situation in front of them.",
     concepts: [
       {
-        id: "strat-kernel",
-        title: "What a strategy actually is: the kernel",
-        explanation:
-          "Richard Rumelt's kernel [6] holds that a real strategy has exactly three parts: a diagnosis that names the crux of the situation and simplifies an overwhelming reality down to what actually matters; a guiding policy, which is the overall approach chosen to cope with that diagnosis; and a set of coherent actions that are resourced, mutually reinforcing, and actually carried out. Remove any one part and what remains is not a strategy.",
-        whyItMatters:
-          "Most documents titled 'strategy' are goals with adjectives — 'become the market leader,' 'be customer-obsessed,' 'grow 20% annually.' None of these diagnose anything, so none of them tell you what to stop doing. In an interview this is the fastest way to demonstrate seniority: before proposing anything, name the crux. Candidates who jump straight to a framework signal that they pattern-match; candidates who diagnose signal that they think.",
-        example:
-          "Rumelt's own illustration is the 1991 Gulf War ground campaign. The diagnosis was that Iraqi forces were dug in facing Kuwait with an exposed western flank and no capacity to reorient quickly. The guiding policy was to hold them frontally while swinging armoured forces wide around that flank. The coherent actions — fuel depots, deception operations, the timing of the air campaign — all served that single policy rather than being a list of good military ideas.",
-        sections: [
-          {
-            heading: "How to tell strategy from bad strategy",
-            body:
-              "Rumelt names four hallmarks of bad strategy, and they are worth memorising because you will be handed documents containing all four. Fluff: restating the obvious in inflated language, so that 'customer-centric intermediation' means 'we are a bank.' Failure to face the challenge: if the document never names a difficulty, it cannot be evaluated, because there is no standard against which to say the approach is wrong. Mistaking goals for strategy: a list of desired outcomes with no account of how the difficulty will be overcome. And bad strategic objectives: objectives that are either a scrambled dog's-dinner list of everything anyone asked for, or 'blue sky' targets that simply restate the desired end state. The diagnostic question that cuts through all four is: what does this tell us not to do?",
-          },
-          {
-            heading: "Diagnosis as the scarce skill",
-            body:
-              "Diagnosis is where most of the analytical work lives, and it is the part interviews actually probe. A good diagnosis is a claim about causality — this business is underperforming because the sales force is compensated on volume while the strategy requires mix shift — and like any causal claim it can be wrong, which is precisely what makes it useful. Weak diagnoses are lists of symptoms. Strong ones identify one or two binding constraints and explain why the others are downstream. The practical test: if your diagnosis were true, would a competent person be able to derive the guiding policy from it almost mechanically? If the policy could equally well follow from a different diagnosis, the diagnosis is not doing any work.",
-          },
-        ],
-        keyTerms: [
-          { term: "Crux", definition: "The one difficulty in a situation that is both critical and addressable — as opposed to problems that are critical but unfixable, or fixable but unimportant." },
-          { term: "Guiding policy", definition: "The overall approach chosen to deal with the diagnosed crux; it rules approaches in and out without yet specifying the individual actions." },
-          { term: "Proximate objective", definition: "A target close enough to current capability that the organisation can actually hit it, chosen deliberately to convert an ambiguous challenge into solvable work." },
-        ],
-        pitfalls: [
-          {
-            mistake: "Opening with 'I'd use a SWOT analysis' or any other framework name before the situation has been diagnosed.",
-            instead:
-              "Say what you think the crux is and what evidence would confirm or kill that hypothesis, then reach for whichever framework tests it. The framework is the instrument, not the answer, and interviewers are listening for which one you reach for and why.",
-          },
-        ],
-      },
-      {
         id: "strat-five-forces",
-        title: "Industry structure: Porter's Five Forces",
+        title: "Porter's Five Forces",
         explanation:
-          "A framework for assessing how attractive an industry is by examining five competitive pressures: rivalry among existing competitors, the threat of new entrants, the bargaining power of suppliers, the bargaining power of buyers, and the threat of substitute products [1]. The forces determine how the economic value created in an industry gets divided between the companies in it, their suppliers, and their customers.",
+          "A framework for assessing how attractive an industry is by examining five competitive pressures: rivalry among existing competitors, the threat of new entrants, the bargaining power of suppliers, the bargaining power of buyers, and the threat of substitute products [1].",
         whyItMatters:
-          "Before you decide how to compete, you need to know whether the industry itself is structurally profitable. A brilliant strategy in a terrible industry (razor-thin margins, powerful buyers, easy entry) will still struggle — the forces set the ceiling on what any competitor can earn. Empirically, industry membership explains a meaningful share of the variation in firm profitability, which is why 'which industry should we be in' is a real strategic question and not a given.",
+          "Before you decide how to compete, you need to know whether the industry itself is structurally profitable. A brilliant strategy in a terrible industry (razor-thin margins, powerful buyers, easy entry) will still struggle — the forces set the ceiling on what any competitor can earn.",
         example:
-          "Airlines: low barriers to entry on any single route, powerful aircraft and fuel suppliers, price-sensitive buyers who compare on metasearch, substitutes on short-haul routes in the form of rail, and rivalry between carriers with high fixed costs and perishable inventory that pushes them to discount the last seat down toward marginal cost. That combination, not managerial incompetence, is why the industry has historically destroyed capital regardless of how well any single airline is run.",
-        sections: [
-          {
-            heading: "Running the analysis properly",
-            body:
-              "The common failure is to treat the five forces as five buckets to fill with observations. Done properly it is a quantitative argument about where profit sits. For each force you ask a specific question. Entry: what would it actually cost a credible entrant to reach minimum efficient scale, and how long would it take? Supplier power: what share of the cost structure does this input represent, how concentrated is that supply base, and what is our switching cost? Buyer power: what fraction of volume does the largest buyer represent, how price-transparent is the purchase, and how much does our product matter to their own cost or quality? Substitutes: what is the price-performance trajectory of the alternative, not its position today? Rivalry: is capacity added in lumps, are fixed costs high, is the product perceived as a commodity, and are there exit barriers keeping failed competitors in? Each answer should move a number, not just a qualitative arrow.",
-          },
-          {
-            heading: "Profit pools and the limits of the framework",
-            body:
-              "The most useful extension is to map the profit pool: total the operating profit along the whole value chain and see which stage captures it. Industries routinely have low average profitability while one stage — a component supplier, a distribution chokepoint, an aftermarket — captures nearly all of it. Personal computers were the classic case, where assembly earned very little while the processor and operating system earned almost everything. Know the framework's limits too, because a good interviewer will push on them. It was built to analyse stable manufacturing industries and treats industry boundaries as given, which is awkward for platforms and ecosystems where the relevant unit is not an industry. It is a static snapshot, so it says nothing about how the forces are changing. And it deliberately omits complements — products that raise willingness to pay for yours — which is why the 'sixth force' is often added.",
-          },
-        ],
-        keyTerms: [
-          { term: "Minimum efficient scale", definition: "The smallest output at which a producer reaches competitive unit costs; the higher it is relative to market size, the harder entry becomes." },
-          { term: "Profit pool", definition: "The total profit earned at each stage of a value chain, mapped to show where in the chain the money actually accumulates." },
-          { term: "Exit barrier", definition: "A cost or commitment that keeps an unprofitable competitor operating — specialised assets, labour agreements, regulatory obligations — which sustains overcapacity and depresses everyone's returns." },
-        ],
-        pitfalls: [
-          {
-            mistake: "Describing each force as 'high' or 'low' and concluding the industry is unattractive, without saying for whom.",
-            instead:
-              "State which force binds hardest, quantify it, and say what a company could do to change its own exposure to it — the forces describe an average, and the strategic question is always how to be an exception to that average.",
-          },
-        ],
-      },
-      {
-        id: "strat-value-stick",
-        title: "Where profit comes from: the value stick",
-        explanation:
-          "Value-based strategy [7] reduces all competition to one vertical line. At the top sits the customer's willingness to pay, the most they would part with rather than go without. At the bottom sits the supplier's willingness to sell, the least they would accept rather than not transact. The distance between them is the total value created. Price splits the upper portion between customer surplus and firm margin; cost splits the lower portion between firm margin and supplier surplus. A firm has only two levers: raise willingness to pay, or lower willingness to sell.",
-        whyItMatters:
-          "This is the analytical backbone underneath every other framework in this lecture, and it is what separates a candidate who can argue about strategy from one who can compute it. Differentiation is simply raising willingness to pay. Cost leadership is lowering cost toward willingness to sell. A merger creates value only if it moves one of those two endpoints, which is why 'strategic fit' with no mechanism is not an argument. When you are asked whether an initiative creates value, you can answer structurally: which endpoint does it move, by how much, and why can a competitor not move it equally?",
-        example:
-          "When a retailer becomes a materially better employer — more predictable scheduling, better training, internal promotion — it lowers the effective willingness to sell of its own workforce, because people accept a given wage more readily at a job they want to keep. Lower turnover cuts recruiting and training costs and raises service quality, which in turn raises customer willingness to pay. The same intervention widens the stick at both ends, which is why it survives competition longer than a price cut does.",
-        sections: [
-          {
-            heading: "Making it quantitative",
-            body:
-              "In practice you estimate willingness to pay in one of three ways. Revealed preference: what do customers actually pay today for the closest substitute, and what does the price gap between good and better versions imply about the value of the difference? Conjoint analysis: present trade-offs and infer the implicit price of each attribute. Or economic value to the customer, which is the strongest method for business-to-business work — take the next-best alternative's price and add the quantified value of every performance difference, in the customer's own cost terms. If your pump saves a plant forty thousand euro a year in energy and downtime relative to the incumbent, the economic value to the customer is the incumbent's price plus forty thousand, and the pricing conversation is about what share of that you capture. Candidates who can run this arithmetic out loud are immediately credible.",
-          },
-          {
-            heading: "Why value creation and value capture diverge",
-            body:
-              "Creating value and capturing it are separate problems, and conflating them is a classic error. An industry can create enormous value and capture almost none of it, because the forces from the previous concept determine the split. Competition pushes price down toward cost, transferring value to customers; supplier power pushes cost up toward willingness to sell, transferring it to suppliers. This is why an innovation can be a triumph for society and a disaster for its inventor. The strategic implication is that you should test every proposal twice: does it widen the stick, and is there something preventing the gain from being competed away? The second question is the one candidates forget, and it is the bridge to the concept on moats.",
-          },
-        ],
-        keyTerms: [
-          { term: "Willingness to pay (WTP)", definition: "The maximum a customer would pay rather than forgo the product; the ceiling on price." },
-          { term: "Willingness to sell (WTS)", definition: "The minimum a supplier or employee would accept rather than not transact; the floor under cost." },
-          { term: "Economic value to the customer (EVC)", definition: "The next-best alternative's price plus the monetised value of every performance difference — the principled upper bound for business-to-business pricing." },
-        ],
-        pitfalls: [
-          {
-            mistake: "Treating cost reduction and price increase as the only two moves available.",
-            instead:
-              "Note that lowering willingness to sell — via supplier relationships, employment terms, or making yourself a preferred customer — widens the stick without touching the customer at all, and is usually far less visible to competitors than a price move.",
-          },
-        ],
+          "Airlines: low barriers to entry, powerful fuel/aircraft suppliers, price-sensitive buyers who compare on Google Flights, and fierce rivalry — which is exactly why the industry has historically struggled with profitability regardless of how well any single airline is run.",
       },
       {
         id: "strat-generic-strategies",
-        title: "Generic strategies and the productivity frontier",
+        title: "Generic strategies: cost leadership, differentiation, focus",
         explanation:
-          "Porter's second contribution [2]: within an industry, a company generally wins by being the lowest-cost producer, by being meaningfully different in a way customers will pay for, or by dominating a narrow segment better than generalists can. Trying to do all three at once usually means doing none of them well — he called this being 'stuck in the middle.' The later and sharper formulation [12] distinguishes operational effectiveness, which is doing the same activities better, from strategy, which is choosing to perform different activities or perform them differently.",
+          "Porter's second contribution [2]: within an industry, a company generally wins by being the lowest-cost producer, by being meaningfully different in a way customers will pay for, or by dominating a narrow segment better than generalists can. Trying to do all three at once usually means doing none of them well — he called this being 'stuck in the middle.'",
         whyItMatters:
-          "This forces discipline. Once you know which generic strategy you're pursuing, it tells you what to say no to — a cost leader shouldn't chase every custom feature request, and a differentiator shouldn't compete on price. The operational-effectiveness distinction matters even more: improvements that every competitor can adopt shift the whole industry's frontier outward and get competed away, transferring the gains to customers. They are necessary but they are not strategy, and calling them strategy is how companies end up working extremely hard on convergence.",
+          "This forces discipline. Once you know which generic strategy you're pursuing, it tells you what to say no to — a cost leader shouldn't chase every custom feature request, and a differentiator shouldn't compete on price.",
         example:
-          "Ryanair pursues cost leadership by stripping cost out of every activity — a single aircraft type to cut maintenance and training cost, secondary airports with lower fees and faster turnarounds, no seat assignment to speed boarding. Singapore Airlines pursues differentiation, charging a premium sustained by cabin service, fleet age, and hub experience. Both are profitable in an industry that destroys capital on average, precisely because neither tries to be the other — and note that each one's activities reinforce the others, which is what makes the position hard to copy piecemeal.",
-        sections: [
-          {
-            heading: "Fit, trade-offs, and why positions are copyable one activity at a time but not as a whole",
-            body:
-              "The durable part of a generic strategy is not the position but the fit between activities. Porter distinguishes three orders: simple consistency between each activity and the overall strategy; activities that reinforce one another; and optimisation of effort across activities, where the whole system is tuned. A competitor can copy any single activity — anyone can buy a uniform fleet — but copying a whole interlocking system requires abandoning their own, and the partial copy usually performs worse than either coherent system. This is why trade-offs are strategically essential rather than regrettable. If a position involves no trade-off, every competitor can occupy it simultaneously, and it will therefore earn nothing. When an interviewer asks why a competitor cannot simply match a move, 'because matching it would require them to give up X' is the answer that shows you understand the mechanism.",
-          },
-          {
-            heading: "The legitimate critique",
-            body:
-              "You should be able to state the objection to generic strategies as well as the framework itself, because interviewers reward candidates who hold frameworks lightly. The strongest objection is empirical: firms that achieve both low cost and differentiation often outperform those doing one alone, because quality improvements can reduce rework and scale can fund both. Toyota is the standard counterexample, achieving cost position and perceived quality simultaneously for decades. The defensible synthesis is that 'stuck in the middle' is a real failure mode when a firm is mediocre on both dimensions without a coherent activity system, but that the two dimensions are not mechanically opposed. What is genuinely universal is the need for a coherent set of trade-offs, not the specific menu of three options.",
-          },
-        ],
-        keyTerms: [
-          { term: "Operational effectiveness", definition: "Performing the same activities better than rivals; improves the industry frontier but is imitable, so its gains tend to flow to customers rather than shareholders." },
-          { term: "Activity system", definition: "The interlocking set of choices that deliver a position, whose value lies in the fit between the parts rather than in any single part." },
-          { term: "Stuck in the middle", definition: "A firm with neither a cost advantage nor a differentiation customers will pay for, typically because it has refused the trade-offs either position requires." },
-        ],
-        pitfalls: [
-          {
-            mistake: "Classifying a company into one of the three boxes and stopping there.",
-            instead:
-              "Name the trade-offs the position requires and the activities that reinforce each other, then say what a rival would have to abandon to copy it. The classification is the beginning of the analysis, not its output.",
-          },
-        ],
-      },
-      {
-        id: "strat-moats",
-        title: "Sources of durable advantage",
-        explanation:
-          "An advantage is durable only if some mechanism prevents competitors from replicating it. The recurring mechanisms are few and worth knowing by name: economies of scale, where unit cost falls with volume; network effects, where the product's value rises with the number of users [17]; switching costs, which make a customer's next purchase cheaper from you than from anyone else; the experience curve, where cumulative production drives cost down through learning [16]; counter-positioning, where the incumbent could copy you but rationally will not because it would cannibalise a better existing business; and regulatory or resource capture, where law or geology limits who may compete at all.",
-        whyItMatters:
-          "'We have a great product' is not a moat, because good products get copied. Naming the specific mechanism turns a vague claim of advantage into a testable one, and each mechanism implies a different strategy. If your advantage is scale, you should be buying share aggressively while the market is forming. If it is network effects, you should worry about multi-homing and whether the network is global or merely local. If it is switching costs, your economics live in retention and expansion rather than acquisition. Interviewers use this to distinguish candidates who describe success from candidates who explain it.",
-        example:
-          "Ride-hailing illustrates how much the details matter. The network effect is real — more drivers means shorter waits, which attracts more riders — but it is largely local, so leadership in one city confers little advantage in another, and both sides multi-home easily because switching apps costs nothing. Compare that with a card payment network, where the effect is global, merchants and issuers face genuine switching costs, and the resulting position has proven extraordinarily durable. Same named mechanism, very different durability.",
-        sections: [
-          {
-            heading: "Testing a claimed moat",
-            body:
-              "Apply three tests in order. First, the counterfactual: if a well-capitalised competitor decided tomorrow to attack this position, what specifically stops them, and how long would it take? An answer in years is a moat; an answer in months is a head start. Second, the evidence test: a real moat shows up in the numbers as pricing power, persistently high returns on invested capital, or customer retention that does not degrade under competitive attack. If returns are merely average, the claimed moat is not operating. Third, the direction test: is the mechanism strengthening or weakening with scale and time? Scale economies strengthen; a patent portfolio has a known expiry; a network effect can invert if congestion or quality dilution sets in. Note that brand is usually a consequence of one of these mechanisms rather than a mechanism itself, so treat 'brand' as an answer that needs one more why.",
-          },
-          {
-            heading: "Scale, learning, and the discipline of the experience curve",
-            body:
-              "The experience curve, from Bruce Henderson's work at BCG [16], observes that unit costs tend to fall by a consistent percentage each time cumulative production doubles — often in the range of twenty to thirty percent in manufacturing. Distinguish it carefully from scale economies, which depend on the rate of output, while learning depends on cumulative output to date. The strategic implication in the 1970s was aggressive pricing to buy share and ride down the curve faster than rivals. The caution, learned expensively since, is that learning is not automatic: it requires deliberate process investment, and it often diffuses to competitors through equipment vendors and staff mobility. Treat a steep experience curve as an opportunity that has to be actively defended rather than as a law that rewards volume by itself.",
-          },
-        ],
-        keyTerms: [
-          { term: "Multi-homing", definition: "Users participating on several competing platforms at once, which sharply weakens a network effect because it removes the cost of also using a rival." },
-          { term: "Counter-positioning", definition: "A newcomer adopting a business model the incumbent declines to copy because doing so would damage a currently more profitable business." },
-          { term: "Return on invested capital (ROIC)", definition: "Operating profit after tax divided by the capital employed to produce it; sustained ROIC above the cost of capital is the financial signature of a real advantage." },
-        ],
-        pitfalls: [
-          {
-            mistake: "Listing first-mover advantage as a moat.",
-            instead:
-              "Say what the first move let the company accumulate that a follower cannot — scale, learning, a network, contracted supply — because being early is only an advantage if it compounds into one of the named mechanisms, and in many markets fast followers win.",
-          },
-        ],
+          "Ryanair (cost leadership, ruthlessly stripping every cost out of the flying experience) versus Singapore Airlines (differentiation, charging a premium for service quality) — both profitable in the same industry, precisely because neither tries to be the other.",
       },
       {
         id: "strat-resource-based-view",
-        title: "Resource-based view, VRIN, and dynamic capabilities",
+        title: "Resource-based view (VRIN)",
         explanation:
-          "Where the Five Forces looks outward at the industry, this looks inward: sustainable advantage comes from resources or capabilities that are Valuable, Rare, hard to Imitate, and Non-substitutable (VRIN) [3][13]. A resource that fails any one of these tests won't sustain an edge for long. The dynamic-capabilities extension [9] adds the dimension the static view lacks: in changing environments, what matters is less any particular resource than the firm's ability to sense opportunities, seize them, and reconfigure its asset base as conditions shift.",
+          "Where the Five Forces looks outward at the industry, this looks inward: sustainable advantage comes from resources or capabilities that are Valuable, Rare, hard to Imitate, and Non-substitutable (VRIN) [3]. A resource that fails any one of these tests won't sustain an edge for long.",
         whyItMatters:
-          "It explains why some companies keep winning even in unattractive industries — their internal capability, not the industry structure, is doing the work. It also warns you that a resource competitors can easily copy or replace isn't really a moat, no matter how valuable it looks today. Practically, the resource-based view is what you reach for when the question is 'where should we compete next,' because it identifies what you can carry into an adjacent market — and the honest version of that analysis often concludes that the answer is nothing.",
+          "It explains why some companies keep winning even in unattractive industries — their internal capability, not the industry structure, is doing the work. It also warns you: a resource competitors can easily copy or replace isn't really a moat, no matter how valuable it looks today.",
         example:
-          "Amazon's fulfilment network took over a decade and tens of billions of dollars to build. It is valuable, rare, and hard to imitate — not mainly because warehouses are expensive, which they are, but because the routing, forecasting, and labour systems that make the network work were learned through a long path of operating it. That path dependence is the part a competitor with equal capital cannot compress, and it is why the network remains a real advantage rather than a temporary one.",
-        sections: [
-          {
-            heading: "Why imitability is the binding constraint",
-            body:
-              "Valuable and rare are relatively easy to assess; inimitability is where the analysis earns its keep, and the literature names the specific barriers. Path dependence: the resource was accumulated through a unique history that cannot now be replayed, such as decades of proprietary operating data. Causal ambiguity: not even the firm that owns the capability can fully specify what makes it work, so a competitor cannot copy what nobody can articulate — this is typical of culture and of complex coordination routines. Social complexity: the resource lives in relationships between people rather than in any asset that could be purchased. And property rights, which is the weakest barrier because patents expire and can be invented around. The practical question to ask is not 'is this hard to copy' but 'which of these four barriers is doing the work,' because the answer tells you how long the advantage lasts and what would erode it.",
-          },
-          {
-            heading: "Using it without tautology",
-            body:
-              "The standard academic criticism is that the resource-based view risks circularity: we observe that a firm succeeds, infer it must have a VRIN resource, and name that resource after the success. 'Their capability is execution' explains nothing. To avoid this in an interview, identify the resource independently of the outcome and make a falsifiable prediction from it. If the claimed resource is a proprietary dataset, the prediction is that performance should be strongest where data density is highest and should degrade in new geographies until density builds — and that is checkable. The dynamic-capabilities framing helps here too, because it directs attention to observable organisational processes such as how quickly the firm reallocates capital away from declining units, which is measurable in the segment disclosures rather than inferred from the fact that the firm did well.",
-          },
-        ],
-        keyTerms: [
-          { term: "Path dependence", definition: "A resource whose value derives from the specific historical sequence that produced it, so it cannot be recreated quickly at any price." },
-          { term: "Causal ambiguity", definition: "Uncertainty — including inside the firm itself — about which actions produce a capability's results, which blocks imitation by making the target unspecifiable." },
-          { term: "Dynamic capabilities", definition: "The firm's higher-order ability to sense change, seize opportunity, and reconfigure its resource base, as distinct from any individual resource it currently holds." },
-        ],
-        pitfalls: [
-          {
-            mistake: "Naming 'our people' or 'our culture' as the VRIN resource and moving on.",
-            instead:
-              "Specify the routine those people execute that competitors cannot, and say which inimitability barrier protects it. Talent is mobile and therefore rarely rare on its own; the system that makes ordinary talent productive is what tends to survive.",
-          },
-        ],
+          "Amazon's logistics and fulfillment network took over a decade and tens of billions of dollars to build — valuable, rare, and extremely hard to imitate quickly, which is why it remains a real advantage rather than a temporary one.",
       },
       {
         id: "strat-diversification-related-unrelated",
-        title: "Corporate strategy: diversification and parenting advantage",
+        title: "Related vs. unrelated diversification",
         explanation:
-          "Corporate strategy asks a different question from business strategy: not how a single business competes, but why these businesses belong under one roof. When a company expands into a new area, the key question is whether it can transfer existing capabilities, brand, or infrastructure into that area (related diversification) or whether it is really just deploying capital into an unconnected business (unrelated diversification). The sharper test is parenting advantage [10][14]: the corporate centre must add more value to a business than any other plausible owner would, net of the cost of the centre itself.",
+          "When a company expands into a new business, the key question is whether it can transfer existing capabilities, brand, or infrastructure into that new area (related diversification) or whether it's really just deploying capital into an unconnected business (unrelated diversification, i.e. running a conglomerate).",
         whyItMatters:
-          "Related diversification tends to create more value because the parent brings something the new business actually needs; unrelated diversification has to justify itself purely on capital allocation and portfolio discipline, which is a much higher bar and one most companies fail. The parenting test also runs in reverse, which is the part candidates miss: if another owner would add more value to a unit than you do, the value-maximising move is to sell it. That is why divestiture is a strategic act rather than an admission of failure, and being willing to say so out loud reads as commercial maturity.",
+          "Related diversification tends to create more value because the company brings something the new business actually needs; unrelated diversification has to justify itself purely on capital allocation and portfolio management skill, which is a much higher bar and one most companies fail.",
         example:
-          "Disney moving from animated films into theme parks, merchandise, and streaming is related diversification — each leg monetises the same intellectual property and each reinforces the others' demand. Berkshire Hathaway is the rarer unrelated case that works, and it works through a specific mechanism: low-cost float from insurance deployed by a centre with genuine capital-allocation skill and almost no corporate overhead. Most conglomerates have neither, which is why they trade at a discount to the sum of their parts.",
-        sections: [
-          {
-            heading: "The three tests before diversifying",
-            body:
-              "Porter's classic screen is still the most useful checklist, and it is easy to recall under pressure. The attractiveness test: is the target industry structurally profitable, or could it be made so by entry? The cost-of-entry test: does the price of entry — the acquisition premium or the cost of building from scratch — consume the future profits you are buying? Note that an efficient market for corporate control tends to price attractive industries fully, so this test kills more deals than the first. And the better-off test: will either the new unit or the existing business be measurably better off for the combination, through a specific shared activity, transferred skill, or shared cost? If the only answer to the third test is diversification of earnings, recall that shareholders can diversify far more cheaply by holding a portfolio, and doing it for them destroys value rather than creating it.",
-          },
-          {
-            heading: "Where the synergy actually comes from, and the discount",
-            body:
-              "Synergy is a word that survives in decks long after the mechanism behind it has died, so insist on naming the mechanism. Shared activities, where two units genuinely use the same plant, sales force, or platform, produce cost savings that can be estimated line by line. Transferred skills, where a capability moves from one unit to another, are real but slower and depend on people moving. Financial synergies, such as internal capital markets, matter mainly where external capital markets are weak, which is why conglomerates remain more successful in some emerging economies than in deep capital markets. Against these sits the conglomerate discount: the empirical tendency for diversified firms to trade below the sum of their parts, attributed to cross-subsidisation of weak units, opacity to investors, and internal politics in capital allocation. A strong answer prices both sides rather than asserting synergy and stopping.",
-          },
-        ],
-        keyTerms: [
-          { term: "Parenting advantage", definition: "The requirement that the corporate centre add more value to a business than any alternative owner would, net of its own cost." },
-          { term: "Conglomerate discount", definition: "The tendency of diversified firms to be valued below the summed value of their businesses as standalone entities." },
-          { term: "Better-off test", definition: "Porter's requirement that either the new unit or an existing one gain measurable competitive advantage from the combination, not merely that both be owned together." },
-        ],
-        pitfalls: [
-          {
-            mistake: "Justifying an acquisition with 'it diversifies our revenue base' or 'it's adjacent to our core.'",
-            instead:
-              "Name the shared activity or transferred capability, estimate its value, and subtract the acquisition premium. Adjacency is a hypothesis about where synergy might exist, not evidence that it does.",
-          },
-        ],
+          "Disney moving from animated films into theme parks, merchandise, and streaming is related diversification — each leg reinforces the same IP and brand. A random industrial conglomerate buying an unrelated insurance business is unrelated diversification, and has to be justified purely on financial discipline (as Berkshire Hathaway does).",
       },
       {
         id: "strat-build-buy-partner",
         title: "Build vs. buy vs. partner",
         explanation:
-          "When a company needs a new capability it has three basic options: build it internally, acquire a company that already has it, or partner, license, or joint-venture with someone who has it. The choice turns on how core the capability is to long-term advantage, how fast the window is closing, whether a suitable target or partner exists at a sane price, and — the dimension most often skipped — how badly a failure of the arrangement would hurt, which is the transaction-cost question of what happens when interests diverge after the contract is signed.",
+          "When a company needs a new capability, it has three basic options: build it internally, acquire a company that already has it, or partner/license/joint-venture with someone who has it. The right choice depends on speed needed, how core the capability is to long-term advantage, and whether a suitable target or partner even exists.",
         whyItMatters:
-          "Getting this wrong is expensive in a specific way. Building something you should have bought wastes years you did not have and usually ends with an inferior internal version defended by the people who built it. Buying something you should have built means paying a premium for a capability you never truly absorb, because the people who embodied it leave within two years. Partnering for something core means your advantage sits on someone else's roadmap and can be repriced at renewal. Interviewers like this question because it has no universal answer and therefore reveals how a candidate reasons under trade-offs.",
+          "Getting this wrong is expensive in a specific way: building something you should have bought wastes years you didn't have; buying something you should have built means you never really own the capability and pay a premium for it besides.",
         example:
-          "A bank wanting a machine-learning capability can buy a fintech — fast, but it pays a premium and most of the value walks out if the founders leave; build an internal data-science group — slow and initially worse, but the capability becomes genuinely owned and compounds; or license a vendor model — fastest and cheapest today, but it creates dependency on a supplier who serves competitors equally well, which means the capability cannot be a source of differentiation for anyone who buys it.",
-        sections: [
-          {
-            heading: "A decision rule you can defend out loud",
-            body:
-              "Sequence the questions rather than weighing everything at once. First: is this capability a source of competitive advantage, or is it table stakes? If a competitor can buy the same thing from the same vendor, it cannot differentiate you, and buying it externally is usually correct — spending internal engineering on undifferentiated work is a real cost. Second, if it is advantage-bearing: how fast is the window closing relative to the time to build? Building is generally superior for advantage-bearing capabilities because the learning stays in-house and compounds, but only if you will still be relevant when it is ready. Third, if you must move faster than you can build: is there a target whose value survives integration? Capability acquisitions fail when the capability lives in people who are now wealthy and no longer need the job, so ask what specifically retains them. Fourth: if you partner, what is the exit? Assume renewal is a renegotiation in which your dependency is known to the counterparty, and price that in now.",
-          },
-          {
-            heading: "The hollowing-out risk",
-            body:
-              "The most consequential long-run error in this decision is outsourcing something that looks like a component today but turns out to be the locus of future advantage. The pattern is well documented in electronics manufacturing, where firms outsourced assembly, then subassembly, then design-for-manufacture, and discovered several steps later that their supplier had accumulated the capability to compete with them directly and they no longer had the engineering depth to respond. The defence is to ask not only whether an activity is core today, but whether the learning generated by performing it is on the path to where advantage is moving. This is where build-versus-buy connects back to dynamic capabilities: outsourcing a capability also outsources the learning that capability would have produced.",
-          },
-        ],
-        keyTerms: [
-          { term: "Acqui-hire", definition: "An acquisition made principally for the target's team rather than its product or revenue, which stands or falls on retention terms." },
-          { term: "Asset specificity", definition: "The degree to which an investment is worth less outside a particular relationship; high specificity favours ownership over contracting because it creates hold-up risk." },
-          { term: "Hold-up", definition: "A counterparty exploiting your dependence after you have made a specific investment, typically at renewal, when your alternatives are worse than they were at signing." },
-        ],
-        pitfalls: [
-          {
-            mistake: "Deciding on speed and cost alone.",
-            instead:
-              "Add the two questions that dominate long-run outcomes: does this capability differentiate us, and who accumulates the learning? Those determine whether you still have an advantage in five years, which is the horizon the question is actually about.",
-          },
-        ],
+          "A bank wanting AI capability might buy a fintech startup (buy — faster, but expensive and risks integration failure), build an internal data science team (build — slower, but the capability becomes truly owned), or license a vendor's model (partner — fastest, but creates dependency).",
       },
       {
         id: "strat-blue-ocean-value-innovation",
-        title: "Blue ocean strategy and value innovation",
+        title: "Blue ocean strategy / value innovation",
         explanation:
-          "Instead of competing head-on in an existing market ('red ocean,' bloody from competition), a company can create uncontested market space [4] by simultaneously pursuing differentiation and low cost — eliminating and reducing some factors the industry competes on while raising others and creating factors the industry has never offered. The operational tool is the four actions framework: eliminate, reduce, raise, create, applied to the industry's own list of competitive factors.",
+          "Instead of competing head-on in an existing market ('red ocean,' bloody from competition), a company can create uncontested market space [4] by simultaneously pursuing differentiation and low cost — dropping some factors the industry competes on entirely while raising or creating others customers actually value.",
         whyItMatters:
-          "It reframes strategy as not always a zero-sum fight against named rivals — sometimes the better move is redefining what is being competed on at all, which sidesteps the Five Forces pressures of an existing industry rather than fighting through them. It is also the most direct challenge to the trade-off logic of generic strategies, and being able to hold both ideas at once, rather than treating them as rival religions, is a sign of genuine fluency.",
+          "It reframes strategy as not always a zero-sum fight against named rivals — sometimes the better move is redefining what's being competed on at all, which sidesteps the Five Forces pressures of an existing industry rather than fighting through them.",
         example:
-          "Cirque du Soleil eliminated the most expensive elements of traditional circus — animal acts, star performers, multiple simultaneous rings — while raising production values and creating a theatrical narrative and an adult, premium-priced audience. The eliminations funded the additions, which is the mechanism that lets cost fall and willingness to pay rise at the same time. The company competed with neither circuses nor theatres directly, drawing demand from both.",
-        sections: [
-          {
-            heading: "How the cost and value curves move together",
-            body:
-              "The claim that you can raise value and cut cost simultaneously is only coherent because of the eliminations, and this is the part to say explicitly. Industries accumulate competitive factors through decades of matching each other, and many of those factors persist because rivals have them rather than because customers value them. Animal acts were expensive, increasingly unpopular, and had become a cost of membership in the category rather than a source of demand. Removing them released the funding for the elements that actually raised willingness to pay. Map this using a strategy canvas: plot the industry's competitive factors on the horizontal axis and the offering level on the vertical, draw the curve for the major competitors, and note how similar the curves are. A blue-ocean move is visible as a curve with a genuinely different shape rather than the same shape shifted up.",
-          },
-          {
-            heading: "The honest critique",
-            body:
-              "You should be able to voice the standard objections. The theory is substantially built on retrospective case selection, so the sample contains successes and the base rate of failed category-creation attempts is unobserved — survivorship bias in its purest form. It also says relatively little about defensibility: creating a new market is not the same as keeping it, and if the new space is attractive and imitable, the ocean turns red quickly, which returns you to the moats concept. And many cited examples are arguably strong differentiation strategies relabelled, since Cirque du Soleil does charge a premium. The defensible position is that the four actions framework is a genuinely useful generative tool for escaping an industry's inherited assumptions, and that the durability question has to be answered separately with the mechanisms from the moats concept.",
-          },
-        ],
-        keyTerms: [
-          { term: "Strategy canvas", definition: "A chart plotting competitive factors against offering level, used to show how similar rivals' value curves are and where a differently shaped curve is possible." },
-          { term: "Four actions framework", definition: "Eliminate, reduce, raise, create — applied to an industry's competitive factors to break the cost-value trade-off." },
-          { term: "Noncustomers", definition: "People the industry currently does not serve, whose reasons for abstaining often point to the factors worth eliminating or creating." },
-        ],
-        pitfalls: [
-          {
-            mistake: "Proposing a blue ocean move without saying what gets eliminated.",
-            instead:
-              "Name the eliminations first and show that they fund the additions. Without them the proposal is simply 'add more features at lower cost', which is not a strategy but a wish.",
-          },
-        ],
+          "Cirque du Soleil dropped expensive elements of traditional circus (star performers, animal acts) that customers valued less, while adding theatrical elements from live theater — creating a new category rather than out-competing Ringling Bros. on their own terms.",
       },
       {
         id: "strat-disruption-theory",
         title: "Disruptive innovation",
         explanation:
-          "Clayton Christensen's theory [5][15]: disruptors usually do not beat incumbents by being better at what incumbents already do well. They enter at the bottom of the market, or in a new market of noncustomers, with an offering that is worse on the metrics established customers care about but is cheaper, simpler, or more accessible — then improve along that trajectory until it is good enough for the mainstream. The incumbent's failure is not incompetence but the rational application of its own resource-allocation process.",
+          "Clayton Christensen's theory [5]: disruptors don't usually beat incumbents by being better at what incumbents already do well — they enter at the bottom of the market (or a new market entirely) with a product that's worse on the traditional metrics but cheaper, simpler, or more accessible, then improve until it's good enough for the mainstream.",
         whyItMatters:
-          "It explains why well-run incumbents get blindsided: their best customers do not want the new thing, its margins are worse than the business they already have, and the market is too small to matter to a large company's growth. Every one of those is a good reason to decline, right up until it is not. Knowing the pattern is the main defence — and knowing the precise definition is also how you avoid the most common misuse, because interviewers notice when 'disruptive' is used to mean merely 'new and successful'.",
+          "It explains why well-run incumbents get blindsided: they rationally ignore the disruptor because it looks inferior and unprofitable by their own current customers' standards — right up until it isn't. Knowing this pattern is the main defense against it.",
         example:
-          "Early digital cameras were far worse than film on image quality, and Kodak's own engineers invented the technology while its own best customers did not want it. The company's processes correctly judged that digital had lower margins than film and chemicals and served a market too small to move its numbers. By the time digital was good enough, the trajectory had crossed mainstream requirements and the film business it was protecting no longer existed.",
-        sections: [
-          {
-            heading: "The mechanism: trajectories and resource allocation",
-            body:
-              "Two curves drive the theory. The first is the pace of technological improvement, which in most industries outruns the second, the pace at which mainstream customers can absorb improvement. Incumbents compete by sustaining innovation aimed at their most demanding and profitable customers, which eventually overshoots what the middle of the market needs and creates room underneath. A disruptor enters that space with a simpler offering on a steeper improvement trajectory. The deeper insight is organisational: the incumbent's inability to respond is produced by processes that work correctly. Resource allocation favours projects with higher margins and larger addressable markets, because that is what it was designed to do, and a disruptive project loses every internal funding contest on the merits as the firm defines merit. This is why Christensen's prescription is structural — an autonomous unit with its own cost structure and its own definition of a good customer — rather than exhortation to be more visionary.",
-          },
-          {
-            heading: "Using the term precisely",
-            body:
-              "Disruption in this technical sense requires a specific entry pattern: a foothold in low-end or new-market segments, an initially inferior performance on mainstream metrics, and an improvement trajectory that eventually meets mainstream needs. Many celebrated innovations are not disruptive by this test, and saying so accurately is a credibility marker. The iPhone entered at the top of the market as a premium product superior on the dimensions buyers cared about; that is sustaining innovation relative to phones, though it is arguably disruptive relative to laptops by opening internet access to new-market use. Uber is contested for a similar reason: it did not enter below the taxi market on quality. Tesla entered at the very top with the Roadster. None of this makes those companies less successful; it makes them examples of something other than disruption, and the point of a theory is that it excludes cases.",
-          },
-        ],
-        keyTerms: [
-          { term: "Sustaining innovation", definition: "An improvement aimed at existing demanding customers along the metrics they already value; incumbents usually win these contests." },
-          { term: "Performance overshoot", definition: "The condition where product improvement has outrun what mainstream customers can use, opening room beneath the incumbent for a simpler entrant." },
-          { term: "Resource dependence", definition: "The tendency of a firm's investment decisions to be governed by its existing customers and cost structure, which is what makes the incumbent's failure systematic rather than accidental." },
-        ],
-        pitfalls: [
-          {
-            mistake: "Calling any successful new entrant 'disruptive.'",
-            instead:
-              "Apply the test — did it enter below the market or among noncustomers, on an inferior-but-improving trajectory? If not, say so and name what it actually is. Precision here is a fast credibility signal, and the wrong diagnosis leads to the wrong defensive response.",
-          },
-        ],
-      },
-      {
-        id: "strat-uncertainty-commitment",
-        title: "Strategy under uncertainty and the role of commitment",
-        explanation:
-          "Not all uncertainty is the same, and the useful distinction [11] runs across four levels: a clear enough future, where a single forecast is adequate; alternate futures, a discrete set of outcomes such as a pending regulatory decision; a range of futures, a continuous band with no natural scenarios; and true ambiguity, where even the variables are unknown. The level determines the toolkit. Against this sits Ghemawat's argument [8] that strategy is fundamentally about commitment — a few irreversible, resource-intensive choices that cannot be unwound, which is precisely what makes them capable of creating advantage.",
-        whyItMatters:
-          "Candidates tend to have one default mode, either forecasting everything or refusing to commit to anything, and both are wrong most of the time. Matching the response to the level of uncertainty is the skill. It also resolves an apparent contradiction that interviewers like to probe: if the future is uncertain, why commit? Because reversible choices are available to everyone and therefore earn nothing. Commitment is costly exactly because it forecloses options, and that cost is what makes the resulting position defensible.",
-        example:
-          "A pharmaceutical firm awaiting a binary regulatory decision faces level-two uncertainty, so it builds two full strategies and identifies the latest point at which it must choose between them. A firm entering a market whose size could be anything within a wide band faces level three, so it takes a staged position — a small plant with expansion rights, an option to acquire rather than an acquisition — and specifies in advance the observable signal that would trigger scaling up.",
-        sections: [
-          {
-            heading: "Big bets, options, and no-regret moves",
-            body:
-              "Within any level of uncertainty, actions sort into three kinds, and a good strategy usually holds a deliberate portfolio of all three. No-regret moves pay off across every scenario — cost reductions that do not foreclose anything, capability building that is useful either way — and should simply be executed. Options are small investments now that buy the right, but not the obligation, to scale later: a minority stake, a pilot, a licence with an acquisition clause, a plant site purchased but not built on. Big bets are large committed investments that pay off in some scenarios and lose badly in others. The discipline is to be explicit about which category each initiative falls into, because the standard organisational pathology is a portfolio of medium-sized half-commitments that are too large to be options and too small to win if the bet is right. A sharpened version of the same idea is to ask what would have to be true for this bet to pay off, then test those specific beliefs rather than arguing about the conclusion.",
-          },
-          {
-            heading: "Why irreversibility is the source of advantage",
-            body:
-              "Ghemawat's insight is that sustainable differences between firms come from a small number of lumpy, irreversible, hard-to-imitate commitments — a plant, a network, a technology platform, a market position — rather than from the flow of day-to-day decisions. The logic is close to the logic of trade-offs in the generic-strategies concept: a choice a competitor could costlessly match cannot be a source of advantage, so the very reversibility that makes a decision feel safe also makes it strategically inert. This gives you a clean way to talk about risk in an interview. The question is never simply whether to commit, but whether you have identified the smallest set of commitments that produce the advantage, staged them so that information arrives before the largest irreversible outlay, and kept everything else flexible. Committing to everything is recklessness and committing to nothing is drift; strategy is knowing which few things to be inflexible about.",
-          },
-        ],
-        keyTerms: [
-          { term: "Real option", definition: "An investment that buys the right but not the obligation to act later, valuable precisely in proportion to the uncertainty it defers." },
-          { term: "No-regret move", definition: "An action that pays off under every scenario considered, and therefore requires no resolution of the uncertainty before proceeding." },
-          { term: "Commitment", definition: "An irreversible allocation of resources that forecloses alternatives; costly by construction, which is why it can sustain an advantage rivals cannot cheaply copy." },
-        ],
-        pitfalls: [
-          {
-            mistake: "Answering an uncertain question with 'it depends' and a list of considerations.",
-            instead:
-              "Name the level of uncertainty, say which few things you would commit to now and why, and state the signal that would trigger the next commitment. A conditional plan is a decision; a list of considerations is not.",
-          },
-        ],
-      },
-      {
-        id: "strat-execution",
-        title: "From strategy to resource allocation",
-        explanation:
-          "A strategy exists only to the extent that money, people, and management attention move differently because of it. The recurring finding in work on the strategy-to-performance gap [18] is that companies typically deliver well under the financial performance their strategic plans promise, and that the losses come less from bad strategies than from a chain of ordinary failures: resources not shifted, plans not translated into commitments anyone owns, performance not tracked against the strategy's own assumptions, and no feedback when those assumptions turn out to be wrong.",
-        whyItMatters:
-          "Interviewers increasingly test this because it is where most real strategic work actually happens, and because it is the fastest way to tell whether a candidate has ever seen a plan meet an organisation. The single most diagnostic fact about a company's strategy is not its deck but its capital allocation: where the incremental budget, the best people, and the chief executive's calendar go. If those look identical to last year, the strategy has not happened, whatever was approved.",
-        example:
-          "A company announcing a shift from hardware to services while leaving the sales force compensated on hardware units, the research budget allocated by historical share, and the promotion path running through the hardware division has not shifted. The organisation will faithfully execute the old strategy, and it will be right to, because every internal signal it receives still rewards it.",
-        sections: [
-          {
-            heading: "The mechanisms that make a strategy bind",
-            body:
-              "Four mechanisms convert intent into behaviour, and you should be able to name them. Capital and headcount reallocation: the empirical evidence is that firms which reallocate meaningfully between business units across cycles outperform those whose allocations are stable, because stable allocation usually reflects internal politics rather than opportunity. Translating the strategy into a small number of owned commitments with dates and named individuals, rather than themes. Instrumenting the strategy's assumptions rather than only its outcomes: if the plan assumes attach rates rise to a certain level, that is the leading indicator to watch, because outcome metrics arrive too late to act on. And incentives, including the promotion path, which is the loudest signal an organisation receives about what actually matters. When a candidate is asked why a sound strategy failed, running these four is a far stronger answer than 'poor execution', which names the symptom rather than the cause.",
-          },
-          {
-            heading: "Emergent strategy and the limits of planning",
-            body:
-              "Mintzberg's distinction between deliberate and emergent strategy is the necessary counterweight to everything above. Realised strategy is the sum of what was intended and carried out plus what emerged from decisions made on the ground in response to conditions nobody planned for. Some intended strategy is never realised, and some of the most valuable positions a firm holds were discovered rather than designed. The managerial implication is not to abandon planning but to build in a mechanism that notices when reality is diverging from the plan in a promising direction and reallocates toward it, rather than treating divergence purely as non-compliance. This is the organisational expression of dynamic capabilities, and it closes the loop back to the kernel: an emergent discovery is new information about the diagnosis, and a strategy that cannot revise its diagnosis has stopped being a strategy and become a budget.",
-          },
-        ],
-        keyTerms: [
-          { term: "Strategy-to-performance gap", definition: "The shortfall between the results a strategic plan promises and those actually delivered, traceable to specific breakdowns in resource allocation and tracking rather than to strategy quality alone." },
-          { term: "Emergent strategy", definition: "A pattern of action realised without having been intended, arising from decisions made in response to conditions on the ground." },
-          { term: "Resource reallocation", definition: "The movement of capital and talent between units over time; the most reliable observable evidence that a strategy is real." },
-        ],
-        pitfalls: [
-          {
-            mistake: "Attributing failure to 'poor execution' and leaving it there.",
-            instead:
-              "Point to the specific mechanism that did not bind — the budget that never moved, the incentive that still rewarded the old behaviour, the assumption nobody was measuring. 'Poor execution' names the symptom; interviewers are listening for the cause.",
-          },
-        ],
+          "Early digital cameras were far worse than film cameras on image quality — Kodak's own engineers invented the technology and its own best customers didn't want it. By the time digital was 'good enough,' it had displaced film entirely.",
       },
     ],
     connections:
-      "These fit together as a chain of questions, not a menu of tools. The kernel establishes what you are even producing: a diagnosis, a guiding policy, coherent action. Five Forces and the value stick answer where profit exists and how it gets divided — the forces explain the split, the stick explains the size. Generic strategies and the moats concept answer how you claim a share of it and why competition will not take it back, with the resource-based view supplying the internal half of that answer where the forces supply the external half. Corporate strategy and build-versus-buy scale the same logic up from one business to a portfolio and out to the boundary of the firm. Blue ocean and disruption are both arguments that the competitive frame itself can be changed rather than fought within, from opposite directions — one by redefining the factors competed on, the other by entering beneath them. Uncertainty and commitment tell you how much to bet and when, and execution determines whether any of it becomes real. If you can only keep one thread: every framework here is ultimately answering either 'is there value' or 'can we keep it', and a strong answer always addresses both.",
-    drills: [
-      {
-        question:
-          "A private-equity client is considering buying a European commercial laundry business serving hotels. The industry grows at roughly GDP, has fifteen regional competitors, and the target has a twelve percent operating margin against an industry average of seven. Would you recommend the investment?",
-        modelAnswer:
-          "Start with the diagnosis rather than the deal. The question that decides this is why the target earns five points more than the industry, and whether that gap is structural or temporary. Structure first: commercial laundry is capital-intensive with meaningful regional density economies, because route density drives collection and delivery cost per kilogram. So the relevant market is not Europe but each metropolitan catchment, and share within catchment is the number that matters. Buyer power is the main threat — hotel chains procure centrally and can tender — but switching has real friction because linen quality and reliability affect the hotel's own product. Then test the margin gap against the moat mechanisms: if it comes from density in catchments where the target is the clear leader, it is scale and it should persist and can be replicated by tuck-in acquisitions, which is a thesis. If it comes from a few long contracts signed at favourable terms, it is a timing artefact and will compress at renewal. If it comes from deferred maintenance on plant, it is borrowed from the future and shows up in capital expenditure. I would ask for margin decomposed by catchment against share in that catchment: a strong positive relationship supports the density thesis and implies a buy-and-build strategy; a flat relationship means the advantage is elsewhere and probably contractual. On the cost-of-entry test, an efficient auction will price a visible margin advantage fully, so my recommendation would be conditional — yes if we have a specific reason to believe we can add catchment density that the seller could not, and no if we are simply paying for a margin someone else already created.",
-      },
-      {
-        question:
-          "You advise a legacy enterprise software firm. A venture-backed startup is offering a product with roughly sixty percent of your functionality at a quarter of your price, and is winning small customers you have never served. Your largest accounts say they would never switch. How do you respond?",
-        modelAnswer:
-          "This matches the disruption pattern closely enough that I would treat it as disruption until shown otherwise: entry below the market, inferior on the metrics established customers use, winning noncustomers, and reassuring feedback from the accounts most invested in the status quo. The key analysis is trajectory, not position. I would plot the startup's functionality gains per release against the functionality our mid-market segment actually uses — not what the top decile demands — and estimate when those lines cross. If that is two years out, this is urgent; if it is eight, it is a watch item. The second analysis is our own cost structure, because the reason incumbents cannot respond is rarely technical. If our field sales and implementation model requires a large contract value to break even, we cannot profitably serve the segment the startup is taking, and any response routed through the existing business will be starved in budgeting on entirely rational grounds. So the structural response matters more than the product response: a separate unit, with its own cost structure, its own definition of an attractive customer, and protection from the core organisation's allocation process. I would resist the two instinctive moves. Adding features accelerates overshoot and widens the opening. Cutting price across the board destroys the profit pool funding everything while still leaving us above the entrant. The one question I would want answered before committing is whether the startup's economics actually work at its price point or are venture-subsidised, because those imply very different time horizons — and I would look at their gross margin and implementation cost per customer rather than their growth rate.",
-      },
-      {
-        question:
-          "A profitable regional grocery chain's board wants to enter meal-kit delivery, arguing it is adjacent to the core and diversifies revenue. Evaluate the proposal.",
-        modelAnswer:
-          "I would run Porter's three tests and say plainly that adjacency is a hypothesis about synergy rather than evidence of it. Attractiveness: meal kits have had structurally poor economics — low barriers to entry, high customer acquisition cost against high churn, perishable inventory, and a substitute in the form of both groceries and restaurant delivery. Absent a specific reason we would change that structure, this is a difficult industry to enter, not an attractive one. Cost of entry: if we build, the cost is customer acquisition in a market where paid acquisition is expensive and repeat rates are weak; if we buy, we pay a premium for someone else's subscriber base and inherit their churn. Better-off test: this is where the proposal has to be won or lost, and I would press hard on the mechanism. Shared purchasing is plausible but small, because meal-kit volumes are trivial against grocery volumes and the assortment differs. Shared distribution is largely illusory, since our network runs pallets to stores while meal kits need chilled parcels to homes — that is a different asset, not a shared one. Brand transfers partially. So the honest answer is that the better-off test is weak, and the diversification argument is the weakest of all, because shareholders can diversify more cheaply themselves. My counter-proposal would be to ask what problem the board is actually solving. If it is stagnant like-for-like growth, prepared foods in-store uses the assets we genuinely have, faces far lower acquisition cost since the customer is already in the building, and is testable in a handful of stores for a fraction of the committed capital. That is a real option rather than a big bet, and it produces information about the same underlying demand.",
-      },
-      {
-        question:
-          "Your firm and its main competitor have nearly identical value curves and have been matching each other's moves for a decade. Margins have fallen every year. What would you do?",
-        modelAnswer:
-          "The diagnosis is that we are competing on operational effectiveness rather than strategy, so every improvement either of us makes is matched and the gains pass to customers. That is the mechanism behind the margin decline, and it will continue indefinitely because nothing about matching creates a trade-off a rival must accept. Convergence is the crux, and the strategic response has to be to introduce a genuine trade-off rather than to run the same race harder. I would use a strategy canvas on both firms and expect the curves to be nearly superimposed, then interrogate each competitive factor with two questions: do customers actually value this, and is it here because they value it or because our rival has it? Factors that fail both are elimination candidates, and the eliminations are what fund a differently shaped curve rather than a uniformly higher one — the point is a different shape, because a higher curve is just more cost. In parallel I would segment by profitability, because convergent competition usually means both firms are serving an average customer well and no specific customer excellently, which typically leaves an underserved segment at one end and an overserved one at the other. The test I would apply to any proposal is the trade-off test: if our competitor could adopt this tomorrow without giving anything up, it is not a strategy and we will be back here in two years. And I would be explicit with the board that the credible options include focusing on a narrower segment and deliberately losing revenue in the segments we exit, because the alternative to accepting a trade-off is continuing the current decline.",
-      },
-    ],
+      "These fit together as a sequence, not a menu: Five Forces tells you whether the industry is worth competing in at all; generic strategy tells you how you'll compete within it; the resource-based view checks whether you actually have (or can build) what that requires; and diversification, build-vs-buy, blue ocean, and disruption theory are all different answers to the same underlying question — how do you get or defend an advantage the forces and your competitors can't easily erode.",
     source: "claude",
-    generatedAt: "2026-09-19",
+    generatedAt: "2026-09-09",
     sources: [
       { id: 1, title: "Competitive Strategy: Techniques for Analyzing Industries and Competitors", author: "Porter, M. E.", year: "1980" },
       { id: 2, title: "Competitive Advantage: Creating and Sustaining Superior Performance", author: "Porter, M. E.", year: "1985" },
       { id: 3, title: "Firm Resources and Sustained Competitive Advantage", author: "Barney, J.", year: "1991" },
       { id: 4, title: "Blue Ocean Strategy", author: "Kim, W. C., & Mauborgne, R.", year: "2005" },
       { id: 5, title: "The Innovator's Dilemma", author: "Christensen, C. M.", year: "1997" },
-      { id: 6, title: "Good Strategy / Bad Strategy: The Difference and Why It Matters", author: "Rumelt, R. P.", year: "2011" },
-      { id: 7, title: "Value-Based Business Strategy", author: "Brandenburger, A. M., & Stuart, H. W.", year: "1996" },
-      { id: 8, title: "Commitment: The Dynamic of Strategy", author: "Ghemawat, P.", year: "1991" },
-      { id: 9, title: "Dynamic Capabilities and Strategic Management", author: "Teece, D. J., Pisano, G., & Shuen, A.", year: "1997" },
-      { id: 10, title: "Corporate-Level Strategy: Creating Value in the Multibusiness Company", author: "Goold, M., Campbell, A., & Alexander, M.", year: "1994" },
-      { id: 11, title: "Strategy Under Uncertainty (Harvard Business Review)", author: "Courtney, H., Kirkland, J., & Viguerie, P.", year: "1997" },
-      { id: 12, title: "What Is Strategy? (Harvard Business Review)", author: "Porter, M. E.", year: "1996" },
-      { id: 13, title: "A Resource-Based View of the Firm", author: "Wernerfelt, B.", year: "1984" },
-      { id: 14, title: "Corporate Strategy: Resources and the Scope of the Firm", author: "Collis, D. J., & Montgomery, C. A.", year: "1997" },
-      { id: 15, title: "The Innovator's Solution: Creating and Sustaining Successful Growth", author: "Christensen, C. M., & Raynor, M. E.", year: "2003" },
-      { id: 16, title: "The Experience Curve Reviewed (BCG Perspectives)", author: "Henderson, B. D.", year: "1973" },
-      { id: 17, title: "Information Rules: A Strategic Guide to the Network Economy", author: "Shapiro, C., & Varian, H. R.", year: "1999" },
-      { id: 18, title: "Turning Great Strategy into Great Performance (Harvard Business Review)", author: "Mankins, M. C., & Steele, R.", year: "2005" },
     ],
   },
 
@@ -830,471 +372,78 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     profession: "business",
     category: "Finance",
     overview:
-      "Corporate finance is about allocating money — where it comes from, what it should be spent on, and how to tell whether a decision created value or merely moved numbers between accounts. This lecture runs in four movements: first the machinery of valuing a stream of cash, then the price of the capital used to fund it and where that price comes from, then how the funding mix and payout choices affect what shareholders actually keep, and finally how to read a real business and act when the forecast is genuinely uncertain. Every concept below is a variation on one comparison — return against the true cost of the capital used to earn it — and the skill being taught is doing that comparison out loud, with numbers, when someone is pushing back.",
-    prerequisites:
-      "You should be able to read an income statement, balance sheet and cash flow statement without a glossary, know the difference between an accrual and a cash movement, and do compound-growth arithmetic mentally to within a few percent. A discount rate, a growth rate and a margin are the only three numbers most of this lecture manipulates, but you will be expected to manipulate them in your head while explaining what they mean.",
+      "Corporate finance is about allocating money — where it comes from, what it should be spent on, and how to tell whether a decision actually creates value versus just moving numbers around. Every concept below is ultimately a variation on comparing a return against the true cost of the capital used to get it.",
     concepts: [
-      {
-        id: "fin-time-value",
-        title: "Time value of money: the machinery underneath everything",
-        explanation:
-          "A pound today is worth more than a pound next year, because today's pound can be invested and because next year's is uncertain. Discounting turns future amounts into today's equivalent by dividing by one plus the discount rate, compounded per period; the perpetuity and growing-perpetuity formulas collapse infinite streams into a single number, where a stream of C growing at g and discounted at r is worth C divided by r minus g. [1] Every valuation technique in finance is this arithmetic with different inputs and a different label.",
-        whyItMatters:
-          "Almost every finance interview question is ultimately testing whether you can hold this machinery in your head while arguing about the inputs. The formula is trivial; the judgement is in the inputs, and the fastest way to lose credibility is to be so busy with the mechanics that you never interrogate the growth rate you were handed.",
-        example:
-          "At a ten percent discount rate, a pound received in ten years is worth about thirty-nine pence today, and in twenty years about fifteen pence. That is why terminal-value assumptions dominate a DCF of a stable business while the first three years of forecast, which is where all the argument happens in practice, often account for less than a quarter of the value.",
-        sections: [
-          {
-            heading: "Why the growing perpetuity is dangerous",
-            body:
-              "The growing-perpetuity denominator, r minus g, is the single most abused expression in corporate finance. As g approaches r the value goes to infinity, so small changes in an assumption nobody can verify produce enormous changes in a number presented to three decimal places. With r at eight percent, moving g from two to three percent raises the terminal value by roughly seventeen percent; moving it to four percent raises it by forty percent. Two disciplines protect you. First, no business can grow faster than the economy forever, because it would eventually become the economy, so g above long-run nominal GDP growth is an arithmetic impossibility rather than an aggressive assumption. Second, always report what share of your value sits in the terminal period; if it is eighty-five percent, you have not valued a business, you have valued a guess about the year 2050 and decorated it with a forecast.",
-          },
-          {
-            heading: "Nominal versus real, and other consistency traps",
-            body:
-              "Most valuation errors that survive review are consistency errors rather than conceptual ones, and interviewers probe them because they are unglamorous and therefore honest. Discount nominal cash flows at a nominal rate and real cash flows at a real rate, never mixed — forecasting flat real prices while discounting at a nominal rate silently destroys value every year. Match the currency of the cash flows to the currency of the discount rate, and if you must switch, convert the cash flows at forward rates rather than adjusting the discount rate by a country spread you cannot defend. Match the claim to the flow: free cash flow to the firm is discounted at WACC and yields enterprise value; free cash flow to equity is discounted at the cost of equity and yields equity value directly. And use mid-year discounting when cash arrives through the year rather than on the last day of it, which is worth several percent of value and is the kind of detail that signals you have actually built models rather than read about them.",
-          },
-        ],
-        keyTerms: [
-          { term: "Discount rate", definition: "The rate at which future cash is converted to present value; economically, the return available on an investment of equivalent risk." },
-          { term: "Terminal value", definition: "The value of all cash flows beyond the explicit forecast period, usually via a growing perpetuity or an exit multiple." },
-          { term: "Mid-year convention", definition: "Discounting each period's cash flow as if it arrived at the midpoint rather than the end, reflecting that cash accrues through the year." },
-        ],
-        pitfalls: [
-          {
-            mistake: "Treating the discount rate as a technical input and the cash flows as the real analysis.",
-            instead:
-              "Say which of the two your answer is most sensitive to, and show it. In a long-duration business the rate dominates; in a short-cycle one the flows do. Knowing which lever matters is the analysis.",
-          },
-        ],
-      },
-      {
-        id: "fin-free-cash-flow",
-        title: "What you actually discount: free cash flow",
-        explanation:
-          "Free cash flow to the firm is the cash a business generates for all capital providers after funding the investment it needs to keep operating: operating profit after tax, plus depreciation and other non-cash charges, minus capital expenditure, minus the increase in working capital. [9] It deliberately ignores how the business is financed, which is why it is discounted at a blended cost of capital. Free cash flow to equity subtracts interest after tax and net debt repayment, leaving what is available to shareholders.",
-        whyItMatters:
-          "Accounting profit is an opinion about timing; free cash flow is closer to a fact. Nearly every case where a profitable company failed comes down to the gap between the two, and interviewers use free cash flow as the test of whether a candidate understands that growth consumes cash before it produces any.",
-        example:
-          "A distributor growing revenue thirty percent a year with a ninety-day cash conversion cycle can report rising profit every quarter while free cash flow is persistently negative, because each additional pound of sales requires inventory and receivables funded months before the customer pays. The profit is real and the cash shortfall is also real; both are consequences of the same growth.",
-        sections: [
-          {
-            heading: "Building it from the statements without deceiving yourself",
-            body:
-              "Start from operating profit rather than net income, so that financing decisions do not contaminate an operating measure, and tax it at the marginal cash rate rather than the reported effective rate, which is distorted by one-off items. Add back depreciation and amortisation because they are non-cash, then immediately subtract capital expenditure, because the add-back is not a source of cash — it is a correction that has to be paid for. Subtract the increase in working capital, defined as operating current assets minus operating non-debt current liabilities, so growth's cash cost appears where it belongs. Two judgement calls separate a careful analyst from a careless one. Maintenance versus growth capital expenditure is rarely disclosed, so estimate maintenance as the level that keeps capacity and asset age constant, and be explicit that you have estimated it. Capitalised items — software development, leases under current standards, sometimes customer acquisition — move cost between the statements without changing economics, so a business that capitalises heavily will show flattering margins and unflattering free cash flow, and the comparison to a peer that expenses the same activity is meaningless until you normalise.",
-          },
-          {
-            heading: "Why stock-based compensation is the question they ask",
-            body:
-              "Stock-based compensation is a non-cash charge, so it gets added back in a naive free cash flow build, which produces the claim that a loss-making software business is strongly cash-generative. That claim is wrong, and being able to say why cleanly is worth more than any formula. The compensation is a real economic cost — it is payment for labour at market rates — and it is funded by issuing claims on the firm rather than by paying cash, which dilutes existing owners. If you add it back and do not account for the dilution, you have valued the firm as if labour were free. Two defensible treatments exist: subtract it as an operating expense and value the current share count, or add it back and explicitly forecast share-count growth so the per-share value absorbs the dilution. What is not defensible is adding it back and then dividing by today's shares. The same logic disposes of most 'adjusted' earnings measures: an adjustment is legitimate only if the cost genuinely will not recur, and restructuring charges taken in eight of the last ten years are a cost of doing business wearing a disguise.",
-          },
-        ],
-        keyTerms: [
-          { term: "FCFF / FCFE", definition: "Free cash flow to the firm, available to all capital providers and paired with WACC; and to equity, after debt service and paired with the cost of equity." },
-          { term: "Maintenance capex", definition: "The reinvestment required to hold current capacity and asset condition constant, as distinct from spending that buys growth." },
-          { term: "Working capital investment", definition: "The cash absorbed by the increase in operating current assets net of operating current liabilities as a business grows." },
-        ],
-        pitfalls: [
-          {
-            mistake: "Adding back every non-cash charge as though non-cash meant costless.",
-            instead:
-              "Ask what each add-back is funded by. Depreciation is funded by past capital expenditure and future capital expenditure replaces it; stock compensation is funded by dilution. Naming the funding source is what distinguishes the answer.",
-          },
-        ],
-      },
       {
         id: "fin-npv-irr-payback",
         title: "NPV, IRR, and payback period",
         explanation:
-          "Net present value discounts a project's free cash flows at the cost of capital and subtracts the investment; positive NPV means the project creates value, and the amount is the value created. Internal rate of return is the discount rate at which NPV equals zero. Payback is how long until the investment is recovered, ignoring both the time value of money and everything that happens afterwards. [1] NPV is the decision rule; the others are diagnostics that answer narrower questions.",
+          "Net present value (NPV) discounts a project's future cash flows to today's dollars and subtracts the initial investment — positive NPV means the project creates value. Internal rate of return (IRR) is the discount rate at which NPV equals zero. Payback period is simply how long until the investment is recouped, ignoring the time value of money. [1]",
         whyItMatters:
-          "NPV and IRR disagree exactly when it matters — on mutually exclusive projects of different size or different cash-flow timing — and the disagreement is not a tie to be split. NPV measures value in currency, which is what shareholders hold; IRR measures a rate, which cannot be added up or spent. Surveys of what firms actually use find IRR at least as popular as NPV [12], so you will meet people who rank by it, and being able to explain the failure cases politely is a practical skill rather than an academic one.",
+          "NPV and IRR can disagree on ranking mutually exclusive projects (especially with different sizes or cash flow timing) — NPV is generally the more reliable decision rule since it directly measures value created in dollar terms, while IRR can be misleading for unconventional cash flow patterns.",
         example:
-          "A project returning forty percent on ten thousand pounds creates four thousand pounds of surplus at best; a project returning fifteen percent on ten million creates far more. A CFO who ranks by IRR chooses the first and reports a higher return on a smaller company.",
-        sections: [
-          {
-            heading: "Where IRR actually breaks",
-            body:
-              "Four failure modes are worth being able to name. Scale: IRR is blind to size, so it systematically favours small projects, which matters whenever capital is not the binding constraint. Timing: IRR implicitly assumes interim cash flows are reinvested at the IRR itself, which is exactly the assumption you are trying to test; the modified IRR fixes this by reinvesting at the cost of capital, and the fact that MIRR is usually lower tells you how much of a reported IRR is that assumption. Sign changes: a project with more than one change of sign in its cash flows — a mine with end-of-life remediation, a business needing a second round of investment — can have multiple IRRs or none, and the number your spreadsheet returns is whichever root the solver found first. And comparability: an IRR calculated over three years and one over fifteen are not on the same scale, which is why private equity reports both IRR and multiple of invested capital, since IRR alone rewards selling early. When forced to rank by IRR, compute the incremental IRR on the difference in cash flows between the two projects and compare it to the hurdle rate; that gets you the NPV-consistent answer in the language the room is using.",
-          },
-          {
-            heading: "Capital rationing, hurdle rates, and what firms really do",
-            body:
-              "Textbook advice is to accept every positive-NPV project, which assumes capital is available at the cost of capital in unlimited quantity. Real firms ration, whether because of covenants, management bandwidth, or an unwillingness to issue equity at the current price. Under rationing the correct rule is to maximise total NPV subject to the constraint, which means ranking by the profitability index — NPV per pound of constrained resource — rather than by NPV itself. Be precise about what is actually scarce: if it is engineering capacity rather than cash, the index denominator is engineer-months. Two field observations are worth carrying into an interview. Firms commonly apply a single company-wide hurdle rate to projects of very different risk, which systematically over-invests in risky divisions and starves safe ones, and the fix is divisional costs of capital estimated from pure-play comparables. And firms commonly set the hurdle above the cost of capital — a self-imposed premium — usually as a crude correction for optimistic forecasts. That is a real response to a real problem, but it is a blunt one: it punishes long-duration projects hardest, because a hurdle premium compounds over time, which is how a firm can talk about the long term and systematically defund it.",
-          },
-        ],
-        keyTerms: [
-          { term: "Profitability index", definition: "NPV per unit of the constrained resource; the correct ranking rule when capital or capacity is rationed." },
-          { term: "Modified IRR", definition: "An IRR variant that reinvests interim cash flows at the cost of capital rather than at the project's own return." },
-          { term: "Hurdle rate", definition: "The minimum return a project must clear to be approved; in principle the risk-adjusted cost of capital, in practice often higher." },
-        ],
-        pitfalls: [
-          {
-            mistake: "Saying only that 'NPV is better than IRR' when asked to compare them.",
-            instead:
-              "Name the specific condition under which they diverge — different scale, different timing, or sign changes — and say what you would compute instead. The conditional answer shows you know why the rule exists.",
-          },
-        ],
-      },
-      {
-        id: "fin-risk-capm",
-        title: "Risk and return: CAPM, beta, and its limits",
-        explanation:
-          "The capital asset pricing model holds that investors are compensated only for risk they cannot diversify away, and prices that risk through beta — the sensitivity of an asset's return to the market's. [3] The expected return on equity is the risk-free rate plus beta times the equity risk premium. Diversifiable risk earns nothing, because an investor who wanted it eliminated could have done so for free.",
-        whyItMatters:
-          "This is where the discount rate comes from, so it is where a valuation argument usually gets attacked. It is also the concept most often misapplied in corporate settings: managers routinely add a premium for risks that are entirely diversifiable to the shareholder, which quietly rejects good projects and is one of the most common real-world value leaks.",
-        example:
-          "A gold miner and a staffing agency can have identical total volatility and very different betas, because the miner's returns are driven by a commodity price largely uncorrelated with the market while the agency's are highly cyclical. CAPM says the agency has the higher cost of equity despite equal volatility, and the reason is that its risk cannot be diversified away.",
-        sections: [
-          {
-            heading: "Estimating the inputs without pretending to precision",
-            body:
-              "Each input in CAPM is contested and you should be able to say how you would set it. The risk-free rate should match the duration of the cash flows, so a long-dated government bond yield in the cash-flow currency rather than a bill rate. The equity risk premium cannot be observed and estimates differ by several percentage points depending on whether you use a long historical average, a survey, or an implied premium backed out of current index prices; the honest move is to state which you used and test the value's sensitivity to the others. Beta is estimated by regressing the stock's returns on the market's, which produces a noisy number that is typically adjusted toward one because betas mean-revert. For a private company or a division there is no return series at all, so you take a set of pure-play comparables, unlever each firm's beta to strip out its financing choices, take the median asset beta, and relever at the target capital structure — which is the standard technique and also the standard place where a candidate's care becomes visible, since it requires taking a view on the target structure before you have finished the valuation.",
-          },
-          {
-            heading: "What CAPM misses, and what to say about it",
-            body:
-              "The empirical record for CAPM as a description of returns is poor. Fama and French documented that size and book-to-market explain cross-sectional returns better than beta does [11], and subsequent literature has added momentum, profitability and investment factors. So why is CAPM still taught and still used? Because it is a disciplined way to answer a question that must be answered somehow, its errors are at least transparent, and the alternatives require estimating more parameters with the same data. In practice the honest position is that the cost of equity is a range rather than a point, and a valuation that changes its recommendation between eight and ten percent has not produced a recommendation. Two corporate misapplications are worth flagging explicitly because interviewers watch for them. Using the company's own WACC to discount a project whose risk differs from the company's average is wrong regardless of how the company is financed, because the rate belongs to the project's risk, not to the balance sheet funding it. And adding a premium for firm-specific hazards — a key customer, a patent expiry, a regulatory decision — double-counts if those hazards are already in the expected cash flows; the correct treatment is to build probability-weighted scenarios into the numerator, not to inflate the denominator with a number nobody can justify.",
-          },
-        ],
-        keyTerms: [
-          { term: "Beta", definition: "Sensitivity of an asset's returns to market returns; the measure of risk that cannot be diversified away and is therefore priced." },
-          { term: "Equity risk premium", definition: "The excess return investors require for holding equities rather than risk-free assets; unobservable and estimated with wide uncertainty." },
-          { term: "Unlevered (asset) beta", definition: "Beta with the effect of financial leverage removed, so that business risk can be compared across firms with different capital structures." },
-        ],
-        pitfalls: [
-          {
-            mistake: "Adding a 'company-specific risk premium' to the discount rate to capture a known hazard.",
-            instead:
-              "Put the hazard in the cash flows as probability-weighted scenarios. The discount rate prices undiversifiable risk; padding it hides the assumption inside a number the reader cannot audit.",
-          },
-        ],
-      },
-      {
-        id: "fin-wacc-cost-of-capital",
-        title: "WACC and the cost of capital",
-        explanation:
-          "The weighted average cost of capital blends the after-tax cost of debt and the cost of equity in proportion to their market-value weights, producing the return a project must clear to leave capital providers no worse off. [2][3] Debt is cheaper both because lenders bear less risk and because interest is tax-deductible, which is why the after-tax cost of debt is the coupon rate multiplied by one minus the tax rate.",
-        whyItMatters:
-          "WACC is the hurdle every investment decision is measured against, so an error here propagates through every decision the firm makes. Set it too low and value-destroying projects clear; too high and good projects are rejected, usually the long-dated ones. It is also the number a candidate is most likely to be asked to build out loud in an interview.",
-        example:
-          "A regulated utility funded sixty percent by debt at four percent pre-tax, with a cost of equity of eight percent and a twenty-five percent tax rate, has a WACC of about five percent. An early-stage biotech with no debt capacity and a cost of equity above fifteen percent must clear three times that hurdle — so the same projected cash flows justify very different investments in the two firms.",
-        sections: [
-          {
-            heading: "Building it correctly",
-            body:
-              "Use market-value weights, not book values, because you are measuring what capital providers require on what they could sell their claim for today; book equity in particular can be meaningless after years of buybacks. Use the target capital structure rather than today's snapshot if the firm is mid-transition, since you are discounting a long stream and today's leverage is temporary. Use the current marginal cost of debt — what the firm would pay to borrow now, inferred from its credit spread or comparable yields — never the historical average coupon on outstanding bonds, which reflects rates from years ago. Apply the marginal tax rate to the debt cost, and only to the extent the firm actually has taxable income to shield; a loss-making company gets no immediate benefit from deductibility, so its after-tax and pre-tax debt costs converge. Include all capital: preferred stock, capitalised operating leases, and the debt-like portion of pension deficits belong in the calculation, and leaving them out understates leverage and flatters returns on capital.",
-          },
-          {
-            heading: "The curve, and why 'debt is cheaper' is not an argument",
-            body:
-              "The most common interview trap in this area invites you to say that since debt is cheaper than equity, more debt lowers WACC and raises value, so the firm should lever up. The reasoning fails because adding debt makes the remaining equity riskier, which raises the cost of equity — in a frictionless world by exactly enough to leave WACC unchanged, which is the Modigliani–Miller result [2]. With corporate taxes the interest shield does lower WACC, but as leverage rises the expected costs of financial distress rise too, and they rise faster, so the WACC curve is shallowly U-shaped with a broad, flat bottom. The practical implication is that the optimum is a range, not a point, and that most of the value at stake in capital structure is in avoiding the extremes rather than in optimising within them. A closing subtlety worth having ready: WACC as normally computed assumes the capital structure stays roughly constant in market-value terms. In a transaction where leverage starts high and pays down fast, that assumption is violated, and the correct method is adjusted present value — value the business unlevered, then add the present value of the tax shields on the actual debt schedule. Knowing when WACC stops being the right tool is a stronger signal than computing it faster.",
-          },
-        ],
-        keyTerms: [
-          { term: "After-tax cost of debt", definition: "The borrowing rate multiplied by one minus the marginal tax rate, reflecting the deductibility of interest for a firm with taxable profits." },
-          { term: "Target capital structure", definition: "The debt-to-value mix the firm intends to maintain; the correct basis for WACC weights when current leverage is transitional." },
-          { term: "Adjusted present value", definition: "Valuing the unlevered business and adding the present value of financing effects separately; the right method when leverage changes materially over time." },
-        ],
-        pitfalls: [
-          {
-            mistake: "Concluding that more debt lowers WACC because debt is cheaper than equity.",
-            instead:
-              "Point out that leverage raises the cost of equity as well, so the first-order effect nets out; what remains is the tax shield against rising distress costs, which is why the curve has a flat bottom rather than a downward slope.",
-          },
-        ],
+          "A project with a huge IRR on a tiny investment can still create less total value than a project with a modest IRR on a much larger investment — which is why a CFO comparing a $10,000 project at 40% IRR against a $10 million project at 15% IRR would rely on NPV, not IRR, to see which actually adds more dollars of value.",
       },
       {
         id: "fin-capital-structure-leverage",
         title: "Capital structure: debt vs. equity",
         explanation:
-          "A firm funds itself with debt, which must be serviced on a fixed schedule but does not dilute ownership, or equity, which has no repayment obligation but is more expensive because equity holders are paid last and therefore demand more. Modigliani and Miller showed that in a world without taxes, distress costs or information asymmetry, the mix does not affect firm value at all [2]; every real theory of capital structure is an argument about which of those frictions matters most.",
+          "A company can fund itself with debt (must be repaid with interest, but doesn't dilute ownership) or equity [2] (no repayment obligation, but dilutes ownership and is more expensive since equity investors demand higher returns for taking more risk). Leverage — using debt — magnifies both returns and risk to equity holders.",
         whyItMatters:
-          "Leverage magnifies returns to equity when results beat the cost of debt and magnifies losses when they do not, so the capital structure question is really a question about how much amplified risk a business's cash flows can carry. Being able to start from irrelevance and then reason toward the real world is the mark of someone who understands the subject rather than having memorised a rule of thumb.",
+          "More debt increases returns to equity holders when things go well (since debt has a fixed cost and equity captures the upside) but also increases the risk of financial distress or bankruptcy when they don't — capital structure decisions are really about how much of that amplified risk a company can safely carry.",
         example:
-          "A leveraged buyout deliberately loads a stable business with debt so that a given improvement in operating profit produces a much larger percentage gain to the sponsor's equity. The same structure turns a modest shortfall in cash flow into a covenant breach, which is why sponsors target businesses with predictable demand and low capital intensity rather than the fastest-growing ones.",
-        sections: [
-          {
-            heading: "Trade-off theory and the costs nobody puts in the model",
-            body:
-              "Trade-off theory says the optimal leverage balances the interest tax shield against the expected costs of financial distress [15]. The tax side is easy to quantify and easy to overstate, since a shield is worth nothing without taxable income, and the personal tax treatment of interest versus capital gains offsets part of the corporate benefit. The distress side is where the real economics sit, and the direct costs — lawyers, advisers, court fees — are the small part, typically a few percent of asset value. The indirect costs are larger and rarely modelled: customers stop buying products that need long-term support, suppliers demand cash on delivery precisely when cash is scarce, the best employees leave first because they have the most options, and management spends its attention on lenders rather than on the business. Debt capacity therefore depends on the nature of the assets as much as on the level of cash flow. A business whose value is in tangible, redeployable assets can borrow heavily; a business whose value is in people, brand or a research pipeline cannot, because that value evaporates in exactly the state where it would be pledged. This is why software firms carry little debt while property and utilities carry a great deal, and it is the answer to 'what leverage is right for this company?' — not a number, but the reasoning that produces one.",
-          },
-          {
-            heading: "Pecking order, agency, and reading the signal",
-            body:
-              "The pecking order theory [7][8] starts from the observation that managers know more about the firm's prospects than investors do. Issuing equity therefore signals that managers consider the shares fairly valued at best, so the market marks the price down on announcement, which makes equity expensive in a way no cost-of-capital formula captures. Firms consequently prefer internal funds first, then debt, then equity as a last resort — which explains the empirical pattern that the most profitable firms in an industry often carry the least debt, a fact trade-off theory alone predicts backwards. Agency considerations cut both ways. Jensen argued that debt disciplines managers of mature, cash-rich businesses by committing the cash to a contractual schedule before it can be spent on empire-building [5], which is part of the case for leverage in slow-growth industries. Running the other way, heavily indebted firms can underinvest, because the gains from a good project accrue largely to creditors whose claim is closest to impairment, so shareholders rationally decline to fund it — the debt overhang problem, and the reason restructurings often have to happen before a business can be fixed rather than after. In an interview, naming which of these frictions binds for the specific company in front of you is the whole answer; reciting all three is not.",
-          },
-        ],
-        keyTerms: [
-          { term: "Trade-off theory", definition: "The view that optimal leverage balances the interest tax shield against the expected costs of financial distress." },
-          { term: "Pecking order", definition: "The preference for internal funds, then debt, then equity, arising from the adverse signal an equity issue sends." },
-          { term: "Debt overhang", definition: "The underinvestment that occurs when the benefit of a new project would accrue mainly to existing creditors rather than to the shareholders funding it." },
-        ],
-        pitfalls: [
-          {
-            mistake: "Answering 'what is the right capital structure?' with an industry-average leverage ratio.",
-            instead:
-              "Reason from the asset base and the cash-flow volatility to a debt capacity, then check it against peers. The average is a sanity check on your reasoning, not a substitute for it.",
-          },
-        ],
+          "Highly leveraged buyouts (LBOs) intentionally load a company with debt to boost equity returns for the private equity sponsor — a strategy that works well if the business performs as projected, and can force bankruptcy if cash flows fall short of covering the debt service.",
       },
       {
-        id: "fin-payout-policy",
-        title: "Payout policy: dividends, buybacks, and what to do with the cash",
+        id: "fin-wacc-cost-of-capital",
+        title: "WACC and the cost of capital",
         explanation:
-          "Once a firm has funded every project worth funding, the surplus belongs to shareholders, and payout policy is the decision of how to return it. Miller and Modigliani showed that in frictionless markets the form is irrelevant: a dividend reduces the share price by its amount, and a buyback reduces the share count instead, leaving each holder equally well off [4]. Real payout policy is therefore about taxes, signalling, and the credibility of a commitment.",
+          "The weighted average cost of capital (WACC) [3] blends the cost of debt and the cost of equity, weighted by how much of each a company uses, into a single discount rate representing the minimum return a project must clear to be worth doing — since that's the return capital providers require for the risk they're taking.",
         whyItMatters:
-          "Payout is where the market's view of management's investment discipline becomes visible, and it is a standard interview question because it forces a candidate to think about a firm's whole opportunity set at once. It is also where the most common piece of received wisdom — that buybacks create value by raising earnings per share — is simply wrong, and saying why is a fast way to demonstrate real understanding.",
+          "WACC is the hurdle rate used in NPV calculations — get it wrong (too low) and you'll approve value-destroying projects that look attractive on paper; get it too high and you'll reject genuinely good projects.",
         example:
-          "A mature firm that has covered its capital plan and still generates surplus cash faces a choice: raise the dividend, which the market reads as a durable commitment and punishes severely if later cut, or buy back shares, which is flexible and can be suspended quietly in a downturn. The flexibility is precisely why buybacks convey a weaker signal.",
-        sections: [
-          {
-            heading: "Why a buyback does not create value by itself",
-            body:
-              "A buyback raises earnings per share whenever the earnings yield exceeds the after-tax cost of the cash used, which for a firm with idle cash is nearly always. That makes rising EPS an arithmetic consequence of the transaction rather than evidence of value creation, and treating it as evidence is the single most common error in this area. The honest test is the same one applied to any investment: a buyback creates value if and only if the shares are bought below intrinsic value, in which case value transfers from the selling shareholders to those who stay. Which means the question 'should we buy back stock?' is inseparable from 'do we think our shares are cheap?', and management's record at answering that question is poor on average, since repurchases peak at market highs when cash is plentiful and stop in downturns when shares are cheapest and cash is scarce. Two further points are worth having ready. Buybacks that merely offset dilution from stock compensation are not returns of capital at all; they are the cash cost of the compensation, arriving one statement later. And leveraging up to repurchase shares is two decisions wearing one name — a capital-structure decision and a payout decision — which should be defended separately, because the case for one is rarely the case for the other.",
-          },
-          {
-            heading: "Signalling, clienteles, and the free cash flow problem",
-            body:
-              "Dividends carry information because they are costly to reverse. Surveys of executives consistently find that maintaining the dividend ranks alongside investment decisions in importance and that cuts are avoided almost at any cost [19], which is exactly what makes an increase informative: management is committing to a cash flow it believes is sustainable. Buybacks convey a weaker signal for the same reason — the programme can be quietly slowed. Clientele effects matter too: investors sort themselves into firms whose payout suits their tax position and income needs, so a change in policy changes the shareholder base, which is disruptive independently of whether the new policy is better. The deeper issue is Jensen's free cash flow problem [5]: managers of cash-rich firms in mature industries face a temptation to invest in growth that earns less than the cost of capital, because a larger firm is more prestigious and better paid. Committing the cash to shareholders removes the temptation and forces future projects to be financed in markets that will scrutinise them. That is the strongest argument for a high payout, and it is an argument about governance rather than about finance — which is why the right answer to a payout question usually starts with the firm's reinvestment opportunities rather than with the payout mechanism.",
-          },
-        ],
-        keyTerms: [
-          { term: "Dividend irrelevance", definition: "The frictionless-markets result that payout form does not affect shareholder wealth; the baseline from which real-world frictions are argued." },
-          { term: "Signalling", definition: "The information conveyed by a payout decision, deriving from how costly it would be to reverse." },
-          { term: "Free cash flow problem", definition: "The tendency of managers with surplus cash and few good projects to invest below the cost of capital rather than return it." },
-        ],
-        pitfalls: [
-          {
-            mistake: "Arguing that a buyback creates value because it increases earnings per share.",
-            instead:
-              "Say that EPS rises mechanically whenever the earnings yield exceeds the after-tax return on the cash, and that value is created only if the shares were bought below intrinsic value. Then say how you would test that.",
-          },
-        ],
-      },
-      {
-        id: "fin-valuation-methods",
-        title: "Valuation: DCF, comparables, and precedent transactions",
-        explanation:
-          "A discounted cash flow values a business on its own projected cash flows and a discount rate. Trading comparables value it against multiples of similar listed companies. Precedent transactions value it against what similar businesses actually sold for, which embeds a control premium. [9][10] Each answers a slightly different question: what the business is worth, what the market currently pays for businesses like it, and what an acquirer has historically paid to own one outright.",
-        whyItMatters:
-          "No method is correct on its own, and knowing each one's failure mode is what makes triangulation more than averaging. A DCF is only as good as assumptions nobody can verify; comparables import the market's mood along with its pricing; precedents can be stale and reflect deal-specific motives. Practitioners use all three and argue about the overlap.",
-        example:
-          "The football-field chart in a banker's pitch shows a range from each method side by side. The useful information is rarely the midpoint; it is where the ranges fail to overlap, because that divergence is a question about the business that someone has to answer.",
-        sections: [
-          {
-            heading: "Multiples as compressed DCFs",
-            body:
-              "The most useful way to hold multiples in your head is that each one is a DCF with the assumptions hidden. For a stable firm, the enterprise value to EBIT multiple is approximately one minus the tax rate, divided by the cost of capital minus growth, adjusted for reinvestment intensity — so a high multiple is a statement about growth, risk and capital intensity, not a market opinion arriving from nowhere. This reframing tells you what to do when two comparable companies trade at different multiples: rather than averaging them, ask which of those three drivers differs, and whether the target resembles the high or the low end on each. It also disciplines multiple selection. Use enterprise value against unlevered measures — EBIT, EBITDA, sales — and equity value against levered ones such as net income, because pairing an equity numerator with an enterprise denominator double-counts the debt and is the most frequently made mechanical error in valuation. Prefer EBIT to EBITDA when capital intensity differs across the set, because EBITDA treats a capital-hungry manufacturer and an asset-light distributor as equivalent. And ensure the multiple is forward-looking and consistently defined across the set, since a trailing multiple on a business mid-recovery describes a company that no longer exists.",
-          },
-          {
-            heading: "Choosing the method the situation calls for",
-            body:
-              "Method selection is itself an analytical statement. A DCF is strongest where cash flows are forecastable and the business is stable enough that the forecast means something — infrastructure, mature industrials, contracted revenue. It is weakest for early-stage businesses, where all the value sits in a terminal assumption, and for financial institutions, where debt is raw material rather than financing, so free cash flow to the firm is not meaningful and you value equity directly via dividend discount or excess returns on book equity. Comparables are strongest when a genuine peer set exists and the market is not in an obvious dislocation, and weakest for businesses that are a mixture of segments, where the correct approach is a sum of the parts with a segment-appropriate multiple on each and a defensible holding-company discount if one applies. Precedent transactions are the right reference when the question is what an acquirer would pay, but they carry a control premium — typically material, and paid because the buyer expects synergies — so using them to value a minority stake overstates it. Two closing disciplines: say what your valuation is most sensitive to before anyone asks, and state the implied assumptions your answer requires. Working backwards from a market price to the growth rate it implies, and asking whether that rate is plausible, is often more persuasive than any forecast you could build forwards.",
-          },
-        ],
-        keyTerms: [
-          { term: "Enterprise value", definition: "The value of the operating business to all capital providers: equity value plus net debt and other debt-like claims." },
-          { term: "Control premium", definition: "The amount paid above market price to acquire control, reflecting expected synergies and the ability to direct the business." },
-          { term: "Sum of the parts", definition: "Valuing each segment with its own appropriate method or multiple, then aggregating and adjusting for corporate costs and any holding discount." },
-        ],
-        pitfalls: [
-          {
-            mistake: "Presenting a single valuation number to two decimal places.",
-            instead:
-              "Give a range, name the two assumptions that drive it, and say what evidence would move you within the range. Spurious precision reads as inexperience regardless of how good the model is.",
-          },
-        ],
+          "A riskier business (like an early-stage biotech) has a much higher WACC than a stable utility, because equity investors demand a much higher expected return to compensate for the biotech's greater risk — the same project cash flows would be judged differently depending on which company's WACC discounts them.",
       },
       {
         id: "fin-cash-conversion-cycle",
-        title: "Working capital and the cash conversion cycle",
+        title: "Cash conversion cycle and profitability vs. liquidity",
         explanation:
-          "The cash conversion cycle is days of inventory plus days of receivables minus days of payables: how long cash is committed between paying suppliers and collecting from customers. A positive cycle means growth consumes cash, so a profitable business can run out of money; a negative cycle means customers fund the business, so growth generates cash before it earns any.",
+          "The cash conversion cycle measures how long cash is tied up in operations — from paying for inventory, through selling it, to collecting payment from customers. A profitable company on paper can still run out of cash if this cycle is too long relative to its available financing.",
         whyItMatters:
-          "Profitability and solvency are different properties and companies fail on the second while reporting the first. The cycle also determines how much growth a firm can self-finance, which links directly to the sustainable growth rate and to whether a growth plan requires funding the board has not yet been asked for.",
+          "This is why 'profitable' and 'solvent' aren't the same thing — a growing company can be reporting healthy profits while simultaneously running out of cash, because growth itself consumes cash (more inventory, more receivables) faster than profit generates it.",
         example:
-          "A retailer selling for cash while paying suppliers in sixty days has a negative cycle: every new store releases cash on opening. A capital-goods manufacturer holding work in progress for four months and granting ninety-day terms has a long positive cycle, so a large order is a financing event before it is a profit event.",
-        sections: [
-          {
-            heading: "Reading the cycle as a diagnosis",
-            body:
-              "Decompose before you conclude, because the three components fail for different reasons and call for different responses. Rising days of inventory can mean demand has slowed, or that the mix has shifted toward slower-moving lines, or that a deliberate service-level decision was taken — and the write-down risk differs completely between those. Rising days of receivables is the one to take most seriously, because it usually means either that collections have weakened or that sales have been bought with extended terms, which is revenue borrowed from next period at a poor rate; ageing the receivables separates the two immediately. Rising days of payables looks like an improvement and sometimes is, but stretching suppliers is a short-term loan from a lender with other options, and it often precedes a supply problem or a price increase. Compare each component to the same firm two years ago and to the closest peers, because the absolute level is an industry characteristic while the change is a management signal. Finally, connect the cycle to financing: the sustainable growth rate — return on equity times the retention ratio — is the speed at which a firm can grow without new equity or rising leverage, and a growth plan above that rate is a financing request whether or not anyone has labelled it one.",
-          },
-          {
-            heading: "Liquidity, covenants, and how firms actually run out",
-            body:
-              "Failure is rarely caused by a long cycle alone; it is caused by a long cycle meeting a funding structure that cannot absorb it. Three mechanisms recur. Maturity mismatch: financing long-cycle working capital with short-term facilities that must be renewed, leaving the business dependent on a refinancing decision made by someone else at the worst moment. Covenant tripwires: leverage and interest-cover covenants tested quarterly on trailing figures, so a single weak quarter can trigger a technical default that converts a trading problem into a solvency event, which is why covenant headroom under a downside case matters more than the base case. And concentration: one customer paying late is a liquidity crisis when that customer is thirty percent of receivables. The practical analytical habit is to build a weekly cash forecast for a stress case rather than a monthly one for the base case, because businesses fail between month-ends. Altman's work on bankruptcy prediction [18] is worth knowing as evidence that the warning signs are observable in ordinary financial ratios well before failure — working capital to assets is one of its components — which supports the broader point that solvency analysis is a discipline of reading the statements, not a specialism reserved for distress.",
-          },
-        ],
-        keyTerms: [
-          { term: "Cash conversion cycle", definition: "Days inventory outstanding plus days sales outstanding minus days payables outstanding; the length of time cash is tied up in operations." },
-          { term: "Sustainable growth rate", definition: "Return on equity times the retention ratio: the growth a firm can fund without new equity or increased leverage." },
-          { term: "Covenant headroom", definition: "The margin between current financial ratios and the levels at which loan covenants are breached." },
-        ],
-        pitfalls: [
-          {
-            mistake: "Treating a lengthening cash conversion cycle as one problem.",
-            instead:
-              "Split it into inventory, receivables and payables and diagnose each. The causes and the remedies differ, and the split is usually where the actual finding is.",
-          },
-        ],
+          "Fast-growing retailers have historically gone bankrupt despite reporting profits, because rapid expansion required financing more inventory and receivables than operating cash flow could support — a classic 'growing broke' scenario driven by cash conversion cycle mechanics, not lack of profitability.",
+      },
+      {
+        id: "fin-valuation-methods",
+        title: "Valuation methods: DCF, comparables, precedent transactions",
+        explanation:
+          "Discounted cash flow (DCF) values a company based on its own projected future cash flows, discounted to present value. Trading comparables value it relative to similar public companies' valuation multiples. Precedent transactions value it based on what similar companies actually sold for in past M&A deals.",
+        whyItMatters:
+          "No single method is 'correct' — each has different strengths and blind spots (DCF is sensitive to assumptions about growth and discount rate; comparables depend on finding truly similar companies; precedent transactions can be stale or reflect deal-specific premiums), so practitioners typically triangulate across all three.",
+        example:
+          "Investment bankers routinely present a 'football field' chart showing the valuation range from each method side by side — a company's fair value is usually argued to sit somewhere in the overlap of these ranges, not at a single precise number from any one method.",
       },
       {
         id: "fin-financial-statement-analysis",
-        title: "Diagnosing a business from its financial statements",
+        title: "Diagnosing a business from financial statements",
         explanation:
-          "The income statement reports profitability over a period, the balance sheet reports position at a point in time, and the cash flow statement reports what actually moved. [20] Read together they constrain each other: profit that never becomes operating cash must be sitting in a balance-sheet account, and finding which one is the whole diagnostic method. Any single statement can be made to tell a flattering story; the three together are much harder to reconcile dishonestly.",
+          "The income statement (profitability over a period), balance sheet (assets, liabilities, and equity at a point in time), and cash flow statement (actual cash movements, split into operating, investing, and financing activities) together tell a fuller story than any one alone — reading them together reveals things a single number can hide.",
         whyItMatters:
-          "This is the skill that makes every other concept usable, because the inputs to a valuation, a credit assessment or a capital-structure argument all come from here. It is also what interviewers use to separate candidates who have read about finance from those who have sat with a set of accounts and found something.",
+          "A company can show growing revenue and profit on the income statement while its cash flow statement reveals operating cash flow is actually negative — a red flag that pure income-statement analysis would miss entirely, often signaling aggressive revenue recognition or a working-capital problem.",
         example:
-          "Revenue and profit rising while operating cash flow deteriorates is the canonical warning, and the reconciliation always points somewhere specific: receivables growing faster than sales suggests revenue recognised before it is collectible, inventory growing faster than cost of sales suggests demand has turned, and capitalised costs rising suggests expenses have moved to the balance sheet.",
-        sections: [
-          {
-            heading: "A repeatable order of operations",
-            body:
-              "Work in a fixed sequence so nothing is skipped under pressure. Start with the cash flow statement, because it is hardest to manipulate: compare cumulative operating cash flow to cumulative net income over three to five years, since a ratio persistently below one means earnings are not converting and the gap has to be explained. Then decompose returns. DuPont splits return on equity into margin, asset turnover and leverage, which immediately tells you whether a return is earned operationally or financed, and a return on equity that rises while margin and turnover fall is leverage, not performance. Then check growth quality by comparing revenue growth against receivables, inventory and deferred revenue: revenue growing more slowly than receivables is the most reliable early warning in financial analysis. Then read the accounting policies and their changes — useful life estimates, revenue recognition timing, what gets capitalised — because a change in policy is a change in reported results without a change in the business. Then work through off-balance-sheet and debt-like items: leases, pension deficits, securitised receivables, guarantees and contingent consideration, all of which understate leverage when ignored. Finally read the footnotes and, in particular, the related-party note, which is short, rarely read, and where the genuinely troubling facts tend to be disclosed correctly and quietly.",
-          },
-          {
-            heading: "Accruals, quality of earnings, and where the bodies are",
-            body:
-              "The unifying idea is that accruals — the difference between earnings and cash — are the discretionary part of reported profit, and that high accruals predict weaker future earnings. Every classic accounting failure is a variation: revenue recognised before delivery or before collectibility was reasonable, costs capitalised that should have been expensed, reserves built in good years and released in bad ones to smooth results, or related-party transactions that create revenue with no external counterparty. The Enron case is usually cited for its off-balance-sheet vehicles, and the useful lesson for an analyst is narrower and more transferable: the reported profits were not accompanied by cash, the structures generating them were disclosed in footnotes that were technically adequate and practically unreadable, and the complexity itself was the signal. That last point generalises. If a business's results cannot be explained without reference to entities whose economics you cannot follow, treat the opacity as a finding rather than as a gap in your own understanding. In an interview, the way to demonstrate this skill is not to recite ratios but to state a hypothesis and name the document that would confirm it — 'margin expansion looks like capitalised development cost rather than operating improvement, and the intangibles roll-forward in the notes would settle it' is a complete analytical move in one sentence.",
-          },
-        ],
-        keyTerms: [
-          { term: "Accruals", definition: "The non-cash component of earnings; the discretionary gap between reported profit and operating cash flow." },
-          { term: "DuPont decomposition", definition: "Splitting return on equity into net margin, asset turnover and equity multiplier to separate operating performance from leverage." },
-          { term: "Quality of earnings", definition: "The degree to which reported profit is cash-backed, repeatable and free of discretionary accounting choices." },
-        ],
-        pitfalls: [
-          {
-            mistake: "Listing ratios without forming a hypothesis about the business.",
-            instead:
-              "Lead with the one thing that does not reconcile and say which disclosure would resolve it. A named hypothesis plus its test beats a page of ratios every time.",
-          },
-        ],
-      },
-      {
-        id: "fin-value-creation-roic",
-        title: "Where value actually comes from: ROIC, growth, and economic profit",
-        explanation:
-          "A business creates value only when its return on invested capital exceeds its cost of capital; growth then multiplies that spread. If the spread is negative, growth destroys value faster, which is the most counter-intuitive and most useful result in corporate finance. [9][17] Economic profit — invested capital multiplied by the spread — states this in currency and is the measure that reconciles the accounting view with the valuation view.",
-        whyItMatters:
-          "This is the lens that turns a set of financial concepts into a management argument. It explains why two firms growing at the same rate deserve entirely different multiples, why acquisitions that raise earnings can still destroy value, and why 'grow the top line' is not a strategy. Interviewers use it because a candidate who reaches for it unprompted has understood what the rest of the machinery is for.",
-        example:
-          "A firm earning six percent on capital while its capital costs nine percent destroys three pence of value per pound invested; doubling its size doubles the destruction while raising reported profit, which is exactly what makes the destruction easy to finance and hard to notice.",
-        sections: [
-          {
-            heading: "Computing ROIC so that it means something",
-            body:
-              "Return on invested capital is net operating profit after tax divided by invested capital, where invested capital is operating working capital plus net fixed assets plus capitalised operating leases and acquired intangibles including goodwill. Several adjustments determine whether the number is informative. Include goodwill when asking whether the firm created value for its own shareholders, since the acquisition price is capital they provided; exclude it when asking whether the underlying operations perform well, since an overpayment does not make the operations worse. Capitalise research and development for research-intensive firms, because expensing it understates capital and overstates return, making pharmaceutical and software firms look more profitable than they are on a comparable basis. Use average rather than year-end capital when the base has moved materially. And be clear that accounting return is not economic return: an old asset base carried at depreciated cost inflates ROIC, so a mature manufacturer with fully depreciated plant can post a return that will not survive the next replacement cycle. This is why sustained high ROIC is the quantitative footprint of a competitive moat, and why the analytical question is always whether the spread persists rather than whether it exists today.",
-          },
-          {
-            heading: "The value-driver formula and how to argue with a plan",
-            body:
-              "The two drivers combine in a single expression worth memorising: value equals net operating profit after tax, multiplied by one minus growth divided by ROIC, divided by the cost of capital minus growth. The term in brackets is the reinvestment rate — growth divided by ROIC is the share of profit that must be ploughed back to fund that growth. Read it and three management implications fall out. When ROIC exceeds the cost of capital, raising growth raises value, and the higher the ROIC the cheaper each point of growth is in reinvestment. When ROIC equals the cost of capital, growth changes nothing: the business is a machine for converting capital into an ordinary return. When ROIC is below the cost of capital, growth reduces value, and the value-maximising action is to shrink. This is the formula to reach for when handed a plan promising accelerated growth: ask what reinvestment it requires and what return that incremental capital earns, because growth funded at a spread below zero is the most reliable way to destroy a company slowly while reporting progress. It also disciplines incentives, which is where agency problems enter [6]: compensating executives on earnings growth or EPS rewards exactly the behaviour the formula warns against, whereas economic profit charges management for the capital it consumes, which is the argument behind EVA-style measures [17] and, more practically, the argument for asking any bonus scheme what it does when capital is free.",
-          },
-        ],
-        keyTerms: [
-          { term: "ROIC", definition: "Net operating profit after tax divided by invested capital; the return the operating business earns on the money committed to it." },
-          { term: "Economic profit", definition: "Invested capital multiplied by the spread between ROIC and the cost of capital; profit after charging for the capital employed." },
-          { term: "Reinvestment rate", definition: "Growth divided by ROIC: the share of operating profit that must be reinvested to sustain that rate of growth." },
-        ],
-        pitfalls: [
-          {
-            mistake: "Treating growth as good and defending an investment on the size of the market.",
-            instead:
-              "Ask what return the incremental capital earns. Growth is a multiplier on the spread between ROIC and the cost of capital, and it carries the sign of that spread.",
-          },
-        ],
-      },
-      {
-        id: "fin-real-options",
-        title: "Decisions under uncertainty: real options and staged commitment",
-        explanation:
-          "A conventional NPV values a project as a now-or-never commitment to a fixed plan, which understates opportunities that can be staged, expanded, deferred or abandoned as information arrives. Real options analysis values that flexibility, borrowing the insight that an option's worth rises with uncertainty because the holder keeps the upside and can decline the downside. [13][14] The same logic explains why a licence, a pilot, or a land holding can be valuable long before it produces any cash.",
-        whyItMatters:
-          "Without this, uncertainty looks like a reason to discount more heavily, and heavy discounting kills precisely the long-dated, high-variance investments that create the most value. With it, uncertainty becomes a reason to structure the investment differently — buy information first, commit later — which is what senior people actually do and what interviews about risky projects are really testing.",
-        example:
-          "A pharmaceutical pipeline is a chain of options: each trial phase buys the right, not the obligation, to fund the next. Valuing the programme as a single committed spend against a probability-weighted launch materially undervalues it, because it ignores that most of the spend is never incurred in the states of the world where the drug fails.",
-        sections: [
-          {
-            heading: "The option types and when they are real",
-            body:
-              "Five types recur and are worth naming precisely. The option to defer: waiting has value when uncertainty resolves over time and the opportunity is not competitively contestable, which is the standard case for a resource lease. The option to expand: a first investment that is unattractive standalone can be justified by the follow-on it creates, which is the honest way to defend an entry into a new market. The option to abandon: a project with resale value or a contract that can be exited has a floor under its downside, which raises its value and is why lease-versus-buy is a real-options question. The option to stage: breaking a commitment into tranches with decision points converts one large bet into a sequence of small ones. And the option to switch inputs or outputs, which is what a flexible plant is actually worth. The discipline is to check that the option is real before valuing it. Three tests: is there genuine flexibility, in that management could actually decline to proceed, or is the commitment effectively irreversible once begun? Does uncertainty resolve in a way you can observe before the decision point? And is the option exclusive, or will competitors exercise the same opportunity while you wait, in which case deferral has a cost that must be modelled as a loss of position.",
-          },
-          {
-            heading: "Using it honestly, and the discipline it imposes",
-            body:
-              "Black-Scholes applied to a factory is usually the wrong tool, because its assumptions — a traded underlying, a known volatility, a fixed exercise price — rarely hold for real assets, and a precise number derived from an unmeasurable volatility invites false confidence. Decision trees with explicit probabilities and stage gates are more defensible in a business setting, easier to challenge, and produce the same qualitative conclusions: value the sequence, not the plan. The genuine contribution of real-options thinking is less the arithmetic than the discipline it imposes on how a proposal is structured. It reframes the question from 'should we do this?' to 'what is the cheapest experiment that would materially change our answer, and what would we then do?' — which is the question that separates senior judgement from analysis. It also cuts the other way, and saying so is a mark of balance: real-options reasoning is frequently abused to rescue a project that cannot be justified on its own cash flows, by claiming strategic optionality that nobody could ever actually exercise. The test to apply, out loud, is whether the firm would genuinely walk away at the next gate. If the honest answer is no — because the reputational cost is too high, or the organisation is already committed — then there is no option, only a staged payment on a decision that has already been made.",
-          },
-        ],
-        keyTerms: [
-          { term: "Real option", definition: "A right, but not an obligation, to take a future business action — defer, expand, abandon, stage or switch — whose value rises with uncertainty." },
-          { term: "Stage gate", definition: "A pre-committed decision point at which a project must re-qualify for further funding against evidence gathered since the last gate." },
-          { term: "Value of information", definition: "The amount a decision-maker should be willing to pay for evidence that could change the decision; zero if no result would change it." },
-        ],
-        pitfalls: [
-          {
-            mistake: "Invoking 'strategic optionality' to justify a negative-NPV project.",
-            instead:
-              "Name the option, the decision point, and what would make you decline at that point. An option nobody would ever refuse to exercise is not an option; it is a commitment in instalments.",
-          },
-        ],
+          "Several accounting scandals (like Enron) involved income statements that looked strong while cash flow and balance sheet details — had they been scrutinized together — showed the underlying cash generation didn't match the reported profits.",
       },
     ],
     connections:
-      "These build in one line rather than sitting side by side. Time value supplies the machinery and free cash flow supplies what goes into it, which together make NPV possible. CAPM prices the risk that determines the discount rate, and WACC assembles that rate from the financing mix — so capital structure is not a separate topic but the thing that sets the hurdle every investment is judged against, and payout policy is what happens to the cash once the hurdle has taken every project worth taking. Valuation is the same NPV logic applied to a whole business rather than one project, with multiples as compressed versions of it. Working capital and statement analysis are the reality check: they are where the forecast meets the accounts, and where the difference between a profitable company and a solvent one becomes visible. ROIC against the cost of capital is the unifying test that explains why any of it creates value, and real options is the correction for the fact that real decisions are sequences rather than single commitments. If you keep one thread: every question in this field reduces to whether the return exceeds the cost of the capital used to earn it, and every technique above is a different way of making that comparison honest.",
-    drills: [
-      {
-        question:
-          "A board is presented with two mutually exclusive proposals. Project A costs two million and returns five hundred thousand a year for six years. Project B costs ten million and returns two million a year for eight years. The CFO favours A because its IRR is thirteen percent against B's eleven, and the cost of capital is nine. What would you tell the board?",
-        modelAnswer:
-          "I would say the ranking is being done on the wrong measure and show it rather than assert it. Roughly, A returns three million undiscounted against a two million cost, and at nine percent its present value is around two and a quarter million, so an NPV of a few hundred thousand. B returns sixteen million undiscounted against ten, and discounting eight years of two million at nine percent gives about eleven million, so an NPV of roughly one million — several times A's. B creates more value in currency even though its rate is lower, and shareholders hold currency, not rates. The way to settle this in the CFO's own language is the incremental IRR: take the difference in cash flows, an extra eight million of cost for an extra one and a half million a year over six years and two million in years seven and eight, and ask whether the return on that increment clears nine percent. It does, which means the incremental capital is worth committing and B is the right choice on IRR reasoning too. Then I would raise the three things this comparison quietly assumes. First, whether the eight million of capital not spent on B has another positive-NPV use — if the firm is capital-rationed, the correct rule is profitability index on the binding constraint, and A only wins if the freed capital earns a genuinely attractive return elsewhere, which someone should be made to name. Second, whether the two projects carry the same risk, because a single nine percent hurdle applied to different risks is the more serious error and would change the answer if B is materially riskier. Third, whether B's longer life is real or is a forecasting artefact, since its advantage is concentrated in years seven and eight, which are the least reliable part of any forecast. I would recommend B, conditional on the risk profiles being comparable, and I would say plainly that if the firm routinely ranks by IRR it is systematically choosing small projects and should expect to grow slowly.",
-      },
-      {
-        question:
-          "A private company you are valuing has no traded shares, is funded entirely by equity, and operates in an industry where the listed comparables carry significant debt. Walk me through how you would arrive at a discount rate, and tell me where you are least confident.",
-        modelAnswer:
-          "I would build it up rather than borrow it. Start with a risk-free rate matched to the duration of the cash flows, so a long government bond yield in the cash-flow currency. Then the cost of equity: since there is no return series to regress, take a set of pure-play listed comparables, pull each one's levered beta, and unlever using its own debt-to-equity ratio and marginal tax rate to strip out financing choices, which gives a set of asset betas describing business risk alone. I would use the median rather than the mean, because the set is small and one comparable with an odd capital structure would distort it. Then relever at the target capital structure for the business I am valuing, not the current one, and here the fact that it is unlevered matters: if it will stay unlevered, the asset beta is the equity beta and the cost of equity is straightforwardly the risk-free rate plus that beta times the equity risk premium. For the premium I would use an implied premium backed out of current index prices, state that choice, and show the valuation at plus and minus a point. Then the adjustments that private-company valuation actually turns on, which I would rather raise myself than be asked. A size premium is commonly applied and is empirically contested, so I would show the answer with and without it. Illiquidity is real but belongs in a discount on the resulting value, where it can be seen and argued with, rather than buried in the rate. And I would refuse to add a premium for customer concentration or key-person risk, because those are specific hazards that belong in probability-weighted scenarios on the cash flows; putting them in the denominator double-counts if the forecast already reflects them and is impossible for anyone to audit. Where I am least confident is the comparable set itself. If the listed peers are much larger, more diversified, and serve different end markets, then the asset beta I am importing describes a different business, and no amount of careful arithmetic downstream fixes that. I would say so explicitly, present a range rather than a point, and if the recommendation flips inside that range, I would report that the valuation does not support a decision at this level of evidence and say what evidence would.",
-      },
-      {
-        question:
-          "A mature industrial firm generates surplus cash after funding its capital plan. The CEO proposes a large debt-funded share buyback, arguing it will lift earnings per share by twelve percent. Evaluate it.",
-        modelAnswer:
-          "First I would separate the two decisions bundled in the proposal, because they are being defended with one argument and need two. One is a capital-structure decision to raise leverage; the other is a payout decision to return cash through repurchase rather than dividend. The EPS argument supports neither. EPS rises mechanically whenever the earnings yield exceeds the after-tax cost of the debt funding the purchase, which is arithmetic, not value creation, and it would be true of a value-destroying buyback as readily as a good one. On the payout decision, the test is whether the shares trade below intrinsic value, since a repurchase transfers value from selling shareholders to those who remain and creates none in aggregate. So I would ask what the firm's own valuation of its equity is and how that has performed as a forecast historically, and I would note the general pattern that repurchases cluster at market peaks, which should temper confidence. I would also check how much of the programme merely offsets dilution from stock compensation, because that portion is the cash cost of remuneration rather than a return of capital and should not be presented as one. On the capital-structure decision, the questions are what the asset base supports and what the cash flows can service in a downside. For a mature industrial with tangible, redeployable assets and stable demand, meaningful leverage is defensible, and Jensen's argument that committed debt service disciplines the use of surplus cash applies with some force here. I would want the covenant headroom under a recession case, the maturity profile, and the rating consequence, because if leverage rises far enough to threaten access to commercial paper or to trip a covenant in a mild downturn, the firm has bought an EPS increase with its own resilience. Before endorsing the payout at all, I would ask about reinvestment: if the firm's ROIC exceeds its cost of capital and it has identified projects, returning capital is the wrong use of it, and if it does not, then returning capital is right and the honest framing is that the firm lacks investment opportunities, which is a defensible thing for a mature business to say out loud. My recommendation would be to support a return of capital on those grounds, sized to what the business can service in a downside case rather than to the EPS target, and to say clearly that the EPS figure should not appear in the board paper as a justification.",
-      },
-      {
-        question:
-          "A company reports revenue up twenty-two percent and net income up eighteen percent, but operating cash flow fell by a third. Management attributes it to timing. How would you investigate, and what would change your mind?",
-        modelAnswer:
-          "I would treat 'timing' as a hypothesis with a testable prediction — that the gap reverses in the following period — and then go looking for where the cash went, because it has to be somewhere on the balance sheet. I would reconcile net income to operating cash flow line by line and rank the drivers by size. If receivables are the driver, I would compute days sales outstanding for this period and the prior two and age the receivables: a rising balance concentrated in the most recent bucket is consistent with strong late-quarter selling and genuinely is timing, while growth in the older buckets means collection has deteriorated and some of that revenue may never arrive. I would also look at whether revenue growth was bought with extended payment terms or channel loading, which shows up as sell-in running ahead of sell-through and as returns provisions moving. If inventory is the driver, I would split it into raw materials, work in progress and finished goods: a build in raw materials ahead of a known production ramp is a different fact from a build in finished goods while sales slow, and the second carries write-down risk. If payables are the driver, in that the firm simply paid suppliers faster, that is genuinely timing and reverses. I would also check the non-cash lines for anything that moved cost off the income statement — a jump in capitalised development spend or a change in useful lives would flatter profit and hurt cash simultaneously, which fits the pattern exactly. Two other checks: whether any receivables were previously being factored and that facility has been reduced, which changes reported cash flow without changing the business at all, and whether deferred revenue is falling while revenue rises, which means the firm is recognising a backlog it is not replacing. What would change my mind toward management's explanation is a concentration of the receivable build in current buckets, subsequent collection in the weeks after period end, unchanged accounting policies, and inventory building in materials for a ramp that other evidence supports. What would harden the concern is ageing that has lengthened, policy changes disclosed quietly in the notes, a third consecutive period of operating cash flow below net income, and an explanation that changes when pressed. On that last point, I would say that one quarter of divergence is noise and three is a pattern, and the cumulative ratio of operating cash flow to net income over three years is the number I would put in front of the audit committee.",
-      },
-    ],
-    source: "claude",
-    generatedAt: "2026-09-19",
+      "NPV, IRR, and payback are the decision tools for evaluating any individual investment, but they only work correctly once you know your WACC — the true cost of the capital being invested, which itself depends on the debt/equity mix chosen in your capital structure. The cash conversion cycle is a reminder that accounting profit and actual cash aren't the same thing, valuation methods extend the same NPV logic to valuing an entire company rather than a single project, and financial statement analysis is the diagnostic skill that ties all of it back to what a business's real financial health actually looks like.",
     sources: [
       { id: 1, title: "Principles of Corporate Finance", author: "Brealey, R. A., Myers, S. C., & Allen, F." },
       { id: 2, title: "The Cost of Capital, Corporation Finance and the Theory of Investment", author: "Modigliani, F., & Miller, M. H.", year: "1958" },
       { id: 3, title: "Capital Asset Prices: A Theory of Market Equilibrium under Conditions of Risk", author: "Sharpe, W. F.", year: "1964" },
-      { id: 4, title: "Dividend Policy, Growth, and the Valuation of Shares", author: "Miller, M. H., & Modigliani, F.", year: "1961" },
-      { id: 5, title: "Agency Costs of Free Cash Flow, Corporate Finance, and Takeovers", author: "Jensen, M. C.", year: "1986" },
-      { id: 6, title: "Theory of the Firm: Managerial Behavior, Agency Costs and Ownership Structure", author: "Jensen, M. C., & Meckling, W. H.", year: "1976" },
-      { id: 7, title: "The Capital Structure Puzzle", author: "Myers, S. C.", year: "1984" },
-      { id: 8, title: "Corporate Financing and Investment Decisions When Firms Have Information That Investors Do Not Have", author: "Myers, S. C., & Majluf, N. S.", year: "1984" },
-      { id: 9, title: "Valuation: Measuring and Managing the Value of Companies", author: "Koller, T., Goedhart, M., & Wessels, D." },
-      { id: 10, title: "Investment Valuation: Tools and Techniques for Determining the Value of Any Asset", author: "Damodaran, A." },
-      { id: 11, title: "The Cross-Section of Expected Stock Returns", author: "Fama, E. F., & French, K. R.", year: "1992" },
-      { id: 12, title: "The Theory and Practice of Corporate Finance: Evidence from the Field", author: "Graham, J. R., & Harvey, C. R.", year: "2001" },
-      { id: 13, title: "The Pricing of Options and Corporate Liabilities", author: "Black, F., & Scholes, M.", year: "1973" },
-      { id: 14, title: "Investment under Uncertainty", author: "Dixit, A. K., & Pindyck, R. S.", year: "1994" },
-      { id: 15, title: "A State-Preference Model of Optimal Financial Leverage", author: "Kraus, A., & Litzenberger, R. H.", year: "1973" },
-      { id: 16, title: "Corporate Income Taxes and the Cost of Capital: A Correction", author: "Modigliani, F., & Miller, M. H.", year: "1963" },
-      { id: 17, title: "The Quest for Value: A Guide for Senior Managers", author: "Stewart, G. B.", year: "1991" },
-      { id: 18, title: "Financial Ratios, Discriminant Analysis and the Prediction of Corporate Bankruptcy", author: "Altman, E. I.", year: "1968" },
-      { id: 19, title: "Payout Policy in the 21st Century", author: "Brav, A., Graham, J. R., Harvey, C. R., & Michaely, R.", year: "2005" },
-      { id: 20, title: "Financial Statement Analysis and Security Valuation", author: "Penman, S. H." },
     ],
+    source: "claude",
+    generatedAt: "2026-09-09",
   },
 
   "business/Marketing": {
