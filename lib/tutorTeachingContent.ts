@@ -38,7 +38,53 @@ import type { CountryCode } from "@/lib/countryContext";
  * getTeachingContent() below, with an honest on-screen notice (see
  * AITutor.tsx) when a request falls back rather than silently presenting US
  * content as if it were the visitor's own country.
+ *
+ * EXPANSION (in progress): the original 68 entries were written at roughly
+ * 1,000 words each — about 7 spoken minutes, enough to recognise a concept
+ * but not to defend an answer under interview pressure. The target is a
+ * ~45-minute graduate lecture: 9-12 concepts, each carrying `sections`,
+ * `keyTerms` and `pitfalls` on top of the original three fields, plus
+ * category-level `prerequisites` and `drills`. Check an entry against the
+ * target with estimateLectureMinutes() below. Those fields are all optional
+ * precisely so the expansion can land category by category — an entry
+ * without them still renders and teaches exactly as it did before.
  */
+
+/**
+ * One section of a concept's lecture-depth treatment — the part that takes
+ * the student past "I know this framework exists" to "I can run it under
+ * questioning". Rendered and spoken as its own navigable step, so a concept
+ * stays chunked into a few minutes of speech rather than one long block.
+ */
+export interface ConceptSection {
+  /** Short heading, e.g. "How the analysis actually runs". */
+  heading: string;
+  body: string;
+}
+
+/** A term of art the student is expected to use correctly, unprompted. */
+export interface KeyTerm {
+  term: string;
+  definition: string;
+}
+
+/** The gap between a memorised answer and a practitioner's answer. */
+export interface Pitfall {
+  /** The weak move — what someone who only read the summary says. */
+  mistake: string;
+  /** What a strong candidate says instead, and why it lands better. */
+  instead: string;
+}
+
+/**
+ * An interview-grade test of the whole category: the kind of question that
+ * separates a candidate who memorised frameworks from one who can actually
+ * do the job. `modelAnswer` shows the reasoning, not just the conclusion.
+ */
+export interface InterviewDrill {
+  question: string;
+  modelAnswer: string;
+}
 
 export interface TeachingConcept {
   id: string;
@@ -49,6 +95,10 @@ export interface TeachingConcept {
   whyItMatters: string;
   /** A concrete real-world example. */
   example: string;
+  /** Lecture-depth body. Absent on entries not yet expanded — see EXPANSION below. */
+  sections?: ConceptSection[];
+  keyTerms?: KeyTerm[];
+  pitfalls?: Pitfall[];
 }
 
 /**
@@ -74,14 +124,41 @@ export interface TeachingContent {
   jurisdiction?: CountryCode;
   /** 2-3 sentence framing read before the first concept. */
   overview: string;
+  /** What the student is assumed to know already, so gaps are theirs to close before starting. */
+  prerequisites?: string;
   /** In deliberate teaching order — later concepts often build on earlier ones. */
   concepts: TeachingConcept[];
   /** How the concepts above connect/build on each other, read after the last one. */
   connections: string;
+  /** Hard, interview-grade tests of the whole category, read after `connections`. */
+  drills?: InterviewDrill[];
   source: "claude" | "gemini";
   generatedAt: string;
   /** Category-level numbered bibliography — absent for categories with no cited sources yet. */
   sources?: TeachingSource[];
+}
+
+/** Words per minute a listener follows unhurried spoken lecture content at. */
+const SPOKEN_WORDS_PER_MINUTE = 140;
+
+/**
+ * Roughly how long this entry runs when spoken end to end. Derived rather
+ * than stored so it can't drift out of sync with the content it describes —
+ * used to check an entry against the ~45-minute lecture target (see
+ * EXPANSION in the file header) and to set expectations in the UI.
+ */
+export function estimateLectureMinutes(teaching: TeachingContent): number {
+  const texts: string[] = [teaching.overview, teaching.prerequisites ?? "", teaching.connections];
+  for (const concept of teaching.concepts) {
+    texts.push(concept.title, concept.explanation, concept.whyItMatters, concept.example);
+    for (const section of concept.sections ?? []) texts.push(section.heading, section.body);
+    for (const term of concept.keyTerms ?? []) texts.push(term.term, term.definition);
+    for (const pitfall of concept.pitfalls ?? []) texts.push(pitfall.mistake, pitfall.instead);
+  }
+  for (const drill of teaching.drills ?? []) texts.push(drill.question, drill.modelAnswer);
+
+  const words = texts.reduce((sum, text) => sum + (text.trim() ? text.trim().split(/\s+/).length : 0), 0);
+  return Math.round(words / SPOKEN_WORDS_PER_MINUTE);
 }
 
 const COUNTRY_BOUND_PROFESSIONS: CaseProfession[] = ["law", "politics"];
@@ -103,89 +180,468 @@ const HAND_AUTHORED_CONTENT: Record<string, TeachingContent> = {
     profession: "business",
     category: "Strategy",
     overview:
-      "Strategy is about making a specific set of choices — what to do, what not to do, and why — that gives a company a defensible advantage over time. Every framework below is a different lens for making that choice well; a strong strategist knows which lens fits the situation in front of them.",
+      "Strategy is about making a specific set of choices — what to do, what not to do, and why — that gives a company a defensible advantage over time. This lecture runs in four movements: first what a strategy actually is as an object (most documents called 'strategy' aren't one), then where industry structure and profit actually come from, then the sources of advantage durable enough to survive competition, and finally how you choose and commit under real uncertainty. Every framework below is a lens; the skill being taught is knowing which lens the situation in front of you calls for, and being able to defend that choice out loud.",
+    prerequisites:
+      "You should be comfortable reading an income statement and a balance sheet, know what gross margin, operating margin, and return on invested capital mean, and be able to do arithmetic on market size and share out loud. Strategy questions almost always resolve into a number somebody has to justify, and an answer that never touches the economics reads as commentary rather than analysis.",
     concepts: [
       {
-        id: "strat-five-forces",
-        title: "Porter's Five Forces",
+        id: "strat-kernel",
+        title: "What a strategy actually is: the kernel",
         explanation:
-          "A framework for assessing how attractive an industry is by examining five competitive pressures: rivalry among existing competitors, the threat of new entrants, the bargaining power of suppliers, the bargaining power of buyers, and the threat of substitute products [1].",
+          "Richard Rumelt's kernel [6] holds that a real strategy has exactly three parts: a diagnosis that names the crux of the situation and simplifies an overwhelming reality down to what actually matters; a guiding policy, which is the overall approach chosen to cope with that diagnosis; and a set of coherent actions that are resourced, mutually reinforcing, and actually carried out. Remove any one part and what remains is not a strategy.",
         whyItMatters:
-          "Before you decide how to compete, you need to know whether the industry itself is structurally profitable. A brilliant strategy in a terrible industry (razor-thin margins, powerful buyers, easy entry) will still struggle — the forces set the ceiling on what any competitor can earn.",
+          "Most documents titled 'strategy' are goals with adjectives — 'become the market leader,' 'be customer-obsessed,' 'grow 20% annually.' None of these diagnose anything, so none of them tell you what to stop doing. In an interview this is the fastest way to demonstrate seniority: before proposing anything, name the crux. Candidates who jump straight to a framework signal that they pattern-match; candidates who diagnose signal that they think.",
         example:
-          "Airlines: low barriers to entry, powerful fuel/aircraft suppliers, price-sensitive buyers who compare on Google Flights, and fierce rivalry — which is exactly why the industry has historically struggled with profitability regardless of how well any single airline is run.",
+          "Rumelt's own illustration is the 1991 Gulf War ground campaign. The diagnosis was that Iraqi forces were dug in facing Kuwait with an exposed western flank and no capacity to reorient quickly. The guiding policy was to hold them frontally while swinging armoured forces wide around that flank. The coherent actions — fuel depots, deception operations, the timing of the air campaign — all served that single policy rather than being a list of good military ideas.",
+        sections: [
+          {
+            heading: "How to tell strategy from bad strategy",
+            body:
+              "Rumelt names four hallmarks of bad strategy, and they are worth memorising because you will be handed documents containing all four. Fluff: restating the obvious in inflated language, so that 'customer-centric intermediation' means 'we are a bank.' Failure to face the challenge: if the document never names a difficulty, it cannot be evaluated, because there is no standard against which to say the approach is wrong. Mistaking goals for strategy: a list of desired outcomes with no account of how the difficulty will be overcome. And bad strategic objectives: objectives that are either a scrambled dog's-dinner list of everything anyone asked for, or 'blue sky' targets that simply restate the desired end state. The diagnostic question that cuts through all four is: what does this tell us not to do?",
+          },
+          {
+            heading: "Diagnosis as the scarce skill",
+            body:
+              "Diagnosis is where most of the analytical work lives, and it is the part interviews actually probe. A good diagnosis is a claim about causality — this business is underperforming because the sales force is compensated on volume while the strategy requires mix shift — and like any causal claim it can be wrong, which is precisely what makes it useful. Weak diagnoses are lists of symptoms. Strong ones identify one or two binding constraints and explain why the others are downstream. The practical test: if your diagnosis were true, would a competent person be able to derive the guiding policy from it almost mechanically? If the policy could equally well follow from a different diagnosis, the diagnosis is not doing any work.",
+          },
+        ],
+        keyTerms: [
+          { term: "Crux", definition: "The one difficulty in a situation that is both critical and addressable — as opposed to problems that are critical but unfixable, or fixable but unimportant." },
+          { term: "Guiding policy", definition: "The overall approach chosen to deal with the diagnosed crux; it rules approaches in and out without yet specifying the individual actions." },
+          { term: "Proximate objective", definition: "A target close enough to current capability that the organisation can actually hit it, chosen deliberately to convert an ambiguous challenge into solvable work." },
+        ],
+        pitfalls: [
+          {
+            mistake: "Opening with 'I'd use a SWOT analysis' or any other framework name before the situation has been diagnosed.",
+            instead:
+              "Say what you think the crux is and what evidence would confirm or kill that hypothesis, then reach for whichever framework tests it. The framework is the instrument, not the answer, and interviewers are listening for which one you reach for and why.",
+          },
+        ],
+      },
+      {
+        id: "strat-five-forces",
+        title: "Industry structure: Porter's Five Forces",
+        explanation:
+          "A framework for assessing how attractive an industry is by examining five competitive pressures: rivalry among existing competitors, the threat of new entrants, the bargaining power of suppliers, the bargaining power of buyers, and the threat of substitute products [1]. The forces determine how the economic value created in an industry gets divided between the companies in it, their suppliers, and their customers.",
+        whyItMatters:
+          "Before you decide how to compete, you need to know whether the industry itself is structurally profitable. A brilliant strategy in a terrible industry (razor-thin margins, powerful buyers, easy entry) will still struggle — the forces set the ceiling on what any competitor can earn. Empirically, industry membership explains a meaningful share of the variation in firm profitability, which is why 'which industry should we be in' is a real strategic question and not a given.",
+        example:
+          "Airlines: low barriers to entry on any single route, powerful aircraft and fuel suppliers, price-sensitive buyers who compare on metasearch, substitutes on short-haul routes in the form of rail, and rivalry between carriers with high fixed costs and perishable inventory that pushes them to discount the last seat down toward marginal cost. That combination, not managerial incompetence, is why the industry has historically destroyed capital regardless of how well any single airline is run.",
+        sections: [
+          {
+            heading: "Running the analysis properly",
+            body:
+              "The common failure is to treat the five forces as five buckets to fill with observations. Done properly it is a quantitative argument about where profit sits. For each force you ask a specific question. Entry: what would it actually cost a credible entrant to reach minimum efficient scale, and how long would it take? Supplier power: what share of the cost structure does this input represent, how concentrated is that supply base, and what is our switching cost? Buyer power: what fraction of volume does the largest buyer represent, how price-transparent is the purchase, and how much does our product matter to their own cost or quality? Substitutes: what is the price-performance trajectory of the alternative, not its position today? Rivalry: is capacity added in lumps, are fixed costs high, is the product perceived as a commodity, and are there exit barriers keeping failed competitors in? Each answer should move a number, not just a qualitative arrow.",
+          },
+          {
+            heading: "Profit pools and the limits of the framework",
+            body:
+              "The most useful extension is to map the profit pool: total the operating profit along the whole value chain and see which stage captures it. Industries routinely have low average profitability while one stage — a component supplier, a distribution chokepoint, an aftermarket — captures nearly all of it. Personal computers were the classic case, where assembly earned very little while the processor and operating system earned almost everything. Know the framework's limits too, because a good interviewer will push on them. It was built to analyse stable manufacturing industries and treats industry boundaries as given, which is awkward for platforms and ecosystems where the relevant unit is not an industry. It is a static snapshot, so it says nothing about how the forces are changing. And it deliberately omits complements — products that raise willingness to pay for yours — which is why the 'sixth force' is often added.",
+          },
+        ],
+        keyTerms: [
+          { term: "Minimum efficient scale", definition: "The smallest output at which a producer reaches competitive unit costs; the higher it is relative to market size, the harder entry becomes." },
+          { term: "Profit pool", definition: "The total profit earned at each stage of a value chain, mapped to show where in the chain the money actually accumulates." },
+          { term: "Exit barrier", definition: "A cost or commitment that keeps an unprofitable competitor operating — specialised assets, labour agreements, regulatory obligations — which sustains overcapacity and depresses everyone's returns." },
+        ],
+        pitfalls: [
+          {
+            mistake: "Describing each force as 'high' or 'low' and concluding the industry is unattractive, without saying for whom.",
+            instead:
+              "State which force binds hardest, quantify it, and say what a company could do to change its own exposure to it — the forces describe an average, and the strategic question is always how to be an exception to that average.",
+          },
+        ],
+      },
+      {
+        id: "strat-value-stick",
+        title: "Where profit comes from: the value stick",
+        explanation:
+          "Value-based strategy [7] reduces all competition to one vertical line. At the top sits the customer's willingness to pay, the most they would part with rather than go without. At the bottom sits the supplier's willingness to sell, the least they would accept rather than not transact. The distance between them is the total value created. Price splits the upper portion between customer surplus and firm margin; cost splits the lower portion between firm margin and supplier surplus. A firm has only two levers: raise willingness to pay, or lower willingness to sell.",
+        whyItMatters:
+          "This is the analytical backbone underneath every other framework in this lecture, and it is what separates a candidate who can argue about strategy from one who can compute it. Differentiation is simply raising willingness to pay. Cost leadership is lowering cost toward willingness to sell. A merger creates value only if it moves one of those two endpoints, which is why 'strategic fit' with no mechanism is not an argument. When you are asked whether an initiative creates value, you can answer structurally: which endpoint does it move, by how much, and why can a competitor not move it equally?",
+        example:
+          "When a retailer becomes a materially better employer — more predictable scheduling, better training, internal promotion — it lowers the effective willingness to sell of its own workforce, because people accept a given wage more readily at a job they want to keep. Lower turnover cuts recruiting and training costs and raises service quality, which in turn raises customer willingness to pay. The same intervention widens the stick at both ends, which is why it survives competition longer than a price cut does.",
+        sections: [
+          {
+            heading: "Making it quantitative",
+            body:
+              "In practice you estimate willingness to pay in one of three ways. Revealed preference: what do customers actually pay today for the closest substitute, and what does the price gap between good and better versions imply about the value of the difference? Conjoint analysis: present trade-offs and infer the implicit price of each attribute. Or economic value to the customer, which is the strongest method for business-to-business work — take the next-best alternative's price and add the quantified value of every performance difference, in the customer's own cost terms. If your pump saves a plant forty thousand euro a year in energy and downtime relative to the incumbent, the economic value to the customer is the incumbent's price plus forty thousand, and the pricing conversation is about what share of that you capture. Candidates who can run this arithmetic out loud are immediately credible.",
+          },
+          {
+            heading: "Why value creation and value capture diverge",
+            body:
+              "Creating value and capturing it are separate problems, and conflating them is a classic error. An industry can create enormous value and capture almost none of it, because the forces from the previous concept determine the split. Competition pushes price down toward cost, transferring value to customers; supplier power pushes cost up toward willingness to sell, transferring it to suppliers. This is why an innovation can be a triumph for society and a disaster for its inventor. The strategic implication is that you should test every proposal twice: does it widen the stick, and is there something preventing the gain from being competed away? The second question is the one candidates forget, and it is the bridge to the concept on moats.",
+          },
+        ],
+        keyTerms: [
+          { term: "Willingness to pay (WTP)", definition: "The maximum a customer would pay rather than forgo the product; the ceiling on price." },
+          { term: "Willingness to sell (WTS)", definition: "The minimum a supplier or employee would accept rather than not transact; the floor under cost." },
+          { term: "Economic value to the customer (EVC)", definition: "The next-best alternative's price plus the monetised value of every performance difference — the principled upper bound for business-to-business pricing." },
+        ],
+        pitfalls: [
+          {
+            mistake: "Treating cost reduction and price increase as the only two moves available.",
+            instead:
+              "Note that lowering willingness to sell — via supplier relationships, employment terms, or making yourself a preferred customer — widens the stick without touching the customer at all, and is usually far less visible to competitors than a price move.",
+          },
+        ],
       },
       {
         id: "strat-generic-strategies",
-        title: "Generic strategies: cost leadership, differentiation, focus",
+        title: "Generic strategies and the productivity frontier",
         explanation:
-          "Porter's second contribution [2]: within an industry, a company generally wins by being the lowest-cost producer, by being meaningfully different in a way customers will pay for, or by dominating a narrow segment better than generalists can. Trying to do all three at once usually means doing none of them well — he called this being 'stuck in the middle.'",
+          "Porter's second contribution [2]: within an industry, a company generally wins by being the lowest-cost producer, by being meaningfully different in a way customers will pay for, or by dominating a narrow segment better than generalists can. Trying to do all three at once usually means doing none of them well — he called this being 'stuck in the middle.' The later and sharper formulation [12] distinguishes operational effectiveness, which is doing the same activities better, from strategy, which is choosing to perform different activities or perform them differently.",
         whyItMatters:
-          "This forces discipline. Once you know which generic strategy you're pursuing, it tells you what to say no to — a cost leader shouldn't chase every custom feature request, and a differentiator shouldn't compete on price.",
+          "This forces discipline. Once you know which generic strategy you're pursuing, it tells you what to say no to — a cost leader shouldn't chase every custom feature request, and a differentiator shouldn't compete on price. The operational-effectiveness distinction matters even more: improvements that every competitor can adopt shift the whole industry's frontier outward and get competed away, transferring the gains to customers. They are necessary but they are not strategy, and calling them strategy is how companies end up working extremely hard on convergence.",
         example:
-          "Ryanair (cost leadership, ruthlessly stripping every cost out of the flying experience) versus Singapore Airlines (differentiation, charging a premium for service quality) — both profitable in the same industry, precisely because neither tries to be the other.",
+          "Ryanair pursues cost leadership by stripping cost out of every activity — a single aircraft type to cut maintenance and training cost, secondary airports with lower fees and faster turnarounds, no seat assignment to speed boarding. Singapore Airlines pursues differentiation, charging a premium sustained by cabin service, fleet age, and hub experience. Both are profitable in an industry that destroys capital on average, precisely because neither tries to be the other — and note that each one's activities reinforce the others, which is what makes the position hard to copy piecemeal.",
+        sections: [
+          {
+            heading: "Fit, trade-offs, and why positions are copyable one activity at a time but not as a whole",
+            body:
+              "The durable part of a generic strategy is not the position but the fit between activities. Porter distinguishes three orders: simple consistency between each activity and the overall strategy; activities that reinforce one another; and optimisation of effort across activities, where the whole system is tuned. A competitor can copy any single activity — anyone can buy a uniform fleet — but copying a whole interlocking system requires abandoning their own, and the partial copy usually performs worse than either coherent system. This is why trade-offs are strategically essential rather than regrettable. If a position involves no trade-off, every competitor can occupy it simultaneously, and it will therefore earn nothing. When an interviewer asks why a competitor cannot simply match a move, 'because matching it would require them to give up X' is the answer that shows you understand the mechanism.",
+          },
+          {
+            heading: "The legitimate critique",
+            body:
+              "You should be able to state the objection to generic strategies as well as the framework itself, because interviewers reward candidates who hold frameworks lightly. The strongest objection is empirical: firms that achieve both low cost and differentiation often outperform those doing one alone, because quality improvements can reduce rework and scale can fund both. Toyota is the standard counterexample, achieving cost position and perceived quality simultaneously for decades. The defensible synthesis is that 'stuck in the middle' is a real failure mode when a firm is mediocre on both dimensions without a coherent activity system, but that the two dimensions are not mechanically opposed. What is genuinely universal is the need for a coherent set of trade-offs, not the specific menu of three options.",
+          },
+        ],
+        keyTerms: [
+          { term: "Operational effectiveness", definition: "Performing the same activities better than rivals; improves the industry frontier but is imitable, so its gains tend to flow to customers rather than shareholders." },
+          { term: "Activity system", definition: "The interlocking set of choices that deliver a position, whose value lies in the fit between the parts rather than in any single part." },
+          { term: "Stuck in the middle", definition: "A firm with neither a cost advantage nor a differentiation customers will pay for, typically because it has refused the trade-offs either position requires." },
+        ],
+        pitfalls: [
+          {
+            mistake: "Classifying a company into one of the three boxes and stopping there.",
+            instead:
+              "Name the trade-offs the position requires and the activities that reinforce each other, then say what a rival would have to abandon to copy it. The classification is the beginning of the analysis, not its output.",
+          },
+        ],
+      },
+      {
+        id: "strat-moats",
+        title: "Sources of durable advantage",
+        explanation:
+          "An advantage is durable only if some mechanism prevents competitors from replicating it. The recurring mechanisms are few and worth knowing by name: economies of scale, where unit cost falls with volume; network effects, where the product's value rises with the number of users [17]; switching costs, which make a customer's next purchase cheaper from you than from anyone else; the experience curve, where cumulative production drives cost down through learning [16]; counter-positioning, where the incumbent could copy you but rationally will not because it would cannibalise a better existing business; and regulatory or resource capture, where law or geology limits who may compete at all.",
+        whyItMatters:
+          "'We have a great product' is not a moat, because good products get copied. Naming the specific mechanism turns a vague claim of advantage into a testable one, and each mechanism implies a different strategy. If your advantage is scale, you should be buying share aggressively while the market is forming. If it is network effects, you should worry about multi-homing and whether the network is global or merely local. If it is switching costs, your economics live in retention and expansion rather than acquisition. Interviewers use this to distinguish candidates who describe success from candidates who explain it.",
+        example:
+          "Ride-hailing illustrates how much the details matter. The network effect is real — more drivers means shorter waits, which attracts more riders — but it is largely local, so leadership in one city confers little advantage in another, and both sides multi-home easily because switching apps costs nothing. Compare that with a card payment network, where the effect is global, merchants and issuers face genuine switching costs, and the resulting position has proven extraordinarily durable. Same named mechanism, very different durability.",
+        sections: [
+          {
+            heading: "Testing a claimed moat",
+            body:
+              "Apply three tests in order. First, the counterfactual: if a well-capitalised competitor decided tomorrow to attack this position, what specifically stops them, and how long would it take? An answer in years is a moat; an answer in months is a head start. Second, the evidence test: a real moat shows up in the numbers as pricing power, persistently high returns on invested capital, or customer retention that does not degrade under competitive attack. If returns are merely average, the claimed moat is not operating. Third, the direction test: is the mechanism strengthening or weakening with scale and time? Scale economies strengthen; a patent portfolio has a known expiry; a network effect can invert if congestion or quality dilution sets in. Note that brand is usually a consequence of one of these mechanisms rather than a mechanism itself, so treat 'brand' as an answer that needs one more why.",
+          },
+          {
+            heading: "Scale, learning, and the discipline of the experience curve",
+            body:
+              "The experience curve, from Bruce Henderson's work at BCG [16], observes that unit costs tend to fall by a consistent percentage each time cumulative production doubles — often in the range of twenty to thirty percent in manufacturing. Distinguish it carefully from scale economies, which depend on the rate of output, while learning depends on cumulative output to date. The strategic implication in the 1970s was aggressive pricing to buy share and ride down the curve faster than rivals. The caution, learned expensively since, is that learning is not automatic: it requires deliberate process investment, and it often diffuses to competitors through equipment vendors and staff mobility. Treat a steep experience curve as an opportunity that has to be actively defended rather than as a law that rewards volume by itself.",
+          },
+        ],
+        keyTerms: [
+          { term: "Multi-homing", definition: "Users participating on several competing platforms at once, which sharply weakens a network effect because it removes the cost of also using a rival." },
+          { term: "Counter-positioning", definition: "A newcomer adopting a business model the incumbent declines to copy because doing so would damage a currently more profitable business." },
+          { term: "Return on invested capital (ROIC)", definition: "Operating profit after tax divided by the capital employed to produce it; sustained ROIC above the cost of capital is the financial signature of a real advantage." },
+        ],
+        pitfalls: [
+          {
+            mistake: "Listing first-mover advantage as a moat.",
+            instead:
+              "Say what the first move let the company accumulate that a follower cannot — scale, learning, a network, contracted supply — because being early is only an advantage if it compounds into one of the named mechanisms, and in many markets fast followers win.",
+          },
+        ],
       },
       {
         id: "strat-resource-based-view",
-        title: "Resource-based view (VRIN)",
+        title: "Resource-based view, VRIN, and dynamic capabilities",
         explanation:
-          "Where the Five Forces looks outward at the industry, this looks inward: sustainable advantage comes from resources or capabilities that are Valuable, Rare, hard to Imitate, and Non-substitutable (VRIN) [3]. A resource that fails any one of these tests won't sustain an edge for long.",
+          "Where the Five Forces looks outward at the industry, this looks inward: sustainable advantage comes from resources or capabilities that are Valuable, Rare, hard to Imitate, and Non-substitutable (VRIN) [3][13]. A resource that fails any one of these tests won't sustain an edge for long. The dynamic-capabilities extension [9] adds the dimension the static view lacks: in changing environments, what matters is less any particular resource than the firm's ability to sense opportunities, seize them, and reconfigure its asset base as conditions shift.",
         whyItMatters:
-          "It explains why some companies keep winning even in unattractive industries — their internal capability, not the industry structure, is doing the work. It also warns you: a resource competitors can easily copy or replace isn't really a moat, no matter how valuable it looks today.",
+          "It explains why some companies keep winning even in unattractive industries — their internal capability, not the industry structure, is doing the work. It also warns you that a resource competitors can easily copy or replace isn't really a moat, no matter how valuable it looks today. Practically, the resource-based view is what you reach for when the question is 'where should we compete next,' because it identifies what you can carry into an adjacent market — and the honest version of that analysis often concludes that the answer is nothing.",
         example:
-          "Amazon's logistics and fulfillment network took over a decade and tens of billions of dollars to build — valuable, rare, and extremely hard to imitate quickly, which is why it remains a real advantage rather than a temporary one.",
+          "Amazon's fulfilment network took over a decade and tens of billions of dollars to build. It is valuable, rare, and hard to imitate — not mainly because warehouses are expensive, which they are, but because the routing, forecasting, and labour systems that make the network work were learned through a long path of operating it. That path dependence is the part a competitor with equal capital cannot compress, and it is why the network remains a real advantage rather than a temporary one.",
+        sections: [
+          {
+            heading: "Why imitability is the binding constraint",
+            body:
+              "Valuable and rare are relatively easy to assess; inimitability is where the analysis earns its keep, and the literature names the specific barriers. Path dependence: the resource was accumulated through a unique history that cannot now be replayed, such as decades of proprietary operating data. Causal ambiguity: not even the firm that owns the capability can fully specify what makes it work, so a competitor cannot copy what nobody can articulate — this is typical of culture and of complex coordination routines. Social complexity: the resource lives in relationships between people rather than in any asset that could be purchased. And property rights, which is the weakest barrier because patents expire and can be invented around. The practical question to ask is not 'is this hard to copy' but 'which of these four barriers is doing the work,' because the answer tells you how long the advantage lasts and what would erode it.",
+          },
+          {
+            heading: "Using it without tautology",
+            body:
+              "The standard academic criticism is that the resource-based view risks circularity: we observe that a firm succeeds, infer it must have a VRIN resource, and name that resource after the success. 'Their capability is execution' explains nothing. To avoid this in an interview, identify the resource independently of the outcome and make a falsifiable prediction from it. If the claimed resource is a proprietary dataset, the prediction is that performance should be strongest where data density is highest and should degrade in new geographies until density builds — and that is checkable. The dynamic-capabilities framing helps here too, because it directs attention to observable organisational processes such as how quickly the firm reallocates capital away from declining units, which is measurable in the segment disclosures rather than inferred from the fact that the firm did well.",
+          },
+        ],
+        keyTerms: [
+          { term: "Path dependence", definition: "A resource whose value derives from the specific historical sequence that produced it, so it cannot be recreated quickly at any price." },
+          { term: "Causal ambiguity", definition: "Uncertainty — including inside the firm itself — about which actions produce a capability's results, which blocks imitation by making the target unspecifiable." },
+          { term: "Dynamic capabilities", definition: "The firm's higher-order ability to sense change, seize opportunity, and reconfigure its resource base, as distinct from any individual resource it currently holds." },
+        ],
+        pitfalls: [
+          {
+            mistake: "Naming 'our people' or 'our culture' as the VRIN resource and moving on.",
+            instead:
+              "Specify the routine those people execute that competitors cannot, and say which inimitability barrier protects it. Talent is mobile and therefore rarely rare on its own; the system that makes ordinary talent productive is what tends to survive.",
+          },
+        ],
       },
       {
         id: "strat-diversification-related-unrelated",
-        title: "Related vs. unrelated diversification",
+        title: "Corporate strategy: diversification and parenting advantage",
         explanation:
-          "When a company expands into a new business, the key question is whether it can transfer existing capabilities, brand, or infrastructure into that new area (related diversification) or whether it's really just deploying capital into an unconnected business (unrelated diversification, i.e. running a conglomerate).",
+          "Corporate strategy asks a different question from business strategy: not how a single business competes, but why these businesses belong under one roof. When a company expands into a new area, the key question is whether it can transfer existing capabilities, brand, or infrastructure into that area (related diversification) or whether it is really just deploying capital into an unconnected business (unrelated diversification). The sharper test is parenting advantage [10][14]: the corporate centre must add more value to a business than any other plausible owner would, net of the cost of the centre itself.",
         whyItMatters:
-          "Related diversification tends to create more value because the company brings something the new business actually needs; unrelated diversification has to justify itself purely on capital allocation and portfolio management skill, which is a much higher bar and one most companies fail.",
+          "Related diversification tends to create more value because the parent brings something the new business actually needs; unrelated diversification has to justify itself purely on capital allocation and portfolio discipline, which is a much higher bar and one most companies fail. The parenting test also runs in reverse, which is the part candidates miss: if another owner would add more value to a unit than you do, the value-maximising move is to sell it. That is why divestiture is a strategic act rather than an admission of failure, and being willing to say so out loud reads as commercial maturity.",
         example:
-          "Disney moving from animated films into theme parks, merchandise, and streaming is related diversification — each leg reinforces the same IP and brand. A random industrial conglomerate buying an unrelated insurance business is unrelated diversification, and has to be justified purely on financial discipline (as Berkshire Hathaway does).",
+          "Disney moving from animated films into theme parks, merchandise, and streaming is related diversification — each leg monetises the same intellectual property and each reinforces the others' demand. Berkshire Hathaway is the rarer unrelated case that works, and it works through a specific mechanism: low-cost float from insurance deployed by a centre with genuine capital-allocation skill and almost no corporate overhead. Most conglomerates have neither, which is why they trade at a discount to the sum of their parts.",
+        sections: [
+          {
+            heading: "The three tests before diversifying",
+            body:
+              "Porter's classic screen is still the most useful checklist, and it is easy to recall under pressure. The attractiveness test: is the target industry structurally profitable, or could it be made so by entry? The cost-of-entry test: does the price of entry — the acquisition premium or the cost of building from scratch — consume the future profits you are buying? Note that an efficient market for corporate control tends to price attractive industries fully, so this test kills more deals than the first. And the better-off test: will either the new unit or the existing business be measurably better off for the combination, through a specific shared activity, transferred skill, or shared cost? If the only answer to the third test is diversification of earnings, recall that shareholders can diversify far more cheaply by holding a portfolio, and doing it for them destroys value rather than creating it.",
+          },
+          {
+            heading: "Where the synergy actually comes from, and the discount",
+            body:
+              "Synergy is a word that survives in decks long after the mechanism behind it has died, so insist on naming the mechanism. Shared activities, where two units genuinely use the same plant, sales force, or platform, produce cost savings that can be estimated line by line. Transferred skills, where a capability moves from one unit to another, are real but slower and depend on people moving. Financial synergies, such as internal capital markets, matter mainly where external capital markets are weak, which is why conglomerates remain more successful in some emerging economies than in deep capital markets. Against these sits the conglomerate discount: the empirical tendency for diversified firms to trade below the sum of their parts, attributed to cross-subsidisation of weak units, opacity to investors, and internal politics in capital allocation. A strong answer prices both sides rather than asserting synergy and stopping.",
+          },
+        ],
+        keyTerms: [
+          { term: "Parenting advantage", definition: "The requirement that the corporate centre add more value to a business than any alternative owner would, net of its own cost." },
+          { term: "Conglomerate discount", definition: "The tendency of diversified firms to be valued below the summed value of their businesses as standalone entities." },
+          { term: "Better-off test", definition: "Porter's requirement that either the new unit or an existing one gain measurable competitive advantage from the combination, not merely that both be owned together." },
+        ],
+        pitfalls: [
+          {
+            mistake: "Justifying an acquisition with 'it diversifies our revenue base' or 'it's adjacent to our core.'",
+            instead:
+              "Name the shared activity or transferred capability, estimate its value, and subtract the acquisition premium. Adjacency is a hypothesis about where synergy might exist, not evidence that it does.",
+          },
+        ],
       },
       {
         id: "strat-build-buy-partner",
         title: "Build vs. buy vs. partner",
         explanation:
-          "When a company needs a new capability, it has three basic options: build it internally, acquire a company that already has it, or partner/license/joint-venture with someone who has it. The right choice depends on speed needed, how core the capability is to long-term advantage, and whether a suitable target or partner even exists.",
+          "When a company needs a new capability it has three basic options: build it internally, acquire a company that already has it, or partner, license, or joint-venture with someone who has it. The choice turns on how core the capability is to long-term advantage, how fast the window is closing, whether a suitable target or partner exists at a sane price, and — the dimension most often skipped — how badly a failure of the arrangement would hurt, which is the transaction-cost question of what happens when interests diverge after the contract is signed.",
         whyItMatters:
-          "Getting this wrong is expensive in a specific way: building something you should have bought wastes years you didn't have; buying something you should have built means you never really own the capability and pay a premium for it besides.",
+          "Getting this wrong is expensive in a specific way. Building something you should have bought wastes years you did not have and usually ends with an inferior internal version defended by the people who built it. Buying something you should have built means paying a premium for a capability you never truly absorb, because the people who embodied it leave within two years. Partnering for something core means your advantage sits on someone else's roadmap and can be repriced at renewal. Interviewers like this question because it has no universal answer and therefore reveals how a candidate reasons under trade-offs.",
         example:
-          "A bank wanting AI capability might buy a fintech startup (buy — faster, but expensive and risks integration failure), build an internal data science team (build — slower, but the capability becomes truly owned), or license a vendor's model (partner — fastest, but creates dependency).",
+          "A bank wanting a machine-learning capability can buy a fintech — fast, but it pays a premium and most of the value walks out if the founders leave; build an internal data-science group — slow and initially worse, but the capability becomes genuinely owned and compounds; or license a vendor model — fastest and cheapest today, but it creates dependency on a supplier who serves competitors equally well, which means the capability cannot be a source of differentiation for anyone who buys it.",
+        sections: [
+          {
+            heading: "A decision rule you can defend out loud",
+            body:
+              "Sequence the questions rather than weighing everything at once. First: is this capability a source of competitive advantage, or is it table stakes? If a competitor can buy the same thing from the same vendor, it cannot differentiate you, and buying it externally is usually correct — spending internal engineering on undifferentiated work is a real cost. Second, if it is advantage-bearing: how fast is the window closing relative to the time to build? Building is generally superior for advantage-bearing capabilities because the learning stays in-house and compounds, but only if you will still be relevant when it is ready. Third, if you must move faster than you can build: is there a target whose value survives integration? Capability acquisitions fail when the capability lives in people who are now wealthy and no longer need the job, so ask what specifically retains them. Fourth: if you partner, what is the exit? Assume renewal is a renegotiation in which your dependency is known to the counterparty, and price that in now.",
+          },
+          {
+            heading: "The hollowing-out risk",
+            body:
+              "The most consequential long-run error in this decision is outsourcing something that looks like a component today but turns out to be the locus of future advantage. The pattern is well documented in electronics manufacturing, where firms outsourced assembly, then subassembly, then design-for-manufacture, and discovered several steps later that their supplier had accumulated the capability to compete with them directly and they no longer had the engineering depth to respond. The defence is to ask not only whether an activity is core today, but whether the learning generated by performing it is on the path to where advantage is moving. This is where build-versus-buy connects back to dynamic capabilities: outsourcing a capability also outsources the learning that capability would have produced.",
+          },
+        ],
+        keyTerms: [
+          { term: "Acqui-hire", definition: "An acquisition made principally for the target's team rather than its product or revenue, which stands or falls on retention terms." },
+          { term: "Asset specificity", definition: "The degree to which an investment is worth less outside a particular relationship; high specificity favours ownership over contracting because it creates hold-up risk." },
+          { term: "Hold-up", definition: "A counterparty exploiting your dependence after you have made a specific investment, typically at renewal, when your alternatives are worse than they were at signing." },
+        ],
+        pitfalls: [
+          {
+            mistake: "Deciding on speed and cost alone.",
+            instead:
+              "Add the two questions that dominate long-run outcomes: does this capability differentiate us, and who accumulates the learning? Those determine whether you still have an advantage in five years, which is the horizon the question is actually about.",
+          },
+        ],
       },
       {
         id: "strat-blue-ocean-value-innovation",
-        title: "Blue ocean strategy / value innovation",
+        title: "Blue ocean strategy and value innovation",
         explanation:
-          "Instead of competing head-on in an existing market ('red ocean,' bloody from competition), a company can create uncontested market space [4] by simultaneously pursuing differentiation and low cost — dropping some factors the industry competes on entirely while raising or creating others customers actually value.",
+          "Instead of competing head-on in an existing market ('red ocean,' bloody from competition), a company can create uncontested market space [4] by simultaneously pursuing differentiation and low cost — eliminating and reducing some factors the industry competes on while raising others and creating factors the industry has never offered. The operational tool is the four actions framework: eliminate, reduce, raise, create, applied to the industry's own list of competitive factors.",
         whyItMatters:
-          "It reframes strategy as not always a zero-sum fight against named rivals — sometimes the better move is redefining what's being competed on at all, which sidesteps the Five Forces pressures of an existing industry rather than fighting through them.",
+          "It reframes strategy as not always a zero-sum fight against named rivals — sometimes the better move is redefining what is being competed on at all, which sidesteps the Five Forces pressures of an existing industry rather than fighting through them. It is also the most direct challenge to the trade-off logic of generic strategies, and being able to hold both ideas at once, rather than treating them as rival religions, is a sign of genuine fluency.",
         example:
-          "Cirque du Soleil dropped expensive elements of traditional circus (star performers, animal acts) that customers valued less, while adding theatrical elements from live theater — creating a new category rather than out-competing Ringling Bros. on their own terms.",
+          "Cirque du Soleil eliminated the most expensive elements of traditional circus — animal acts, star performers, multiple simultaneous rings — while raising production values and creating a theatrical narrative and an adult, premium-priced audience. The eliminations funded the additions, which is the mechanism that lets cost fall and willingness to pay rise at the same time. The company competed with neither circuses nor theatres directly, drawing demand from both.",
+        sections: [
+          {
+            heading: "How the cost and value curves move together",
+            body:
+              "The claim that you can raise value and cut cost simultaneously is only coherent because of the eliminations, and this is the part to say explicitly. Industries accumulate competitive factors through decades of matching each other, and many of those factors persist because rivals have them rather than because customers value them. Animal acts were expensive, increasingly unpopular, and had become a cost of membership in the category rather than a source of demand. Removing them released the funding for the elements that actually raised willingness to pay. Map this using a strategy canvas: plot the industry's competitive factors on the horizontal axis and the offering level on the vertical, draw the curve for the major competitors, and note how similar the curves are. A blue-ocean move is visible as a curve with a genuinely different shape rather than the same shape shifted up.",
+          },
+          {
+            heading: "The honest critique",
+            body:
+              "You should be able to voice the standard objections. The theory is substantially built on retrospective case selection, so the sample contains successes and the base rate of failed category-creation attempts is unobserved — survivorship bias in its purest form. It also says relatively little about defensibility: creating a new market is not the same as keeping it, and if the new space is attractive and imitable, the ocean turns red quickly, which returns you to the moats concept. And many cited examples are arguably strong differentiation strategies relabelled, since Cirque du Soleil does charge a premium. The defensible position is that the four actions framework is a genuinely useful generative tool for escaping an industry's inherited assumptions, and that the durability question has to be answered separately with the mechanisms from the moats concept.",
+          },
+        ],
+        keyTerms: [
+          { term: "Strategy canvas", definition: "A chart plotting competitive factors against offering level, used to show how similar rivals' value curves are and where a differently shaped curve is possible." },
+          { term: "Four actions framework", definition: "Eliminate, reduce, raise, create — applied to an industry's competitive factors to break the cost-value trade-off." },
+          { term: "Noncustomers", definition: "People the industry currently does not serve, whose reasons for abstaining often point to the factors worth eliminating or creating." },
+        ],
+        pitfalls: [
+          {
+            mistake: "Proposing a blue ocean move without saying what gets eliminated.",
+            instead:
+              "Name the eliminations first and show that they fund the additions. Without them the proposal is simply 'add more features at lower cost', which is not a strategy but a wish.",
+          },
+        ],
       },
       {
         id: "strat-disruption-theory",
         title: "Disruptive innovation",
         explanation:
-          "Clayton Christensen's theory [5]: disruptors don't usually beat incumbents by being better at what incumbents already do well — they enter at the bottom of the market (or a new market entirely) with a product that's worse on the traditional metrics but cheaper, simpler, or more accessible, then improve until it's good enough for the mainstream.",
+          "Clayton Christensen's theory [5][15]: disruptors usually do not beat incumbents by being better at what incumbents already do well. They enter at the bottom of the market, or in a new market of noncustomers, with an offering that is worse on the metrics established customers care about but is cheaper, simpler, or more accessible — then improve along that trajectory until it is good enough for the mainstream. The incumbent's failure is not incompetence but the rational application of its own resource-allocation process.",
         whyItMatters:
-          "It explains why well-run incumbents get blindsided: they rationally ignore the disruptor because it looks inferior and unprofitable by their own current customers' standards — right up until it isn't. Knowing this pattern is the main defense against it.",
+          "It explains why well-run incumbents get blindsided: their best customers do not want the new thing, its margins are worse than the business they already have, and the market is too small to matter to a large company's growth. Every one of those is a good reason to decline, right up until it is not. Knowing the pattern is the main defence — and knowing the precise definition is also how you avoid the most common misuse, because interviewers notice when 'disruptive' is used to mean merely 'new and successful'.",
         example:
-          "Early digital cameras were far worse than film cameras on image quality — Kodak's own engineers invented the technology and its own best customers didn't want it. By the time digital was 'good enough,' it had displaced film entirely.",
+          "Early digital cameras were far worse than film on image quality, and Kodak's own engineers invented the technology while its own best customers did not want it. The company's processes correctly judged that digital had lower margins than film and chemicals and served a market too small to move its numbers. By the time digital was good enough, the trajectory had crossed mainstream requirements and the film business it was protecting no longer existed.",
+        sections: [
+          {
+            heading: "The mechanism: trajectories and resource allocation",
+            body:
+              "Two curves drive the theory. The first is the pace of technological improvement, which in most industries outruns the second, the pace at which mainstream customers can absorb improvement. Incumbents compete by sustaining innovation aimed at their most demanding and profitable customers, which eventually overshoots what the middle of the market needs and creates room underneath. A disruptor enters that space with a simpler offering on a steeper improvement trajectory. The deeper insight is organisational: the incumbent's inability to respond is produced by processes that work correctly. Resource allocation favours projects with higher margins and larger addressable markets, because that is what it was designed to do, and a disruptive project loses every internal funding contest on the merits as the firm defines merit. This is why Christensen's prescription is structural — an autonomous unit with its own cost structure and its own definition of a good customer — rather than exhortation to be more visionary.",
+          },
+          {
+            heading: "Using the term precisely",
+            body:
+              "Disruption in this technical sense requires a specific entry pattern: a foothold in low-end or new-market segments, an initially inferior performance on mainstream metrics, and an improvement trajectory that eventually meets mainstream needs. Many celebrated innovations are not disruptive by this test, and saying so accurately is a credibility marker. The iPhone entered at the top of the market as a premium product superior on the dimensions buyers cared about; that is sustaining innovation relative to phones, though it is arguably disruptive relative to laptops by opening internet access to new-market use. Uber is contested for a similar reason: it did not enter below the taxi market on quality. Tesla entered at the very top with the Roadster. None of this makes those companies less successful; it makes them examples of something other than disruption, and the point of a theory is that it excludes cases.",
+          },
+        ],
+        keyTerms: [
+          { term: "Sustaining innovation", definition: "An improvement aimed at existing demanding customers along the metrics they already value; incumbents usually win these contests." },
+          { term: "Performance overshoot", definition: "The condition where product improvement has outrun what mainstream customers can use, opening room beneath the incumbent for a simpler entrant." },
+          { term: "Resource dependence", definition: "The tendency of a firm's investment decisions to be governed by its existing customers and cost structure, which is what makes the incumbent's failure systematic rather than accidental." },
+        ],
+        pitfalls: [
+          {
+            mistake: "Calling any successful new entrant 'disruptive.'",
+            instead:
+              "Apply the test — did it enter below the market or among noncustomers, on an inferior-but-improving trajectory? If not, say so and name what it actually is. Precision here is a fast credibility signal, and the wrong diagnosis leads to the wrong defensive response.",
+          },
+        ],
+      },
+      {
+        id: "strat-uncertainty-commitment",
+        title: "Strategy under uncertainty and the role of commitment",
+        explanation:
+          "Not all uncertainty is the same, and the useful distinction [11] runs across four levels: a clear enough future, where a single forecast is adequate; alternate futures, a discrete set of outcomes such as a pending regulatory decision; a range of futures, a continuous band with no natural scenarios; and true ambiguity, where even the variables are unknown. The level determines the toolkit. Against this sits Ghemawat's argument [8] that strategy is fundamentally about commitment — a few irreversible, resource-intensive choices that cannot be unwound, which is precisely what makes them capable of creating advantage.",
+        whyItMatters:
+          "Candidates tend to have one default mode, either forecasting everything or refusing to commit to anything, and both are wrong most of the time. Matching the response to the level of uncertainty is the skill. It also resolves an apparent contradiction that interviewers like to probe: if the future is uncertain, why commit? Because reversible choices are available to everyone and therefore earn nothing. Commitment is costly exactly because it forecloses options, and that cost is what makes the resulting position defensible.",
+        example:
+          "A pharmaceutical firm awaiting a binary regulatory decision faces level-two uncertainty, so it builds two full strategies and identifies the latest point at which it must choose between them. A firm entering a market whose size could be anything within a wide band faces level three, so it takes a staged position — a small plant with expansion rights, an option to acquire rather than an acquisition — and specifies in advance the observable signal that would trigger scaling up.",
+        sections: [
+          {
+            heading: "Big bets, options, and no-regret moves",
+            body:
+              "Within any level of uncertainty, actions sort into three kinds, and a good strategy usually holds a deliberate portfolio of all three. No-regret moves pay off across every scenario — cost reductions that do not foreclose anything, capability building that is useful either way — and should simply be executed. Options are small investments now that buy the right, but not the obligation, to scale later: a minority stake, a pilot, a licence with an acquisition clause, a plant site purchased but not built on. Big bets are large committed investments that pay off in some scenarios and lose badly in others. The discipline is to be explicit about which category each initiative falls into, because the standard organisational pathology is a portfolio of medium-sized half-commitments that are too large to be options and too small to win if the bet is right. A sharpened version of the same idea is to ask what would have to be true for this bet to pay off, then test those specific beliefs rather than arguing about the conclusion.",
+          },
+          {
+            heading: "Why irreversibility is the source of advantage",
+            body:
+              "Ghemawat's insight is that sustainable differences between firms come from a small number of lumpy, irreversible, hard-to-imitate commitments — a plant, a network, a technology platform, a market position — rather than from the flow of day-to-day decisions. The logic is close to the logic of trade-offs in the generic-strategies concept: a choice a competitor could costlessly match cannot be a source of advantage, so the very reversibility that makes a decision feel safe also makes it strategically inert. This gives you a clean way to talk about risk in an interview. The question is never simply whether to commit, but whether you have identified the smallest set of commitments that produce the advantage, staged them so that information arrives before the largest irreversible outlay, and kept everything else flexible. Committing to everything is recklessness and committing to nothing is drift; strategy is knowing which few things to be inflexible about.",
+          },
+        ],
+        keyTerms: [
+          { term: "Real option", definition: "An investment that buys the right but not the obligation to act later, valuable precisely in proportion to the uncertainty it defers." },
+          { term: "No-regret move", definition: "An action that pays off under every scenario considered, and therefore requires no resolution of the uncertainty before proceeding." },
+          { term: "Commitment", definition: "An irreversible allocation of resources that forecloses alternatives; costly by construction, which is why it can sustain an advantage rivals cannot cheaply copy." },
+        ],
+        pitfalls: [
+          {
+            mistake: "Answering an uncertain question with 'it depends' and a list of considerations.",
+            instead:
+              "Name the level of uncertainty, say which few things you would commit to now and why, and state the signal that would trigger the next commitment. A conditional plan is a decision; a list of considerations is not.",
+          },
+        ],
+      },
+      {
+        id: "strat-execution",
+        title: "From strategy to resource allocation",
+        explanation:
+          "A strategy exists only to the extent that money, people, and management attention move differently because of it. The recurring finding in work on the strategy-to-performance gap [18] is that companies typically deliver well under the financial performance their strategic plans promise, and that the losses come less from bad strategies than from a chain of ordinary failures: resources not shifted, plans not translated into commitments anyone owns, performance not tracked against the strategy's own assumptions, and no feedback when those assumptions turn out to be wrong.",
+        whyItMatters:
+          "Interviewers increasingly test this because it is where most real strategic work actually happens, and because it is the fastest way to tell whether a candidate has ever seen a plan meet an organisation. The single most diagnostic fact about a company's strategy is not its deck but its capital allocation: where the incremental budget, the best people, and the chief executive's calendar go. If those look identical to last year, the strategy has not happened, whatever was approved.",
+        example:
+          "A company announcing a shift from hardware to services while leaving the sales force compensated on hardware units, the research budget allocated by historical share, and the promotion path running through the hardware division has not shifted. The organisation will faithfully execute the old strategy, and it will be right to, because every internal signal it receives still rewards it.",
+        sections: [
+          {
+            heading: "The mechanisms that make a strategy bind",
+            body:
+              "Four mechanisms convert intent into behaviour, and you should be able to name them. Capital and headcount reallocation: the empirical evidence is that firms which reallocate meaningfully between business units across cycles outperform those whose allocations are stable, because stable allocation usually reflects internal politics rather than opportunity. Translating the strategy into a small number of owned commitments with dates and named individuals, rather than themes. Instrumenting the strategy's assumptions rather than only its outcomes: if the plan assumes attach rates rise to a certain level, that is the leading indicator to watch, because outcome metrics arrive too late to act on. And incentives, including the promotion path, which is the loudest signal an organisation receives about what actually matters. When a candidate is asked why a sound strategy failed, running these four is a far stronger answer than 'poor execution', which names the symptom rather than the cause.",
+          },
+          {
+            heading: "Emergent strategy and the limits of planning",
+            body:
+              "Mintzberg's distinction between deliberate and emergent strategy is the necessary counterweight to everything above. Realised strategy is the sum of what was intended and carried out plus what emerged from decisions made on the ground in response to conditions nobody planned for. Some intended strategy is never realised, and some of the most valuable positions a firm holds were discovered rather than designed. The managerial implication is not to abandon planning but to build in a mechanism that notices when reality is diverging from the plan in a promising direction and reallocates toward it, rather than treating divergence purely as non-compliance. This is the organisational expression of dynamic capabilities, and it closes the loop back to the kernel: an emergent discovery is new information about the diagnosis, and a strategy that cannot revise its diagnosis has stopped being a strategy and become a budget.",
+          },
+        ],
+        keyTerms: [
+          { term: "Strategy-to-performance gap", definition: "The shortfall between the results a strategic plan promises and those actually delivered, traceable to specific breakdowns in resource allocation and tracking rather than to strategy quality alone." },
+          { term: "Emergent strategy", definition: "A pattern of action realised without having been intended, arising from decisions made in response to conditions on the ground." },
+          { term: "Resource reallocation", definition: "The movement of capital and talent between units over time; the most reliable observable evidence that a strategy is real." },
+        ],
+        pitfalls: [
+          {
+            mistake: "Attributing failure to 'poor execution' and leaving it there.",
+            instead:
+              "Point to the specific mechanism that did not bind — the budget that never moved, the incentive that still rewarded the old behaviour, the assumption nobody was measuring. 'Poor execution' names the symptom; interviewers are listening for the cause.",
+          },
+        ],
       },
     ],
     connections:
-      "These fit together as a sequence, not a menu: Five Forces tells you whether the industry is worth competing in at all; generic strategy tells you how you'll compete within it; the resource-based view checks whether you actually have (or can build) what that requires; and diversification, build-vs-buy, blue ocean, and disruption theory are all different answers to the same underlying question — how do you get or defend an advantage the forces and your competitors can't easily erode.",
+      "These fit together as a chain of questions, not a menu of tools. The kernel establishes what you are even producing: a diagnosis, a guiding policy, coherent action. Five Forces and the value stick answer where profit exists and how it gets divided — the forces explain the split, the stick explains the size. Generic strategies and the moats concept answer how you claim a share of it and why competition will not take it back, with the resource-based view supplying the internal half of that answer where the forces supply the external half. Corporate strategy and build-versus-buy scale the same logic up from one business to a portfolio and out to the boundary of the firm. Blue ocean and disruption are both arguments that the competitive frame itself can be changed rather than fought within, from opposite directions — one by redefining the factors competed on, the other by entering beneath them. Uncertainty and commitment tell you how much to bet and when, and execution determines whether any of it becomes real. If you can only keep one thread: every framework here is ultimately answering either 'is there value' or 'can we keep it', and a strong answer always addresses both.",
+    drills: [
+      {
+        question:
+          "A private-equity client is considering buying a European commercial laundry business serving hotels. The industry grows at roughly GDP, has fifteen regional competitors, and the target has a twelve percent operating margin against an industry average of seven. Would you recommend the investment?",
+        modelAnswer:
+          "Start with the diagnosis rather than the deal. The question that decides this is why the target earns five points more than the industry, and whether that gap is structural or temporary. Structure first: commercial laundry is capital-intensive with meaningful regional density economies, because route density drives collection and delivery cost per kilogram. So the relevant market is not Europe but each metropolitan catchment, and share within catchment is the number that matters. Buyer power is the main threat — hotel chains procure centrally and can tender — but switching has real friction because linen quality and reliability affect the hotel's own product. Then test the margin gap against the moat mechanisms: if it comes from density in catchments where the target is the clear leader, it is scale and it should persist and can be replicated by tuck-in acquisitions, which is a thesis. If it comes from a few long contracts signed at favourable terms, it is a timing artefact and will compress at renewal. If it comes from deferred maintenance on plant, it is borrowed from the future and shows up in capital expenditure. I would ask for margin decomposed by catchment against share in that catchment: a strong positive relationship supports the density thesis and implies a buy-and-build strategy; a flat relationship means the advantage is elsewhere and probably contractual. On the cost-of-entry test, an efficient auction will price a visible margin advantage fully, so my recommendation would be conditional — yes if we have a specific reason to believe we can add catchment density that the seller could not, and no if we are simply paying for a margin someone else already created.",
+      },
+      {
+        question:
+          "You advise a legacy enterprise software firm. A venture-backed startup is offering a product with roughly sixty percent of your functionality at a quarter of your price, and is winning small customers you have never served. Your largest accounts say they would never switch. How do you respond?",
+        modelAnswer:
+          "This matches the disruption pattern closely enough that I would treat it as disruption until shown otherwise: entry below the market, inferior on the metrics established customers use, winning noncustomers, and reassuring feedback from the accounts most invested in the status quo. The key analysis is trajectory, not position. I would plot the startup's functionality gains per release against the functionality our mid-market segment actually uses — not what the top decile demands — and estimate when those lines cross. If that is two years out, this is urgent; if it is eight, it is a watch item. The second analysis is our own cost structure, because the reason incumbents cannot respond is rarely technical. If our field sales and implementation model requires a large contract value to break even, we cannot profitably serve the segment the startup is taking, and any response routed through the existing business will be starved in budgeting on entirely rational grounds. So the structural response matters more than the product response: a separate unit, with its own cost structure, its own definition of an attractive customer, and protection from the core organisation's allocation process. I would resist the two instinctive moves. Adding features accelerates overshoot and widens the opening. Cutting price across the board destroys the profit pool funding everything while still leaving us above the entrant. The one question I would want answered before committing is whether the startup's economics actually work at its price point or are venture-subsidised, because those imply very different time horizons — and I would look at their gross margin and implementation cost per customer rather than their growth rate.",
+      },
+      {
+        question:
+          "A profitable regional grocery chain's board wants to enter meal-kit delivery, arguing it is adjacent to the core and diversifies revenue. Evaluate the proposal.",
+        modelAnswer:
+          "I would run Porter's three tests and say plainly that adjacency is a hypothesis about synergy rather than evidence of it. Attractiveness: meal kits have had structurally poor economics — low barriers to entry, high customer acquisition cost against high churn, perishable inventory, and a substitute in the form of both groceries and restaurant delivery. Absent a specific reason we would change that structure, this is a difficult industry to enter, not an attractive one. Cost of entry: if we build, the cost is customer acquisition in a market where paid acquisition is expensive and repeat rates are weak; if we buy, we pay a premium for someone else's subscriber base and inherit their churn. Better-off test: this is where the proposal has to be won or lost, and I would press hard on the mechanism. Shared purchasing is plausible but small, because meal-kit volumes are trivial against grocery volumes and the assortment differs. Shared distribution is largely illusory, since our network runs pallets to stores while meal kits need chilled parcels to homes — that is a different asset, not a shared one. Brand transfers partially. So the honest answer is that the better-off test is weak, and the diversification argument is the weakest of all, because shareholders can diversify more cheaply themselves. My counter-proposal would be to ask what problem the board is actually solving. If it is stagnant like-for-like growth, prepared foods in-store uses the assets we genuinely have, faces far lower acquisition cost since the customer is already in the building, and is testable in a handful of stores for a fraction of the committed capital. That is a real option rather than a big bet, and it produces information about the same underlying demand.",
+      },
+      {
+        question:
+          "Your firm and its main competitor have nearly identical value curves and have been matching each other's moves for a decade. Margins have fallen every year. What would you do?",
+        modelAnswer:
+          "The diagnosis is that we are competing on operational effectiveness rather than strategy, so every improvement either of us makes is matched and the gains pass to customers. That is the mechanism behind the margin decline, and it will continue indefinitely because nothing about matching creates a trade-off a rival must accept. Convergence is the crux, and the strategic response has to be to introduce a genuine trade-off rather than to run the same race harder. I would use a strategy canvas on both firms and expect the curves to be nearly superimposed, then interrogate each competitive factor with two questions: do customers actually value this, and is it here because they value it or because our rival has it? Factors that fail both are elimination candidates, and the eliminations are what fund a differently shaped curve rather than a uniformly higher one — the point is a different shape, because a higher curve is just more cost. In parallel I would segment by profitability, because convergent competition usually means both firms are serving an average customer well and no specific customer excellently, which typically leaves an underserved segment at one end and an overserved one at the other. The test I would apply to any proposal is the trade-off test: if our competitor could adopt this tomorrow without giving anything up, it is not a strategy and we will be back here in two years. And I would be explicit with the board that the credible options include focusing on a narrower segment and deliberately losing revenue in the segments we exit, because the alternative to accepting a trade-off is continuing the current decline.",
+      },
+    ],
     source: "claude",
-    generatedAt: "2026-09-09",
+    generatedAt: "2026-09-19",
     sources: [
       { id: 1, title: "Competitive Strategy: Techniques for Analyzing Industries and Competitors", author: "Porter, M. E.", year: "1980" },
       { id: 2, title: "Competitive Advantage: Creating and Sustaining Superior Performance", author: "Porter, M. E.", year: "1985" },
       { id: 3, title: "Firm Resources and Sustained Competitive Advantage", author: "Barney, J.", year: "1991" },
       { id: 4, title: "Blue Ocean Strategy", author: "Kim, W. C., & Mauborgne, R.", year: "2005" },
       { id: 5, title: "The Innovator's Dilemma", author: "Christensen, C. M.", year: "1997" },
+      { id: 6, title: "Good Strategy / Bad Strategy: The Difference and Why It Matters", author: "Rumelt, R. P.", year: "2011" },
+      { id: 7, title: "Value-Based Business Strategy", author: "Brandenburger, A. M., & Stuart, H. W.", year: "1996" },
+      { id: 8, title: "Commitment: The Dynamic of Strategy", author: "Ghemawat, P.", year: "1991" },
+      { id: 9, title: "Dynamic Capabilities and Strategic Management", author: "Teece, D. J., Pisano, G., & Shuen, A.", year: "1997" },
+      { id: 10, title: "Corporate-Level Strategy: Creating Value in the Multibusiness Company", author: "Goold, M., Campbell, A., & Alexander, M.", year: "1994" },
+      { id: 11, title: "Strategy Under Uncertainty (Harvard Business Review)", author: "Courtney, H., Kirkland, J., & Viguerie, P.", year: "1997" },
+      { id: 12, title: "What Is Strategy? (Harvard Business Review)", author: "Porter, M. E.", year: "1996" },
+      { id: 13, title: "A Resource-Based View of the Firm", author: "Wernerfelt, B.", year: "1984" },
+      { id: 14, title: "Corporate Strategy: Resources and the Scope of the Firm", author: "Collis, D. J., & Montgomery, C. A.", year: "1997" },
+      { id: 15, title: "The Innovator's Solution: Creating and Sustaining Successful Growth", author: "Christensen, C. M., & Raynor, M. E.", year: "2003" },
+      { id: 16, title: "The Experience Curve Reviewed (BCG Perspectives)", author: "Henderson, B. D.", year: "1973" },
+      { id: 17, title: "Information Rules: A Strategic Guide to the Network Economy", author: "Shapiro, C., & Varian, H. R.", year: "1999" },
+      { id: 18, title: "Turning Great Strategy into Great Performance (Harvard Business Review)", author: "Mankins, M. C., & Steele, R.", year: "2005" },
     ],
   },
 
