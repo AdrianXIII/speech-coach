@@ -48,6 +48,18 @@ function loadVoices(): Promise<SpeechSynthesisVoice[]> {
 }
 
 /**
+ * Teaching content carries inline "[N]" citation markers tying a claim to the
+ * category's bibliography (see TeachingSource in lib/tutorTeachingContent.ts).
+ * They're there to be read on screen and in the PDF, never heard: voices
+ * handle them inconsistently, and at best they interrupt a sentence with a
+ * number. Stripped here rather than at each call site so every spoken string
+ * in the app is covered by construction.
+ */
+function stripCitationMarkers(text: string): string {
+  return text.replace(/\s*\[\d+\]/g, "");
+}
+
+/**
  * Picks the most natural-sounding available voice for a language. Browsers
  * ship several voices per language, and the one used by default is often
  * the flattest, most robotic-sounding local/compact one — network-backed
@@ -108,7 +120,7 @@ export function useSpeechSynthesis(lang = "en-US"): UseSpeechSynthesisResult {
       }
       window.speechSynthesis.cancel();
 
-      const utterance = new SpeechSynthesisUtterance(text);
+      const utterance = new SpeechSynthesisUtterance(stripCitationMarkers(text));
       utterance.lang = lang;
       // Slightly slower than the default 1.0 — reads as a bit more
       // deliberate and human, less like a flat text-to-speech readout.
