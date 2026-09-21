@@ -11,7 +11,7 @@ covering Business/Law/Politics domain knowledge.
 The nav bar groups features by what they actually train, not a flat list —
 see `lib/navTranslations.ts`'s `NAV_GROUPS`:
 
-- **Delivery Practice** — Record & Analyze, 60s Improv: free-form or
+- **Presentation Skills** — Record & Analyze, 60s Improv: free-form or
   spontaneous speaking, graded on delivery.
 - **Micro-Drills** — Pronunciation, Contrastive Stress, Elite Phrasing:
   short, single-utterance exercises, each isolating one specific verbal

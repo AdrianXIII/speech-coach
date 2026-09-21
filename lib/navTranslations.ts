@@ -14,7 +14,7 @@ export interface NavGroup {
  * The nav is grouped by what each feature actually trains, not listed flat —
  * see the app-structure review this grouping came out of. Four groups:
  *
- * - Delivery practice: free-form speaking, graded on pace/filler words/
+ * - Presentation Skills: free-form speaking, graded on pace/filler words/
  *   delivery (or spontaneous fluency under a time limit for Improv).
  * - Micro-drills: short, targeted single-utterance exercises, each
  *   isolating one specific verbal skill (pronunciation, stress, phrasing).
@@ -28,11 +28,11 @@ export interface NavGroup {
 export const NAV_GROUPS: NavGroup[] = [
   {
     label: {
-      en: "Delivery Practice",
-      de: "Sprechtraining",
-      fr: "Entraînement à l'expression orale",
-      es: "Práctica de expresión oral",
-      sv: "Talträning",
+      en: "Presentation Skills",
+      de: "Präsentationsfähigkeiten",
+      fr: "Compétences de présentation",
+      es: "Habilidades de presentación",
+      sv: "Presentationsfärdigheter",
     },
     links: [
       {
