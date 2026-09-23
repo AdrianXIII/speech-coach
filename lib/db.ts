@@ -133,14 +133,21 @@ function ensureSchema(sql: ReturnType<typeof postgres>): Promise<void> {
       -- rows backfill to slot 0 via the column default, so nothing is lost.
       -- ADD CONSTRAINT has no IF NOT EXISTS in Postgres, and this whole block
       -- re-runs on every cold start, so the DO block is required to keep
-      -- ensureSchema() idempotent past the first run.
+      -- ensureSchema() idempotent past the first run. A named UNIQUE
+      -- constraint creates a backing index of the same name, and Postgres
+      -- raises that specific "already exists" case as duplicate_table
+      -- (42P07), not duplicate_object (42710) — catching only the latter
+      -- (as an earlier version of this migration did) let the error escape
+      -- on the second-and-later cold start, permanently breaking every
+      -- query on that Lambda instance since ensureSchema() caches the
+      -- rejected promise. Both must be caught.
       ALTER TABLE comprehension_news_cache ADD COLUMN IF NOT EXISTS slot INTEGER NOT NULL DEFAULT 0;
       ALTER TABLE comprehension_news_cache DROP CONSTRAINT IF EXISTS comprehension_news_cache_topic_language_key;
 
       DO $$ BEGIN
         ALTER TABLE comprehension_news_cache
           ADD CONSTRAINT comprehension_news_cache_topic_language_slot_key UNIQUE (topic, language, slot);
-      EXCEPTION WHEN duplicate_object THEN NULL;
+      EXCEPTION WHEN duplicate_object OR duplicate_table THEN NULL;
       END $$;
     `).then(() => undefined);
   }
