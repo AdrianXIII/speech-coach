@@ -49,6 +49,7 @@ export async function POST(req: NextRequest) {
         strengths: analysis.strengths,
         tips: analysis.tips,
       },
+      mispronouncedWords: analysis.mispronouncedWords,
       mocked: analysis.mocked,
     };
 

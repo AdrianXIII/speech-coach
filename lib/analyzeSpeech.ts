@@ -1,11 +1,18 @@
 import { generateContent, hasGeminiKey } from "@/lib/gemini";
 import { analyzeSpeechMetrics, type SpeechMetrics } from "@/lib/speechMetrics";
 
+export interface MispronouncedWord {
+  word: string;
+  /** What was off, and how to say it correctly — one short sentence. */
+  note: string;
+}
+
 export interface SpeechAnalysisResult {
   transcript: string;
   metrics: SpeechMetrics;
   strengths: string[]; // exactly 3
   tips: string[]; // exactly 3
+  mispronouncedWords: MispronouncedWord[]; // 0-5
   mocked: boolean;
 }
 
@@ -22,16 +29,20 @@ Step 1: Transcribe it exactly word-for-word, in the language spoken (ignore any 
 
 Step 2: Using that transcript, analyze their delivery and respond with specific, constructive, encouraging feedback grounded in what's actually in the transcript and how it's paced — not generic advice that could apply to anyone.
 
+Step 3: Listen specifically for pronunciation, separately from content or delivery — words where the articulation itself was unclear, a sound was substituted or dropped, or stress fell on the wrong syllable. Pick out at most 5 of the clearest examples actually audible in the recording (never guess from spelling alone). If pronunciation was generally clear, return fewer, or none — do not invent problems to fill 5 slots.
+
 Respond with a JSON object matching exactly this shape:
 {
   "transcript": "<verbatim transcript>",
   "strengths": ["<strength 1>", "<strength 2>", "<strength 3>"],
-  "tips": ["<actionable tip 1>", "<actionable tip 2>", "<actionable tip 3>"]
+  "tips": ["<actionable tip 1>", "<actionable tip 2>", "<actionable tip 3>"],
+  "mispronouncedWords": [{"word": "<the word as said>", "note": "<what was off and how to say it correctly, one short sentence>"}]
 }
 
 Rules:
 - Exactly 3 strengths and exactly 3 tips — no more, no fewer.
-- One to two sentences each.
+- mispronouncedWords: at most 5 entries, and only ones you actually heard — an empty array is a valid, good answer.
+- One to two sentences each for strengths/tips; one short sentence per mispronouncedWords note.
 - Tips must be actionable (something to practice or change next time), not just restating a problem.
 - Be honest but encouraging.`;
 
@@ -61,6 +72,7 @@ export async function analyzeSpeech(
         `You used ${metrics.fillerWords.total} filler word(s) in this recording — try pausing silently instead of filling the gap.`,
         `Your pace was ${metrics.wordsPerMinute} words/minute — a natural conversational pace is roughly 120-160 wpm.`,
       ],
+      mispronouncedWords: [],
       mocked: true,
     };
   }
@@ -80,15 +92,21 @@ export async function analyzeSpeech(
     transcript?: string;
     strengths?: string[];
     tips?: string[];
+    mispronouncedWords?: Partial<MispronouncedWord>[];
   };
   const transcript = (parsed.transcript ?? "").trim();
   if (!transcript) throw new Error("Gemini returned an empty transcript.");
+
+  const mispronouncedWords = (parsed.mispronouncedWords ?? [])
+    .filter((item): item is MispronouncedWord => Boolean(item.word && item.note))
+    .slice(0, 5);
 
   return {
     transcript,
     metrics: analyzeSpeechMetrics(transcript, durationSeconds),
     strengths: (parsed.strengths ?? []).slice(0, 3),
     tips: (parsed.tips ?? []).slice(0, 3),
+    mispronouncedWords,
     mocked: false,
   };
 }

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { AnalyzeSpeechResponse } from "@/types/speechAnalysis";
+import type { MispronouncedWord } from "@/lib/analyzeSpeech";
 import { IdealVersionCard } from "@/components/IdealVersionCard";
 import { FollowUpChat } from "@/components/FollowUpChat";
 
@@ -55,6 +56,10 @@ export function DashboardResults({ data }: DashboardResultsProps) {
           tone="improve"
         />
       </div>
+
+      {data.mispronouncedWords.length > 0 && (
+        <MispronunciationCard words={data.mispronouncedWords} />
+      )}
 
       <div className="rounded-2xl border border-hairline bg-surface p-6 shadow-sm">
         <FollowUpChat
@@ -245,6 +250,23 @@ function FeedbackList({
           <li key={item} className="flex items-start gap-2.5 text-sm text-ink-muted">
             <span className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full ${toneClasses.bullet}`} />
             {item}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+/** Up to 5 words Gemini heard as mispronounced in the actual recording (see lib/analyzeSpeech.ts) — a focused practice list, not a full pronunciation audit. */
+function MispronunciationCard({ words }: { words: MispronouncedWord[] }) {
+  return (
+    <div className="rounded-2xl border border-hairline bg-surface p-6 shadow-sm">
+      <h3 className="mb-3 text-sm font-semibold text-amber-700">Words to Practice</h3>
+      <ul className="space-y-3">
+        {words.map((item, i) => (
+          <li key={`${item.word}-${i}`} className="flex flex-col gap-0.5">
+            <span className="text-sm font-semibold text-ink">{item.word}</span>
+            <span className="text-sm text-ink-muted">{item.note}</span>
           </li>
         ))}
       </ul>
