@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 import type { AnalyzeSpeechResponse } from "@/types/speechAnalysis";
 import type { MispronouncedWord } from "@/lib/analyzeSpeech";
 import { IdealVersionCard } from "@/components/IdealVersionCard";
@@ -257,7 +258,7 @@ function FeedbackList({
   );
 }
 
-/** Up to 5 words Gemini heard as mispronounced in the actual recording (see lib/analyzeSpeech.ts) — a focused practice list, not a full pronunciation audit. */
+/** Up to 5 words Gemini heard as mispronounced in the actual recording (see lib/analyzeSpeech.ts) — a focused practice list, not a full pronunciation audit. Each links straight to the Pronunciation trainer with that word pre-filled. */
 function MispronunciationCard({ words }: { words: MispronouncedWord[] }) {
   return (
     <div className="rounded-2xl border border-hairline bg-surface p-6 shadow-sm">
@@ -267,6 +268,12 @@ function MispronunciationCard({ words }: { words: MispronouncedWord[] }) {
           <li key={`${item.word}-${i}`} className="flex flex-col gap-0.5">
             <span className="text-sm font-semibold text-ink">{item.word}</span>
             <span className="text-sm text-ink-muted">{item.note}</span>
+            <Link
+              href={`/pronunciation?word=${encodeURIComponent(item.word)}`}
+              className="mt-1 text-xs font-semibold text-brass-text underline underline-offset-2"
+            >
+              Practice this word in Pronunciation Trainer →
+            </Link>
           </li>
         ))}
       </ul>

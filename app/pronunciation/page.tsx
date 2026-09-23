@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { PronunciationTrainer } from "@/components/PronunciationTrainer";
 
 export default function PronunciationPage() {
@@ -13,7 +14,10 @@ export default function PronunciationPage() {
           </p>
         </header>
 
-        <PronunciationTrainer />
+        {/* useSearchParams (for a "Practice this word" deep link) requires a Suspense boundary. */}
+        <Suspense fallback={null}>
+          <PronunciationTrainer />
+        </Suspense>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useMediaRecorder } from "@/hooks/useMediaRecorder";
 import { formatDuration } from "@/lib/audio";
 import { FollowUpChat } from "@/components/FollowUpChat";
@@ -23,7 +24,10 @@ interface WordSuggestion {
  * to a native pronunciation.
  */
 export function PronunciationTrainer() {
-  const [word, setWord] = useState("");
+  // Lets a "Practice this word" link (e.g. from a Record & Analyze result)
+  // land here with the word already filled in — see DashboardResults.tsx.
+  const searchParams = useSearchParams();
+  const [word, setWord] = useState(() => searchParams.get("word") ?? "");
   const { isRecording, recordedBlob, start, stop, reset, error: recordError } =
     useMediaRecorder(false);
 
@@ -40,6 +44,7 @@ export function PronunciationTrainer() {
   useEffect(() => {
     const query = word.trim();
     if (query.length < 2) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSuggestions([]);
       return;
     }
