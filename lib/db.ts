@@ -126,7 +126,22 @@ function ensureSchema(sql: ReturnType<typeof postgres>): Promise<void> {
         source_url TEXT NOT NULL,
         created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
         UNIQUE (topic, language)
-      )
+      );
+
+      -- Turns one cached row per (topic, language) into a pool of up to 5
+      -- (slot 0-4), served randomly — see lib/comprehensionNews.ts. Existing
+      -- rows backfill to slot 0 via the column default, so nothing is lost.
+      -- ADD CONSTRAINT has no IF NOT EXISTS in Postgres, and this whole block
+      -- re-runs on every cold start, so the DO block is required to keep
+      -- ensureSchema() idempotent past the first run.
+      ALTER TABLE comprehension_news_cache ADD COLUMN IF NOT EXISTS slot INTEGER NOT NULL DEFAULT 0;
+      ALTER TABLE comprehension_news_cache DROP CONSTRAINT IF EXISTS comprehension_news_cache_topic_language_key;
+
+      DO $$ BEGIN
+        ALTER TABLE comprehension_news_cache
+          ADD CONSTRAINT comprehension_news_cache_topic_language_slot_key UNIQUE (topic, language, slot);
+      EXCEPTION WHEN duplicate_object THEN NULL;
+      END $$;
     `).then(() => undefined);
   }
   return schemaReady;

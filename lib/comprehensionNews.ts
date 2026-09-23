@@ -4,17 +4,20 @@ import { NEWS_TOPICS, type NewsTopic, type ComprehensionPassage } from "@/lib/co
 
 export { NEWS_TOPICS, type NewsTopic };
 
+/** Slots per (topic, language) — see the refresh route for how they're kept filled without exceeding Hobby's function-duration limit or a free Gemini key's rate limit. */
+export const NEWS_POOL_SIZE = 5;
+
 export interface ComprehensionNewsPassage extends ComprehensionPassage {
   sourceUrl: string;
 }
 
-const PROMPT = (topic: NewsTopic, languageName: string) => `You are preparing a listening-comprehension exercise for a professional practicing
+const PROMPT = (topic: NewsTopic, languageName: string, avoidTitles?: string[]) => `You are preparing a listening-comprehension exercise for a professional practicing
 ${languageName}: the student hears a short passage read aloud (they never see the text), then
 summarizes it out loud from memory.
 
 Search for one real, recent (within the last few days) ${topic.toLowerCase()} news story suitable for
 an educated general audience — nothing so technical or niche it needs specialist background.
-
+${avoidTitles && avoidTitles.length > 0 ? `\nDo not reuse any of these stories, already covered in this batch: ${avoidTitles.join("; ")}.\n` : ""}
 Write a self-contained passage (120-180 words) in ${languageName}, in a clear, professional spoken
 register (like a radio news segment) — factual, well-structured, no markdown. It must stand on its own
 without the headline or source attached.
@@ -42,6 +45,7 @@ async function readCachedPassage(topic: NewsTopic, language: string): Promise<Co
       select topic, title, text, advanced_terms, key_points, source_url
       from comprehension_news_cache
       where topic = ${topic} and language = ${language}
+      order by random()
       limit 1
     `;
     const row = rows[0];
@@ -63,6 +67,7 @@ async function readCachedPassage(topic: NewsTopic, language: string): Promise<Co
 async function writeCachedPassage(
   topic: NewsTopic,
   language: string,
+  slot: number,
   item: Omit<ComprehensionNewsPassage, "id" | "topic">,
 ): Promise<void> {
   if (!hasDatabase()) return;
@@ -70,9 +75,9 @@ async function writeCachedPassage(
     const sql = await getDb();
     const j = (value: unknown) => sql!.json(value as never);
     await sql!`
-      insert into comprehension_news_cache (topic, language, title, text, advanced_terms, key_points, source_url)
-      values (${topic}, ${language}, ${item.title}, ${item.text}, ${j(item.advancedTerms)}, ${j(item.keyPoints)}, ${item.sourceUrl})
-      on conflict (topic, language) do update set
+      insert into comprehension_news_cache (topic, language, slot, title, text, advanced_terms, key_points, source_url)
+      values (${topic}, ${language}, ${slot}, ${item.title}, ${item.text}, ${j(item.advancedTerms)}, ${j(item.keyPoints)}, ${item.sourceUrl})
+      on conflict (topic, language, slot) do update set
         title = excluded.title,
         text = excluded.text,
         advanced_terms = excluded.advanced_terms,
@@ -91,16 +96,19 @@ async function writeCachedPassage(
  * a real grounded source URL — see generateContentWithSources's doc comment
  * for why an LLM-typed URL field wouldn't be trustworthy here. Returns null
  * on any failure, including a successful-looking response with no source.
+ * `avoidTitles` steers away from stories already picked earlier in the same
+ * (topic, language) pool-filling run — see the refresh route.
  */
 async function generateNewsPassage(
   topic: NewsTopic,
   languageName: string,
+  avoidTitles?: string[],
 ): Promise<Omit<ComprehensionNewsPassage, "id" | "topic"> | null> {
   if (!hasGeminiKey()) return null;
 
   try {
     const { text: raw, sourceUrl } = await generateContentWithSources(
-      [{ text: PROMPT(topic, languageName) }],
+      [{ text: PROMPT(topic, languageName, avoidTitles) }],
       { tools: [{ google_search: {} }] },
     );
     if (!sourceUrl) return null;
@@ -123,16 +131,13 @@ async function generateNewsPassage(
 }
 
 /**
- * Returns a real-news passage for this topic/language. Cache-first: a
- * previously verified passage is served straight from
- * comprehension_news_cache with zero Gemini calls. Only on a cache miss
- * does this call Gemini, and only a result with a real source URL is cached
- * and returned — an unverifiable one returns null so the caller can fall
- * back to the static passage pool instead of showing fabricated content.
- *
- * The cache is not refreshed here on every read — see refreshNewsPassage,
- * run daily by /api/comprehension/news/refresh (news goes stale fast,
- * unlike the AI Tutor's monthly-refreshed domain-knowledge cases).
+ * Returns a real-news passage for this topic/language, picked at random
+ * from whatever's cached (1-5 slots filled — served identically either
+ * way, zero Gemini calls). Only a fully empty pool (a brand-new pair before
+ * its first refresh, or one that's somehow lost all its rows) falls
+ * through to a single live generate-and-cache, written to slot 0 — the
+ * refresh job (see /api/comprehension/news/refresh) is what fills the rest
+ * of the pool over time, a read never tops one up itself.
  */
 export async function fetchNewsPassage(topic: NewsTopic, languageName: string): Promise<ComprehensionNewsPassage | null> {
   const cached = await readCachedPassage(topic, languageName);
@@ -140,19 +145,32 @@ export async function fetchNewsPassage(topic: NewsTopic, languageName: string): 
 
   const generated = await generateNewsPassage(topic, languageName);
   if (!generated) return null;
-  await writeCachedPassage(topic, languageName, generated);
+  await writeCachedPassage(topic, languageName, 0, generated);
   return { id: `news-${topic.toLowerCase()}`, topic, ...generated };
 }
 
 /**
- * Used by the daily refresh job only: always generates fresh (bypasses the
- * cache read), and overwrites the cached row only when a valid new result
- * comes back — a failed/unverifiable attempt leaves whatever was cached
- * before untouched. Returns whether the cache was updated.
+ * Used by the refresh job only, one pool slot at a time: always generates
+ * fresh (bypasses the cache read), and overwrites that slot only when a
+ * valid, non-duplicate new result comes back — a failed/unverifiable
+ * attempt, or one that lands on a `sourceUrl` already used elsewhere in
+ * this same pool-filling run (title-avoidance alone can't stop the search
+ * from re-finding the same article under a different title), leaves
+ * whatever was cached in that slot before untouched. Returns the accepted
+ * {title, sourceUrl} for the caller to fold into the next slot's
+ * avoid-list, or null if this slot wasn't updated.
  */
-export async function refreshNewsPassage(topic: NewsTopic, languageName: string): Promise<boolean> {
-  const generated = await generateNewsPassage(topic, languageName);
-  if (!generated) return false;
-  await writeCachedPassage(topic, languageName, generated);
-  return true;
+export async function refreshNewsSlot(
+  topic: NewsTopic,
+  languageName: string,
+  slot: number,
+  avoidTitles: string[],
+  avoidUrls: Set<string>,
+): Promise<{ title: string; sourceUrl: string } | null> {
+  const generated = await generateNewsPassage(topic, languageName, avoidTitles);
+  if (!generated) return null;
+  if (avoidUrls.has(generated.sourceUrl)) return null;
+
+  await writeCachedPassage(topic, languageName, slot, generated);
+  return { title: generated.title, sourceUrl: generated.sourceUrl };
 }

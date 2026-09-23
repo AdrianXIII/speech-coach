@@ -1,21 +1,66 @@
 import { NextRequest, NextResponse } from "next/server";
-import { refreshNewsPassage, NEWS_TOPICS } from "@/lib/comprehensionNews";
+import { refreshNewsSlot, NEWS_TOPICS, NEWS_POOL_SIZE, type NewsTopic } from "@/lib/comprehensionNews";
 import { LANGUAGES, getLanguage } from "@/lib/languages";
 
-// 5 topics x 5 languages = 25 grounded Gemini calls — comfortably fast, no
-// need for the AI Tutor refresh route's extended maxDuration.
+// Hobby's realistic function-duration ceiling is well under Vercel Pro's
+// configurable 300s — see the cycle-length reasoning below for why this
+// route deliberately never approaches even this lower cap.
+export const maxDuration = 60;
+
+/**
+ * Spreads filling the 5-topic x 5-language x 5-slot pool (125 grounded
+ * Gemini calls total) across CYCLE_LENGTH_DAYS days instead of one big run:
+ * a free Gemini key's per-minute rate limit and Vercel Hobby's ~60s function
+ * ceiling both rule out 125 sequential grounded-search calls in one
+ * invocation. 125 / 18 ≈ 7 calls/day comfortably fits both constraints with
+ * margin. Lower this once on a paid Vercel/Gemini tier for fresher slots —
+ * it's the only knob that trades safety margin for freshness.
+ */
+const CYCLE_LENGTH_DAYS = 18;
+
+interface WorkUnit {
+  topic: NewsTopic;
+  languageCode: string;
+  languageName: string;
+  slot: number;
+}
+
+function buildWorkList(): WorkUnit[] {
+  const units: WorkUnit[] = [];
+  for (const topic of NEWS_TOPICS) {
+    for (const language of LANGUAGES) {
+      for (let slot = 0; slot < NEWS_POOL_SIZE; slot++) {
+        units.push({ topic, languageCode: language.code, languageName: getLanguage(language.code).name, slot });
+      }
+    }
+  }
+  return units;
+}
+
+function chunkForToday(units: WorkUnit[]): { chunkIndex: number; chunk: WorkUnit[] } {
+  const chunkIndex = Math.floor(Date.now() / 86_400_000) % CYCLE_LENGTH_DAYS;
+  const chunkSize = Math.ceil(units.length / CYCLE_LENGTH_DAYS);
+  const start = chunkIndex * chunkSize;
+  return { chunkIndex, chunk: units.slice(start, start + chunkSize) };
+}
 
 /**
  * POST /api/comprehension/news/refresh
- * Daily job (see vercel.json's `crons` entry) that regenerates every
- * topic x language combination and only overwrites
- * lib/comprehensionNews.ts's cache when a new, verifiable (real source URL)
- * result comes back — a failed or unverifiable attempt leaves whatever was
- * cached before untouched, so a student is never left without a passage
- * just because today's search didn't turn up anything usable. Daily, not
- * monthly like the AI Tutor's news cases, because this trainer's whole
- * point is practicing with current events — a month-old cache would defeat
- * the reason this feature exists.
+ * Daily job (see vercel.json's `crons` entry — schedule unchanged from the
+ * original single-slot-per-pair version) that processes one deterministic
+ * ~1/18th slice of the full pool-filling work list today (see
+ * CYCLE_LENGTH_DAYS above), so the full 5-article-per-topic pool cycles
+ * once roughly every 2.5 weeks — the closest safe cadence to "weekly" this
+ * project's Vercel Hobby plan and free Gemini key allow. A failed or
+ * unverifiable attempt leaves whatever was cached in that slot before
+ * untouched, so a student is never left without a passage just because
+ * today's search didn't turn up anything usable for one slot.
+ *
+ * Each (topic, language) pair's slots are processed strictly sequentially
+ * (never concurrently) — required so each slot's generation can be steered
+ * away from stories already picked earlier in the same pair via
+ * avoidTitles/avoidUrls (see lib/comprehensionNews.ts's refreshNewsSlot),
+ * and to stay well under a free-tier key's requests-per-minute limit.
  *
  * Protected the same way Vercel Cron itself recommends: when CRON_SECRET is
  * set, Vercel automatically sends `Authorization: Bearer <CRON_SECRET>` on
@@ -30,15 +75,33 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const results: { topic: string; language: string; updated: boolean }[] = [];
+  const { chunkIndex, chunk } = chunkForToday(buildWorkList());
 
-  for (const topic of NEWS_TOPICS) {
-    for (const language of LANGUAGES) {
-      const updated = await refreshNewsPassage(topic, getLanguage(language.code).name);
-      results.push({ topic, language: language.code, updated });
+  // Reset per (topic, languageCode) pair as we cross into a new one, since
+  // avoidance is scoped to one pair's own pool-filling run, never shared
+  // across pairs or across days.
+  let currentPairKey = "";
+  let avoidTitles: string[] = [];
+  let avoidUrls = new Set<string>();
+
+  const results: { topic: string; language: string; slot: number; updated: boolean }[] = [];
+
+  for (const unit of chunk) {
+    const pairKey = `${unit.topic}:${unit.languageCode}`;
+    if (pairKey !== currentPairKey) {
+      currentPairKey = pairKey;
+      avoidTitles = [];
+      avoidUrls = new Set<string>();
     }
+
+    const accepted = await refreshNewsSlot(unit.topic, unit.languageName, unit.slot, avoidTitles, avoidUrls);
+    if (accepted) {
+      avoidTitles.push(accepted.title);
+      avoidUrls.add(accepted.sourceUrl);
+    }
+    results.push({ topic: unit.topic, language: unit.languageCode, slot: unit.slot, updated: Boolean(accepted) });
   }
 
   const updatedCount = results.filter((r) => r.updated).length;
-  return NextResponse.json({ total: results.length, updated: updatedCount, results });
+  return NextResponse.json({ chunkIndex, cycleLengthDays: CYCLE_LENGTH_DAYS, total: results.length, updated: updatedCount, results });
 }

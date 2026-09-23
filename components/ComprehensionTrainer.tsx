@@ -314,7 +314,11 @@ export function ComprehensionTrainer() {
   }, [isFinalizing, recognition.isListening, recognition.transcript, passage, language]);
 
   function handlePickTopic(topic: NewsTopic) {
-    if (isLoadingNews || topic === activeTopic) return;
+    // Re-clicking the active topic is allowed on purpose (not a no-op): the
+    // server picks a random pool slot per request, so it's a free way to
+    // get a different passage for the same topic without waiting for a
+    // language switch or landing on it again via Shuffle.
+    if (isLoadingNews) return;
     loadTopic(topic);
   }
 
