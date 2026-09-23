@@ -149,7 +149,7 @@ export function PronunciationTrainer() {
             }}
             onFocus={() => setShowSuggestions(true)}
             onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
-            placeholder="e.g. 'entrepreneur' or 'particularly' — not sure how it's spelled? just try"
+            placeholder="e.g. 'entrepreneur' — not sure how it's spelled? just try"
             autoComplete="off"
             className="flex-1 rounded-lg border border-hairline px-3 py-2 text-sm text-ink placeholder:text-ink-muted focus:border-brass focus:outline-none"
           />
