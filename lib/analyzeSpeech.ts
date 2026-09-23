@@ -2,6 +2,7 @@ import { generateContent, hasGeminiKey } from "@/lib/gemini";
 import { analyzeSpeechMetrics, type SpeechMetrics } from "@/lib/speechMetrics";
 
 export interface MispronouncedWord {
+  /** The correctly spelled target word (never a phonetic spelling of what was actually said) — safe to feed straight into the Pronunciation trainer's dictionary lookup. */
   word: string;
   /** What was off, and how to say it correctly — one short sentence. */
   note: string;
@@ -36,12 +37,12 @@ Respond with a JSON object matching exactly this shape:
   "transcript": "<verbatim transcript>",
   "strengths": ["<strength 1>", "<strength 2>", "<strength 3>"],
   "tips": ["<actionable tip 1>", "<actionable tip 2>", "<actionable tip 3>"],
-  "mispronouncedWords": [{"word": "<the word as said>", "note": "<what was off and how to say it correctly, one short sentence>"}]
+  "mispronouncedWords": [{"word": "<the correctly spelled target word — the real dictionary word they were trying to say, NEVER a phonetic spelling of what came out>", "note": "<what was off and how to say it correctly, one short sentence>"}]
 }
 
 Rules:
 - Exactly 3 strengths and exactly 3 tips — no more, no fewer.
-- mispronouncedWords: at most 5 entries, and only ones you actually heard — an empty array is a valid, good answer.
+- mispronouncedWords: at most 5 entries, and only ones you actually heard — an empty array is a valid, good answer. "word" must always be the correctly spelled target word (e.g. "speaking"), even if what was actually said sounded like "sproaking" — describe that discrepancy in "note", not in "word".
 - One to two sentences each for strengths/tips; one short sentence per mispronouncedWords note.
 - Tips must be actionable (something to practice or change next time), not just restating a problem.
 - Be honest but encouraging.`;
