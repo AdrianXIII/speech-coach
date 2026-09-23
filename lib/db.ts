@@ -113,6 +113,19 @@ function ensureSchema(sql: ReturnType<typeof postgres>): Promise<void> {
         year TEXT,
         url TEXT,
         created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+      );
+
+      CREATE TABLE IF NOT EXISTS comprehension_news_cache (
+        id SERIAL PRIMARY KEY,
+        topic TEXT NOT NULL,
+        language TEXT NOT NULL,
+        title TEXT NOT NULL,
+        text TEXT NOT NULL,
+        advanced_terms JSONB NOT NULL DEFAULT '[]'::jsonb,
+        key_points JSONB NOT NULL DEFAULT '[]'::jsonb,
+        source_url TEXT NOT NULL,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+        UNIQUE (topic, language)
       )
     `).then(() => undefined);
   }

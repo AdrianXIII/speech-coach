@@ -1,0 +1,158 @@
+import { generateContentWithSources, hasGeminiKey } from "@/lib/gemini";
+import { getDb, hasDatabase } from "@/lib/db";
+import { NEWS_TOPICS, type NewsTopic, type ComprehensionPassage } from "@/lib/comprehensionContent";
+
+export { NEWS_TOPICS, type NewsTopic };
+
+export interface ComprehensionNewsPassage extends ComprehensionPassage {
+  sourceUrl: string;
+}
+
+const PROMPT = (topic: NewsTopic, languageName: string) => `You are preparing a listening-comprehension exercise for a professional practicing
+${languageName}: the student hears a short passage read aloud (they never see the text), then
+summarizes it out loud from memory.
+
+Search for one real, recent (within the last few days) ${topic.toLowerCase()} news story suitable for
+an educated general audience — nothing so technical or niche it needs specialist background.
+
+Write a self-contained passage (120-180 words) in ${languageName}, in a clear, professional spoken
+register (like a radio news segment) — factual, well-structured, no markdown. It must stand on its own
+without the headline or source attached.
+
+Respond with ONLY a JSON object (no markdown fences, no commentary), every string in ${languageName}:
+{
+  "title": "<a short, neutral title for this story, in ${languageName}, 2-6 words>",
+  "text": "<the 120-180 word passage itself, in ${languageName}>",
+  "advancedTerms": ["<3-8 sophisticated words/phrases that literally appear in "text", verbatim>"],
+  "keyPoints": ["<4-7 short phrases capturing the passage's core facts, each using words that appear in "text", for content-coverage scoring>"]
+}`;
+
+/**
+ * Both cache functions below swallow DB errors (not just a missing
+ * DATABASE_URL, but a live connection/auth failure too) rather than
+ * throwing — a broken database must degrade this feature to "always
+ * generate, never cache", not break the exercise outright for every
+ * student until someone notices and fixes the connection.
+ */
+async function readCachedPassage(topic: NewsTopic, language: string): Promise<ComprehensionNewsPassage | null> {
+  if (!hasDatabase()) return null;
+  try {
+    const sql = await getDb();
+    const rows = await sql!`
+      select topic, title, text, advanced_terms, key_points, source_url
+      from comprehension_news_cache
+      where topic = ${topic} and language = ${language}
+      limit 1
+    `;
+    const row = rows[0];
+    if (!row) return null;
+    return {
+      id: `news-${topic.toLowerCase()}`,
+      topic: row.topic,
+      title: row.title,
+      text: row.text,
+      advancedTerms: row.advanced_terms,
+      keyPoints: row.key_points,
+      sourceUrl: row.source_url,
+    };
+  } catch {
+    return null;
+  }
+}
+
+async function writeCachedPassage(
+  topic: NewsTopic,
+  language: string,
+  item: Omit<ComprehensionNewsPassage, "id" | "topic">,
+): Promise<void> {
+  if (!hasDatabase()) return;
+  try {
+    const sql = await getDb();
+    const j = (value: unknown) => sql!.json(value as never);
+    await sql!`
+      insert into comprehension_news_cache (topic, language, title, text, advanced_terms, key_points, source_url)
+      values (${topic}, ${language}, ${item.title}, ${item.text}, ${j(item.advancedTerms)}, ${j(item.keyPoints)}, ${item.sourceUrl})
+      on conflict (topic, language) do update set
+        title = excluded.title,
+        text = excluded.text,
+        advanced_terms = excluded.advanced_terms,
+        key_points = excluded.key_points,
+        source_url = excluded.source_url,
+        created_at = now()
+    `;
+  } catch {
+    // Best-effort — the generated passage is still returned to the caller
+    // (see fetchNewsPassage) even when it can't be persisted.
+  }
+}
+
+/**
+ * Calls Gemini (Google Search grounding) for one fresh news passage. Requires
+ * a real grounded source URL — see generateContentWithSources's doc comment
+ * for why an LLM-typed URL field wouldn't be trustworthy here. Returns null
+ * on any failure, including a successful-looking response with no source.
+ */
+async function generateNewsPassage(
+  topic: NewsTopic,
+  languageName: string,
+): Promise<Omit<ComprehensionNewsPassage, "id" | "topic"> | null> {
+  if (!hasGeminiKey()) return null;
+
+  try {
+    const { text: raw, sourceUrl } = await generateContentWithSources(
+      [{ text: PROMPT(topic, languageName) }],
+      { tools: [{ google_search: {} }] },
+    );
+    if (!sourceUrl) return null;
+
+    const cleaned = raw.trim().replace(/^```(?:json)?\s*|\s*```$/g, "");
+    const parsed = JSON.parse(cleaned);
+    if (!parsed.title || !parsed.text || !Array.isArray(parsed.advancedTerms) || !Array.isArray(parsed.keyPoints)) {
+      return null;
+    }
+    return {
+      title: String(parsed.title),
+      text: String(parsed.text),
+      advancedTerms: parsed.advancedTerms.map(String),
+      keyPoints: parsed.keyPoints.map(String),
+      sourceUrl,
+    };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Returns a real-news passage for this topic/language. Cache-first: a
+ * previously verified passage is served straight from
+ * comprehension_news_cache with zero Gemini calls. Only on a cache miss
+ * does this call Gemini, and only a result with a real source URL is cached
+ * and returned — an unverifiable one returns null so the caller can fall
+ * back to the static passage pool instead of showing fabricated content.
+ *
+ * The cache is not refreshed here on every read — see refreshNewsPassage,
+ * run daily by /api/comprehension/news/refresh (news goes stale fast,
+ * unlike the AI Tutor's monthly-refreshed domain-knowledge cases).
+ */
+export async function fetchNewsPassage(topic: NewsTopic, languageName: string): Promise<ComprehensionNewsPassage | null> {
+  const cached = await readCachedPassage(topic, languageName);
+  if (cached) return cached;
+
+  const generated = await generateNewsPassage(topic, languageName);
+  if (!generated) return null;
+  await writeCachedPassage(topic, languageName, generated);
+  return { id: `news-${topic.toLowerCase()}`, topic, ...generated };
+}
+
+/**
+ * Used by the daily refresh job only: always generates fresh (bypasses the
+ * cache read), and overwrites the cached row only when a valid new result
+ * comes back — a failed/unverifiable attempt leaves whatever was cached
+ * before untouched. Returns whether the cache was updated.
+ */
+export async function refreshNewsPassage(topic: NewsTopic, languageName: string): Promise<boolean> {
+  const generated = await generateNewsPassage(topic, languageName);
+  if (!generated) return false;
+  await writeCachedPassage(topic, languageName, generated);
+  return true;
+}

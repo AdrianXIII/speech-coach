@@ -289,6 +289,15 @@ const PASSAGES_BY_LANGUAGE: Record<LanguageCode, ComprehensionPassage[]> = {
   ],
 };
 
+/**
+ * Real-news topics for the Listening & Summary trainer (see
+ * lib/comprehensionNews.ts), kept here rather than in that file since this
+ * module is safe to import from client components — comprehensionNews.ts
+ * pulls in the Postgres client and would break a client bundle.
+ */
+export const NEWS_TOPICS = ["Economy", "Technology", "Politics", "Sport", "Culture"] as const;
+export type NewsTopic = (typeof NEWS_TOPICS)[number];
+
 export function passagesForLanguage(language: LanguageCode): ComprehensionPassage[] {
   return PASSAGES_BY_LANGUAGE[language];
 }

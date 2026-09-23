@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMediaRecorder } from "@/hooks/useMediaRecorder";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
-import { passagesForLanguage, randomPassage, type ComprehensionPassage } from "@/lib/comprehensionContent";
+import { randomPassage, NEWS_TOPICS, type ComprehensionPassage, type NewsTopic } from "@/lib/comprehensionContent";
 import { analyzeRichness, type RichnessScore } from "@/lib/languageRichness";
 import { getLanguage, type LanguageCode } from "@/lib/languages";
 import { useLanguage } from "@/components/LanguageProvider";
@@ -32,6 +32,10 @@ const T: Record<LanguageCode, {
   tryAgain: string;
   newPassage: string;
   loading: string;
+  loadingNews: string;
+  newsUnavailable: string;
+  source: string;
+  newsTopics: Record<NewsTopic, string>;
 }> = {
   en: {
     noSpeechSupport: "Your browser doesn't support speech recognition (Web Speech API) — try Chrome or Edge to use this exercise.",
@@ -57,6 +61,10 @@ const T: Record<LanguageCode, {
     tryAgain: "Try again",
     newPassage: "🎲 New passage",
     loading: "Loading…",
+    loadingNews: "Fetching today's news…",
+    newsUnavailable: "Live news isn't available right now — here's an example passage instead.",
+    source: "Source",
+    newsTopics: { Economy: "Economy", Technology: "Technology", Politics: "Politics", Sport: "Sport", Culture: "Culture" },
   },
   de: {
     noSpeechSupport: "Dein Browser unterstützt keine Spracherkennung (Web Speech API) — probiere Chrome oder Edge für diese Übung.",
@@ -82,6 +90,10 @@ const T: Record<LanguageCode, {
     tryAgain: "Erneut versuchen",
     newPassage: "🎲 Neue Passage",
     loading: "Wird geladen…",
+    loadingNews: "Aktuelle Nachrichten werden geladen…",
+    newsUnavailable: "Aktuelle Nachrichten sind gerade nicht verfügbar — hier ist stattdessen ein Beispieltext.",
+    source: "Quelle",
+    newsTopics: { Economy: "Wirtschaft", Technology: "Technologie", Politics: "Politik", Sport: "Sport", Culture: "Kultur" },
   },
   fr: {
     noSpeechSupport: "Votre navigateur ne prend pas en charge la reconnaissance vocale (Web Speech API) — essayez Chrome ou Edge pour cet exercice.",
@@ -107,6 +119,10 @@ const T: Record<LanguageCode, {
     tryAgain: "Réessayer",
     newPassage: "🎲 Nouveau passage",
     loading: "Chargement…",
+    loadingNews: "Récupération des actualités du jour…",
+    newsUnavailable: "Les actualités en direct ne sont pas disponibles pour le moment — voici un exemple à la place.",
+    source: "Source",
+    newsTopics: { Economy: "Économie", Technology: "Technologie", Politics: "Politique", Sport: "Sport", Culture: "Culture" },
   },
   es: {
     noSpeechSupport: "Tu navegador no admite reconocimiento de voz (Web Speech API) — prueba Chrome o Edge para este ejercicio.",
@@ -132,6 +148,10 @@ const T: Record<LanguageCode, {
     tryAgain: "Intentar de nuevo",
     newPassage: "🎲 Nuevo pasaje",
     loading: "Cargando…",
+    loadingNews: "Obteniendo las noticias de hoy…",
+    newsUnavailable: "Las noticias en vivo no están disponibles ahora mismo — aquí tienes un pasaje de ejemplo.",
+    source: "Fuente",
+    newsTopics: { Economy: "Economía", Technology: "Tecnología", Politics: "Política", Sport: "Deporte", Culture: "Cultura" },
   },
   sv: {
     noSpeechSupport: "Din webbläsare stöder inte taligenkänning (Web Speech API) — prova Chrome eller Edge för den här övningen.",
@@ -157,12 +177,24 @@ const T: Record<LanguageCode, {
     tryAgain: "Försök igen",
     newPassage: "🎲 Nytt avsnitt",
     loading: "Laddar…",
+    loadingNews: "Hämtar dagens nyheter…",
+    newsUnavailable: "Aktuella nyheter är inte tillgängliga just nu — här är ett exempelavsnitt istället.",
+    source: "Källa",
+    newsTopics: { Economy: "Ekonomi", Technology: "Teknik", Politics: "Politik", Sport: "Sport", Culture: "Kultur" },
   },
 };
 
 type Translations = (typeof T)[LanguageCode];
 
 type Phase = "setup" | "listening" | "ready" | "responding" | "results";
+
+type DisplayPassage = ComprehensionPassage & { sourceUrl?: string };
+
+/** Deterministic-feeling but non-repeating topic pick: prefers a topic other than the one just shown. */
+function pickTopic(exclude?: NewsTopic): NewsTopic {
+  const pool = exclude ? NEWS_TOPICS.filter((t) => t !== exclude) : NEWS_TOPICS;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
 
 /**
  * Listening comprehension + spoken-summary drill for professionals working
@@ -178,10 +210,51 @@ type Phase = "setup" | "listening" | "ready" | "responding" | "results";
 export function ComprehensionTrainer() {
   const { language } = useLanguage();
   const t = T[language];
-  const [passage, setPassage] = useState<ComprehensionPassage | null>(null);
+  const [passage, setPassage] = useState<DisplayPassage | null>(null);
+  const [activeTopic, setActiveTopic] = useState<NewsTopic | null>(null);
+  const [isLoadingNews, setIsLoadingNews] = useState(false);
+  const [newsUnavailable, setNewsUnavailable] = useState(false);
   const [phase, setPhase] = useState<Phase>("setup");
   const [score, setScore] = useState<RichnessScore | null>(null);
   const [isFinalizing, setIsFinalizing] = useState(false);
+
+  // Guards against out-of-order results: the mount effect (which can
+  // double-fire under StrictMode in dev) and topic-button clicks both call
+  // loadTopic, so two fetches can be in flight together — without this, a
+  // slow earlier request resolving after a faster later one would overwrite
+  // the passage the user is actually looking at with a stale one.
+  const requestIdRef = useRef(0);
+
+  // Cache-first fetch against /api/comprehension/news (see
+  // lib/comprehensionNews.ts) — real, recent news read aloud, so the same
+  // topic doesn't mean the same passage forever. Falls back to the static
+  // example pool (lib/comprehensionContent.ts) if no database/API key is
+  // configured or generation fails, so the exercise never just breaks.
+  async function loadTopic(topic: NewsTopic) {
+    const requestId = ++requestIdRef.current;
+    setIsLoadingNews(true);
+    setNewsUnavailable(false);
+    try {
+      const res = await fetch(`/api/comprehension/news?topic=${topic}&language=${language}`);
+      const data: { passage: DisplayPassage | null } = await res.json();
+      if (requestIdRef.current !== requestId) return;
+      if (data.passage) {
+        setPassage(data.passage);
+        setActiveTopic(topic);
+      } else {
+        setPassage(randomPassage(language));
+        setActiveTopic(null);
+        setNewsUnavailable(true);
+      }
+    } catch {
+      if (requestIdRef.current !== requestId) return;
+      setPassage(randomPassage(language));
+      setActiveTopic(null);
+      setNewsUnavailable(true);
+    } finally {
+      if (requestIdRef.current === requestId) setIsLoadingNews(false);
+    }
+  }
 
   const { recordedBlob, start: startRecorder, stop: stopRecorder, reset: resetRecorder } =
     useMediaRecorder(false);
@@ -194,8 +267,12 @@ export function ComprehensionTrainer() {
   useEffect(() => {
     window.speechSynthesis.cancel();
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setPassage(randomPassage(language));
     setPhase("setup");
+    loadTopic(pickTopic());
+    // loadTopic is stable in shape across renders (only closes over
+    // `language`, already a dependency) — omitting it avoids re-running
+    // this effect every render while still re-running on language changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language]);
 
   const audioEndTimeRef = useRef(0);
@@ -236,12 +313,14 @@ export function ComprehensionTrainer() {
     }
   }, [isFinalizing, recognition.isListening, recognition.transcript, passage, language]);
 
-  function handlePickPassage(p: ComprehensionPassage) {
-    setPassage(p);
+  function handlePickTopic(topic: NewsTopic) {
+    if (isLoadingNews || topic === activeTopic) return;
+    loadTopic(topic);
   }
 
   function handleShufflePassage() {
-    setPassage((current) => randomPassage(language, current?.id));
+    if (isLoadingNews) return;
+    loadTopic(pickTopic(activeTopic ?? undefined));
   }
 
   function handleListen() {
@@ -307,7 +386,7 @@ export function ComprehensionTrainer() {
     recognition.reset();
     setScore(null);
     setPhase("setup");
-    setPassage((current) => randomPassage(language, current?.id));
+    loadTopic(pickTopic(activeTopic ?? undefined));
   }
 
   if (!passage) {
@@ -329,9 +408,10 @@ export function ComprehensionTrainer() {
       {phase === "setup" && (
         <SetupPanel
           t={t}
-          language={language}
-          passage={passage}
-          onPick={handlePickPassage}
+          activeTopic={activeTopic}
+          isLoadingNews={isLoadingNews}
+          newsUnavailable={newsUnavailable}
+          onPickTopic={handlePickTopic}
           onShuffle={handleShufflePassage}
           onListen={handleListen}
           disabled={!recognition.isSupported}
@@ -344,7 +424,7 @@ export function ComprehensionTrainer() {
             🔊
           </span>
           <p className="text-sm font-semibold text-brass-text">{t.listening}</p>
-          <p className="text-xs text-ink-muted">({passage.topic})</p>
+          <p className="text-xs text-ink-muted">({activeTopic ? t.newsTopics[activeTopic] : passage.topic})</p>
           <button
             onClick={handleSkipListening}
             className="text-xs font-semibold text-ink-muted underline underline-offset-2 hover:text-ink-muted"
@@ -412,59 +492,63 @@ export function ComprehensionTrainer() {
 
 function SetupPanel({
   t,
-  language,
-  passage,
-  onPick,
+  activeTopic,
+  isLoadingNews,
+  newsUnavailable,
+  onPickTopic,
   onShuffle,
   onListen,
   disabled,
 }: {
   t: Translations;
-  language: LanguageCode;
-  passage: ComprehensionPassage;
-  onPick: (p: ComprehensionPassage) => void;
+  activeTopic: NewsTopic | null;
+  isLoadingNews: boolean;
+  newsUnavailable: boolean;
+  onPickTopic: (topic: NewsTopic) => void;
   onShuffle: () => void;
   onListen: () => void;
   disabled: boolean;
 }) {
-  const passages = passagesForLanguage(language);
-
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center justify-between">
         <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{t.topic}</p>
         <button
           onClick={onShuffle}
-          className="rounded-lg bg-surface-2 px-3 py-1.5 text-sm font-semibold text-ink transition-colors hover:bg-hairline"
+          disabled={isLoadingNews}
+          className="rounded-lg bg-surface-2 px-3 py-1.5 text-sm font-semibold text-ink transition-colors hover:bg-hairline disabled:opacity-50"
         >
           {t.shuffle}
         </button>
       </div>
 
       <div className="grid gap-2 sm:grid-cols-3">
-        {passages.map((p) => (
+        {NEWS_TOPICS.map((topic) => (
           <button
-            key={p.id}
-            onClick={() => onPick(p)}
-            className={`rounded-lg border p-3 text-left transition-colors ${
-              passage.id === p.id
+            key={topic}
+            onClick={() => onPickTopic(topic)}
+            disabled={isLoadingNews}
+            className={`rounded-lg border p-3 text-left transition-colors disabled:cursor-wait ${
+              activeTopic === topic
                 ? "border-brass bg-surface-2"
                 : "border-hairline bg-surface hover:bg-surface-2"
             }`}
           >
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-brass-text">
-              {p.topic}
-            </p>
-            <p className="mt-0.5 text-sm font-bold text-ink">{p.title}</p>
+            <p className="text-sm font-bold text-ink">{t.newsTopics[topic]}</p>
           </button>
         ))}
       </div>
+
+      {isLoadingNews && <p className="text-center text-xs text-ink-muted">{t.loadingNews}</p>}
+      {newsUnavailable && !isLoadingNews && (
+        <p className="text-center text-xs text-amber-700">{t.newsUnavailable}</p>
+      )}
 
       <p className="text-center text-sm text-ink-muted">{t.setupInstruction}</p>
 
       <button
         onClick={onListen}
-        disabled={disabled}
+        disabled={disabled || isLoadingNews}
         className="self-center rounded-lg bg-navy px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800 disabled:cursor-not-allowed disabled:opacity-40"
       >
         {t.listenButton}
@@ -485,7 +569,7 @@ function ResultsPanel({
 }: {
   t: Translations;
   score: RichnessScore;
-  passage: ComprehensionPassage;
+  passage: DisplayPassage;
   audioUrl: string | null;
   onRetry: () => void;
   onNewPassage: () => void;
@@ -559,9 +643,19 @@ function ResultsPanel({
           {showOriginal ? t.hideOriginal : t.showOriginal}
         </button>
         {showOriginal && (
-          <p className="mt-2 rounded-lg bg-surface-2 p-3 text-sm leading-relaxed text-ink-muted">
-            {passage.text}
-          </p>
+          <div className="mt-2 rounded-lg bg-surface-2 p-3">
+            <p className="text-sm leading-relaxed text-ink-muted">{passage.text}</p>
+            {passage.sourceUrl && (
+              <a
+                href={passage.sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 inline-block text-xs font-semibold text-brass-text underline underline-offset-2"
+              >
+                {t.source} ↗
+              </a>
+            )}
+          </div>
         )}
       </div>
 
