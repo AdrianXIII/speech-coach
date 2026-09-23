@@ -37,8 +37,8 @@ function buildWorkList(): WorkUnit[] {
   return units;
 }
 
-function chunkForToday(units: WorkUnit[]): { chunkIndex: number; chunk: WorkUnit[] } {
-  const chunkIndex = Math.floor(Date.now() / 86_400_000) % CYCLE_LENGTH_DAYS;
+function chunkForToday(units: WorkUnit[], overrideChunkIndex?: number): { chunkIndex: number; chunk: WorkUnit[] } {
+  const chunkIndex = overrideChunkIndex ?? Math.floor(Date.now() / 86_400_000) % CYCLE_LENGTH_DAYS;
   const chunkSize = Math.ceil(units.length / CYCLE_LENGTH_DAYS);
   const start = chunkIndex * chunkSize;
   return { chunkIndex, chunk: units.slice(start, start + chunkSize) };
@@ -65,6 +65,11 @@ function chunkForToday(units: WorkUnit[]): { chunkIndex: number; chunk: WorkUnit
  * Protected the same way Vercel Cron itself recommends: when CRON_SECRET is
  * set, Vercel automatically sends `Authorization: Bearer <CRON_SECRET>` on
  * cron-triggered requests, so anyone else calling this route is rejected.
+ *
+ * Accepts an optional `?chunkIndex=N` (0 to CYCLE_LENGTH_DAYS-1) to manually
+ * pre-warm the pool by walking through every chunk in one sitting instead of
+ * waiting for the natural daily cycle — the cron itself never sends this,
+ * it's for a human driving curl/Postman during initial rollout.
  */
 export async function POST(req: NextRequest) {
   const cronSecret = process.env.CRON_SECRET;
@@ -75,7 +80,13 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const { chunkIndex, chunk } = chunkForToday(buildWorkList());
+  const rawOverride = req.nextUrl.searchParams.get("chunkIndex");
+  const overrideChunkIndex = rawOverride !== null ? Number(rawOverride) : undefined;
+  if (overrideChunkIndex !== undefined && (!Number.isInteger(overrideChunkIndex) || overrideChunkIndex < 0 || overrideChunkIndex >= CYCLE_LENGTH_DAYS)) {
+    return NextResponse.json({ error: `chunkIndex must be an integer from 0 to ${CYCLE_LENGTH_DAYS - 1}.` }, { status: 400 });
+  }
+
+  const { chunkIndex, chunk } = chunkForToday(buildWorkList(), overrideChunkIndex);
 
   // Reset per (topic, languageCode) pair as we cross into a new one, since
   // avoidance is scoped to one pair's own pool-filling run, never shared
