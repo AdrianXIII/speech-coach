@@ -35,6 +35,7 @@ const T: Record<LanguageCode, {
   loadingNews: string;
   newsUnavailable: string;
   source: string;
+  articleReady: string;
   newsTopics: Record<NewsTopic, string>;
 }> = {
   en: {
@@ -64,6 +65,7 @@ const T: Record<LanguageCode, {
     loadingNews: "Fetching today's news…",
     newsUnavailable: "Live news isn't available right now — here's an example passage instead.",
     source: "Source",
+    articleReady: "Article ready:",
     newsTopics: { Economy: "Economy", Technology: "Technology", Politics: "Politics", Sport: "Sport", Culture: "Culture" },
   },
   de: {
@@ -93,6 +95,7 @@ const T: Record<LanguageCode, {
     loadingNews: "Aktuelle Nachrichten werden geladen…",
     newsUnavailable: "Aktuelle Nachrichten sind gerade nicht verfügbar — hier ist stattdessen ein Beispieltext.",
     source: "Quelle",
+    articleReady: "Artikel bereit:",
     newsTopics: { Economy: "Wirtschaft", Technology: "Technologie", Politics: "Politik", Sport: "Sport", Culture: "Kultur" },
   },
   fr: {
@@ -122,6 +125,7 @@ const T: Record<LanguageCode, {
     loadingNews: "Récupération des actualités du jour…",
     newsUnavailable: "Les actualités en direct ne sont pas disponibles pour le moment — voici un exemple à la place.",
     source: "Source",
+    articleReady: "Article prêt :",
     newsTopics: { Economy: "Économie", Technology: "Technologie", Politics: "Politique", Sport: "Sport", Culture: "Culture" },
   },
   es: {
@@ -151,6 +155,7 @@ const T: Record<LanguageCode, {
     loadingNews: "Obteniendo las noticias de hoy…",
     newsUnavailable: "Las noticias en vivo no están disponibles ahora mismo — aquí tienes un pasaje de ejemplo.",
     source: "Fuente",
+    articleReady: "Artículo listo:",
     newsTopics: { Economy: "Economía", Technology: "Tecnología", Politics: "Política", Sport: "Deporte", Culture: "Cultura" },
   },
   sv: {
@@ -180,6 +185,7 @@ const T: Record<LanguageCode, {
     loadingNews: "Hämtar dagens nyheter…",
     newsUnavailable: "Aktuella nyheter är inte tillgängliga just nu — här är ett exempelavsnitt istället.",
     source: "Källa",
+    articleReady: "Artikel redo:",
     newsTopics: { Economy: "Ekonomi", Technology: "Teknik", Politics: "Politik", Sport: "Sport", Culture: "Kultur" },
   },
 };
@@ -412,6 +418,7 @@ export function ComprehensionTrainer() {
       {phase === "setup" && (
         <SetupPanel
           t={t}
+          passage={passage}
           activeTopic={activeTopic}
           isLoadingNews={isLoadingNews}
           newsUnavailable={newsUnavailable}
@@ -496,6 +503,7 @@ export function ComprehensionTrainer() {
 
 function SetupPanel({
   t,
+  passage,
   activeTopic,
   isLoadingNews,
   newsUnavailable,
@@ -505,6 +513,7 @@ function SetupPanel({
   disabled,
 }: {
   t: Translations;
+  passage: ComprehensionPassage | null;
   activeTopic: NewsTopic | null;
   isLoadingNews: boolean;
   newsUnavailable: boolean;
@@ -546,6 +555,15 @@ function SetupPanel({
       {isLoadingNews && <p className="text-center text-xs text-ink-muted">{t.loadingNews}</p>}
       {newsUnavailable && !isLoadingNews && (
         <p className="text-center text-xs text-amber-700">{t.newsUnavailable}</p>
+      )}
+      {/* Title only, never the passage text itself — a visible sign that a
+          real (possibly different-each-time) article was picked, without
+          giving away content the listening exercise depends on staying
+          hidden until after the student has listened. */}
+      {!isLoadingNews && passage && (
+        <p className="text-center text-sm font-semibold text-ink">
+          {t.articleReady} <span className="font-normal text-ink-muted">{passage.title}</span>
+        </p>
       )}
 
       <p className="text-center text-sm text-ink-muted">{t.setupInstruction}</p>
