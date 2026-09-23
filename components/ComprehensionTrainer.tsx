@@ -36,6 +36,7 @@ const T: Record<LanguageCode, {
   newsUnavailable: string;
   source: string;
   articleReady: string;
+  chooseArticle: string;
   newsTopics: Record<NewsTopic, string>;
 }> = {
   en: {
@@ -66,6 +67,7 @@ const T: Record<LanguageCode, {
     newsUnavailable: "Live news isn't available right now — here's an example passage instead.",
     source: "Source",
     articleReady: "Article ready:",
+    chooseArticle: "Choose an article to listen to:",
     newsTopics: { Economy: "Economy", Technology: "Technology", Politics: "Politics", Sport: "Sport", Culture: "Culture" },
   },
   de: {
@@ -96,6 +98,7 @@ const T: Record<LanguageCode, {
     newsUnavailable: "Aktuelle Nachrichten sind gerade nicht verfügbar — hier ist stattdessen ein Beispieltext.",
     source: "Quelle",
     articleReady: "Artikel bereit:",
+    chooseArticle: "Wähle einen Artikel zum Anhören:",
     newsTopics: { Economy: "Wirtschaft", Technology: "Technologie", Politics: "Politik", Sport: "Sport", Culture: "Kultur" },
   },
   fr: {
@@ -126,6 +129,7 @@ const T: Record<LanguageCode, {
     newsUnavailable: "Les actualités en direct ne sont pas disponibles pour le moment — voici un exemple à la place.",
     source: "Source",
     articleReady: "Article prêt :",
+    chooseArticle: "Choisissez un article à écouter :",
     newsTopics: { Economy: "Économie", Technology: "Technologie", Politics: "Politique", Sport: "Sport", Culture: "Culture" },
   },
   es: {
@@ -156,6 +160,7 @@ const T: Record<LanguageCode, {
     newsUnavailable: "Las noticias en vivo no están disponibles ahora mismo — aquí tienes un pasaje de ejemplo.",
     source: "Fuente",
     articleReady: "Artículo listo:",
+    chooseArticle: "Elige un artículo para escuchar:",
     newsTopics: { Economy: "Economía", Technology: "Tecnología", Politics: "Política", Sport: "Deporte", Culture: "Cultura" },
   },
   sv: {
@@ -186,6 +191,7 @@ const T: Record<LanguageCode, {
     newsUnavailable: "Aktuella nyheter är inte tillgängliga just nu — här är ett exempelavsnitt istället.",
     source: "Källa",
     articleReady: "Artikel redo:",
+    chooseArticle: "Välj en artikel att lyssna på:",
     newsTopics: { Economy: "Ekonomi", Technology: "Teknik", Politics: "Politik", Sport: "Sport", Culture: "Kultur" },
   },
 };
@@ -218,17 +224,21 @@ export function ComprehensionTrainer() {
   const t = T[language];
   const [passage, setPassage] = useState<DisplayPassage | null>(null);
   const [activeTopic, setActiveTopic] = useState<NewsTopic | null>(null);
+  const [poolList, setPoolList] = useState<{ slot: number; title: string }[]>([]);
+  const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const [isLoadingNews, setIsLoadingNews] = useState(false);
+  const [isLoadingArticle, setIsLoadingArticle] = useState(false);
   const [newsUnavailable, setNewsUnavailable] = useState(false);
   const [phase, setPhase] = useState<Phase>("setup");
   const [score, setScore] = useState<RichnessScore | null>(null);
   const [isFinalizing, setIsFinalizing] = useState(false);
 
   // Guards against out-of-order results: the mount effect (which can
-  // double-fire under StrictMode in dev) and topic-button clicks both call
-  // loadTopic, so two fetches can be in flight together — without this, a
-  // slow earlier request resolving after a faster later one would overwrite
-  // the passage the user is actually looking at with a stale one.
+  // double-fire under StrictMode in dev), topic clicks, and article picks
+  // can all have requests in flight together — without this, a slow
+  // earlier request resolving after a faster later one would overwrite
+  // what the user is actually looking at with a stale result. Shared by
+  // every async fetch below (list, article-by-slot, and the random pick).
   const requestIdRef = useRef(0);
 
   // Cache-first fetch against /api/comprehension/news (see
@@ -236,10 +246,14 @@ export function ComprehensionTrainer() {
   // topic doesn't mean the same passage forever. Falls back to the static
   // example pool (lib/comprehensionContent.ts) if no database/API key is
   // configured or generation fails, so the exercise never just breaks.
-  async function loadTopic(topic: NewsTopic) {
+  // Used for one-click "surprise me" paths (initial load, Shuffle, New
+  // passage) where the student doesn't pick a specific headline.
+  async function loadRandomTopic(topic: NewsTopic) {
     const requestId = ++requestIdRef.current;
     setIsLoadingNews(true);
     setNewsUnavailable(false);
+    setPoolList([]);
+    setSelectedSlot(null);
     try {
       const res = await fetch(`/api/comprehension/news?topic=${topic}&language=${language}`);
       const data: { passage: DisplayPassage | null } = await res.json();
@@ -262,6 +276,55 @@ export function ComprehensionTrainer() {
     }
   }
 
+  // Explicit topic click: shows every cached headline for that topic so the
+  // student picks which one to listen to, instead of getting a random one.
+  // No article is selected yet — Listen stays disabled until pickArticle
+  // runs. Falls back to loadRandomTopic's single-pick-and-generate path
+  // when the pool is completely empty (a brand-new pair before its first
+  // refresh), since there's nothing to list yet.
+  async function loadTopicList(topic: NewsTopic) {
+    const requestId = ++requestIdRef.current;
+    setIsLoadingNews(true);
+    setNewsUnavailable(false);
+    setPassage(null);
+    setSelectedSlot(null);
+    try {
+      const res = await fetch(`/api/comprehension/news?topic=${topic}&language=${language}&list=true`);
+      const data: { pool: { slot: number; title: string }[] } = await res.json();
+      if (requestIdRef.current !== requestId) return;
+      if (data.pool && data.pool.length > 0) {
+        setActiveTopic(topic);
+        setPoolList(data.pool);
+        setIsLoadingNews(false);
+      } else {
+        await loadRandomTopic(topic);
+      }
+    } catch {
+      if (requestIdRef.current !== requestId) return;
+      await loadRandomTopic(topic);
+    }
+  }
+
+  // A student picked a specific headline from poolList — fetch its full text.
+  async function pickArticle(slot: number) {
+    if (!activeTopic) return;
+    const requestId = ++requestIdRef.current;
+    setIsLoadingArticle(true);
+    try {
+      const res = await fetch(`/api/comprehension/news?topic=${activeTopic}&language=${language}&slot=${slot}`);
+      const data: { passage: DisplayPassage | null } = await res.json();
+      if (requestIdRef.current !== requestId) return;
+      if (data.passage) {
+        setPassage(data.passage);
+        setSelectedSlot(slot);
+      }
+    } catch {
+      // Leave the current selection (if any) untouched on a transient failure.
+    } finally {
+      if (requestIdRef.current === requestId) setIsLoadingArticle(false);
+    }
+  }
+
   const { recordedBlob, start: startRecorder, stop: stopRecorder, reset: resetRecorder } =
     useMediaRecorder(false);
   const recognition = useSpeechRecognition(getLanguage(language).speechLang);
@@ -274,8 +337,8 @@ export function ComprehensionTrainer() {
     window.speechSynthesis.cancel();
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setPhase("setup");
-    loadTopic(pickTopic());
-    // loadTopic is stable in shape across renders (only closes over
+    loadTopicList(pickTopic());
+    // loadTopicList is stable in shape across renders (only closes over
     // `language`, already a dependency) — omitting it avoids re-running
     // this effect every render while still re-running on language changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -320,17 +383,16 @@ export function ComprehensionTrainer() {
   }, [isFinalizing, recognition.isListening, recognition.transcript, passage, language]);
 
   function handlePickTopic(topic: NewsTopic) {
-    // Re-clicking the active topic is allowed on purpose (not a no-op): the
-    // server picks a random pool slot per request, so it's a free way to
-    // get a different passage for the same topic without waiting for a
-    // language switch or landing on it again via Shuffle.
+    // Re-clicking the active topic is allowed on purpose (not a no-op) —
+    // it re-fetches the headline list, useful if the pool's been refreshed
+    // since it was first loaded.
     if (isLoadingNews) return;
-    loadTopic(topic);
+    loadTopicList(topic);
   }
 
   function handleShufflePassage() {
     if (isLoadingNews) return;
-    loadTopic(pickTopic(activeTopic ?? undefined));
+    loadRandomTopic(pickTopic(activeTopic ?? undefined));
   }
 
   function handleListen() {
@@ -396,15 +458,7 @@ export function ComprehensionTrainer() {
     recognition.reset();
     setScore(null);
     setPhase("setup");
-    loadTopic(pickTopic(activeTopic ?? undefined));
-  }
-
-  if (!passage) {
-    return (
-      <div className="rounded-2xl border border-hairline bg-surface p-8 shadow-sm">
-        <p className="text-sm text-ink-muted">{t.loading}</p>
-      </div>
-    );
+    loadTopicList(pickTopic(activeTopic ?? undefined));
   }
 
   return (
@@ -420,80 +474,90 @@ export function ComprehensionTrainer() {
           t={t}
           passage={passage}
           activeTopic={activeTopic}
+          poolList={poolList}
+          selectedSlot={selectedSlot}
           isLoadingNews={isLoadingNews}
+          isLoadingArticle={isLoadingArticle}
           newsUnavailable={newsUnavailable}
           onPickTopic={handlePickTopic}
+          onPickArticle={pickArticle}
           onShuffle={handleShufflePassage}
           onListen={handleListen}
           disabled={!recognition.isSupported}
         />
       )}
 
-      {phase === "listening" && (
-        <div className="flex flex-col items-center gap-3 py-10">
-          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-surface-2 text-2xl">
-            🔊
-          </span>
-          <p className="text-sm font-semibold text-brass-text">{t.listening}</p>
-          <p className="text-xs text-ink-muted">({activeTopic ? t.newsTopics[activeTopic] : passage.topic})</p>
-          <button
-            onClick={handleSkipListening}
-            className="text-xs font-semibold text-ink-muted underline underline-offset-2 hover:text-ink-muted"
-          >
-            {t.skipAhead}
-          </button>
-        </div>
-      )}
+      {/* Every phase below only exists once handleListen has run, which
+          requires a passage — see its own `if (!passage) return;` guard. */}
+      {phase !== "setup" && passage && (
+        <>
+          {phase === "listening" && (
+            <div className="flex flex-col items-center gap-3 py-10">
+              <span className="flex h-16 w-16 items-center justify-center rounded-full bg-surface-2 text-2xl">
+                🔊
+              </span>
+              <p className="text-sm font-semibold text-brass-text">{t.listening}</p>
+              <p className="text-xs text-ink-muted">({activeTopic ? t.newsTopics[activeTopic] : passage.topic})</p>
+              <button
+                onClick={handleSkipListening}
+                className="text-xs font-semibold text-ink-muted underline underline-offset-2 hover:text-ink-muted"
+              >
+                {t.skipAhead}
+              </button>
+            </div>
+          )}
 
-      {phase === "ready" && (
-        <div className="flex flex-col items-center gap-4 py-6">
-          <p className="text-center text-base font-medium text-ink">
-            {t.summarizePrompt}
-          </p>
-          <button
-            onClick={handleListen}
-            className="text-xs font-semibold text-brass-text underline underline-offset-2"
-          >
-            {t.listenAgain}
-          </button>
-          <button
-            onClick={handleStartResponse}
-            className="flex h-20 w-20 items-center justify-center rounded-full bg-red-600 text-white shadow-lg transition-transform hover:scale-105"
-            aria-label="Start Recording"
-          >
-            <span className="h-6 w-6 rounded-full bg-surface" />
-          </button>
-        </div>
-      )}
+          {phase === "ready" && (
+            <div className="flex flex-col items-center gap-4 py-6">
+              <p className="text-center text-base font-medium text-ink">
+                {t.summarizePrompt}
+              </p>
+              <button
+                onClick={handleListen}
+                className="text-xs font-semibold text-brass-text underline underline-offset-2"
+              >
+                {t.listenAgain}
+              </button>
+              <button
+                onClick={handleStartResponse}
+                className="flex h-20 w-20 items-center justify-center rounded-full bg-red-600 text-white shadow-lg transition-transform hover:scale-105"
+                aria-label="Start Recording"
+              >
+                <span className="h-6 w-6 rounded-full bg-surface" />
+              </button>
+            </div>
+          )}
 
-      {phase === "responding" && (
-        <div className="flex flex-col items-center gap-4 py-6">
-          <span className="flex items-center gap-2 text-sm font-semibold text-red-600">
-            <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-red-500" />
-            {t.recording}
-          </span>
-          <p className="min-h-[3rem] max-w-md text-center text-sm text-ink-muted">
-            {recognition.transcript || "…"}
-          </p>
-          <button
-            onClick={handleStopResponse}
-            className="flex h-20 w-20 items-center justify-center rounded-full bg-navy text-white shadow-lg transition-transform hover:scale-105"
-            aria-label="Stop Recording"
-          >
-            <span className="h-6 w-6 rounded-md bg-surface" />
-          </button>
-        </div>
-      )}
+          {phase === "responding" && (
+            <div className="flex flex-col items-center gap-4 py-6">
+              <span className="flex items-center gap-2 text-sm font-semibold text-red-600">
+                <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-red-500" />
+                {t.recording}
+              </span>
+              <p className="min-h-[3rem] max-w-md text-center text-sm text-ink-muted">
+                {recognition.transcript || "…"}
+              </p>
+              <button
+                onClick={handleStopResponse}
+                className="flex h-20 w-20 items-center justify-center rounded-full bg-navy text-white shadow-lg transition-transform hover:scale-105"
+                aria-label="Stop Recording"
+              >
+                <span className="h-6 w-6 rounded-md bg-surface" />
+              </button>
+            </div>
+          )}
 
-      {phase === "results" && score && (
-        <ResultsPanel
-          t={t}
-          score={score}
-          passage={passage}
-          audioUrl={audioUrl}
-          onRetry={handleRetry}
-          onNewPassage={handleNewPassage}
-        />
+          {phase === "results" && score && (
+            <ResultsPanel
+              t={t}
+              score={score}
+              passage={passage}
+              audioUrl={audioUrl}
+              onRetry={handleRetry}
+              onNewPassage={handleNewPassage}
+            />
+          )}
+        </>
       )}
     </div>
   );
@@ -505,9 +569,13 @@ function SetupPanel({
   t,
   passage,
   activeTopic,
+  poolList,
+  selectedSlot,
   isLoadingNews,
+  isLoadingArticle,
   newsUnavailable,
   onPickTopic,
+  onPickArticle,
   onShuffle,
   onListen,
   disabled,
@@ -515,9 +583,13 @@ function SetupPanel({
   t: Translations;
   passage: ComprehensionPassage | null;
   activeTopic: NewsTopic | null;
+  poolList: { slot: number; title: string }[];
+  selectedSlot: number | null;
   isLoadingNews: boolean;
+  isLoadingArticle: boolean;
   newsUnavailable: boolean;
   onPickTopic: (topic: NewsTopic) => void;
+  onPickArticle: (slot: number) => void;
   onShuffle: () => void;
   onListen: () => void;
   disabled: boolean;
@@ -556,11 +628,34 @@ function SetupPanel({
       {newsUnavailable && !isLoadingNews && (
         <p className="text-center text-xs text-amber-700">{t.newsUnavailable}</p>
       )}
-      {/* Title only, never the passage text itself — a visible sign that a
-          real (possibly different-each-time) article was picked, without
-          giving away content the listening exercise depends on staying
-          hidden until after the student has listened. */}
-      {!isLoadingNews && passage && (
+
+      {/* Headlines only, never the passage text itself — the student picks
+          which one to listen to, but content stays hidden until they've
+          actually listened. */}
+      {!isLoadingNews && poolList.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{t.chooseArticle}</p>
+          {poolList.map((entry) => (
+            <button
+              key={entry.slot}
+              onClick={() => onPickArticle(entry.slot)}
+              disabled={isLoadingArticle}
+              className={`rounded-lg border p-3 text-left text-sm font-semibold transition-colors disabled:cursor-wait ${
+                selectedSlot === entry.slot
+                  ? "border-brass bg-surface-2 text-ink"
+                  : "border-hairline bg-surface text-ink hover:bg-surface-2"
+              }`}
+            >
+              {entry.title}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Fallback for the rare case a pool is empty and a single passage was
+          generated/borrowed directly (see loadTopicList/loadRandomTopic) —
+          nothing to pick between, just confirmation one is ready. */}
+      {!isLoadingNews && poolList.length === 0 && passage && (
         <p className="text-center text-sm font-semibold text-ink">
           {t.articleReady} <span className="font-normal text-ink-muted">{passage.title}</span>
         </p>
@@ -570,7 +665,7 @@ function SetupPanel({
 
       <button
         onClick={onListen}
-        disabled={disabled || isLoadingNews}
+        disabled={disabled || isLoadingNews || isLoadingArticle || !passage}
         className="self-center rounded-lg bg-navy px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800 disabled:cursor-not-allowed disabled:opacity-40"
       >
         {t.listenButton}

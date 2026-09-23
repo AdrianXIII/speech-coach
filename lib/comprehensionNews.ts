@@ -11,6 +11,11 @@ export interface ComprehensionNewsPassage extends ComprehensionPassage {
   sourceUrl: string;
 }
 
+export interface PoolEntry {
+  slot: number;
+  title: string;
+}
+
 const PROMPT = (topic: NewsTopic, languageName: string, avoidTitles?: string[]) => `You are preparing a listening-comprehension exercise for a professional practicing
 ${languageName}: the student hears a short passage read aloud (they never see the text), then
 summarizes it out loud from memory.
@@ -40,17 +45,24 @@ Respond with ONLY a JSON object (no markdown fences, no commentary), every strin
  * swallowing the error from the caller's perspective isn't the same as
  * hiding it from observability entirely.
  */
-async function readCachedPassage(topic: NewsTopic, language: string): Promise<ComprehensionNewsPassage | null> {
+async function readCachedPassage(topic: NewsTopic, language: string, slot?: number): Promise<ComprehensionNewsPassage | null> {
   if (!hasDatabase()) return null;
   try {
     const sql = await getDb();
-    const rows = await sql!`
-      select topic, title, text, advanced_terms, key_points, source_url
-      from comprehension_news_cache
-      where topic = ${topic} and language = ${language}
-      order by random()
-      limit 1
-    `;
+    const rows = slot === undefined
+      ? await sql!`
+          select topic, title, text, advanced_terms, key_points, source_url
+          from comprehension_news_cache
+          where topic = ${topic} and language = ${language}
+          order by random()
+          limit 1
+        `
+      : await sql!`
+          select topic, title, text, advanced_terms, key_points, source_url
+          from comprehension_news_cache
+          where topic = ${topic} and language = ${language} and slot = ${slot}
+          limit 1
+        `;
     const row = rows[0];
     if (!row) return null;
     return {
@@ -65,6 +77,24 @@ async function readCachedPassage(topic: NewsTopic, language: string): Promise<Co
   } catch (err) {
     console.error(`comprehension_news_cache read failed (${topic}/${language}):`, err instanceof Error ? err.message : err);
     return null;
+  }
+}
+
+/** Lightweight listing (title + slot only) of whatever's cached for a topic/language, for a picker UI — no Gemini calls, just the pool as it stands right now (0-5 rows). */
+export async function listPoolEntries(topic: NewsTopic, language: string): Promise<PoolEntry[]> {
+  if (!hasDatabase()) return [];
+  try {
+    const sql = await getDb();
+    const rows = await sql!`
+      select slot, title
+      from comprehension_news_cache
+      where topic = ${topic} and language = ${language}
+      order by slot
+    `;
+    return rows.map((row) => ({ slot: row.slot, title: row.title }));
+  } catch (err) {
+    console.error(`comprehension_news_cache list failed (${topic}/${language}):`, err instanceof Error ? err.message : err);
+    return [];
   }
 }
 
@@ -152,6 +182,17 @@ export async function fetchNewsPassage(topic: NewsTopic, languageName: string): 
   if (!generated) return null;
   await writeCachedPassage(topic, languageName, 0, generated);
   return { id: `news-${topic.toLowerCase()}`, topic, ...generated };
+}
+
+/**
+ * Fetches one specific pool slot's full passage — for a picker UI where the
+ * student chose a particular headline from listPoolEntries rather than
+ * getting a random one. Pure cache read, no Gemini call and no fallback
+ * generation: a slot the pool-filling job hasn't reached yet simply isn't
+ * choosable (it wouldn't be listed by listPoolEntries either).
+ */
+export async function fetchNewsPassageBySlot(topic: NewsTopic, languageName: string, slot: number): Promise<ComprehensionNewsPassage | null> {
+  return readCachedPassage(topic, languageName, slot);
 }
 
 /**
