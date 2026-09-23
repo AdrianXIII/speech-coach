@@ -35,7 +35,10 @@ Respond with ONLY a JSON object (no markdown fences, no commentary), every strin
  * DATABASE_URL, but a live connection/auth failure too) rather than
  * throwing — a broken database must degrade this feature to "always
  * generate, never cache", not break the exercise outright for every
- * student until someone notices and fixes the connection.
+ * student until someone notices and fixes the connection. They still
+ * console.error the real reason (visible in Vercel's function logs) —
+ * swallowing the error from the caller's perspective isn't the same as
+ * hiding it from observability entirely.
  */
 async function readCachedPassage(topic: NewsTopic, language: string): Promise<ComprehensionNewsPassage | null> {
   if (!hasDatabase()) return null;
@@ -59,7 +62,8 @@ async function readCachedPassage(topic: NewsTopic, language: string): Promise<Co
       keyPoints: row.key_points,
       sourceUrl: row.source_url,
     };
-  } catch {
+  } catch (err) {
+    console.error(`comprehension_news_cache read failed (${topic}/${language}):`, err instanceof Error ? err.message : err);
     return null;
   }
 }
@@ -85,9 +89,10 @@ async function writeCachedPassage(
         source_url = excluded.source_url,
         created_at = now()
     `;
-  } catch {
+  } catch (err) {
     // Best-effort — the generated passage is still returned to the caller
     // (see fetchNewsPassage) even when it can't be persisted.
+    console.error(`comprehension_news_cache write failed (${topic}/${language}/slot ${slot}):`, err instanceof Error ? err.message : err);
   }
 }
 
