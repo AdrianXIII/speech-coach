@@ -11,6 +11,11 @@ interface FeedbackState {
   mocked: boolean;
 }
 
+interface WordSuggestion {
+  word: string;
+  matchType: "prefix" | "phonetic";
+}
+
 /**
  * Pronunciation practice: type a word or short phrase, hear it spoken by
  * the browser's built-in text-to-speech, record yourself saying it, then
@@ -24,6 +29,30 @@ export function PronunciationTrainer() {
 
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const [suggestions, setSuggestions] = useState<WordSuggestion[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  // Debounced spelling-help lookup: for a learner who knows how a word
+  // sounds but not how it's spelled ("fisiks" -> "physics"), not just
+  // ordinary prefix completion. Skipped once the input is already an exact
+  // dictionary word — no point suggesting alternatives to a correct spelling.
+  useEffect(() => {
+    const query = word.trim();
+    if (query.length < 2) {
+      setSuggestions([]);
+      return;
+    }
+    const timer = setTimeout(() => {
+      fetch(`/api/word-search?q=${encodeURIComponent(query)}`)
+        .then((res) => res.json())
+        .then((data: { suggestions: WordSuggestion[] }) => {
+          setSuggestions(data.suggestions ?? []);
+        })
+        .catch(() => setSuggestions([]));
+    }, 200);
+    return () => clearTimeout(timer);
+  }, [word]);
 
   const [feedback, setFeedback] = useState<FeedbackState | null>(null);
   const [isFetchingFeedback, setIsFetchingFeedback] = useState(false);
@@ -104,15 +133,19 @@ export function PronunciationTrainer() {
         <label htmlFor="pronunciation-word" className="text-sm font-semibold text-ink">
           Word or phrase to practice
         </label>
-        <div className="mt-2 flex gap-2">
+        <div className="relative mt-2 flex gap-2">
           <input
             id="pronunciation-word"
             value={word}
             onChange={(e) => {
               setWord(e.target.value);
+              setShowSuggestions(true);
               handleTryAgain();
             }}
-            placeholder="e.g. 'entrepreneur' or 'particularly'"
+            onFocus={() => setShowSuggestions(true)}
+            onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+            placeholder="e.g. 'entrepreneur' or 'particularly' — not sure how it's spelled? just try"
+            autoComplete="off"
             className="flex-1 rounded-lg border border-hairline px-3 py-2 text-sm text-ink placeholder:text-ink-muted focus:border-brass focus:outline-none"
           />
           <button
@@ -122,6 +155,30 @@ export function PronunciationTrainer() {
           >
             🔊 Listen
           </button>
+
+          {showSuggestions && suggestions.length > 0 && (
+            <ul className="absolute left-0 right-0 top-full z-10 mt-1 max-h-56 overflow-y-auto rounded-lg border border-hairline bg-surface shadow-lg">
+              {suggestions.map((s) => (
+                <li key={s.word}>
+                  <button
+                    type="button"
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => {
+                      setWord(s.word);
+                      setShowSuggestions(false);
+                      handleTryAgain();
+                    }}
+                    className="flex w-full items-center justify-between px-3 py-2 text-left text-sm text-ink hover:bg-surface-2"
+                  >
+                    <span>{s.word}</span>
+                    {s.matchType === "phonetic" && (
+                      <span className="text-xs text-ink-muted">sounds like this</span>
+                    )}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
 
