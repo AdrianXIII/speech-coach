@@ -196,23 +196,58 @@ export async function fetchNewsPassageBySlot(topic: NewsTopic, languageName: str
 }
 
 /**
+ * What's already sitting in this pair's *other* slots right now — read
+ * fresh from the DB immediately before generating, not carried in memory
+ * across the refresh route's loop. That's what makes dedup work across
+ * days, not just within one cron invocation: slots for the same
+ * (topic, language) pair routinely get filled on different days (the pool
+ * cycles over ~18 days), so an in-memory avoid-list reset per run/pair
+ * previously went blind to whatever earlier days had already cached —
+ * which is exactly how near-duplicate headlines like "Federal Reserve Rate
+ * Hike" / "Federal Reserve Hikes Rates" slipped into the same pool.
+ * `excludeSlot` leaves the slot about to be regenerated out of its own
+ * avoid-list — regenerating a slot shouldn't be steered away from content
+ * it may simply be refreshing, only from its four siblings.
+ */
+async function getSiblingSlots(
+  topic: NewsTopic,
+  language: string,
+  excludeSlot: number,
+): Promise<{ titles: string[]; urls: Set<string> }> {
+  if (!hasDatabase()) return { titles: [], urls: new Set() };
+  try {
+    const sql = await getDb();
+    const rows = await sql!`
+      select title, source_url
+      from comprehension_news_cache
+      where topic = ${topic} and language = ${language} and slot != ${excludeSlot}
+    `;
+    return {
+      titles: rows.map((row) => row.title as string),
+      urls: new Set(rows.map((row) => row.source_url as string)),
+    };
+  } catch (err) {
+    console.error(`comprehension_news_cache sibling lookup failed (${topic}/${language}):`, err instanceof Error ? err.message : err);
+    return { titles: [], urls: new Set() };
+  }
+}
+
+/**
  * Used by the refresh job only, one pool slot at a time: always generates
  * fresh (bypasses the cache read), and overwrites that slot only when a
  * valid, non-duplicate new result comes back — a failed/unverifiable
- * attempt, or one that lands on a `sourceUrl` already used elsewhere in
- * this same pool-filling run (title-avoidance alone can't stop the search
- * from re-finding the same article under a different title), leaves
- * whatever was cached in that slot before untouched. Returns the accepted
- * {title, sourceUrl} for the caller to fold into the next slot's
- * avoid-list, or null if this slot wasn't updated.
+ * attempt, or one that lands on a `sourceUrl` already used in one of this
+ * pair's other slots (title-avoidance alone can't stop the search from
+ * re-finding the same article under a different title), leaves whatever
+ * was cached in that slot before untouched.
  */
 export async function refreshNewsSlot(
   topic: NewsTopic,
   languageName: string,
   slot: number,
-  avoidTitles: string[],
-  avoidUrls: Set<string>,
 ): Promise<{ title: string; sourceUrl: string } | null> {
+  const { titles: avoidTitles, urls: avoidUrls } = await getSiblingSlots(topic, languageName, slot);
+
   const generated = await generateNewsPassage(topic, languageName, avoidTitles);
   if (!generated) return null;
   if (avoidUrls.has(generated.sourceUrl)) return null;

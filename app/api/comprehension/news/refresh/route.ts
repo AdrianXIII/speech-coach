@@ -58,9 +58,12 @@ function chunkForToday(units: WorkUnit[], overrideChunkIndex?: number): { chunkI
  *
  * Each (topic, language) pair's slots are processed strictly sequentially
  * (never concurrently) — required so each slot's generation can be steered
- * away from stories already picked earlier in the same pair via
- * avoidTitles/avoidUrls (see lib/comprehensionNews.ts's refreshNewsSlot),
- * and to stay well under a free-tier key's requests-per-minute limit.
+ * away from stories already sitting in that pair's other slots, looked up
+ * fresh from the DB each time (see lib/comprehensionNews.ts's
+ * refreshNewsSlot/getSiblingSlots — this is also what makes dedup work
+ * across days, not just within one run, since a pair's 5 slots are
+ * routinely filled on different days), and to stay well under a free-tier
+ * key's requests-per-minute limit.
  *
  * Protected the same way Vercel Cron itself recommends: when CRON_SECRET is
  * set, Vercel automatically sends `Authorization: Bearer <CRON_SECRET>` on
@@ -88,28 +91,10 @@ export async function POST(req: NextRequest) {
 
   const { chunkIndex, chunk } = chunkForToday(buildWorkList(), overrideChunkIndex);
 
-  // Reset per (topic, languageCode) pair as we cross into a new one, since
-  // avoidance is scoped to one pair's own pool-filling run, never shared
-  // across pairs or across days.
-  let currentPairKey = "";
-  let avoidTitles: string[] = [];
-  let avoidUrls = new Set<string>();
-
   const results: { topic: string; language: string; slot: number; updated: boolean }[] = [];
 
   for (const unit of chunk) {
-    const pairKey = `${unit.topic}:${unit.languageCode}`;
-    if (pairKey !== currentPairKey) {
-      currentPairKey = pairKey;
-      avoidTitles = [];
-      avoidUrls = new Set<string>();
-    }
-
-    const accepted = await refreshNewsSlot(unit.topic, unit.languageName, unit.slot, avoidTitles, avoidUrls);
-    if (accepted) {
-      avoidTitles.push(accepted.title);
-      avoidUrls.add(accepted.sourceUrl);
-    }
+    const accepted = await refreshNewsSlot(unit.topic, unit.languageName, unit.slot);
     results.push({ topic: unit.topic, language: unit.languageCode, slot: unit.slot, updated: Boolean(accepted) });
   }
 
