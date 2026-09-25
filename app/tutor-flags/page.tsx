@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { BackLink } from "@/components/BackLink";
 
 interface Flag {
   id: number;
@@ -39,6 +40,9 @@ export default function TutorFlagsPage() {
     <div className="min-h-screen bg-paper px-4 py-12 sm:px-8">
       <div className="mx-auto flex max-w-3xl flex-col gap-6">
         <header>
+          <div className="mb-4">
+            <BackLink />
+          </div>
           <h1 className="font-display text-2xl font-semibold text-ink">AI Tutor content flags</h1>
           <div className="mt-3 h-px w-10 bg-brass" />
         </header>

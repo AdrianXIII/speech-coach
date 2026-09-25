@@ -7,6 +7,7 @@ import { randomPassage, NEWS_TOPICS, type ComprehensionPassage, type NewsTopic }
 import { analyzeRichness, type RichnessScore } from "@/lib/languageRichness";
 import { getLanguage, type LanguageCode } from "@/lib/languages";
 import { useLanguage } from "@/components/LanguageProvider";
+import { BackLink } from "@/components/BackLink";
 
 const T: Record<LanguageCode, {
   noSpeechSupport: string;
@@ -16,6 +17,7 @@ const T: Record<LanguageCode, {
   listenButton: string;
   listening: string;
   skipAhead: string;
+  changeArticle: string;
   summarizePrompt: string;
   listenAgain: string;
   recording: string;
@@ -47,6 +49,7 @@ const T: Record<LanguageCode, {
     listenButton: "🔊 Listen",
     listening: "Listening…",
     skipAhead: "Skip ahead",
+    changeArticle: "Change article",
     summarizePrompt: "Now summarize what you just heard, in your own words — out loud.",
     listenAgain: "🔁 Listen again",
     recording: "Recording…",
@@ -78,6 +81,7 @@ const T: Record<LanguageCode, {
     listenButton: "🔊 Anhören",
     listening: "Hört zu…",
     skipAhead: "Überspringen",
+    changeArticle: "Artikel wechseln",
     summarizePrompt: "Fasse jetzt zusammen, was du gerade gehört hast, in eigenen Worten — laut.",
     listenAgain: "🔁 Erneut anhören",
     recording: "Aufnahme läuft…",
@@ -109,6 +113,7 @@ const T: Record<LanguageCode, {
     listenButton: "🔊 Écouter",
     listening: "Écoute en cours…",
     skipAhead: "Passer",
+    changeArticle: "Changer d'article",
     summarizePrompt: "Résumez maintenant ce que vous venez d'entendre, avec vos propres mots — à voix haute.",
     listenAgain: "🔁 Réécouter",
     recording: "Enregistrement…",
@@ -140,6 +145,7 @@ const T: Record<LanguageCode, {
     listenButton: "🔊 Escuchar",
     listening: "Escuchando…",
     skipAhead: "Adelantar",
+    changeArticle: "Cambiar artículo",
     summarizePrompt: "Ahora resume lo que acabas de escuchar, con tus propias palabras — en voz alta.",
     listenAgain: "🔁 Escuchar de nuevo",
     recording: "Grabando…",
@@ -171,6 +177,7 @@ const T: Record<LanguageCode, {
     listenButton: "🔊 Lyssna",
     listening: "Lyssnar…",
     skipAhead: "Hoppa vidare",
+    changeArticle: "Byt artikel",
     summarizePrompt: "Sammanfatta nu det du just hörde, med egna ord — högt.",
     listenAgain: "🔁 Lyssna igen",
     recording: "Spelar in…",
@@ -446,6 +453,13 @@ export function ComprehensionTrainer() {
     setIsFinalizing(true);
   }
 
+  /** Back out of listening/ready to the setup screen without finishing the exercise — no score exists yet at this point, unlike handleRetry. */
+  function handleChangeArticle() {
+    resetRecorder();
+    recognition.reset();
+    setPhase("setup");
+  }
+
   function handleRetry() {
     resetRecorder();
     recognition.reset();
@@ -493,6 +507,9 @@ export function ComprehensionTrainer() {
         <>
           {phase === "listening" && (
             <div className="flex flex-col items-center gap-3 py-10">
+              <div className="self-start">
+                <BackLink onClick={handleChangeArticle} label={t.changeArticle} />
+              </div>
               <span className="flex h-16 w-16 items-center justify-center rounded-full bg-surface-2 text-2xl">
                 🔊
               </span>
@@ -509,6 +526,9 @@ export function ComprehensionTrainer() {
 
           {phase === "ready" && (
             <div className="flex flex-col items-center gap-4 py-6">
+              <div className="self-start">
+                <BackLink onClick={handleChangeArticle} label={t.changeArticle} />
+              </div>
               <p className="text-center text-base font-medium text-ink">
                 {t.summarizePrompt}
               </p>

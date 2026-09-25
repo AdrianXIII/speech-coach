@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { LANGUAGES, type LanguageCode } from "@/lib/languages";
+import { BackLink } from "@/components/BackLink";
 
 interface ContentRow { contentKey: string; profession: string; category: string; teaching: { concepts: { title: string }[] } | null; cases: unknown[] }
 interface AgentReview { agentName: string; model?: string; verdict: string; scores: Record<string, number>; contradictions: string[]; missingTopics: string[]; sources: unknown[]; suggestions: string[] }
@@ -139,6 +140,9 @@ export default function TutorReviewPage() {
     <main className="min-h-screen bg-paper px-4 py-12 sm:px-8">
       <div className="mx-auto flex max-w-4xl flex-col gap-6">
         <header>
+          <div className="mb-4">
+            <BackLink />
+          </div>
           <h1 className="font-display text-2xl font-semibold text-ink">AI Tutor content review</h1>
           <p className="mt-2 text-sm text-ink-muted">Review copies only. Active app content is never changed automatically.</p>
         </header>
