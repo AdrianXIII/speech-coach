@@ -202,6 +202,135 @@ export function randomStructureModel(language: LanguageCode): StructureModel {
   return models[Math.floor(Math.random() * models.length)];
 }
 
+/**
+ * STAR and BLUF, for Executive Communication — workplace/self-advocacy
+ * frameworks, as opposed to Improv's spontaneity-flavored NUPP/Triad (which
+ * stay Improv-only; a "what does it remind you of?" phase makes no sense
+ * applied to a work scenario). BLUF isn't naturally phase-timed the way
+ * PREP/STAR are — the user's own framing is "answer first, then justify" —
+ * but that decomposes cleanly into exactly two gradable phases (state the
+ * conclusion, then back it up), so it reuses the same StructureModel shape
+ * rather than needing a different type.
+ */
+const EXEC_MODELS_BY_LANGUAGE: Record<LanguageCode, StructureModel[]> = {
+  en: [
+    {
+      id: "star",
+      name: "STAR",
+      fullName: "Situation – Task – Action – Result",
+      phases: [
+        { label: "Situation", seconds: 15 },
+        { label: "Task", seconds: 10 },
+        { label: "Action", seconds: 25 },
+        { label: "Result", seconds: 10 },
+      ],
+    },
+    {
+      id: "bluf",
+      name: "BLUF",
+      fullName: "Bottom Line Up Front — answer first, then justify",
+      phases: [
+        { label: "Bottom line", seconds: 15 },
+        { label: "Because…", seconds: 45 },
+      ],
+    },
+  ],
+  de: [
+    {
+      id: "star",
+      name: "STAR",
+      fullName: "Situation – Aufgabe – Aktion – Ergebnis",
+      phases: [
+        { label: "Situation", seconds: 15 },
+        { label: "Aufgabe", seconds: 10 },
+        { label: "Aktion", seconds: 25 },
+        { label: "Ergebnis", seconds: 10 },
+      ],
+    },
+    {
+      id: "bluf",
+      name: "BLUF",
+      fullName: "Bottom Line Up Front — zuerst die Antwort, dann die Begründung",
+      phases: [
+        { label: "Kernaussage", seconds: 15 },
+        { label: "Weil…", seconds: 45 },
+      ],
+    },
+  ],
+  fr: [
+    {
+      id: "star",
+      name: "STAR",
+      fullName: "Situation – Tâche – Action – Résultat",
+      phases: [
+        { label: "Situation", seconds: 15 },
+        { label: "Tâche", seconds: 10 },
+        { label: "Action", seconds: 25 },
+        { label: "Résultat", seconds: 10 },
+      ],
+    },
+    {
+      id: "bluf",
+      name: "BLUF",
+      fullName: "Bottom Line Up Front — la réponse d'abord, puis la justification",
+      phases: [
+        { label: "L'essentiel", seconds: 15 },
+        { label: "Parce que…", seconds: 45 },
+      ],
+    },
+  ],
+  es: [
+    {
+      id: "star",
+      name: "STAR",
+      fullName: "Situación – Tarea – Acción – Resultado",
+      phases: [
+        { label: "Situación", seconds: 15 },
+        { label: "Tarea", seconds: 10 },
+        { label: "Acción", seconds: 25 },
+        { label: "Resultado", seconds: 10 },
+      ],
+    },
+    {
+      id: "bluf",
+      name: "BLUF",
+      fullName: "Bottom Line Up Front — la respuesta primero, luego la justificación",
+      phases: [
+        { label: "Lo esencial", seconds: 15 },
+        { label: "Porque…", seconds: 45 },
+      ],
+    },
+  ],
+  sv: [
+    {
+      id: "star",
+      name: "STAR",
+      fullName: "Situation – Uppgift – Åtgärd – Resultat",
+      phases: [
+        { label: "Situation", seconds: 15 },
+        { label: "Uppgift", seconds: 10 },
+        { label: "Åtgärd", seconds: 25 },
+        { label: "Resultat", seconds: 10 },
+      ],
+    },
+    {
+      id: "bluf",
+      name: "BLUF",
+      fullName: "Bottom Line Up Front — svaret först, sedan motiveringen",
+      phases: [
+        { label: "Kärnbudskap", seconds: 15 },
+        { label: "Eftersom…", seconds: 45 },
+      ],
+    },
+  ],
+};
+
+/** PREP (shared with Improv) plus STAR/BLUF — the framework picker for Executive Communication. */
+export function execModelsForLanguage(language: LanguageCode): StructureModel[] {
+  const prep = MODELS_BY_LANGUAGE[language].find((m) => m.id === "prep")!;
+  return [prep, ...EXEC_MODELS_BY_LANGUAGE[language]];
+}
+
 /** Which phase index is active at `elapsedSeconds` into the 60-second exercise. */
 export function activePhaseIndex(model: StructureModel, elapsedSeconds: number): number {
   let cumulative = 0;
