@@ -2,7 +2,10 @@ import type { LanguageCode } from "@/lib/languages";
 
 export interface NavLink {
   href: string;
+  icon: string;
   labels: Record<LanguageCode, string>;
+  /** One short sentence, shown on the landing page's "what do you want to practice?" cards — not used by the nav itself. */
+  descriptions: Record<LanguageCode, string>;
 }
 
 export interface NavGroup {
@@ -24,6 +27,10 @@ export interface NavGroup {
  *   AI Tutor now also covers the old Case Studies flow directly (its Teach
  *   step has a "skip the lesson, practice a case now" shortcut), so that's
  *   no longer a separate top-level item.
+ *
+ * The same grouping also drives the landing page's "what do you want to
+ * practice today?" chooser (see app/page.tsx) — icon/descriptions exist for
+ * that, the nav itself only reads labels/href.
  */
 export const NAV_GROUPS: NavGroup[] = [
   {
@@ -36,7 +43,8 @@ export const NAV_GROUPS: NavGroup[] = [
     },
     links: [
       {
-        href: "/",
+        href: "/record",
+        icon: "🎙️",
         labels: {
           en: "Record & Analyze",
           de: "Aufnehmen & Analysieren",
@@ -44,15 +52,30 @@ export const NAV_GROUPS: NavGroup[] = [
           es: "Grabar y analizar",
           sv: "Spela in & analysera",
         },
+        descriptions: {
+          en: "Record a short speech and get feedback on pace, filler words, and delivery.",
+          de: "Nimm eine kurze Rede auf und erhalte Feedback zu Tempo, Füllwörtern und Vortrag.",
+          fr: "Enregistrez un court discours et recevez des retours sur le rythme et l'élocution.",
+          es: "Graba un discurso breve y recibe comentarios sobre ritmo y muletillas.",
+          sv: "Spela in ett kort tal och få feedback på tempo, utfyllnadsord och framförande.",
+        },
       },
       {
         href: "/improv",
+        icon: "⏱️",
         labels: {
           en: "60s Improv",
           de: "60-Sek-Impro",
           fr: "Impro de 60 s",
           es: "Impro de 60 s",
           sv: "60 sek improv",
+        },
+        descriptions: {
+          en: "Speak on a surprise topic for 60 seconds — build fluency under pressure.",
+          de: "Sprich 60 Sekunden zu einem Überraschungsthema — Sprachgewandtheit unter Druck.",
+          fr: "Parlez 60 secondes sur un sujet surprise — l'aisance sous pression.",
+          es: "Habla 60 segundos sobre un tema sorpresa — fluidez bajo presión.",
+          sv: "Prata 60 sekunder om ett överraskningsämne — flyt under press.",
         },
       },
     ],
@@ -68,6 +91,7 @@ export const NAV_GROUPS: NavGroup[] = [
     links: [
       {
         href: "/pronunciation",
+        icon: "🗣️",
         labels: {
           en: "Pronunciation",
           de: "Aussprache",
@@ -75,9 +99,17 @@ export const NAV_GROUPS: NavGroup[] = [
           es: "Pronunciación",
           sv: "Uttal",
         },
+        descriptions: {
+          en: "Practice a single tricky word and get AI feedback on your pronunciation.",
+          de: "Übe ein einzelnes schwieriges Wort und erhalte KI-Feedback zur Aussprache.",
+          fr: "Entraînez-vous sur un mot difficile et recevez un retour de l'IA.",
+          es: "Practica una palabra difícil y recibe retroalimentación de la IA.",
+          sv: "Öva på ett svårt ord och få AI-feedback på ditt uttal.",
+        },
       },
       {
         href: "/emphasis",
+        icon: "🎯",
         labels: {
           en: "Contrastive Stress",
           de: "Kontrastive Betonung",
@@ -85,15 +117,30 @@ export const NAV_GROUPS: NavGroup[] = [
           es: "Énfasis contrastivo",
           sv: "Kontrastiv betoning",
         },
+        descriptions: {
+          en: "Learn to stress the right word in a sentence to change its meaning.",
+          de: "Lerne, das richtige Wort im Satz zu betonen, um die Bedeutung zu verändern.",
+          fr: "Apprenez à accentuer le bon mot dans une phrase pour changer son sens.",
+          es: "Aprende a acentuar la palabra correcta para cambiar el significado.",
+          sv: "Lär dig betona rätt ord i en mening för att ändra dess betydelse.",
+        },
       },
       {
         href: "/collocations",
+        icon: "💬",
         labels: {
           en: "Elite Phrasing",
           de: "Elite-Ausdrucksweise",
           fr: "Expression d'élite",
           es: "Expresión de élite",
           sv: "Elituttryck",
+        },
+        descriptions: {
+          en: "Swap everyday phrasing for the word combinations polished speakers use.",
+          de: "Ersetze Alltagsformulierungen durch die Wortkombinationen versierter Redner.",
+          fr: "Remplacez les tournures banales par celles des orateurs aguerris.",
+          es: "Cambia frases comunes por las combinaciones que usan los oradores expertos.",
+          sv: "Byt ut vardagsuttryck mot de ordkombinationer skickliga talare använder.",
         },
       },
     ],
@@ -109,6 +156,7 @@ export const NAV_GROUPS: NavGroup[] = [
     links: [
       {
         href: "/speed-reading",
+        icon: "📖",
         labels: {
           en: "Speed Reading",
           de: "Schnelllesen",
@@ -116,15 +164,30 @@ export const NAV_GROUPS: NavGroup[] = [
           es: "Lectura rápida",
           sv: "Snabbläsning",
         },
+        descriptions: {
+          en: "Read passages faster while keeping full comprehension.",
+          de: "Lies Texte schneller und behalte das volle Verständnis.",
+          fr: "Lisez des textes plus vite tout en gardant une pleine compréhension.",
+          es: "Lee textos más rápido sin perder la comprensión.",
+          sv: "Läs texter snabbare och behåll full förståelse.",
+        },
       },
       {
         href: "/comprehension",
+        icon: "🎧",
         labels: {
           en: "Listening & Summary",
           de: "Hören & Zusammenfassen",
           fr: "Écoute et résumé",
           es: "Escucha y resumen",
           sv: "Lyssna & sammanfatta",
+        },
+        descriptions: {
+          en: "Listen to a real news passage, then summarize it out loud from memory.",
+          de: "Höre einen echten Nachrichtentext und fasse ihn dann frei zusammen.",
+          fr: "Écoutez un vrai article, puis résumez-le à voix haute de mémoire.",
+          es: "Escucha una noticia real y resúmela en voz alta de memoria.",
+          sv: "Lyssna på en riktig nyhetstext och sammanfatta den sedan utantill.",
         },
       },
     ],
@@ -140,12 +203,20 @@ export const NAV_GROUPS: NavGroup[] = [
     links: [
       {
         href: "/ai-tutor",
+        icon: "🎓",
         labels: {
           en: "AI Tutor",
           de: "KI-Tutor",
           fr: "Tuteur IA",
           es: "Tutor de IA",
           sv: "AI-handledare",
+        },
+        descriptions: {
+          en: "Work through real Business, Law, or Politics cases with an AI tutor.",
+          de: "Bearbeite reale Fälle aus Wirtschaft, Recht oder Politik mit einem KI-Tutor.",
+          fr: "Travaillez sur des cas réels (affaires, droit, politique) avec un tuteur IA.",
+          es: "Trabaja casos reales de negocios, derecho o política con un tutor de IA.",
+          sv: "Arbeta med verkliga fall inom ekonomi, juridik eller politik med en AI-handledare.",
         },
       },
     ],
@@ -154,3 +225,27 @@ export const NAV_GROUPS: NavGroup[] = [
 
 /** Flat view of every link, for code that just needs to check/list all routes (not grouped display). */
 export const NAV_LINKS: NavLink[] = NAV_GROUPS.flatMap((group) => group.links);
+
+/** Copy for the landing page's "what do you want to practice today?" chooser. */
+export const LANDING_COPY: Record<LanguageCode, { title: string; subtitle: string }> = {
+  en: {
+    title: "What do you want to practice today?",
+    subtitle: "Pick a skill below — each session takes just a few minutes.",
+  },
+  de: {
+    title: "Was möchtest du heute üben?",
+    subtitle: "Wähle unten eine Fähigkeit — jede Übung dauert nur wenige Minuten.",
+  },
+  fr: {
+    title: "Que voulez-vous pratiquer aujourd'hui ?",
+    subtitle: "Choisissez une compétence ci-dessous — chaque séance ne prend que quelques minutes.",
+  },
+  es: {
+    title: "¿Qué quieres practicar hoy?",
+    subtitle: "Elige una habilidad abajo — cada sesión dura solo unos minutos.",
+  },
+  sv: {
+    title: "Vad vill du träna på idag?",
+    subtitle: "Välj en färdighet nedan — varje övning tar bara några minuter.",
+  },
+};
