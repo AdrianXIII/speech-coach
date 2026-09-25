@@ -1,5 +1,16 @@
 "use client";
 
+import { useLanguage } from "@/components/LanguageProvider";
+import type { LanguageCode } from "@/lib/languages";
+
+const T: Record<LanguageCode, { audience: string; watching: string; waiting: string }> = {
+  en: { audience: "Audience", watching: "Watching closely", waiting: "Waiting for you to begin" },
+  de: { audience: "Publikum", watching: "Hört aufmerksam zu", waiting: "Wartet auf deinen Start" },
+  fr: { audience: "Public", watching: "Écoute attentivement", waiting: "Attend que vous commenciez" },
+  es: { audience: "Público", watching: "Escuchando atentamente", waiting: "Esperando a que empieces" },
+  sv: { audience: "Publik", watching: "Lyssnar noga", waiting: "Väntar på att du ska börja" },
+};
+
 const ROWS = 3;
 const COLS = 8;
 
@@ -23,13 +34,15 @@ interface AudienceGridProps {
  * No canvas or 3D library — kept deliberately lightweight.
  */
 export function AudienceGrid({ engaged }: AudienceGridProps) {
+  const { language } = useLanguage();
+  const t = T[language];
   const seats = Array.from({ length: ROWS * COLS }, (_, i) => i);
 
   return (
     <div className="rounded-2xl border border-hairline bg-navy p-6 shadow-sm">
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-xs font-semibold uppercase tracking-widest text-cream-muted">
-          Audience
+          {t.audience}
         </h3>
         <span
           className={`flex items-center gap-1.5 text-xs font-medium transition-colors ${
@@ -39,7 +52,7 @@ export function AudienceGrid({ engaged }: AudienceGridProps) {
           <span
             className={`h-1.5 w-1.5 rounded-full ${engaged ? "bg-emerald-400" : "bg-slate-600"}`}
           />
-          {engaged ? "Watching closely" : "Waiting for you to begin"}
+          {engaged ? t.watching : t.waiting}
         </span>
       </div>
 

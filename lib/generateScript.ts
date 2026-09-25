@@ -25,11 +25,13 @@ const MOCK_SCRIPT =
  * Turns a topic, rough notes, or a draft into a polished, speakable script.
  * Falls back to a mock script when GEMINI_API_KEY isn't set.
  */
-export async function generateScript(input: string): Promise<GeneratedScript> {
+export async function generateScript(input: string, languageName = "English"): Promise<GeneratedScript> {
   if (!hasGeminiKey()) {
     return { script: MOCK_SCRIPT, mocked: true };
   }
 
-  const script = await generateContent([{ text: `${SYSTEM_PROMPT}\n\nInput:\n"""${input}"""` }]);
+  const script = await generateContent([
+    { text: `${SYSTEM_PROMPT}\n\nWrite the script in ${languageName}.\n\nInput:\n"""${input}"""` },
+  ]);
   return { script: script.trim(), mocked: false };
 }

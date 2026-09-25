@@ -8,8 +8,100 @@ import { Teleprompter } from "@/components/stage/Teleprompter";
 import { ScriptAssistant } from "@/components/ScriptAssistant";
 import { DashboardResults } from "@/components/DashboardResults";
 import type { AnalyzeSpeechResponse } from "@/types/speechAnalysis";
+import { useLanguage } from "@/components/LanguageProvider";
+import { COMMON } from "@/lib/commonStrings";
+import type { LanguageCode } from "@/lib/languages";
 
 type Mode = "simple" | "stage";
+
+const T: Record<
+  LanguageCode,
+  {
+    simple: string;
+    stage: string;
+    recording: string;
+    complete: string;
+    pressToStart: string;
+    analyze: string;
+    analyzing: string;
+    recordAgain: string;
+    cameraPreview: string;
+    startPractice: string;
+    stop: string;
+    practiceAgain: string;
+  }
+> = {
+  en: {
+    simple: "Simple recording",
+    stage: "Stage practice (video + audience)",
+    recording: "Recording…",
+    complete: "Recording complete",
+    pressToStart: "Press to start recording",
+    analyze: "Analyze Speech",
+    analyzing: "Analyzing…",
+    recordAgain: "Record Again",
+    cameraPreview: "Your camera preview will appear here once you start",
+    startPractice: "Start Practice",
+    stop: "Stop",
+    practiceAgain: "Practice Again",
+  },
+  de: {
+    simple: "Einfache Aufnahme",
+    stage: "Bühnenübung (Video + Publikum)",
+    recording: "Aufnahme läuft…",
+    complete: "Aufnahme abgeschlossen",
+    pressToStart: "Drücken, um die Aufnahme zu starten",
+    analyze: "Rede analysieren",
+    analyzing: "Wird analysiert…",
+    recordAgain: "Neu aufnehmen",
+    cameraPreview: "Deine Kameravorschau erscheint hier, sobald du startest",
+    startPractice: "Übung starten",
+    stop: "Stopp",
+    practiceAgain: "Nochmal üben",
+  },
+  fr: {
+    simple: "Enregistrement simple",
+    stage: "Entraînement sur scène (vidéo + public)",
+    recording: "Enregistrement…",
+    complete: "Enregistrement terminé",
+    pressToStart: "Appuyez pour commencer l'enregistrement",
+    analyze: "Analyser le discours",
+    analyzing: "Analyse…",
+    recordAgain: "Réenregistrer",
+    cameraPreview: "L'aperçu de votre caméra apparaîtra ici dès que vous commencerez",
+    startPractice: "Commencer l'entraînement",
+    stop: "Arrêter",
+    practiceAgain: "Recommencer",
+  },
+  es: {
+    simple: "Grabación simple",
+    stage: "Práctica en escenario (vídeo + público)",
+    recording: "Grabando…",
+    complete: "Grabación completa",
+    pressToStart: "Pulsa para empezar a grabar",
+    analyze: "Analizar discurso",
+    analyzing: "Analizando…",
+    recordAgain: "Grabar de nuevo",
+    cameraPreview: "La vista previa de tu cámara aparecerá aquí cuando empieces",
+    startPractice: "Empezar práctica",
+    stop: "Detener",
+    practiceAgain: "Practicar de nuevo",
+  },
+  sv: {
+    simple: "Enkel inspelning",
+    stage: "Scenövning (video + publik)",
+    recording: "Spelar in…",
+    complete: "Inspelningen är klar",
+    pressToStart: "Tryck för att börja spela in",
+    analyze: "Analysera talet",
+    analyzing: "Analyserar…",
+    recordAgain: "Spela in igen",
+    cameraPreview: "Din kameraförhandsvisning visas här när du börjar",
+    startPractice: "Starta övning",
+    stop: "Stoppa",
+    practiceAgain: "Öva igen",
+  },
+};
 
 /**
  * Delivery practice, in two modes sharing one recording/analysis pipeline:
@@ -22,6 +114,9 @@ type Mode = "simple" | "stage";
  * same underlying record → analyze loop.
  */
 export function SpeechRecorder() {
+  const { language } = useLanguage();
+  const t = T[language];
+  const common = COMMON[language];
   const [mode, setMode] = useState<Mode>("simple");
   const { isRecording, recordedBlob, audioBlob, stream, start, stop, reset, error } =
     useMediaRecorder(mode === "stage");
@@ -93,17 +188,18 @@ export function SpeechRecorder() {
       const formData = new FormData();
       formData.append("audio", blob, "speech.webm");
       formData.append("durationSeconds", String(elapsedSeconds));
+      formData.append("language", language);
 
       const res = await fetch("/api/analyze-speech", { method: "POST", body: formData });
       if (!res.ok) {
         const body = await res.json().catch(() => null);
-        throw new Error(body?.error || `Analysis request failed (${res.status}).`);
+        throw new Error(body?.error || common.requestFailed(res.status));
       }
 
       const result: AnalyzeSpeechResponse = await res.json();
       setResults(result);
     } catch (err) {
-      setAnalyzeError(err instanceof Error ? err.message : "Something went wrong.");
+      setAnalyzeError(err instanceof Error ? err.message : common.somethingWentWrong);
     } finally {
       setIsAnalyzing(false);
     }
@@ -123,7 +219,7 @@ export function SpeechRecorder() {
             mode === "simple" ? "bg-brass text-navy" : "bg-surface-2 text-ink-muted hover:bg-hairline"
           }`}
         >
-          Simple recording
+          {t.simple}
         </button>
         <button
           onClick={() => handleModeChange("stage")}
@@ -132,7 +228,7 @@ export function SpeechRecorder() {
             mode === "stage" ? "bg-brass text-navy" : "bg-surface-2 text-ink-muted hover:bg-hairline"
           }`}
         >
-          Stage practice (video + audience)
+          {t.stage}
         </button>
       </div>
 
@@ -147,7 +243,7 @@ export function SpeechRecorder() {
               onClick={handleStart}
               disabled={hasRecording}
               className="flex h-24 w-24 items-center justify-center rounded-full bg-red-600 text-white shadow-lg transition-transform hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
-              aria-label="Start Recording"
+              aria-label={common.startRecording}
             >
               <span className="h-7 w-7 rounded-full bg-surface" />
             </button>
@@ -155,14 +251,14 @@ export function SpeechRecorder() {
             <button
               onClick={stop}
               className="flex h-24 w-24 items-center justify-center rounded-full bg-navy text-white shadow-lg transition-transform hover:scale-105"
-              aria-label="Stop Recording"
+              aria-label={common.stopRecording}
             >
               <span className="h-7 w-7 rounded-md bg-surface" />
             </button>
           )}
 
           <p className="text-sm font-semibold text-ink-muted">
-            {isRecording ? "Recording…" : hasRecording ? "Recording complete" : "Press to start recording"}
+            {isRecording ? t.recording : hasRecording ? t.complete : t.pressToStart}
           </p>
 
           {error && <p className="text-sm text-red-600">{error}</p>}
@@ -177,14 +273,14 @@ export function SpeechRecorder() {
                   disabled={isAnalyzing}
                   className="rounded-lg bg-navy px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800 disabled:opacity-50"
                 >
-                  {isAnalyzing ? "Analyzing…" : "Analyze Speech"}
+                  {isAnalyzing ? t.analyzing : t.analyze}
                 </button>
                 <button
                   onClick={handleRecordAgain}
                   disabled={isAnalyzing}
                   className="rounded-lg bg-surface-2 px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-hairline disabled:opacity-50"
                 >
-                  Record Again
+                  {t.recordAgain}
                 </button>
               </div>
 
@@ -205,7 +301,7 @@ export function SpeechRecorder() {
                   <video src={playbackUrl ?? undefined} controls className="aspect-video w-full" />
                 ) : (
                   <div className="flex aspect-video w-full items-center justify-center text-sm text-cream-muted">
-                    Your camera preview will appear here once you start
+                    {t.cameraPreview}
                   </div>
                 )}
 
@@ -231,7 +327,7 @@ export function SpeechRecorder() {
                     onClick={handleStart}
                     className="rounded-lg bg-navy px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800"
                   >
-                    Start Practice
+                    {t.startPractice}
                   </button>
                 )}
                 {isRecording && (
@@ -239,7 +335,7 @@ export function SpeechRecorder() {
                     onClick={stop}
                     className="rounded-lg bg-navy px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800"
                   >
-                    Stop
+                    {t.stop}
                   </button>
                 )}
                 {showStageReview && (
@@ -249,14 +345,14 @@ export function SpeechRecorder() {
                       disabled={isAnalyzing || !audioBlob}
                       className="rounded-lg bg-navy px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800 disabled:opacity-50"
                     >
-                      {isAnalyzing ? "Analyzing…" : "Analyze Speech"}
+                      {isAnalyzing ? t.analyzing : t.analyze}
                     </button>
                     <button
                       onClick={handleRecordAgain}
                       disabled={isAnalyzing}
                       className="rounded-lg bg-surface-2 px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-hairline disabled:opacity-50"
                     >
-                      Practice Again
+                      {t.practiceAgain}
                     </button>
                   </>
                 )}

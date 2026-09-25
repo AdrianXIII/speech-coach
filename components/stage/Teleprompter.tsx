@@ -1,6 +1,41 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useLanguage } from "@/components/LanguageProvider";
+import type { LanguageCode } from "@/lib/languages";
+
+const T: Record<LanguageCode, { title: string; placeholder: string; speed: string; empty: string }> = {
+  en: {
+    title: "Teleprompter notes",
+    placeholder: "Paste or write your speech notes here — they'll scroll automatically once you start recording.",
+    speed: "Scroll speed",
+    empty: "No notes added — add some before you start next time.",
+  },
+  de: {
+    title: "Teleprompter-Notizen",
+    placeholder: "Füge deine Redenotizen hier ein oder schreibe sie — sie scrollen automatisch, sobald die Aufnahme startet.",
+    speed: "Scrollgeschwindigkeit",
+    empty: "Keine Notizen — füge beim nächsten Mal vor dem Start welche hinzu.",
+  },
+  fr: {
+    title: "Notes du téléprompteur",
+    placeholder: "Collez ou écrivez vos notes ici — elles défileront automatiquement dès le début de l'enregistrement.",
+    speed: "Vitesse de défilement",
+    empty: "Aucune note — ajoutez-en avant de commencer la prochaine fois.",
+  },
+  es: {
+    title: "Notas del teleprompter",
+    placeholder: "Pega o escribe aquí tus notas: se desplazarán automáticamente cuando empieces a grabar.",
+    speed: "Velocidad de desplazamiento",
+    empty: "Sin notas: añade algunas antes de empezar la próxima vez.",
+  },
+  sv: {
+    title: "Teleprompteranteckningar",
+    placeholder: "Klistra in eller skriv dina talanteckningar här — de rullar automatiskt när inspelningen startar.",
+    speed: "Rullningshastighet",
+    empty: "Inga anteckningar — lägg till några innan du börjar nästa gång.",
+  },
+};
 
 interface TeleprompterProps {
   text: string;
@@ -20,6 +55,8 @@ const DEFAULT_SPEED = 40;
  * regardless of frame rate.
  */
 export function Teleprompter({ text, onTextChange, isScrolling }: TeleprompterProps) {
+  const { language } = useLanguage();
+  const t = T[language];
   const [speed, setSpeed] = useState(DEFAULT_SPEED);
   const scrollRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<number | null>(null);
@@ -48,16 +85,16 @@ export function Teleprompter({ text, onTextChange, isScrolling }: TeleprompterPr
   if (!isScrolling) {
     return (
       <div className="flex flex-col gap-3 rounded-2xl border border-hairline bg-surface p-5 shadow-sm">
-        <h3 className="text-sm font-semibold text-ink">Teleprompter notes</h3>
+        <h3 className="text-sm font-semibold text-ink">{t.title}</h3>
         <textarea
           value={text}
           onChange={(e) => onTextChange(e.target.value)}
-          placeholder="Paste or write your speech notes here — they'll scroll automatically once you start recording."
+          placeholder={t.placeholder}
           rows={7}
           className="w-full resize-none rounded-lg border border-hairline p-3 text-sm text-ink focus:border-brass focus:outline-none"
         />
         <label className="flex items-center gap-3 text-xs text-ink-muted">
-          Scroll speed
+          {t.speed}
           <input
             type="range"
             min={MIN_SPEED}
@@ -80,7 +117,7 @@ export function Teleprompter({ text, onTextChange, isScrolling }: TeleprompterPr
       {text.trim() ? (
         <p className="whitespace-pre-wrap">{text}</p>
       ) : (
-        <p className="text-white/50">No notes added — add some before you start next time.</p>
+        <p className="text-white/50">{t.empty}</p>
       )}
       {/* trailing space so the last line isn't stuck at the bottom edge */}
       <div className="h-32" />

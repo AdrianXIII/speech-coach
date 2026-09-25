@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { continueChat, type ChatTurn } from "@/lib/chat";
 import { geminiErrorResponse } from "@/lib/gemini";
+import { getLanguage, toLanguageCode } from "@/lib/languages";
 
 /**
  * POST /api/chat
@@ -12,7 +13,7 @@ import { geminiErrorResponse } from "@/lib/gemini";
  * set).
  */
 export async function POST(req: NextRequest) {
-  let body: { history?: ChatTurn[] };
+  let body: { history?: ChatTurn[]; language?: string };
   try {
     body = await req.json();
   } catch {
@@ -32,7 +33,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const reply = await continueChat(history);
+    const reply = await continueChat(history, getLanguage(toLanguageCode(body.language)).name);
     return NextResponse.json({ reply });
   } catch (err) {
     return geminiErrorResponse(err, "Chat failed.");

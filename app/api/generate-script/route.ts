@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateScript } from "@/lib/generateScript";
 import { geminiErrorResponse } from "@/lib/gemini";
+import { getLanguage, toLanguageCode } from "@/lib/languages";
 
 /**
  * POST /api/generate-script
@@ -9,7 +10,7 @@ import { geminiErrorResponse } from "@/lib/gemini";
  * GEMINI_API_KEY isn't set).
  */
 export async function POST(req: NextRequest) {
-  let body: { input?: string };
+  let body: { input?: string; language?: string };
   try {
     body = await req.json();
   } catch {
@@ -22,7 +23,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const result = await generateScript(input);
+    const result = await generateScript(input, getLanguage(toLanguageCode(body.language)).name);
     return NextResponse.json(result);
   } catch (err) {
     return geminiErrorResponse(err, "Script generation failed.");

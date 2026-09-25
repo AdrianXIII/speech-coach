@@ -27,3 +27,8 @@ export const LANGUAGES: Language[] = [
 export function getLanguage(code: LanguageCode): Language {
   return LANGUAGES.find((l) => l.code === code) ?? LANGUAGES[0];
 }
+
+/** Validates an untrusted value (API request field) as a LanguageCode, falling back to English. */
+export function toLanguageCode(raw: unknown): LanguageCode {
+  return LANGUAGES.some((l) => l.code === raw) ? (raw as LanguageCode) : "en";
+}

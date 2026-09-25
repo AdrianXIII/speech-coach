@@ -1,5 +1,6 @@
 import { generateContent, hasGeminiKey } from "@/lib/gemini";
 import { analyzeSpeechMetrics, type SpeechMetrics } from "@/lib/speechMetrics";
+import { getLanguage, type LanguageCode } from "@/lib/languages";
 
 export interface MispronouncedWord {
   /** The correctly spelled target word (never a phonetic spelling of what was actually said) — safe to feed straight into the Pronunciation trainer's dictionary lookup. */
@@ -22,11 +23,13 @@ const MOCK_TRANSCRIPT =
   "You know, it's a skill that, um, basically everyone needs, whether you're, like, " +
   "presenting to a small team or, uh, speaking at a big conference. So, yeah, let's get into it.";
 
-const SYSTEM_PROMPT = `You are an expert public speaking coach with decades of experience helping people become more confident, clear, and engaging speakers.
+const buildSystemPrompt = (languageName: string) => `You are an expert public speaking coach with decades of experience helping people become more confident, clear, and engaging speakers.
 
-You will be given an audio recording of someone's practice speech.
+You will be given an audio recording of someone's practice speech. They are practicing in ${languageName}.
 
-Step 1: Transcribe it exactly word-for-word, in the language spoken (ignore any video, focus only on what's said). Include filler words like "um", "uh", "like", "you know", "so" if you hear them — do not clean them up.
+Write every strength, tip, and mispronunciation note in ${languageName}.
+
+Step 1: Transcribe it exactly word-for-word, in the language spoken (ignore any video, focus only on what's said). Include filler words and hesitation sounds if you hear them (in English "um", "uh", "like", "you know"; in other languages their equivalents, e.g. German "äh", French "euh", Spanish "este", Swedish "eh", "liksom") — do not clean them up.
 
 Step 2: Using that transcript, analyze their delivery and respond with specific, constructive, encouraging feedback grounded in what's actually in the transcript and how it's paced — not generic advice that could apply to anyone.
 
@@ -87,9 +90,10 @@ const ANALYSIS_RESPONSE_SCHEMA = {
 export async function analyzeSpeech(
   audio: File,
   durationSeconds: number,
+  language: LanguageCode = "en",
 ): Promise<SpeechAnalysisResult> {
   if (!hasGeminiKey()) {
-    const metrics = analyzeSpeechMetrics(MOCK_TRANSCRIPT, durationSeconds);
+    const metrics = analyzeSpeechMetrics(MOCK_TRANSCRIPT, durationSeconds, "en");
     return {
       transcript: MOCK_TRANSCRIPT,
       metrics,
@@ -113,7 +117,7 @@ export async function analyzeSpeech(
 
   const raw = await generateContent(
     [
-      { text: SYSTEM_PROMPT },
+      { text: buildSystemPrompt(getLanguage(language).name) },
       { inlineData: { mimeType: audio.type || "audio/webm", data: base64 } },
     ],
     { responseMimeType: "application/json", responseSchema: ANALYSIS_RESPONSE_SCHEMA },
@@ -143,7 +147,7 @@ export async function analyzeSpeech(
 
   return {
     transcript,
-    metrics: analyzeSpeechMetrics(transcript, durationSeconds),
+    metrics: analyzeSpeechMetrics(transcript, durationSeconds, language),
     strengths: (parsed.strengths ?? []).slice(0, 3),
     tips: (parsed.tips ?? []).slice(0, 3),
     mispronouncedWords,

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { analyzeSpeech } from "@/lib/analyzeSpeech";
 import { calculateOverallScore } from "@/lib/scoreSpeech";
 import { geminiErrorResponse } from "@/lib/gemini";
+import { toLanguageCode } from "@/lib/languages";
 import type { AnalyzeSpeechResponse } from "@/types/speechAnalysis";
 
 /**
@@ -25,6 +26,7 @@ export async function POST(req: NextRequest) {
 
   const audio = formData.get("audio");
   const durationSeconds = Number(formData.get("durationSeconds") ?? 0);
+  const language = toLanguageCode(formData.get("language")?.toString());
 
   if (!audio || !(audio instanceof Blob)) {
     return NextResponse.json({ error: "Missing 'audio' file in form data." }, { status: 400 });
@@ -34,7 +36,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const analysis = await analyzeSpeech(audio as File, durationSeconds);
+    const analysis = await analyzeSpeech(audio as File, durationSeconds, language);
 
     const response: AnalyzeSpeechResponse = {
       transcript: analysis.transcript,

@@ -16,12 +16,14 @@ const MOCK_REPLY =
  * with the visitor's latest question. Text-only — no audio is re-sent, so
  * a follow-up costs a fraction of the original analysis call.
  */
-export async function continueChat(history: ChatTurn[]): Promise<string> {
+export async function continueChat(history: ChatTurn[], languageName = "English"): Promise<string> {
   if (!hasGeminiKey()) return MOCK_REPLY;
 
-  const contents: GeminiTurn[] = history.map((turn) => ({
+  // No system-prompt slot in generateChat, so the language instruction
+  // rides on the first (synthetic, caller-seeded) user turn.
+  const contents: GeminiTurn[] = history.map((turn, i) => ({
     role: turn.role,
-    parts: [{ text: turn.text }],
+    parts: [{ text: i === 0 ? `(Always reply in ${languageName}.)\n\n${turn.text}` : turn.text }],
   }));
 
   const reply = await generateChat(contents);

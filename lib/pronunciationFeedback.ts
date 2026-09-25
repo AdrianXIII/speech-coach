@@ -5,10 +5,12 @@ export interface PronunciationFeedback {
   mocked: boolean;
 }
 
-const PROMPT_TEMPLATE = (targetWord: string) => `You are a friendly pronunciation coach helping a
-non-native English speaker sound more like a native speaker.
+const PROMPT_TEMPLATE = (targetWord: string, languageName: string) => `You are a friendly pronunciation coach helping a
+non-native ${languageName} speaker sound more like a native speaker.
 
-They are practicing saying: "${targetWord}"
+They are practicing saying this ${languageName} word or phrase: "${targetWord}"
+
+Write your feedback in ${languageName}.
 
 Listen to the attached recording of them saying it. In 2-3 short sentences: say how close it is to
 a native pronunciation, point out the specific sound(s) or syllable stress that's off (if any), and
@@ -31,6 +33,7 @@ const MOCK_FEEDBACK =
 export async function getPronunciationFeedback(
   targetWord: string,
   audio: File,
+  languageName = "English",
 ): Promise<PronunciationFeedback> {
   if (!hasGeminiKey()) {
     return { feedback: MOCK_FEEDBACK, mocked: true };
@@ -40,7 +43,7 @@ export async function getPronunciationFeedback(
   const base64 = Buffer.from(buffer).toString("base64");
 
   const feedback = await generateContent([
-    { text: PROMPT_TEMPLATE(targetWord) },
+    { text: PROMPT_TEMPLATE(targetWord, languageName) },
     { inlineData: { mimeType: audio.type || "audio/webm", data: base64 } },
   ]);
 

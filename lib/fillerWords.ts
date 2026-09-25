@@ -1,3 +1,5 @@
+import type { LanguageCode } from "@/lib/languages";
+
 export interface FillerWordHit {
   word: string;
   timestampSeconds: number;
@@ -10,24 +12,33 @@ export interface FillerWordStats {
   hits: FillerWordHit[];
 }
 
-export const DEFAULT_FILLER_WORDS = [
-  "um",
-  "uh",
-  "ah",
-  "like",
-  "you know",
-  "so",
-  "actually",
-  "basically",
-  "literally",
-  "kind of",
-  "sort of",
-];
+/**
+ * Common spoken fillers per language. Kept to words that are almost always
+ * filler in speech — genuinely ambiguous ones (German "ja", Swedish "så")
+ * are left out so ordinary sentences don't get flagged.
+ */
+export const FILLER_WORDS_BY_LANGUAGE: Record<LanguageCode, string[]> = {
+  en: ["um", "uh", "ah", "like", "you know", "so", "actually", "basically", "literally", "kind of", "sort of"],
+  de: ["äh", "ähm", "öhm", "hm", "also", "halt", "quasi", "sozusagen", "irgendwie", "eigentlich", "na ja"],
+  fr: ["euh", "ben", "bah", "genre", "en fait", "du coup", "voilà", "tu vois", "quoi", "bref"],
+  es: ["eh", "em", "este", "o sea", "pues", "bueno", "vale", "tipo", "en plan", "digamos", "sabes"],
+  sv: ["eh", "öh", "ehm", "liksom", "typ", "alltså", "asså", "ba", "så att säga", "på något sätt"],
+};
+
+export const DEFAULT_FILLER_WORDS = FILLER_WORDS_BY_LANGUAGE.en;
+
+/**
+ * Regex for one filler word/phrase with Unicode-aware word boundaries —
+ * JS's `\b` only knows ASCII letters, so it would never match fillers
+ * starting with "ä"/"ö" (German "äh", Swedish "öh").
+ */
+export function fillerPattern(word: string, flags = "gu"): RegExp {
+  const body = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, "\\s+");
+  return new RegExp(`(?<![\\p{L}\\p{N}])${body}(?![\\p{L}\\p{N}])`, flags);
+}
 
 /**
  * Scans a transcript for filler words and returns aggregate stats.
- * `wordTimestamps` is optional — pass it (e.g. from a speech-to-text API
- * that returns per-word timing) to get accurate hit timestamps.
  */
 export function detectFillerWords(
   transcript: string,
@@ -39,13 +50,11 @@ export function detectFillerWords(
   const hits: FillerWordHit[] = [];
 
   for (const word of fillerWords) {
-    const pattern = new RegExp(`\\b${word.replace(/\s+/g, "\\s+")}\\b`, "g");
-    const matches = lower.match(pattern);
+    const matches = lower.match(fillerPattern(word));
     if (matches?.length) {
       byWord[word] = matches.length;
       for (let i = 0; i < matches.length; i++) {
-        // Placeholder timestamp — replace with real per-word timing once
-        // the transcription API's word-level timestamps are wired in.
+        // Placeholder timestamp — no word-level timing from the transcription yet.
         hits.push({ word, timestampSeconds: 0 });
       }
     }

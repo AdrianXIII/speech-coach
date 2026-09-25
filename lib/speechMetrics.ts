@@ -1,5 +1,6 @@
-import { DEFAULT_FILLER_WORDS, detectFillerWords } from "@/lib/fillerWords";
+import { FILLER_WORDS_BY_LANGUAGE, detectFillerWords } from "@/lib/fillerWords";
 import type { FillerWordStats } from "@/lib/fillerWords";
+import type { LanguageCode } from "@/lib/languages";
 
 export interface SpeechMetrics {
   wordsPerMinute: number;
@@ -12,12 +13,16 @@ export interface SpeechMetrics {
  * calls — so it works identically whether the transcript came from Whisper
  * or the mock fallback.
  */
-export function analyzeSpeechMetrics(transcript: string, durationSeconds: number): SpeechMetrics {
+export function analyzeSpeechMetrics(
+  transcript: string,
+  durationSeconds: number,
+  language: LanguageCode = "en",
+): SpeechMetrics {
   const wordCount = transcript.trim().split(/\s+/).filter(Boolean).length;
   const wordsPerMinute =
     durationSeconds > 0 ? Math.round((wordCount / durationSeconds) * 60) : 0;
 
-  const fillerWords = detectFillerWords(transcript, durationSeconds, DEFAULT_FILLER_WORDS);
+  const fillerWords = detectFillerWords(transcript, durationSeconds, FILLER_WORDS_BY_LANGUAGE[language]);
 
   return { wordsPerMinute, fillerWords };
 }

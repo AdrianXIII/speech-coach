@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPronunciationFeedback } from "@/lib/pronunciationFeedback";
 import { geminiErrorResponse } from "@/lib/gemini";
+import { getLanguage, toLanguageCode } from "@/lib/languages";
 
 /**
  * POST /api/pronunciation-feedback
@@ -30,7 +31,8 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const result = await getPronunciationFeedback(word, audio as File);
+    const languageName = getLanguage(toLanguageCode(formData.get("language")?.toString())).name;
+    const result = await getPronunciationFeedback(word, audio as File, languageName);
     return NextResponse.json(result);
   } catch (err) {
     return geminiErrorResponse(err, "Pronunciation feedback failed.");
