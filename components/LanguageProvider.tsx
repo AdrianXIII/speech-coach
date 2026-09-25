@@ -39,6 +39,13 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  // Keep <html lang> in sync so screen readers and browser features (e.g.
+  // spellcheck, translation prompts) match the app's actual language
+  // instead of the "en" the server always renders before hydration.
+  useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
+
   function setLanguage(newLanguage: LanguageCode) {
     setLanguageState(newLanguage);
     try {

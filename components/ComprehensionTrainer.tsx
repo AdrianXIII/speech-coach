@@ -7,6 +7,7 @@ import { randomPassage, NEWS_TOPICS, type ComprehensionPassage, type NewsTopic }
 import { analyzeRichness, type RichnessScore } from "@/lib/languageRichness";
 import { getLanguage, type LanguageCode } from "@/lib/languages";
 import { useLanguage } from "@/components/LanguageProvider";
+import { COMMON } from "@/lib/commonStrings";
 import { BackLink } from "@/components/BackLink";
 
 const T: Record<LanguageCode, {
@@ -541,7 +542,7 @@ export function ComprehensionTrainer() {
               <button
                 onClick={handleStartResponse}
                 className="flex h-20 w-20 items-center justify-center rounded-full bg-red-600 text-white shadow-lg transition-transform hover:scale-105"
-                aria-label="Start Recording"
+                aria-label={COMMON[language].startRecording}
               >
                 <span className="h-6 w-6 rounded-full bg-surface" />
               </button>
@@ -560,7 +561,7 @@ export function ComprehensionTrainer() {
               <button
                 onClick={handleStopResponse}
                 className="flex h-20 w-20 items-center justify-center rounded-full bg-navy text-white shadow-lg transition-transform hover:scale-105"
-                aria-label="Stop Recording"
+                aria-label={COMMON[language].stopRecording}
               >
                 <span className="h-6 w-6 rounded-md bg-surface" />
               </button>

@@ -13,6 +13,7 @@ import {
 import { checkCollocationUsage, type CollocationUsage } from "@/lib/collocationCheck";
 import { getLanguage, type LanguageCode } from "@/lib/languages";
 import { useLanguage } from "@/components/LanguageProvider";
+import { COMMON } from "@/lib/commonStrings";
 
 const PROFILE_STORAGE_KEY = "collocationProfile";
 
@@ -417,7 +418,7 @@ export function CollocationTrainer() {
           <button
             onClick={handleStopSpeaking}
             className="flex h-20 w-20 items-center justify-center rounded-full bg-navy text-white shadow-lg transition-transform hover:scale-105"
-            aria-label="Stop Recording"
+            aria-label={COMMON[language].stopRecording}
           >
             <span className="h-6 w-6 rounded-md bg-surface" />
           </button>
@@ -527,6 +528,7 @@ function SpeakPromptStep({
   challenge: CollocationChallenge;
   onStart: () => void;
 }) {
+  const { language } = useLanguage();
   const correctPhrase = challenge.options.find((o) => o.correct)?.phrase ?? "";
   return (
     <div className="flex flex-col items-center gap-4 py-4 text-center">
@@ -537,7 +539,7 @@ function SpeakPromptStep({
       <button
         onClick={onStart}
         className="flex h-20 w-20 items-center justify-center rounded-full bg-red-600 text-white shadow-lg transition-transform hover:scale-105"
-        aria-label="Start Recording"
+        aria-label={COMMON[language].startRecording}
       >
         <span className="h-6 w-6 rounded-full bg-surface" />
       </button>

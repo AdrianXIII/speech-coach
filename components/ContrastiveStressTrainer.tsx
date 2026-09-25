@@ -5,6 +5,7 @@ import { useMediaRecorder } from "@/hooks/useMediaRecorder";
 import { measureSyllableStress, type StressMeasurement } from "@/lib/audioStress";
 import { randomContrastiveExercise, type ContrastiveExercise } from "@/lib/contrastiveStress";
 import { useLanguage } from "@/components/LanguageProvider";
+import { COMMON } from "@/lib/commonStrings";
 import type { LanguageCode } from "@/lib/languages";
 
 const T: Record<LanguageCode, {
@@ -221,7 +222,7 @@ export function ContrastiveStressTrainer() {
         <button
           onClick={start}
           className="flex h-20 w-20 items-center justify-center self-center rounded-full bg-red-600 text-white shadow-lg transition-transform hover:scale-105"
-          aria-label="Start Recording"
+          aria-label={COMMON[language].startRecording}
         >
           <span className="h-6 w-6 rounded-full bg-surface" />
         </button>
@@ -236,7 +237,7 @@ export function ContrastiveStressTrainer() {
           <button
             onClick={stop}
             className="flex h-20 w-20 items-center justify-center rounded-full bg-navy text-white shadow-lg transition-transform hover:scale-105"
-            aria-label="Stop Recording"
+            aria-label={COMMON[language].stopRecording}
           >
             <span className="h-6 w-6 rounded-md bg-surface" />
           </button>
