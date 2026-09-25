@@ -78,6 +78,24 @@ export const NAV_GROUPS: NavGroup[] = [
           sv: "Prata 60 sekunder om ett överraskningsämne — flyt under press.",
         },
       },
+      {
+        href: "/executive-communication",
+        icon: "🧭",
+        labels: {
+          en: "Executive Communication",
+          de: "Executive-Kommunikation",
+          fr: "Communication de direction",
+          es: "Comunicación ejecutiva",
+          sv: "Ledningskommunikation",
+        },
+        descriptions: {
+          en: "Practice explaining your impact, summarizing complex work in 30 seconds, and making your point heard in meetings — graded on structure, not delivery.",
+          de: "Übe, deinen Beitrag zu erklären, komplexe Arbeit in 30 Sekunden zusammenzufassen und dich in Meetings durchzusetzen — bewertet nach Struktur, nicht Vortragsweise.",
+          fr: "Entraînez-vous à expliquer votre impact, résumer un sujet complexe en 30 secondes et vous faire entendre en réunion — évalué sur la structure, pas l'élocution.",
+          es: "Practica explicar tu impacto, resumir un tema complejo en 30 segundos y hacerte escuchar en reuniones — evaluado por estructura, no por elocución.",
+          sv: "Öva på att förklara din påverkan, sammanfatta komplext arbete på 30 sekunder och göra dig hörd i möten — bedöms på struktur, inte framförande.",
+        },
+      },
     ],
   },
   {
