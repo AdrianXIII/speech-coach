@@ -25,13 +25,14 @@ function toReviewWord(row: any): ReviewWord {
  * connection degrades this one feature instead of breaking the whole
  * Pronunciation trainer for every visitor.
  */
-export async function listReviewWords(): Promise<ReviewWord[]> {
+export async function listReviewWords(language: string): Promise<ReviewWord[]> {
   if (!hasDatabase()) return [];
   try {
     const sql = await getDb();
     const rows = await sql!`
       SELECT id, word, added_at, last_practiced_at, practice_count, stage, next_review_at
       FROM pronunciation_review_words
+      WHERE language = ${language}
       ORDER BY next_review_at ASC
     `;
     return rows.map(toReviewWord);
@@ -41,14 +42,14 @@ export async function listReviewWords(): Promise<ReviewWord[]> {
   }
 }
 
-export async function addReviewWord(word: string): Promise<ReviewWord | null> {
+export async function addReviewWord(word: string, language: string): Promise<ReviewWord | null> {
   if (!hasDatabase()) return null;
   try {
     const sql = await getDb();
     const inserted = await sql!`
-      INSERT INTO pronunciation_review_words (word)
-      VALUES (${word})
-      ON CONFLICT (lower(word)) DO NOTHING
+      INSERT INTO pronunciation_review_words (word, language)
+      VALUES (${word}, ${language})
+      ON CONFLICT (language, lower(word)) DO NOTHING
       RETURNING id, word, added_at, last_practiced_at, practice_count, stage, next_review_at
     `;
     if (inserted[0]) return toReviewWord(inserted[0]);
@@ -58,7 +59,7 @@ export async function addReviewWord(word: string): Promise<ReviewWord | null> {
     const existing = await sql!`
       SELECT id, word, added_at, last_practiced_at, practice_count, stage, next_review_at
       FROM pronunciation_review_words
-      WHERE lower(word) = lower(${word})
+      WHERE language = ${language} AND lower(word) = lower(${word})
     `;
     return existing[0] ? toReviewWord(existing[0]) : null;
   } catch (err) {

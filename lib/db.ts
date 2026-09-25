@@ -160,8 +160,14 @@ function ensureSchema(sql: ReturnType<typeof postgres>): Promise<void> {
         next_review_at TIMESTAMPTZ NOT NULL DEFAULT now()
       );
 
-      CREATE UNIQUE INDEX IF NOT EXISTS pronunciation_review_words_word_lower_idx
-        ON pronunciation_review_words (lower(word));
+      -- Review words are per-language (the Pronunciation trainer now covers
+      -- all five). Rows saved before this existed were all English, which
+      -- the column default backfills; uniqueness moves from (word) to
+      -- (language, word), and both steps are idempotent on every cold start.
+      ALTER TABLE pronunciation_review_words ADD COLUMN IF NOT EXISTS language TEXT NOT NULL DEFAULT 'en';
+      DROP INDEX IF EXISTS pronunciation_review_words_word_lower_idx;
+      CREATE UNIQUE INDEX IF NOT EXISTS pronunciation_review_words_lang_word_idx
+        ON pronunciation_review_words (language, lower(word));
 
       CREATE TABLE IF NOT EXISTS exec_comm_attempts (
         id SERIAL PRIMARY KEY,

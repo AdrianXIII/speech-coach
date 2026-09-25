@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { hasDatabase } from "@/lib/db";
+import { toLanguageCode } from "@/lib/languages";
 import {
   listReviewWords,
   addReviewWord,
@@ -14,11 +15,11 @@ import {
  * is connected yet, consistent with the rest of the app's "gracefully do
  * nothing until configured" convention (see app/api/tutor/flags/route.ts).
  */
-export async function GET() {
+export async function GET(req: NextRequest) {
   if (!hasDatabase()) {
     return NextResponse.json({ words: [], databaseConfigured: false });
   }
-  const words = await listReviewWords();
+  const words = await listReviewWords(toLanguageCode(req.nextUrl.searchParams.get("language")));
   return NextResponse.json({ words, databaseConfigured: true });
 }
 
@@ -33,7 +34,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Missing 'word'." }, { status: 400 });
   }
 
-  const result = await addReviewWord(word);
+  const result = await addReviewWord(word, toLanguageCode(body?.language));
   if (!result) {
     return NextResponse.json({ error: "Could not add word." }, { status: 500 });
   }
