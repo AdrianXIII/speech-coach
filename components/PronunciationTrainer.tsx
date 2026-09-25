@@ -71,11 +71,18 @@ export function PronunciationTrainer() {
   // Spaced-repetition review list — fetched once, then kept in sync locally
   // from each mutation's own response (single-user app, nothing else could
   // change it concurrently, so a refetch after every action buys nothing).
+  // hasMutatedRef guards against a real race: the initial GET can still be
+  // in flight (a cold Postgres connection can take a couple of seconds) when
+  // the user adds/removes/marks a word — without this guard, the slow GET's
+  // stale response would land after the mutation and overwrite it.
   const [reviewWords, setReviewWords] = useState<ReviewWord[]>([]);
+  const hasMutatedRef = useRef(false);
   useEffect(() => {
     fetch("/api/pronunciation-review")
       .then((res) => res.json())
-      .then((data: { words: ReviewWord[] }) => setReviewWords(data.words ?? []))
+      .then((data: { words: ReviewWord[] }) => {
+        if (!hasMutatedRef.current) setReviewWords(data.words ?? []);
+      })
       .catch(() => {});
   }, []);
   const inReviewList = reviewWords.find((w) => w.word.toLowerCase() === word.trim().toLowerCase());
@@ -83,6 +90,7 @@ export function PronunciationTrainer() {
   async function handleAddToReviewList() {
     const target = word.trim();
     if (!target) return;
+    hasMutatedRef.current = true;
     const res = await fetch("/api/pronunciation-review", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -99,6 +107,7 @@ export function PronunciationTrainer() {
   }
 
   async function handleRemoveReviewWord(id: number) {
+    hasMutatedRef.current = true;
     setReviewWords((prev) => prev.filter((w) => w.id !== id));
     await fetch("/api/pronunciation-review", {
       method: "DELETE",
@@ -109,6 +118,7 @@ export function PronunciationTrainer() {
 
   async function handleMarkPracticed() {
     if (!inReviewList) return;
+    hasMutatedRef.current = true;
     const res = await fetch("/api/pronunciation-review", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
