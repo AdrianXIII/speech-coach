@@ -489,6 +489,7 @@ export function AITutor() {
           teachStepIndex={teachStepIndex}
           isSpeaking={playback.isSpeaking}
           isPlaybackSupported={playback.isSupported}
+          currentWordIndex={playback.currentWordIndex}
           elapsedSeconds={playback.elapsedSeconds}
           estimatedTotalSeconds={playback.estimatedTotalSeconds}
           onPlayPause={handlePlayPause}
@@ -597,15 +598,92 @@ export function AITutor() {
   );
 }
 
-/** The text spoken (and shown) for a given step of the rich teaching flow. */
-function teachStepText(teaching: TeachingContent, stepIndex: number, language: LanguageCode): string {
+interface TeachSegment {
+  text: string;
+  /** False for text that's spoken but never shown on screen (a connector phrase, the trailing handoff question) — excluded from word-highlighting since there's no DOM to highlight it in. */
+  display: boolean;
+}
+
+/**
+ * The single source of truth for a teach step's content, split into the
+ * same pieces shown on screen (title/explanation/whyItMatters/example, or
+ * overview, or connections) plus the spoken-only connector text between
+ * them. Both teachStepText (what's spoken) and TeachStep's rendering (what's
+ * shown, and where the word-highlight lands) are built from this same list,
+ * so the two can never drift out of sync with each other.
+ */
+function buildTeachSegments(teaching: TeachingContent, stepIndex: number, language: LanguageCode): TeachSegment[] {
   const t = tutorStrings(language);
-  if (stepIndex === -1) return teaching.overview;
+  if (stepIndex === -1) return [{ text: teaching.overview, display: true }];
   if (stepIndex < teaching.concepts.length) {
     const c = teaching.concepts[stepIndex];
-    return `${c.title}. ${c.explanation} ${c.whyItMatters} ${t.forExample} ${c.example}`;
+    return [
+      { text: `${c.title}.`, display: true },
+      { text: c.explanation, display: true },
+      { text: c.whyItMatters, display: true },
+      { text: t.forExample, display: false },
+      { text: c.example, display: true },
+    ];
   }
-  return `${teaching.connections} ${t.handoffQuestion}`;
+  return [
+    { text: teaching.connections, display: true },
+    { text: t.handoffQuestion, display: false },
+  ];
+}
+
+/** The text spoken for a given step of the rich teaching flow. */
+function teachStepText(teaching: TeachingContent, stepIndex: number, language: LanguageCode): string {
+  return buildTeachSegments(teaching, stepIndex, language)
+    .map((s) => s.text)
+    .join(" ");
+}
+
+function wordCount(text: string): number {
+  return text.trim() ? text.trim().split(/\s+/).filter(Boolean).length : 0;
+}
+
+/**
+ * Renders `text` word-by-word, highlighting the one at `currentIndex`
+ * (green, karaoke-style) — `startIndex` is this block's own first word's
+ * position in the overall step's word count, so multiple HighlightedWords
+ * blocks in a row (title, explanation, why-it-matters, example) share one
+ * continuous index space driven by useSpeechPlayback's currentWordIndex.
+ * Splits on `(\s+)` (capturing) so whitespace tokens are preserved and
+ * re-rendered verbatim between word spans — output text is never rejoined
+ * with different spacing than the input had.
+ */
+function HighlightedWords({
+  text,
+  startIndex,
+  currentIndex,
+}: {
+  text: string;
+  startIndex: number;
+  currentIndex: number;
+}) {
+  // A pure left-to-right fold rather than a mutated `let` counter inside
+  // .map() — this file's lint config (React Compiler rules) rejects
+  // reassigning a closed-over variable during render.
+  const { elements } = text.split(/(\s+)/).reduce<{ elements: ReactNode[]; nextIndex: number }>(
+    (acc, token, i) => {
+      if (token === "") return acc;
+      if (/^\s+$/.test(token)) {
+        return { elements: [...acc.elements, <span key={i}>{token}</span>], nextIndex: acc.nextIndex };
+      }
+      const isCurrent = acc.nextIndex === currentIndex;
+      return {
+        elements: [
+          ...acc.elements,
+          <span key={i} className={isCurrent ? "rounded bg-emerald-200 text-emerald-950" : undefined}>
+            {token}
+          </span>,
+        ],
+        nextIndex: acc.nextIndex + 1,
+      };
+    },
+    { elements: [], nextIndex: startIndex },
+  );
+  return <>{elements}</>;
 }
 
 /* ─────────────────────────── Voice answer control ─────────────────────────── */
@@ -665,6 +743,7 @@ function TeachStep({
   isPlaybackSupported,
   elapsedSeconds,
   estimatedTotalSeconds,
+  currentWordIndex,
   onPlayPause,
   onSkipBack,
   onSkipForward,
@@ -700,6 +779,7 @@ function TeachStep({
   isPlaybackSupported: boolean;
   elapsedSeconds: number;
   estimatedTotalSeconds: number;
+  currentWordIndex: number;
   onPlayPause: () => void;
   onSkipBack: () => void;
   onSkipForward: () => void;
@@ -806,6 +886,14 @@ function TeachStep({
   const isConnections = teachStepIndex === teaching.concepts.length;
   const concept = !isOverview && !isConnections ? teaching.concepts[teachStepIndex] : null;
 
+  // Segments (and each one's starting position in the shared word-index
+  // space) drive the highlight — see buildTeachSegments's doc comment for
+  // why this is the same list teachStepText is built from, word for word.
+  const segments = buildTeachSegments(teaching, teachStepIndex, language);
+  const segmentStarts = segments.map((_, i) =>
+    segments.slice(0, i).reduce((sum, seg) => sum + wordCount(seg.text), 0),
+  );
+
   return (
     <div className="flex flex-col gap-5">
       {header}
@@ -822,30 +910,46 @@ function TeachStep({
       <div className="rounded-lg bg-surface-2 p-5">
         <div className="flex items-center justify-between">
           <p className="text-xs font-semibold uppercase tracking-wide text-brass-text">
-            {isOverview ? "Overview" : isConnections ? "Putting it together" : concept!.title}
+            {concept ? (
+              <HighlightedWords text={segments[0].text} startIndex={segmentStarts[0]} currentIndex={currentWordIndex} />
+            ) : isOverview ? (
+              "Overview"
+            ) : (
+              "Putting it together"
+            )}
           </p>
           <span className="text-[10px] font-semibold text-ink-muted">
             {stepNumber} / {totalSteps}
           </span>
         </div>
 
-        {isOverview && <p className="mt-2 text-sm leading-relaxed text-ink">{teaching.overview}</p>}
+        {isOverview && (
+          <p className="mt-2 text-sm leading-relaxed text-ink">
+            <HighlightedWords text={segments[0].text} startIndex={segmentStarts[0]} currentIndex={currentWordIndex} />
+          </p>
+        )}
 
         {concept && (
           <div className="mt-2 flex flex-col gap-2">
-            <p className="text-sm leading-relaxed text-ink">{concept.explanation}</p>
+            <p className="text-sm leading-relaxed text-ink">
+              <HighlightedWords text={segments[1].text} startIndex={segmentStarts[1]} currentIndex={currentWordIndex} />
+            </p>
             <p className="text-sm leading-relaxed text-ink">
               <span className="font-semibold">Why it matters: </span>
-              {concept.whyItMatters}
+              <HighlightedWords text={segments[2].text} startIndex={segmentStarts[2]} currentIndex={currentWordIndex} />
             </p>
             <p className="text-sm leading-relaxed text-ink-muted">
               <span className="font-semibold text-ink">Example: </span>
-              {concept.example}
+              <HighlightedWords text={segments[4].text} startIndex={segmentStarts[4]} currentIndex={currentWordIndex} />
             </p>
           </div>
         )}
 
-        {isConnections && <p className="mt-2 text-sm leading-relaxed text-ink">{teaching.connections}</p>}
+        {isConnections && (
+          <p className="mt-2 text-sm leading-relaxed text-ink">
+            <HighlightedWords text={segments[0].text} startIndex={segmentStarts[0]} currentIndex={currentWordIndex} />
+          </p>
+        )}
 
         <PlaybackBar
           isSupported={isPlaybackSupported}

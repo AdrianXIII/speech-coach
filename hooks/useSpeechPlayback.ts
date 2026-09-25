@@ -9,6 +9,8 @@ export interface UseSpeechPlaybackResult {
   isPaused: boolean;
   elapsedSeconds: number;
   estimatedTotalSeconds: number;
+  /** Estimated index (into the word list of whatever text was passed to `play`) of the word currently being spoken — for karaoke-style highlighting. -1 when nothing is playing. Same estimation basis as elapsedSeconds/skip; see the hook's own doc comment. */
+  currentWordIndex: number;
   /** Starts speaking new text from the beginning, replacing whatever was playing. Also what "restart from scratch" (e.g. a Repeat button) should call. */
   play: (text: string) => void;
   /** Pauses at the current estimated position. */
@@ -32,10 +34,14 @@ const RATE = 0.95;
  */
 const WORDS_PER_MINUTE_AT_RATE_1 = 165;
 
+function wordCount(text: string): number {
+  return text.trim() ? text.trim().split(/\s+/).filter(Boolean).length : 0;
+}
+
 function estimateDurationSeconds(text: string): number {
-  const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
+  const words = wordCount(text);
   const wpm = WORDS_PER_MINUTE_AT_RATE_1 * RATE;
-  return wordCount > 0 ? (wordCount / wpm) * 60 : 0;
+  return words > 0 ? (words / wpm) * 60 : 0;
 }
 
 /** Maps an estimated elapsed time to a character offset, snapped to the start of the next word so playback never resumes mid-word. */
@@ -69,6 +75,10 @@ export function useSpeechPlayback(lang = "en-US"): UseSpeechPlaybackResult {
   const [isPaused, setIsPaused] = useState(false);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [estimatedTotalSeconds, setEstimatedTotalSeconds] = useState(0);
+  // State, not derived from fullTextRef at render time — refs can't be read
+  // during render (only in effects/callbacks), so this is set explicitly
+  // wherever fullTextRef itself is set (currently just play()).
+  const [totalWords, setTotalWords] = useState(0);
 
   const voiceRef = useRef<SpeechSynthesisVoice | undefined>(undefined);
   const fullTextRef = useRef("");
@@ -161,6 +171,7 @@ export function useSpeechPlayback(lang = "en-US"): UseSpeechPlaybackResult {
       fullTextRef.current = text;
       const total = estimateDurationSeconds(text);
       setEstimatedTotalSeconds(total);
+      setTotalWords(wordCount(text));
       setElapsedSeconds(0);
       elapsedRef.current = 0;
       speakFrom(0, total);
@@ -216,6 +227,7 @@ export function useSpeechPlayback(lang = "en-US"): UseSpeechPlaybackResult {
     elapsedRef.current = 0;
     fullTextRef.current = "";
     setEstimatedTotalSeconds(0);
+    setTotalWords(0);
   }, [stopTimer]);
 
   useEffect(() => {
@@ -229,12 +241,18 @@ export function useSpeechPlayback(lang = "en-US"): UseSpeechPlaybackResult {
     };
   }, [stopTimer]);
 
+  const currentWordIndex =
+    estimatedTotalSeconds > 0 && totalWords > 0
+      ? Math.min(totalWords - 1, Math.floor((elapsedSeconds / estimatedTotalSeconds) * totalWords))
+      : -1;
+
   return {
     isSupported,
     isSpeaking,
     isPaused,
     elapsedSeconds,
     estimatedTotalSeconds,
+    currentWordIndex,
     play,
     pause,
     resume,
