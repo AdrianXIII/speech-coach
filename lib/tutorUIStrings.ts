@@ -78,6 +78,7 @@ export interface TutorUI {
   preparingLesson: string;
   coreKnowledgeFor: (category: string) => string;
   noTeachingYet: string;
+  jurisdictionFallback: (shown: string, wanted: string) => string;
   noFundamentals: string;
   strongAnswerLooksLike: string;
   skipLesson: string;
@@ -152,6 +153,7 @@ const UI: Record<LanguageCode, TutorUI> = {
     preparingLesson: "Preparing your lesson…",
     coreKnowledgeFor: (c) => `Core knowledge for ${c}`,
     noTeachingYet: "Deep-dive teaching content for this category hasn’t been generated yet — here’s the fundamentals checklist in the meantime.",
+    jurisdictionFallback: (s, w) => `Showing ${s} — ${w} content isn’t available yet.`,
     noFundamentals: "No fundamentals catalogued yet for this category — you’ll still be graded against the challenge’s own key issues.",
     strongAnswerLooksLike: "What a strong answer looks like: ",
     skipLesson: "Skip the lesson — practice a case now →",
@@ -230,6 +232,7 @@ const UI: Record<LanguageCode, TutorUI> = {
     preparingLesson: "Deine Lektion wird vorbereitet…",
     coreKnowledgeFor: (c) => `Kernwissen für ${c}`,
     noTeachingYet: "Vertiefende Lerninhalte für diese Kategorie gibt es noch nicht — hier ist vorerst die Grundlagen-Checkliste.",
+    jurisdictionFallback: (s, w) => `Angezeigt wird ${s} — Inhalte für ${w} gibt es noch nicht.`,
     noFundamentals: "Für diese Kategorie sind noch keine Grundlagen erfasst — bewertet wirst du trotzdem anhand der Kernpunkte des Falls.",
     strongAnswerLooksLike: "So sieht eine starke Antwort aus: ",
     skipLesson: "Lektion überspringen — jetzt einen Fall üben →",
@@ -308,6 +311,7 @@ const UI: Record<LanguageCode, TutorUI> = {
     preparingLesson: "Préparation de votre leçon…",
     coreKnowledgeFor: (c) => `Connaissances clés : ${c}`,
     noTeachingYet: "Le contenu approfondi de cette catégorie n'a pas encore été généré — voici en attendant la liste des fondamentaux.",
+    jurisdictionFallback: (s, w) => `Contenu affiché : ${s} — le contenu pour ${w} n'est pas encore disponible.`,
     noFundamentals: "Aucun fondamental n'est encore répertorié pour cette catégorie — vous serez tout de même évalué sur les points clés du cas.",
     strongAnswerLooksLike: "À quoi ressemble une bonne réponse : ",
     skipLesson: "Passer la leçon — s'entraîner sur un cas →",
@@ -386,6 +390,7 @@ const UI: Record<LanguageCode, TutorUI> = {
     preparingLesson: "Preparando tu lección…",
     coreKnowledgeFor: (c) => `Conocimientos clave de ${c}`,
     noTeachingYet: "Aún no se ha generado el contenido detallado de esta categoría; mientras tanto, aquí tienes la lista de fundamentos.",
+    jurisdictionFallback: (s, w) => `Se muestra ${s}: el contenido para ${w} aún no está disponible.`,
     noFundamentals: "Aún no hay fundamentos catalogados para esta categoría; igualmente se te evaluará según los puntos clave del caso.",
     strongAnswerLooksLike: "Así es una respuesta sólida: ",
     skipLesson: "Saltar la lección: practicar un caso ahora →",
@@ -464,6 +469,7 @@ const UI: Record<LanguageCode, TutorUI> = {
     preparingLesson: "Förbereder din lektion…",
     coreKnowledgeFor: (c) => `Grundkunskaper i ${c}`,
     noTeachingYet: "Fördjupande lektionsinnehåll för den här kategorin finns inte än — här är grundchecklistan så länge.",
+    jurisdictionFallback: (s, w) => `Visar ${s} — innehåll för ${w} finns inte än.`,
     noFundamentals: "Inga grunder är katalogiserade för den här kategorin än — du bedöms ändå mot fallets egna nyckelfrågor.",
     strongAnswerLooksLike: "Så ser ett starkt svar ut: ",
     skipLesson: "Hoppa över lektionen — öva på ett fall direkt →",

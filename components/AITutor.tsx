@@ -431,8 +431,7 @@ export function AITutor() {
     <div className="flex flex-col gap-6 rounded-2xl border border-hairline bg-surface p-8 shadow-sm">
       {isJurisdictionFallback && jurisdiction && (
         <p className="text-xs text-brass-text">
-          Showing {jurisdictionLabels[teaching!.jurisdiction!]} — {jurisdictionLabels[jurisdiction]} content
-          isn&rsquo;t available yet.
+          {ui.jurisdictionFallback(jurisdictionLabels[teaching!.jurisdiction!], jurisdictionLabels[jurisdiction])}
         </p>
       )}
 
