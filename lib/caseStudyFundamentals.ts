@@ -1,3 +1,5 @@
+import { COUNTRY_BOUND_FUNDAMENTALS } from "@/lib/cases";
+
 export interface Fundamental {
   id: string;
   label: string;
@@ -12,6 +14,7 @@ export interface Fundamental {
  * colliding with business category names.
  */
 export const FUNDAMENTALS: Record<string, Fundamental[]> = {
+  ...COUNTRY_BOUND_FUNDAMENTALS,
   "business/Strategy": [
     { id: "strat-five-forces", label: "Applying Porter's Five Forces to assess industry attractiveness and competitive intensity" },
     { id: "strat-generic-strategies", label: "Choosing among cost leadership, differentiation, and focus (Porter's generic strategies)" },
