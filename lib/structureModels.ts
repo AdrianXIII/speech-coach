@@ -234,6 +234,16 @@ const EXEC_MODELS_BY_LANGUAGE: Record<LanguageCode, StructureModel[]> = {
         { label: "Because…", seconds: 45 },
       ],
     },
+    {
+      id: "wsn",
+      name: "What · So what · Now what",
+      fullName: "What happened – why it matters – what's next",
+      phases: [
+        { label: "What?", seconds: 15 },
+        { label: "So what?", seconds: 25 },
+        { label: "Now what?", seconds: 20 },
+      ],
+    },
   ],
   de: [
     {
@@ -254,6 +264,16 @@ const EXEC_MODELS_BY_LANGUAGE: Record<LanguageCode, StructureModel[]> = {
       phases: [
         { label: "Kernaussage", seconds: 15 },
         { label: "Weil…", seconds: 45 },
+      ],
+    },
+    {
+      id: "wsn",
+      name: "Was · Na und · Was nun",
+      fullName: "Was passiert ist – warum es wichtig ist – was jetzt",
+      phases: [
+        { label: "Was?", seconds: 15 },
+        { label: "Na und?", seconds: 25 },
+        { label: "Was nun?", seconds: 20 },
       ],
     },
   ],
@@ -278,6 +298,16 @@ const EXEC_MODELS_BY_LANGUAGE: Record<LanguageCode, StructureModel[]> = {
         { label: "Parce que…", seconds: 45 },
       ],
     },
+    {
+      id: "wsn",
+      name: "Quoi · Et alors · Et maintenant",
+      fullName: "Ce qui s'est passé – pourquoi c'est important – la suite",
+      phases: [
+        { label: "Quoi ?", seconds: 15 },
+        { label: "Et alors ?", seconds: 25 },
+        { label: "Et maintenant ?", seconds: 20 },
+      ],
+    },
   ],
   es: [
     {
@@ -298,6 +328,16 @@ const EXEC_MODELS_BY_LANGUAGE: Record<LanguageCode, StructureModel[]> = {
       phases: [
         { label: "Lo esencial", seconds: 15 },
         { label: "Porque…", seconds: 45 },
+      ],
+    },
+    {
+      id: "wsn",
+      name: "Qué · Y qué · Y ahora qué",
+      fullName: "Qué pasó – por qué importa – qué sigue",
+      phases: [
+        { label: "¿Qué?", seconds: 15 },
+        { label: "¿Y qué?", seconds: 25 },
+        { label: "¿Y ahora qué?", seconds: 20 },
       ],
     },
   ],
@@ -322,13 +362,36 @@ const EXEC_MODELS_BY_LANGUAGE: Record<LanguageCode, StructureModel[]> = {
         { label: "Eftersom…", seconds: 45 },
       ],
     },
+    {
+      id: "wsn",
+      name: "Vad · Så vad · Vad nu",
+      fullName: "Vad som hänt – varför det spelar roll – vad som ska hända",
+      phases: [
+        { label: "Vad?", seconds: 15 },
+        { label: "Så vad?", seconds: 25 },
+        { label: "Vad nu?", seconds: 20 },
+      ],
+    },
   ],
 };
 
-/** PREP (shared with Improv) plus STAR/BLUF — the framework picker for Executive Communication. */
+/** PREP (shared with Improv) plus STAR/BLUF/What-So what-Now what — the framework picker for Executive Communication. */
 export function execModelsForLanguage(language: LanguageCode): StructureModel[] {
   const prep = MODELS_BY_LANGUAGE[language].find((m) => m.id === "prep")!;
   return [prep, ...EXEC_MODELS_BY_LANGUAGE[language]];
+}
+
+/**
+ * Rescales a model's phases (authored to sum to 60s) to a different total
+ * length, keeping each phase's proportion — so a 30s executive summary and
+ * a 90s influence pitch both get a correctly paced phase bar.
+ */
+export function scaleModel(model: StructureModel, totalSeconds: number): StructureModel {
+  const base = model.phases.reduce((sum, p) => sum + p.seconds, 0);
+  return {
+    ...model,
+    phases: model.phases.map((p) => ({ ...p, seconds: (p.seconds * totalSeconds) / base })),
+  };
 }
 
 /** Which phase index is active at `elapsedSeconds` into the 60-second exercise. */

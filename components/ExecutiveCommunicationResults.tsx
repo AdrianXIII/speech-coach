@@ -1,22 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import type { ExecCommResult } from "@/lib/executiveCommEngine";
+import { SCORE_KEYS, type ExecCommAttempt, type ExecCommResult, type ScoreKey } from "@/lib/executiveCommTypes";
 import type { StructureModel } from "@/lib/structureModels";
 import { useLanguage } from "@/components/LanguageProvider";
 import { getLanguage, type LanguageCode } from "@/lib/languages";
 
 const T: Record<LanguageCode, {
   mockBanner: string;
-  bluf: string;
+  overall: string;
+  before: string;
+  now: string;
+  dimensions: Record<ScoreKey, string>;
   ledWithConclusion: string;
   buriedIt: string;
-  structure: string;
-  followed: string;
+  covered: string;
   missing: string;
-  conciseness: string;
-  tight: string;
-  rambled: string;
+  hedgingFound: string;
+  noHedging: string;
   transcript: string;
   strengths: string;
   tips: string;
@@ -24,125 +25,208 @@ const T: Record<LanguageCode, {
   strongRewriteHint: string;
   listen: string;
   stop: string;
-  practiceAgain: string;
+  retrySame: string;
+  retryHint: string;
+  newScenario: string;
+  progress: string;
+  attempts: string;
+  average: string;
+  best: string;
+  scoreLabel: (score: number) => string;
 }> = {
   en: {
     mockBanner: "Showing mock results — set GEMINI_API_KEY to see real grading.",
-    bluf: "Bottom Line Up Front",
+    overall: "Overall score",
+    before: "Before",
+    now: "Now",
+    dimensions: {
+      bluf: "Bottom line first",
+      structure: "Structure",
+      conciseness: "Conciseness",
+      specificity: "Specificity",
+      confidence: "Confident language",
+      closing: "Clear close / ask",
+    },
     ledWithConclusion: "Led with the conclusion",
-    buriedIt: "Buried the lede",
-    structure: "Structure",
-    followed: "Covered",
+    buriedIt: "Conclusion came too late",
+    covered: "Covered",
     missing: "Missing",
-    conciseness: "Conciseness",
-    tight: "Tight & focused",
-    rambled: "Rambled or went on tangents",
+    hedgingFound: "Hedging phrases you used",
+    noHedging: "No hedging — you owned your message.",
     transcript: "Transcript",
     strengths: "Strengths",
-    tips: "Areas to Improve",
+    tips: "For your next attempt",
     strongRewrite: "A Stronger Version",
-    strongRewriteHint: "Same content, restructured to lead with the point and follow the framework.",
+    strongRewriteHint: "Same content, restructured — listen, then try to say it your way.",
     listen: "🔊 Listen",
     stop: "⏹ Stop",
-    practiceAgain: "🎲 Practice again",
+    retrySame: "🔁 Try again — same scenario",
+    retryHint: "The fastest way to improve: apply the feedback right away and compare.",
+    newScenario: "New scenario",
+    progress: "Your progress",
+    attempts: "attempts",
+    average: "average",
+    best: "best",
+    scoreLabel: (s) => (s >= 85 ? "Excellent" : s >= 70 ? "Strong" : s >= 55 ? "Getting there" : s >= 40 ? "Needs work" : "Keep practicing"),
   },
   de: {
     mockBanner: "Mock-Ergebnisse — setze GEMINI_API_KEY für echte Bewertung.",
-    bluf: "Bottom Line Up Front",
+    overall: "Gesamtpunktzahl",
+    before: "Vorher",
+    now: "Jetzt",
+    dimensions: {
+      bluf: "Kernaussage zuerst",
+      structure: "Struktur",
+      conciseness: "Prägnanz",
+      specificity: "Konkretheit",
+      confidence: "Selbstsichere Sprache",
+      closing: "Klarer Abschluss",
+    },
     ledWithConclusion: "Mit der Kernaussage begonnen",
-    buriedIt: "Die Kernaussage kam zu spät",
-    structure: "Struktur",
-    followed: "Abgedeckt",
+    buriedIt: "Kernaussage kam zu spät",
+    covered: "Abgedeckt",
     missing: "Fehlend",
-    conciseness: "Prägnanz",
-    tight: "Klar und fokussiert",
-    rambled: "Abgeschweift oder wiederholt",
+    hedgingFound: "Abschwächende Formulierungen",
+    noHedging: "Keine Abschwächungen — du stehst zu deiner Aussage.",
     transcript: "Transkript",
     strengths: "Stärken",
-    tips: "Verbesserungspotenzial",
+    tips: "Für deinen nächsten Versuch",
     strongRewrite: "Eine stärkere Version",
-    strongRewriteHint: "Gleicher Inhalt, umstrukturiert mit der Kernaussage zuerst, dem gewählten Modell folgend.",
+    strongRewriteHint: "Gleicher Inhalt, neu strukturiert — anhören und dann auf deine Art sagen.",
     listen: "🔊 Anhören",
     stop: "⏹ Stopp",
-    practiceAgain: "🎲 Erneut üben",
+    retrySame: "🔁 Nochmal — gleiches Szenario",
+    retryHint: "Der schnellste Weg zur Verbesserung: Feedback sofort umsetzen und vergleichen.",
+    newScenario: "Neues Szenario",
+    progress: "Dein Fortschritt",
+    attempts: "Versuche",
+    average: "Durchschnitt",
+    best: "Bestwert",
+    scoreLabel: (s) => (s >= 85 ? "Ausgezeichnet" : s >= 70 ? "Stark" : s >= 55 ? "Auf gutem Weg" : s >= 40 ? "Ausbaufähig" : "Weiter üben"),
   },
   fr: {
     mockBanner: "Résultats fictifs — définissez GEMINI_API_KEY pour une évaluation réelle.",
-    bluf: "Bottom Line Up Front",
+    overall: "Score global",
+    before: "Avant",
+    now: "Maintenant",
+    dimensions: {
+      bluf: "L'essentiel d'abord",
+      structure: "Structure",
+      conciseness: "Concision",
+      specificity: "Précision",
+      confidence: "Langage assuré",
+      closing: "Conclusion claire",
+    },
     ledWithConclusion: "A commencé par la conclusion",
     buriedIt: "La conclusion est arrivée trop tard",
-    structure: "Structure",
-    followed: "Couvert",
+    covered: "Couvert",
     missing: "Manquant",
-    conciseness: "Concision",
-    tight: "Clair et concentré",
-    rambled: "Digressions ou répétitions",
+    hedgingFound: "Formules hésitantes utilisées",
+    noHedging: "Aucune hésitation — vous assumez votre message.",
     transcript: "Transcription",
     strengths: "Points forts",
-    tips: "Axes d'amélioration",
+    tips: "Pour votre prochain essai",
     strongRewrite: "Une version plus forte",
-    strongRewriteHint: "Même contenu, restructuré pour commencer par l'essentiel et suivre le modèle choisi.",
+    strongRewriteHint: "Même contenu, restructuré — écoutez, puis dites-le à votre façon.",
     listen: "🔊 Écouter",
     stop: "⏹ Arrêter",
-    practiceAgain: "🎲 Réessayer",
+    retrySame: "🔁 Réessayer — même scénario",
+    retryHint: "Le moyen le plus rapide de progresser : appliquer le retour tout de suite et comparer.",
+    newScenario: "Nouveau scénario",
+    progress: "Votre progression",
+    attempts: "essais",
+    average: "moyenne",
+    best: "meilleur",
+    scoreLabel: (s) => (s >= 85 ? "Excellent" : s >= 70 ? "Solide" : s >= 55 ? "En bonne voie" : s >= 40 ? "À travailler" : "Continuez"),
   },
   es: {
     mockBanner: "Mostrando resultados simulados — define GEMINI_API_KEY para una evaluación real.",
-    bluf: "Bottom Line Up Front",
+    overall: "Puntuación global",
+    before: "Antes",
+    now: "Ahora",
+    dimensions: {
+      bluf: "Lo esencial primero",
+      structure: "Estructura",
+      conciseness: "Concisión",
+      specificity: "Concreción",
+      confidence: "Lenguaje seguro",
+      closing: "Cierre claro",
+    },
     ledWithConclusion: "Empezó con la conclusión",
     buriedIt: "La conclusión llegó tarde",
-    structure: "Estructura",
-    followed: "Cubierto",
+    covered: "Cubierto",
     missing: "Faltante",
-    conciseness: "Concisión",
-    tight: "Claro y enfocado",
-    rambled: "Divagó o se fue por las ramas",
+    hedgingFound: "Expresiones de duda que usaste",
+    noHedging: "Sin dudas — defendiste tu mensaje.",
     transcript: "Transcripción",
     strengths: "Puntos fuertes",
-    tips: "Áreas de mejora",
+    tips: "Para tu próximo intento",
     strongRewrite: "Una versión más sólida",
-    strongRewriteHint: "Mismo contenido, reestructurado para empezar por lo esencial y seguir el modelo elegido.",
+    strongRewriteHint: "Mismo contenido, reestructurado — escúchalo y luego dilo a tu manera.",
     listen: "🔊 Escuchar",
     stop: "⏹ Detener",
-    practiceAgain: "🎲 Practicar de nuevo",
+    retrySame: "🔁 Otra vez — mismo escenario",
+    retryHint: "La forma más rápida de mejorar: aplica los comentarios enseguida y compara.",
+    newScenario: "Nuevo escenario",
+    progress: "Tu progreso",
+    attempts: "intentos",
+    average: "promedio",
+    best: "mejor",
+    scoreLabel: (s) => (s >= 85 ? "Excelente" : s >= 70 ? "Sólido" : s >= 55 ? "Vas bien" : s >= 40 ? "A mejorar" : "Sigue practicando"),
   },
   sv: {
     mockBanner: "Visar mockresultat — sätt GEMINI_API_KEY för riktig bedömning.",
-    bluf: "Bottom Line Up Front",
+    overall: "Totalpoäng",
+    before: "Före",
+    now: "Nu",
+    dimensions: {
+      bluf: "Slutsatsen först",
+      structure: "Struktur",
+      conciseness: "Koncishet",
+      specificity: "Konkretion",
+      confidence: "Självsäkert språk",
+      closing: "Tydlig avslutning",
+    },
     ledWithConclusion: "Ledde med slutsatsen",
     buriedIt: "Slutsatsen kom för sent",
-    structure: "Struktur",
-    followed: "Täckte in",
+    covered: "Täckte in",
     missing: "Saknades",
-    conciseness: "Koncishet",
-    tight: "Tight och fokuserat",
-    rambled: "Svamlade eller gick på sidospår",
+    hedgingFound: "Osäkra uttryck du använde",
+    noHedging: "Inga osäkra uttryck — du stod för ditt budskap.",
     transcript: "Transkript",
     strengths: "Styrkor",
-    tips: "Förbättringsområden",
+    tips: "Till nästa försök",
     strongRewrite: "En starkare version",
-    strongRewriteHint: "Samma innehåll, omstrukturerat för att leda med poängen och följa vald modell.",
+    strongRewriteHint: "Samma innehåll, omstrukturerat — lyssna och säg det sedan på ditt sätt.",
     listen: "🔊 Lyssna",
     stop: "⏹ Stoppa",
-    practiceAgain: "🎲 Öva igen",
+    retrySame: "🔁 Försök igen — samma scenario",
+    retryHint: "Snabbaste vägen till förbättring: använd feedbacken direkt och jämför.",
+    newScenario: "Nytt scenario",
+    progress: "Din utveckling",
+    attempts: "försök",
+    average: "snitt",
+    best: "bästa",
+    scoreLabel: (s) => (s >= 85 ? "Utmärkt" : s >= 70 ? "Starkt" : s >= 55 ? "På god väg" : s >= 40 ? "Behöver jobbas på" : "Fortsätt öva"),
   },
 };
 
 interface ExecutiveCommunicationResultsProps {
   results: ExecCommResult;
+  previousResult: ExecCommResult | null;
   model: StructureModel;
-  onPracticeAgain: () => void;
+  history: ExecCommAttempt[];
+  onRetrySame: () => void;
+  onNewScenario: () => void;
 }
 
-/**
- * Results view for Executive Communication — modeled on DashboardResults.tsx's
- * visual pattern (card stack, two-column strengths/tips) but not sharing its
- * component, since it's tightly coupled to analyzeSpeech's different shape.
- */
 export function ExecutiveCommunicationResults({
   results,
+  previousResult,
   model,
-  onPracticeAgain,
+  history,
+  onRetrySame,
+  onNewScenario,
 }: ExecutiveCommunicationResultsProps) {
   const { language } = useLanguage();
   const t = T[language];
@@ -164,60 +248,108 @@ export function ExecutiveCommunicationResults({
     setIsSpeaking(false);
   }
 
+  const notes: Record<ScoreKey, string> = {
+    bluf: results.bluf.note,
+    structure: results.structure.note,
+    conciseness: results.conciseness.note,
+    specificity: results.specificity.note,
+    confidence: results.confidence.note,
+    closing: results.closing.note,
+  };
+
+  const delta = previousResult ? results.overallScore - previousResult.overallScore : null;
+
   return (
     <div className="flex flex-col gap-6">
       {results.mocked && (
-        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-          {t.mockBanner}
-        </div>
+        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">{t.mockBanner}</div>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="rounded-2xl border border-hairline bg-surface p-6 shadow-sm">
-          <h3 className="mb-2 text-sm font-semibold text-ink">{t.bluf}</h3>
-          <p
-            className={`text-sm font-semibold ${
-              results.bluf.ledWithConclusion ? "text-emerald-700" : "text-amber-700"
-            }`}
-          >
-            {results.bluf.ledWithConclusion ? `✓ ${t.ledWithConclusion}` : `⚠ ${t.buriedIt}`}
-          </p>
-          <p className="mt-1.5 text-sm text-ink-muted">{results.bluf.note}</p>
-        </div>
-
-        <div className="rounded-2xl border border-hairline bg-surface p-6 shadow-sm">
-          <h3 className="mb-2 text-sm font-semibold text-ink">
-            {t.structure} ({model.name})
-          </h3>
-          {results.structure.followedPhases.length > 0 && (
-            <p className="text-sm text-emerald-700">
-              {t.followed}: {results.structure.followedPhases.join(", ")}
+      {/* Overall score, with before/after when this was a retry */}
+      <div className="flex flex-col items-center gap-5 rounded-2xl border border-hairline bg-gradient-to-br from-surface to-surface-2 p-8 shadow-sm sm:flex-row sm:justify-between">
+        <div className="flex flex-col items-center text-center sm:items-start sm:text-left">
+          <p className="text-xs font-semibold uppercase tracking-widest text-brass-text">{t.overall}</p>
+          <h2 className="mt-1 text-lg font-bold text-ink">{t.scoreLabel(results.overallScore)}</h2>
+          {previousResult && delta !== null && (
+            <p className="mt-2 text-sm text-ink-muted">
+              {t.before} {previousResult.overallScore} → {t.now} {results.overallScore}{" "}
+              <span className={`font-bold ${delta > 0 ? "text-emerald-700" : delta < 0 ? "text-red-600" : "text-ink-muted"}`}>
+                ({delta > 0 ? "+" : ""}
+                {delta})
+              </span>
             </p>
           )}
-          {results.structure.missingPhases.length > 0 && (
-            <p className="mt-1 text-sm text-amber-700">
-              {t.missing}: {results.structure.missingPhases.join(", ")}
-            </p>
-          )}
-          <p className="mt-1.5 text-sm text-ink-muted">{results.structure.note}</p>
         </div>
+        <ScoreRing score={results.overallScore} />
       </div>
 
-      <div className="rounded-2xl border border-hairline bg-surface p-6 shadow-sm">
-        <h3 className="mb-2 text-sm font-semibold text-ink">{t.conciseness}</h3>
-        <p
-          className={`text-sm font-semibold ${
-            results.conciseness.rambling ? "text-amber-700" : "text-emerald-700"
-          }`}
-        >
-          {results.conciseness.rambling ? `⚠ ${t.rambled}` : `✓ ${t.tight}`}
-        </p>
-        <p className="mt-1.5 text-sm text-ink-muted">{results.conciseness.note}</p>
-      </div>
+      {/* Six dimensions */}
+      <div className="flex flex-col gap-4 rounded-2xl border border-hairline bg-surface p-6 shadow-sm">
+        {SCORE_KEYS.map((key) => {
+          const score = results.scores[key];
+          const prev = previousResult?.scores[key];
+          const d = prev !== undefined ? score - prev : null;
+          return (
+            <div key={key} className="flex flex-col gap-1.5">
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-sm font-semibold text-ink">
+                  {t.dimensions[key]}
+                  {key === "structure" ? ` (${model.name})` : ""}
+                </span>
+                <span className="font-mono text-sm tabular-nums text-ink">
+                  {score}/10
+                  {d !== null && d !== 0 && (
+                    <span className={`ml-1.5 text-xs font-bold ${d > 0 ? "text-emerald-700" : "text-red-600"}`}>
+                      {d > 0 ? "+" : ""}
+                      {d}
+                    </span>
+                  )}
+                </span>
+              </div>
+              <div className="h-2 w-full overflow-hidden rounded-full bg-surface-2">
+                <div
+                  className={`h-full rounded-full ${score >= 7 ? "bg-emerald-500" : score >= 4 ? "bg-amber-500" : "bg-red-500"}`}
+                  style={{ width: `${score * 10}%` }}
+                />
+              </div>
 
-      <div className="rounded-2xl border border-hairline bg-surface p-6 shadow-sm">
-        <h3 className="mb-3 text-sm font-semibold text-ink">{t.transcript}</h3>
-        <p className="text-[15px] leading-relaxed text-ink-muted">{results.transcript}</p>
+              {key === "bluf" && (
+                <p className={`text-xs font-semibold ${results.bluf.ledWithConclusion ? "text-emerald-700" : "text-amber-700"}`}>
+                  {results.bluf.ledWithConclusion ? `✓ ${t.ledWithConclusion}` : `⚠ ${t.buriedIt}`}
+                </p>
+              )}
+              {key === "structure" && (
+                <>
+                  {results.structure.followedPhases.length > 0 && (
+                    <p className="text-xs text-emerald-700">
+                      {t.covered}: {results.structure.followedPhases.join(", ")}
+                    </p>
+                  )}
+                  {results.structure.missingPhases.length > 0 && (
+                    <p className="text-xs text-amber-700">
+                      {t.missing}: {results.structure.missingPhases.join(", ")}
+                    </p>
+                  )}
+                </>
+              )}
+              {key === "confidence" &&
+                (results.confidence.hedgingPhrases.length > 0 ? (
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span className="text-xs text-ink-muted">{t.hedgingFound}:</span>
+                    {results.confidence.hedgingPhrases.map((p) => (
+                      <span key={p} className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-900">
+                        &ldquo;{p}&rdquo;
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs font-semibold text-emerald-700">✓ {t.noHedging}</p>
+                ))}
+
+              {notes[key] && <p className="text-sm text-ink-muted">{notes[key]}</p>}
+            </div>
+          );
+        })}
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -239,30 +371,108 @@ export function ExecutiveCommunicationResults({
         </div>
       </div>
 
-      <button
-        onClick={onPracticeAgain}
-        className="self-center rounded-lg bg-surface-2 px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-hairline"
-      >
-        {t.practiceAgain}
-      </button>
+      <div className="rounded-2xl border border-hairline bg-surface p-6 shadow-sm">
+        <h3 className="mb-3 text-sm font-semibold text-ink">{t.transcript}</h3>
+        <p className="text-[15px] leading-relaxed text-ink-muted">{results.transcript}</p>
+      </div>
+
+      {history.length > 0 && <ProgressPanel history={history} t={t} />}
+
+      <div className="flex flex-col items-center gap-2">
+        <button
+          onClick={() => {
+            handleStop();
+            onRetrySame();
+          }}
+          className="rounded-lg bg-navy px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800"
+        >
+          {t.retrySame}
+        </button>
+        <p className="text-center text-xs text-ink-muted">{t.retryHint}</p>
+        <button
+          onClick={() => {
+            handleStop();
+            onNewScenario();
+          }}
+          className="mt-1 rounded-lg bg-surface-2 px-6 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-hairline"
+        >
+          {t.newScenario}
+        </button>
+      </div>
     </div>
   );
 }
 
-function FeedbackList({
-  title,
-  items,
-  tone,
+function ScoreRing({ score }: { score: number }) {
+  const radius = 52;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (Math.min(100, Math.max(0, score)) / 100) * circumference;
+  const ringColor = score >= 70 ? "stroke-emerald-500" : score >= 50 ? "stroke-amber-500" : "stroke-red-500";
+  return (
+    <div className="relative flex h-32 w-32 shrink-0 items-center justify-center">
+      <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
+        <circle cx="60" cy="60" r={radius} fill="none" strokeWidth="10" className="stroke-surface-2" />
+        <circle
+          cx="60"
+          cy="60"
+          r={radius}
+          fill="none"
+          strokeWidth="10"
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          className={`${ringColor} transition-[stroke-dashoffset] duration-700 ease-out`}
+        />
+      </svg>
+      <div className="absolute flex flex-col items-center">
+        <span className="text-3xl font-extrabold tabular-nums text-ink">{score}</span>
+        <span className="text-xs font-medium text-ink-muted">/ 100</span>
+      </div>
+    </div>
+  );
+}
+
+function ProgressPanel({
+  history,
+  t,
 }: {
-  title: string;
-  items: string[];
-  tone: "positive" | "improve";
+  history: ExecCommAttempt[];
+  t: { progress: string; attempts: string; average: string; best: string };
 }) {
+  // API returns newest first; chart reads left (oldest) to right (newest).
+  const recent = history.slice(0, 12).reverse();
+  const scores = history.map((a) => a.overallScore);
+  const average = Math.round(scores.reduce((s, v) => s + v, 0) / scores.length);
+  const best = Math.max(...scores);
+
+  return (
+    <div className="rounded-2xl border border-hairline bg-surface p-6 shadow-sm">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <h3 className="text-sm font-semibold text-ink">{t.progress}</h3>
+        <p className="text-xs text-ink-muted">
+          {history.length} {t.attempts} · {t.average} {average} · {t.best} {best}
+        </p>
+      </div>
+      <div className="mt-4 flex h-24 items-end gap-1.5">
+        {recent.map((a) => (
+          <div key={a.id} className="flex flex-1 flex-col items-center gap-1">
+            <div
+              className={`w-full rounded-t ${a.overallScore >= 70 ? "bg-emerald-500" : a.overallScore >= 50 ? "bg-amber-500" : "bg-red-400"}`}
+              style={{ height: `${Math.max(4, a.overallScore)}%` }}
+              title={`${a.overallScore}`}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function FeedbackList({ title, items, tone }: { title: string; items: string[]; tone: "positive" | "improve" }) {
   const toneClasses =
     tone === "positive"
       ? { title: "text-emerald-700", bullet: "bg-emerald-500" }
       : { title: "text-amber-700", bullet: "bg-amber-500" };
-
   return (
     <div className="rounded-2xl border border-hairline bg-surface p-6 shadow-sm">
       <h3 className={`mb-3 text-sm font-semibold ${toneClasses.title}`}>{title}</h3>

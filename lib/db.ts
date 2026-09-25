@@ -162,6 +162,17 @@ function ensureSchema(sql: ReturnType<typeof postgres>): Promise<void> {
 
       CREATE UNIQUE INDEX IF NOT EXISTS pronunciation_review_words_word_lower_idx
         ON pronunciation_review_words (lower(word));
+
+      CREATE TABLE IF NOT EXISTS exec_comm_attempts (
+        id SERIAL PRIMARY KEY,
+        scenario_id TEXT NOT NULL,
+        category TEXT NOT NULL,
+        model_id TEXT NOT NULL,
+        language TEXT NOT NULL,
+        overall_score INTEGER NOT NULL,
+        scores JSONB NOT NULL,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+      );
     `).then(() => undefined);
   }
   return schemaReady;

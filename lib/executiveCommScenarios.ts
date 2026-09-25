@@ -7,6 +7,17 @@ import type { LanguageCode } from "@/lib/languages";
  */
 export type CommScenarioCategory = "self-advocacy" | "executive-summary" | "influence";
 
+/**
+ * Speaking time per scenario type, matching how each is actually practiced:
+ * a hallway/executive update is a ~30s exercise, making your own case
+ * ~60s, and persuading a skeptical room needs room for a real argument.
+ */
+export const RECOMMENDED_SECONDS: Record<CommScenarioCategory, number> = {
+  "executive-summary": 30,
+  "self-advocacy": 60,
+  influence: 90,
+};
+
 export interface CommScenario {
   id: string;
   category: CommScenarioCategory;
