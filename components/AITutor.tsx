@@ -19,7 +19,8 @@ import { countryForLanguage, type CountryCode } from "@/lib/countryContext";
 import { matchSpokenLabel } from "@/lib/voiceMatch";
 import { resolveTeachNavCommand, resolveHandoffCommand } from "@/lib/tutorVoiceCommands";
 import { categoryLabel, categoryLabels } from "@/lib/categoryLabels";
-import { tutorStrings } from "@/lib/tutorUIStrings";
+import { tutorStrings, tutorUI } from "@/lib/tutorUIStrings";
+import { COMMON } from "@/lib/commonStrings";
 import { ProfessionPicker, PROFESSION_LABELS, professionLabel } from "@/components/shared/ProfessionPicker";
 import { CategoryPicker } from "@/components/shared/CategoryPicker";
 import { TutorProfileEditor } from "@/components/TutorProfileEditor";
@@ -32,12 +33,6 @@ type Mode = "core" | "news";
 /** Voice answers are routed here so one mic button can serve every prompt in the flow. */
 type VoiceIntent = "profession" | "category" | "teachNav" | "handoff" | null;
 
-const ENTITY_LABEL: Record<CaseProfession, string> = {
-  business: "company",
-  law: "client organization",
-  politics: "organization",
-};
-
 /**
  * One generic tutor session, voice-first: it teaches the domain step by
  * step (spoken aloud, with a mic button to answer/steer by voice — tap
@@ -48,6 +43,8 @@ const ENTITY_LABEL: Record<CaseProfession, string> = {
  */
 export function AITutor() {
   const { language } = useLanguage();
+  const ui = tutorUI(language);
+  const common = COMMON[language];
   const [phase, setPhase] = useState<Phase>("selectProfession");
   const [profession, setProfession] = useState<CaseProfession | null>(null);
   const [category, setCategory] = useState<string | null>(null);
@@ -138,7 +135,7 @@ export function AITutor() {
       .then(async (res) => {
         if (!res.ok) {
           const body = await res.json().catch(() => null);
-          throw new Error(body?.error || `Evaluation failed (${res.status}).`);
+          throw new Error(body?.error || common.requestFailed(res.status));
         }
         return res.json() as Promise<TutorFeedback>;
       })
@@ -147,7 +144,7 @@ export function AITutor() {
         setPhase("feedback");
       })
       .catch((err) => {
-        setEvalError(err instanceof Error ? err.message : "Something went wrong.");
+        setEvalError(err instanceof Error ? err.message : common.somethingWentWrong);
         setPhase("challenge");
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -197,7 +194,7 @@ export function AITutor() {
         setVoiceNotice(null);
         handleSelectProfession(p);
       } else {
-        setVoiceNotice(`Didn't catch that — try naming a profession, or tap one below.`);
+        setVoiceNotice(ui.didntCatchProfession);
       }
     } else if (voiceIntent === "category" && profession) {
       const categories = CASE_CATEGORIES[profession];
@@ -208,7 +205,7 @@ export function AITutor() {
         setVoiceNotice(null);
         handleSelectCategory(cat);
       } else {
-        setVoiceNotice(`Didn't catch that — try naming the category, or tap one below.`);
+        setVoiceNotice(ui.didntCatchCategory);
       }
     } else if (voiceIntent === "teachNav") {
       const cmd = resolveTeachNavCommand(heard, language);
@@ -216,7 +213,7 @@ export function AITutor() {
         setVoiceNotice(null);
         handleTeachCommand(cmd);
       } else {
-        setVoiceNotice(`Didn't catch that — say "next" or "repeat", or tap a button below.`);
+        setVoiceNotice(ui.didntCatchTeachNav);
       }
     } else if (voiceIntent === "handoff") {
       const cmd = resolveHandoffCommand(heard, language);
@@ -229,7 +226,7 @@ export function AITutor() {
         setMode("core");
         beginChallenge("core");
       } else {
-        setVoiceNotice(`Didn't catch that — say "standard" or "news", or tap a button below.`);
+        setVoiceNotice(ui.didntCatchHandoff);
       }
     }
     setVoiceIntent(null);
@@ -248,7 +245,7 @@ export function AITutor() {
     playback.cancel();
     setProfession(p);
     setCategory(null);
-    setProfile(loadTutorProfile(p));
+    setProfile(loadTutorProfile(p, language));
     setPhase("selectCategory");
   }
 
@@ -441,7 +438,7 @@ export function AITutor() {
 
       {!recognition.isSupported && (
         <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-          Your browser doesn&rsquo;t support speech recognition — try Chrome or Edge to use this exercise.
+          {ui.browserUnsupported}
         </div>
       )}
 
@@ -512,7 +509,7 @@ export function AITutor() {
           onFlag={handleFlagConcept}
           voiceControl={
             <VoiceAnswerControl
-              prompt='Say "next", "repeat", or "back".'
+              prompt={ui.teachNavPrompt}
               listening={voiceIntent === "teachNav" && voiceNav.isListening}
               liveTranscript={voiceIntent === "teachNav" ? voiceNav.transcript : ""}
               notice={voiceIntent === null ? voiceNotice : null}
@@ -522,7 +519,7 @@ export function AITutor() {
           }
           handoffVoiceControl={
             <VoiceAnswerControl
-              prompt='Say "standard" or "news".'
+              prompt={ui.handoffPrompt}
               listening={voiceIntent === "handoff" && voiceNav.isListening}
               liveTranscript={voiceIntent === "handoff" ? voiceNav.transcript : ""}
               notice={voiceIntent === null ? voiceNotice : null}
@@ -541,10 +538,7 @@ export function AITutor() {
 
       {phase === "challenge" && newsFallbackNotice && !currentCase && !newsItem && (
         <div className="flex flex-col items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-4">
-          <p className="text-sm text-amber-800">
-            Just nu finns inte nyhetsartiklar som är lämpliga för det här området. Prova igen om en stund, eller
-            fortsätt med ett standardfall.
-          </p>
+          <p className="text-sm text-amber-800">{ui.newsUnavailable}</p>
           <button
             onClick={() => {
               setMode("core");
@@ -552,7 +546,7 @@ export function AITutor() {
             }}
             className="rounded-lg bg-brass px-4 py-2 text-sm font-semibold text-navy"
           >
-            Använd standardfall istället
+            {ui.useStandardInstead}
           </button>
         </div>
       )}
@@ -579,7 +573,7 @@ export function AITutor() {
       {phase === "evaluating" && (
         <div className="flex flex-col items-center gap-3 py-10">
           <span className="h-8 w-8 animate-spin rounded-full border-2 border-hairline border-t-brass" />
-          <p className="text-sm text-ink-muted">Evaluating your answer…</p>
+          <p className="text-sm text-ink-muted">{ui.evaluating}</p>
         </div>
       )}
 
@@ -703,6 +697,7 @@ function VoiceAnswerControl({
   onSpeak: () => void;
   compact?: boolean;
 }) {
+  const ui = tutorUI(useLanguage().language);
   return (
     <div className={`flex flex-col items-center gap-2 ${compact ? "" : "rounded-lg border border-hairline p-3"}`}>
       <button
@@ -714,10 +709,10 @@ function VoiceAnswerControl({
       >
         {listening ? (
           <>
-            <span className="h-2 w-2 animate-pulse rounded-full bg-red-500" /> Listening…
+            <span className="h-2 w-2 animate-pulse rounded-full bg-red-500" /> {ui.listening}
           </>
         ) : (
-          <>🎤 Answer by voice</>
+          <>{ui.answerByVoice}</>
         )}
       </button>
       {!compact && <p className="text-center text-xs text-ink-muted">{prompt}</p>}
@@ -802,13 +797,14 @@ function TeachStep({
   onSkipToChallenge: () => void;
   onChangeCategory: () => void;
 }) {
+  const ui = tutorUI(language);
   const header = (
     <div className="flex items-center justify-between">
       <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
         {professionLabel(profession, language).label} · {categoryLabel(category, language)}
       </p>
       <button onClick={onChangeCategory} className="text-xs font-semibold text-brass-text hover:underline">
-        ← Change category
+        {ui.changeCategoryLink}
       </button>
     </div>
   );
@@ -834,7 +830,7 @@ function TeachStep({
         {header}
         <div className="flex flex-col items-center gap-3 py-10">
           <span className="h-8 w-8 animate-spin rounded-full border-2 border-hairline border-t-brass" />
-          <p className="text-sm text-ink-muted">Preparing your lesson…</p>
+          <p className="text-sm text-ink-muted">{ui.preparingLesson}</p>
         </div>
       </div>
     );
@@ -848,11 +844,10 @@ function TeachStep({
         {header}
         <div className="rounded-lg bg-surface-2 p-5">
           <p className="text-xs font-semibold uppercase tracking-wide text-brass-text">
-            Core knowledge for {categoryLabel(category, language)}
+            {ui.coreKnowledgeFor(categoryLabel(category, language))}
           </p>
           <p className="mt-1 text-xs text-ink-muted">
-            Deep-dive teaching content for this category hasn&rsquo;t been generated yet — here&rsquo;s the
-            fundamentals checklist in the meantime.
+            {ui.noTeachingYet}
           </p>
           {fundamentals.length > 0 ? (
             <ul className="mt-3 flex flex-col gap-1.5">
@@ -864,13 +859,12 @@ function TeachStep({
             </ul>
           ) : (
             <p className="mt-2 text-sm text-ink-muted">
-              No fundamentals catalogued yet for this category — you&rsquo;ll still be graded against
-              the challenge&rsquo;s own key issues.
+              {ui.noFundamentals}
             </p>
           )}
           {exampleApproach && (
             <p className="mt-4 text-sm leading-relaxed text-ink-muted">
-              <span className="font-semibold text-ink">What a strong answer looks like: </span>
+              <span className="font-semibold text-ink">{ui.strongAnswerLooksLike}</span>
               {exampleApproach}
             </p>
           )}
@@ -903,7 +897,7 @@ function TeachStep({
           onClick={onSkipToChallenge}
           className="self-center text-xs font-semibold text-ink-muted hover:text-brass-text hover:underline"
         >
-          Skip the lesson — practice a case now →
+          {ui.skipLesson}
         </button>
       )}
 
@@ -913,9 +907,9 @@ function TeachStep({
             {concept ? (
               <HighlightedWords text={segments[0].text} startIndex={segmentStarts[0]} currentIndex={currentWordIndex} />
             ) : isOverview ? (
-              "Overview"
+              ui.overview
             ) : (
-              "Putting it together"
+              ui.puttingTogether
             )}
           </p>
           <span className="text-[10px] font-semibold text-ink-muted">
@@ -935,11 +929,11 @@ function TeachStep({
               <HighlightedWords text={segments[1].text} startIndex={segmentStarts[1]} currentIndex={currentWordIndex} />
             </p>
             <p className="text-sm leading-relaxed text-ink">
-              <span className="font-semibold">Why it matters: </span>
+              <span className="font-semibold">{ui.whyItMatters}</span>
               <HighlightedWords text={segments[2].text} startIndex={segmentStarts[2]} currentIndex={currentWordIndex} />
             </p>
             <p className="text-sm leading-relaxed text-ink-muted">
-              <span className="font-semibold text-ink">Example: </span>
+              <span className="font-semibold text-ink">{ui.example}</span>
               <HighlightedWords text={segments[4].text} startIndex={segmentStarts[4]} currentIndex={currentWordIndex} />
             </p>
           </div>
@@ -969,7 +963,7 @@ function TeachStep({
           rel="noopener noreferrer"
           className="self-center text-xs font-semibold text-ink-muted hover:text-brass-text hover:underline"
         >
-          Sources (PDF) →
+          {ui.sourcesPdf}
         </a>
       )}
 
@@ -983,19 +977,19 @@ function TeachStep({
               disabled={isOverview}
               className="rounded-lg bg-surface-2 px-4 py-2 text-xs font-semibold text-ink transition-colors hover:bg-hairline disabled:cursor-not-allowed disabled:opacity-40"
             >
-              ← Back
+              {ui.back}
             </button>
             <button
               onClick={onRepeat}
               className="rounded-lg bg-surface-2 px-4 py-2 text-xs font-semibold text-ink transition-colors hover:bg-hairline"
             >
-              🔁 Repeat
+              {ui.repeat}
             </button>
             <button
               onClick={onNext}
               className="rounded-lg bg-navy px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-navy-800"
             >
-              Next →
+              {ui.next}
             </button>
           </div>
           {voiceControl}
@@ -1009,13 +1003,13 @@ function TeachStep({
               onClick={onBack}
               className="rounded-lg bg-surface-2 px-4 py-2 text-xs font-semibold text-ink transition-colors hover:bg-hairline"
             >
-              ← Back
+              {ui.back}
             </button>
             <button
               onClick={onRepeat}
               className="rounded-lg bg-surface-2 px-4 py-2 text-xs font-semibold text-ink transition-colors hover:bg-hairline"
             >
-              🔁 Repeat
+              {ui.repeat}
             </button>
           </div>
           {sessionTypePicker}
@@ -1039,9 +1033,10 @@ function FlagConceptControl({
   const [reason, setReason] = useState<"inaccurate" | "shallow" | "other">("inaccurate");
   const [note, setNote] = useState("");
   const [sent, setSent] = useState(false);
+  const ui = tutorUI(useLanguage().language);
 
   if (sent) {
-    return <p className="text-center text-xs text-ink-muted">Thanks — flagged for review.</p>;
+    return <p className="text-center text-xs text-ink-muted">{ui.flagThanks}</p>;
   }
 
   if (!open) {
@@ -1050,7 +1045,7 @@ function FlagConceptControl({
         onClick={() => setOpen(true)}
         className="self-center text-xs font-semibold text-ink-muted hover:text-brass-text hover:underline"
       >
-        🚩 This seems wrong or shallow
+        {ui.flagOpen}
       </button>
     );
   }
@@ -1066,19 +1061,19 @@ function FlagConceptControl({
               reason === r ? "bg-brass text-navy" : "bg-surface-2 text-ink-muted hover:bg-hairline"
             }`}
           >
-            {r}
+            {ui.flagReasons[r]}
           </button>
         ))}
       </div>
       <input
         value={note}
         onChange={(e) => setNote(e.target.value)}
-        placeholder="Optional note — what's wrong?"
+        placeholder={ui.flagNotePlaceholder}
         className="rounded-lg border border-hairline px-3 py-1.5 text-xs text-ink placeholder:text-ink-muted focus:border-brass focus:outline-none"
       />
       <div className="flex justify-end gap-2">
         <button onClick={() => setOpen(false)} className="text-xs font-semibold text-ink-muted hover:underline">
-          Cancel
+          {ui.cancel}
         </button>
         <button
           onClick={() => {
@@ -1087,7 +1082,7 @@ function FlagConceptControl({
           }}
           className="rounded-lg bg-navy px-3 py-1.5 text-xs font-semibold text-white hover:bg-navy-800"
         >
-          Submit
+          {ui.submit}
         </button>
       </div>
     </div>
@@ -1119,10 +1114,11 @@ function SessionTypePicker({
   isFetchingNews: boolean;
   onStart: () => void;
 }) {
+  const ui = tutorUI(useLanguage().language);
   return (
     <div className="flex w-full flex-col gap-5">
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Session type</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{ui.sessionType}</p>
         <div className="mt-2 grid gap-2 sm:grid-cols-2">
           <button
             onClick={() => onModeChange("core")}
@@ -1130,8 +1126,8 @@ function SessionTypePicker({
               mode === "core" ? "border-brass bg-surface-2" : "border-hairline bg-surface hover:bg-surface-2"
             }`}
           >
-            <p className="text-sm font-bold text-ink">Standard case</p>
-            <p className="mt-0.5 text-xs text-ink-muted">A realistic case drawn from this category.</p>
+            <p className="text-sm font-bold text-ink">{ui.standardCase}</p>
+            <p className="mt-0.5 text-xs text-ink-muted">{ui.standardCaseDesc}</p>
           </button>
           <button
             onClick={() => onModeChange("news")}
@@ -1139,10 +1135,8 @@ function SessionTypePicker({
               mode === "news" ? "border-brass bg-surface-2" : "border-hairline bg-surface hover:bg-surface-2"
             }`}
           >
-            <p className="text-sm font-bold text-ink">Live news</p>
-            <p className="mt-0.5 text-xs text-ink-muted">
-              A real, current news story applied to your fictive {ENTITY_LABEL[profession]}.
-            </p>
+            <p className="text-sm font-bold text-ink">{ui.liveNews}</p>
+            <p className="mt-0.5 text-xs text-ink-muted">{ui.liveNewsDesc(ui.entity[profession])}</p>
           </button>
         </div>
       </div>
@@ -1165,7 +1159,7 @@ function SessionTypePicker({
                 </p>
               </div>
               <button onClick={onEditProfile} className="text-xs font-semibold text-brass-text hover:underline">
-                Edit
+                {ui.edit}
               </button>
             </div>
           )}
@@ -1177,7 +1171,7 @@ function SessionTypePicker({
         disabled={isFetchingNews}
         className="self-center rounded-lg bg-navy px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800 disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {isFetchingNews ? "Finding a news story…" : "Start challenge"}
+        {isFetchingNews ? ui.findingNews : ui.startChallenge}
       </button>
     </div>
   );
@@ -1218,6 +1212,8 @@ function ChallengeStep({
   onNewChallenge: () => void;
   onChangeCategory: () => void;
 }) {
+  const ui = tutorUI(language);
+  const common = COMMON[language];
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center justify-between">
@@ -1225,14 +1221,14 @@ function ChallengeStep({
           {professionLabel(profession, language).label} · {categoryLabel(category, language)}
         </p>
         <button onClick={onChangeCategory} className="text-xs font-semibold text-brass-text hover:underline">
-          ← Change category
+          {ui.changeCategoryLink}
         </button>
       </div>
 
       {isLocalizingCase ? (
         <div className="flex flex-col items-center gap-3 py-6">
           <span className="h-6 w-6 animate-spin rounded-full border-2 border-hairline border-t-brass" />
-          <p className="text-sm text-ink-muted">Preparing your challenge…</p>
+          <p className="text-sm text-ink-muted">{ui.preparingChallenge}</p>
         </div>
       ) : (
         <div className="rounded-lg bg-surface-2 p-5">
@@ -1241,7 +1237,7 @@ function ChallengeStep({
               <h3 className="font-display text-base font-semibold text-ink">{newsItem.headline}</h3>
               <p className="mt-2 text-sm leading-relaxed text-ink">{newsItem.summary}</p>
               <p className="mt-3 text-sm leading-relaxed text-ink-muted">
-                <span className="font-semibold text-ink">Connection: </span>
+                <span className="font-semibold text-ink">{ui.connection}</span>
                 {newsItem.connection}
               </p>
               <p className="mt-3 text-sm font-semibold leading-relaxed text-ink">{newsItem.appliedQuestion}</p>
@@ -1261,17 +1257,17 @@ function ChallengeStep({
 
       {phase === "challenge" && (
         <div className="flex flex-col items-center gap-3 py-2">
-          <p className="text-sm text-ink-muted">Think it through, then record your answer out loud.</p>
+          <p className="text-sm text-ink-muted">{ui.thinkThenRecord}</p>
           <button
             onClick={onStart}
             disabled={!canSpeak}
             className="flex h-20 w-20 items-center justify-center rounded-full bg-red-600 text-white shadow-lg transition-transform hover:scale-105 disabled:cursor-not-allowed disabled:opacity-40"
-            aria-label="Start Recording"
+            aria-label={common.startRecording}
           >
             <span className="h-6 w-6 rounded-full bg-white" />
           </button>
           <button onClick={onNewChallenge} className="text-xs font-semibold text-brass-text hover:underline">
-            🎲 Different challenge
+            {ui.differentChallenge}
           </button>
         </div>
       )}
@@ -1280,13 +1276,13 @@ function ChallengeStep({
         <div className="flex flex-col items-center gap-4 py-2">
           <span className="flex items-center gap-2 text-sm font-semibold text-red-600">
             <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-red-500" />
-            Recording…
+            {ui.recording}
           </span>
           <p className="min-h-[3rem] max-w-md text-center text-sm text-ink-muted">{transcript || "…"}</p>
           <button
             onClick={onStop}
             className="flex h-20 w-20 items-center justify-center rounded-full bg-navy text-white shadow-lg transition-transform hover:scale-105"
-            aria-label="Stop Recording"
+            aria-label={common.stopRecording}
           >
             <span className="h-6 w-6 rounded-md bg-white" />
           </button>
@@ -1315,6 +1311,7 @@ function FeedbackStep({
   onNewChallenge: () => void;
   onChangeCategory: () => void;
 }) {
+  const ui = tutorUI(useLanguage().language);
   const audioUrl = useMemo(() => (audioBlob ? URL.createObjectURL(audioBlob) : null), [audioBlob]);
   useEffect(() => {
     return () => {
@@ -1346,27 +1343,27 @@ function FeedbackStep({
       )}
 
       <div className="rounded-xl border border-hairline bg-surface-2 p-6">
-        <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Summary</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{ui.summary}</p>
         <p className="mt-2 text-sm leading-relaxed text-ink">{feedback.summary}</p>
       </div>
 
       <div className="rounded-lg border border-brass/40 bg-brass/5 p-4">
-        <p className="text-xs font-semibold uppercase tracking-wide text-brass-text">Knowledge</p>
-        <FeedbackList label="Covered" items={feedback.knowledge.covered} tone="good" />
-        <FeedbackList label="Missed" items={feedback.knowledge.missed} tone="bad" />
-        <FeedbackList label="Corrections" items={feedback.knowledge.corrections} tone="bad" />
+        <p className="text-xs font-semibold uppercase tracking-wide text-brass-text">{ui.knowledge}</p>
+        <FeedbackList label={ui.covered} items={feedback.knowledge.covered} tone="good" />
+        <FeedbackList label={ui.missed} items={feedback.knowledge.missed} tone="bad" />
+        <FeedbackList label={ui.corrections} items={feedback.knowledge.corrections} tone="bad" />
       </div>
 
       <div className="flex flex-col gap-3">
-        <FeedbackBlock label="Terminology" text={feedback.language.terminology} />
-        <FeedbackBlock label="Word choice" text={feedback.language.wordChoice} />
-        <FeedbackBlock label="Grammar & clarity" text={feedback.language.grammar} />
-        <FeedbackBlock label="Pronunciation" text={feedback.pronunciation} />
+        <FeedbackBlock label={ui.terminology} text={feedback.language.terminology} />
+        <FeedbackBlock label={ui.wordChoice} text={feedback.language.wordChoice} />
+        <FeedbackBlock label={ui.grammar} text={feedback.language.grammar} />
+        <FeedbackBlock label={ui.pronunciation} text={feedback.pronunciation} />
       </div>
 
       {feedback.nextSteps.length > 0 && (
         <div className="rounded-lg border border-hairline p-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Practice next</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{ui.practiceNext}</p>
           <ul className="mt-2 flex flex-col gap-1.5">
             {feedback.nextSteps.map((step) => (
               <li key={step} className="text-sm text-ink">
@@ -1378,9 +1375,9 @@ function FeedbackStep({
       )}
 
       <div className="rounded-lg bg-surface-2 p-4">
-        <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">What you said</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{ui.whatYouSaid}</p>
         <p className="mt-2 text-sm italic text-ink-muted">
-          {transcript ? `"${transcript}"` : "(no speech detected)"}
+          {transcript ? `"${transcript}"` : ui.noSpeech}
         </p>
         {audioUrl && <audio src={audioUrl} controls className="mt-3 w-full max-w-sm" />}
       </div>
@@ -1392,13 +1389,13 @@ function FeedbackStep({
           onClick={onChangeCategory}
           className="rounded-lg bg-surface-2 px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-hairline"
         >
-          Change category
+          {ui.changeCategory}
         </button>
         <button
           onClick={onNewChallenge}
           className="rounded-lg bg-navy px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800"
         >
-          🎲 Try another challenge
+          {ui.tryAnother}
         </button>
       </div>
     </div>

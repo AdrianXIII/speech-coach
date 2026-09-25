@@ -3,12 +3,8 @@
 import { useState } from "react";
 import type { CaseProfession } from "@/lib/caseStudyContent";
 import { saveTutorProfile, type TutorProfile } from "@/lib/tutorProfile";
-
-const ENTITY_LABEL: Record<CaseProfession, string> = {
-  business: "company",
-  law: "client organization",
-  politics: "organization",
-};
+import { useLanguage } from "@/components/LanguageProvider";
+import { tutorUI } from "@/lib/tutorUIStrings";
 
 /**
  * Lets the student edit their persistent fictive company/client/org (used by
@@ -26,6 +22,7 @@ export function TutorProfileEditor({
   onSave: (profile: TutorProfile) => void;
   onClose: () => void;
 }) {
+  const ui = tutorUI(useLanguage().language);
   const [draft, setDraft] = useState<TutorProfile>(profile);
 
   function handleSave() {
@@ -51,25 +48,25 @@ export function TutorProfileEditor({
   return (
     <div className="flex flex-col gap-4 rounded-xl border border-hairline bg-surface-2 p-5">
       <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
-        Your fictive {ENTITY_LABEL[profession]}
+        {ui.yourFictive(ui.entity[profession])}
       </p>
-      {field("name", "Name", "e.g. XYZ Corp")}
-      {field("description", "Description", "e.g. A mid-sized B2B software company")}
-      {field("size", "Size", "e.g. ~500 employees, $80M revenue")}
-      {field("market", "Market", "e.g. North America and Western Europe")}
-      {field("goals", "Goals", "e.g. Grow the enterprise segment")}
+      {field("name", ui.profileFields.name, ui.profilePlaceholders.name)}
+      {field("description", ui.profileFields.description, ui.profilePlaceholders.description)}
+      {field("size", ui.profileFields.size, ui.profilePlaceholders.size)}
+      {field("market", ui.profileFields.market, ui.profilePlaceholders.market)}
+      {field("goals", ui.profileFields.goals, ui.profilePlaceholders.goals)}
       <div className="flex justify-end gap-2">
         <button
           onClick={onClose}
           className="rounded-lg bg-surface px-4 py-2 text-xs font-semibold text-ink transition-colors hover:bg-hairline"
         >
-          Cancel
+          {ui.cancel}
         </button>
         <button
           onClick={handleSave}
           className="rounded-lg bg-navy px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-navy-800"
         >
-          Save
+          {ui.save}
         </button>
       </div>
     </div>

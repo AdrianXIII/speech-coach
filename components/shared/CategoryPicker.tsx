@@ -7,6 +7,7 @@ import { loadFundamentalScores, countMastered } from "@/lib/caseStudyProgress";
 import { professionLabel } from "@/components/shared/ProfessionPicker";
 import { categoryLabel } from "@/lib/categoryLabels";
 import type { LanguageCode } from "@/lib/languages";
+import { tutorUI } from "@/lib/tutorUIStrings";
 
 /** Shared second step of the Area → Domain → Case flow — used by the AI Tutor. */
 export function CategoryPicker({
@@ -20,6 +21,7 @@ export function CategoryPicker({
   onSelect: (category: string) => void;
   onBack: () => void;
 }) {
+  const ui = tutorUI(language);
   const [scores, setScores] = useState<Record<string, number>>({});
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -30,10 +32,10 @@ export function CategoryPicker({
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
-          {professionLabel(profession, language).label} — choose a category
+          {professionLabel(profession, language).label} — {ui.chooseCategory}
         </p>
         <button onClick={onBack} className="text-xs font-semibold text-brass-text hover:underline">
-          ← Change profession
+          {ui.changeProfession}
         </button>
       </div>
       <div className="grid gap-2 sm:grid-cols-2">
@@ -50,8 +52,8 @@ export function CategoryPicker({
               <span className="text-sm font-semibold text-ink">{categoryLabel(cat, language)}</span>
               <span className="text-xs text-ink-muted">
                 {fundamentals.length
-                  ? `${mastered}/${fundamentals.length} fundamentals mastered`
-                  : `${count} case${count === 1 ? "" : "s"}`}
+                  ? ui.fundamentalsMastered(mastered, fundamentals.length)
+                  : ui.cases(count)}
               </span>
             </button>
           );

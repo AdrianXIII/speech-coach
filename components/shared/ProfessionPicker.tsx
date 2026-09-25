@@ -2,6 +2,7 @@
 
 import type { CaseProfession } from "@/lib/caseStudyContent";
 import type { LanguageCode } from "@/lib/languages";
+import { tutorUI } from "@/lib/tutorUIStrings";
 
 /** Canonical English labels — used as the fallback and as the identity entry for "en". */
 export const PROFESSION_LABELS: Record<CaseProfession, { label: string; blurb: string }> = {
@@ -47,7 +48,7 @@ export function ProfessionPicker({
   return (
     <div className="flex flex-col gap-4">
       <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
-        Choose a profession
+        {tutorUI(language).chooseProfession}
       </p>
       <div className="grid gap-3 sm:grid-cols-3">
         {(Object.keys(PROFESSION_LABELS) as CaseProfession[]).map((p) => {
