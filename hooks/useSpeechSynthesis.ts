@@ -19,7 +19,8 @@ let voicesLoadPromise: Promise<SpeechSynthesisVoice[]> | null = null;
  * once they're actually available, cached module-wide since the list never
  * changes during a session.
  */
-function loadVoices(): Promise<SpeechSynthesisVoice[]> {
+/** Exported for hooks/useSpeechPlayback.ts, which needs the same voice-picking/citation-stripping logic. */
+export function loadVoices(): Promise<SpeechSynthesisVoice[]> {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) return Promise.resolve([]);
   if (cachedVoices.length > 0) return Promise.resolve(cachedVoices);
   if (voicesLoadPromise) return voicesLoadPromise;
@@ -55,7 +56,7 @@ function loadVoices(): Promise<SpeechSynthesisVoice[]> {
  * number. Stripped here rather than at each call site so every spoken string
  * in the app is covered by construction.
  */
-function stripCitationMarkers(text: string): string {
+export function stripCitationMarkers(text: string): string {
   return text.replace(/\s*\[\d+\]/g, "");
 }
 
@@ -67,7 +68,7 @@ function stripCitationMarkers(text: string): string {
  * (Natural)" voices) sound meaningfully more human, so this actively
  * prefers them over whatever the browser would default to.
  */
-function pickBestVoice(voices: SpeechSynthesisVoice[], lang: string): SpeechSynthesisVoice | undefined {
+export function pickBestVoice(voices: SpeechSynthesisVoice[], lang: string): SpeechSynthesisVoice | undefined {
   const langPrefix = lang.split("-")[0].toLowerCase();
   const matching = voices.filter((v) => v.lang.toLowerCase().startsWith(langPrefix));
   if (matching.length === 0) return undefined;

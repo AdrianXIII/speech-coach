@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useMediaRecorder } from "@/hooks/useMediaRecorder";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
 import { useSpeechSynthesis } from "@/hooks/useSpeechSynthesis";
+import { useSpeechPlayback } from "@/hooks/useSpeechPlayback";
+import { PlaybackBar } from "@/components/PlaybackBar";
 import { CASE_CATEGORIES, type CaseProfession, type CaseStudy } from "@/lib/caseStudyContent";
 import type { Fundamental } from "@/lib/caseStudyFundamentals";
 import { buildTeachingBrief, pickChallenge, type TeachingBrief, type TutorFeedback } from "@/lib/tutorEngine";
@@ -93,6 +95,10 @@ export function AITutor() {
   const [voiceNotice, setVoiceNotice] = useState<string | null>(null);
   const speechLang = getLanguage(language).speechLang;
   const tts = useSpeechSynthesis(speechLang);
+  // Separate from `tts`: only the teach step's reading needs a playback bar
+  // (pause/resume, skip ±10s); every other prompt in this file (profession/
+  // category prompts, etc.) stays on the simpler fire-and-forget `tts`.
+  const playback = useSpeechPlayback(speechLang);
   const voiceNav = useSpeechRecognition(speechLang, 1500);
 
   const { recordedBlob, audioBlob, start: startRecorder, stop: stopRecorder, reset: resetRecorder } =
@@ -166,7 +172,7 @@ export function AITutor() {
 
   useEffect(() => {
     if (phase !== "teach" || !teaching || isLocalizingTeach) return;
-    tts.speak(teachStepText(teaching, teachStepIndex, language));
+    playback.play(teachStepText(teaching, teachStepIndex, language));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, teaching, teachStepIndex, isLocalizingTeach]);
 
@@ -239,6 +245,7 @@ export function AITutor() {
 
   function handleSelectProfession(p: CaseProfession) {
     tts.cancel();
+    playback.cancel();
     setProfession(p);
     setCategory(null);
     setProfile(loadTutorProfile(p));
@@ -248,6 +255,7 @@ export function AITutor() {
   async function handleSelectCategory(cat: string) {
     if (!profession) return;
     tts.cancel();
+    playback.cancel();
     setCategory(cat);
     const brief = buildTeachingBrief(profession, cat, jurisdiction);
     setFundamentals(brief.fundamentals);
@@ -285,7 +293,7 @@ export function AITutor() {
   function handleTeachCommand(cmd: string) {
     if (!teaching) return;
     if (cmd === "repeat") {
-      tts.speak(teachStepText(teaching, teachStepIndex, language));
+      playback.play(teachStepText(teaching, teachStepIndex, language));
       return;
     }
     if (cmd === "back" || cmd === "previous") {
@@ -295,9 +303,21 @@ export function AITutor() {
     setTeachStepIndex((i) => Math.min(teaching.concepts.length, i + 1));
   }
 
+  /** Playback bar's Play/Pause toggle: pause if speaking, resume if paused, otherwise (finished, or not yet started) restart the current step from the beginning. */
+  function handlePlayPause() {
+    if (playback.isSpeaking) {
+      playback.pause();
+    } else if (playback.isPaused) {
+      playback.resume();
+    } else if (teaching) {
+      playback.play(teachStepText(teaching, teachStepIndex, language));
+    }
+  }
+
   async function beginChallenge(forceMode?: Mode) {
     if (!profession || !category) return;
     tts.cancel();
+    playback.cancel();
     const activeMode = forceMode ?? mode;
     setEvalError(null);
     resetRecorder();
@@ -467,7 +487,13 @@ export function AITutor() {
           teaching={teaching}
           isLocalizing={isLocalizingTeach}
           teachStepIndex={teachStepIndex}
-          isSpeaking={tts.isSpeaking}
+          isSpeaking={playback.isSpeaking}
+          isPlaybackSupported={playback.isSupported}
+          elapsedSeconds={playback.elapsedSeconds}
+          estimatedTotalSeconds={playback.estimatedTotalSeconds}
+          onPlayPause={handlePlayPause}
+          onSkipBack={() => playback.skip(-10)}
+          onSkipForward={() => playback.skip(10)}
           mode={mode}
           onModeChange={setMode}
           profile={profile}
@@ -636,6 +662,12 @@ function TeachStep({
   isLocalizing,
   teachStepIndex,
   isSpeaking,
+  isPlaybackSupported,
+  elapsedSeconds,
+  estimatedTotalSeconds,
+  onPlayPause,
+  onSkipBack,
+  onSkipForward,
   mode,
   onModeChange,
   profile,
@@ -665,6 +697,12 @@ function TeachStep({
   isLocalizing: boolean;
   teachStepIndex: number;
   isSpeaking: boolean;
+  isPlaybackSupported: boolean;
+  elapsedSeconds: number;
+  estimatedTotalSeconds: number;
+  onPlayPause: () => void;
+  onSkipBack: () => void;
+  onSkipForward: () => void;
   mode: Mode;
   onModeChange: (m: Mode) => void;
   profile: TutorProfile;
@@ -809,7 +847,15 @@ function TeachStep({
 
         {isConnections && <p className="mt-2 text-sm leading-relaxed text-ink">{teaching.connections}</p>}
 
-        {isSpeaking && <p className="mt-3 text-xs text-brass-text">🔊 Speaking…</p>}
+        <PlaybackBar
+          isSupported={isPlaybackSupported}
+          isSpeaking={isSpeaking}
+          elapsedSeconds={elapsedSeconds}
+          estimatedTotalSeconds={estimatedTotalSeconds}
+          onPlayPause={onPlayPause}
+          onSkipBack={onSkipBack}
+          onSkipForward={onSkipForward}
+        />
       </div>
 
       {Boolean(teaching.sources?.length) && (
