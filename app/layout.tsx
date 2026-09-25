@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Source_Serif_4, Source_Sans_3 } from "next/font/google";
 import { NavBar } from "@/components/NavBar";
 import { LanguageProvider } from "@/components/LanguageProvider";
@@ -15,6 +15,14 @@ const sourceSans = Source_Sans_3({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
 });
+
+// viewportFit: "cover" lets the native iOS shell's WKWebView draw edge-to-edge
+// under the status bar/notch (Capacitor's default) — without it, the safe-area
+// env() variables below stay at 0 and content like the NavBar renders hidden
+// behind the status bar instead of padded below it.
+export const viewport: Viewport = {
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   title: "MasterSpeak",

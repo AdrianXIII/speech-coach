@@ -20,7 +20,7 @@ export function NavBar() {
   }, [pathname]);
 
   return (
-    <nav className="border-b border-navy-800 bg-navy">
+    <nav className="border-b border-navy-800 bg-navy pt-[env(safe-area-inset-top)]">
       <div className="mx-auto max-w-4xl px-4 sm:px-8">
         {/* Mobile: logo + hamburger only, full nav collapses into a toggled
             panel below — the unconstrained flex-wrap layout below (built for
