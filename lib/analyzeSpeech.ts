@@ -48,6 +48,36 @@ Rules:
 - Be honest but encouraging.`;
 
 /**
+ * Constrains Gemini's output to this exact shape (Gemini's structured-output
+ * schema, not full JSON Schema — note the uppercase type names) instead of
+ * relying on responseMimeType alone, which doesn't itself guarantee
+ * schema-valid JSON and was observed producing occasional malformed output
+ * (a stray bracket mid-array) that broke JSON.parse and failed the whole
+ * analysis.
+ */
+const ANALYSIS_RESPONSE_SCHEMA = {
+  type: "OBJECT",
+  properties: {
+    transcript: { type: "STRING" },
+    strengths: { type: "ARRAY", items: { type: "STRING" }, minItems: 3, maxItems: 3 },
+    tips: { type: "ARRAY", items: { type: "STRING" }, minItems: 3, maxItems: 3 },
+    mispronouncedWords: {
+      type: "ARRAY",
+      maxItems: 5,
+      items: {
+        type: "OBJECT",
+        properties: {
+          word: { type: "STRING" },
+          note: { type: "STRING" },
+        },
+        required: ["word", "note"],
+      },
+    },
+  },
+  required: ["transcript", "strengths", "tips", "mispronouncedWords"],
+};
+
+/**
  * Transcribes a recording and generates coaching feedback in a single
  * Gemini call (rather than a separate transcribe-then-coach round trip),
  * to cut API request volume in half. Falls back to a mock transcript +
@@ -86,15 +116,24 @@ export async function analyzeSpeech(
       { text: SYSTEM_PROMPT },
       { inlineData: { mimeType: audio.type || "audio/webm", data: base64 } },
     ],
-    { responseMimeType: "application/json" },
+    { responseMimeType: "application/json", responseSchema: ANALYSIS_RESPONSE_SCHEMA },
   );
 
-  const parsed = JSON.parse(raw) as {
+  // responseSchema constrains Gemini to valid JSON matching this shape, but
+  // isn't an absolute guarantee — the fence-strip mirrors the defensive
+  // cleanup already used for the news-pool's JSON responses (comprehensionNews.ts).
+  const cleaned = raw.trim().replace(/^```(?:json)?\s*|\s*```$/g, "");
+  let parsed: {
     transcript?: string;
     strengths?: string[];
     tips?: string[];
     mispronouncedWords?: Partial<MispronouncedWord>[];
   };
+  try {
+    parsed = JSON.parse(cleaned);
+  } catch {
+    throw new Error("Couldn't read the AI's feedback this time — please try again.");
+  }
   const transcript = (parsed.transcript ?? "").trim();
   if (!transcript) throw new Error("Gemini returned an empty transcript.");
 

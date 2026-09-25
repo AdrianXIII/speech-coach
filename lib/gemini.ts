@@ -43,7 +43,7 @@ export interface GeminiTurn {
 /** Raw Gemini generateContent call — parsed JSON body, nothing extracted yet. */
 async function callGeminiRaw(
   contents: GeminiTurn[],
-  options?: { responseMimeType?: string; tools?: Record<string, unknown>[] },
+  options?: { responseMimeType?: string; responseSchema?: Record<string, unknown>; tools?: Record<string, unknown>[] },
 ): Promise<Record<string, unknown>> {
   const res = await fetch(`${GEMINI_URL}?key=${process.env.GEMINI_API_KEY}`, {
     method: "POST",
@@ -53,6 +53,7 @@ async function callGeminiRaw(
       generationConfig: {
         thinkingConfig: { thinkingBudget: 0 },
         ...(options?.responseMimeType && { responseMimeType: options.responseMimeType }),
+        ...(options?.responseSchema && { responseSchema: options.responseSchema }),
       },
       ...(options?.tools && { tools: options.tools }),
     }),
@@ -78,7 +79,7 @@ function extractText(data: Record<string, unknown>): string {
 
 async function callGemini(
   contents: GeminiTurn[],
-  options?: { responseMimeType?: string; tools?: Record<string, unknown>[] },
+  options?: { responseMimeType?: string; responseSchema?: Record<string, unknown>; tools?: Record<string, unknown>[] },
 ): Promise<string> {
   const data = await callGeminiRaw(contents, options);
   return extractText(data);
@@ -96,7 +97,7 @@ async function callGemini(
  */
 export async function generateContent(
   parts: GeminiPart[],
-  options?: { responseMimeType?: string; tools?: Record<string, unknown>[] },
+  options?: { responseMimeType?: string; responseSchema?: Record<string, unknown>; tools?: Record<string, unknown>[] },
 ): Promise<string> {
   return callGemini([{ role: "user", parts }], options);
 }
