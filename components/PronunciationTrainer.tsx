@@ -6,6 +6,8 @@ import { useMediaRecorder } from "@/hooks/useMediaRecorder";
 import { formatDuration } from "@/lib/audio";
 import { FollowUpChat } from "@/components/FollowUpChat";
 import { StressMeter } from "@/components/StressMeter";
+import { PronunciationReviewList } from "@/components/PronunciationReviewList";
+import { REVIEW_INTERVAL_DAYS, type ReviewWord } from "@/lib/pronunciationReviewSchedule";
 
 interface FeedbackState {
   text: string;
@@ -65,6 +67,57 @@ export function PronunciationTrainer() {
   // Bumped on every new recording so <StressMeter> remounts fresh instead of
   // reusing state from a previous attempt.
   const [attempt, setAttempt] = useState(0);
+
+  // Spaced-repetition review list — fetched once, then kept in sync locally
+  // from each mutation's own response (single-user app, nothing else could
+  // change it concurrently, so a refetch after every action buys nothing).
+  const [reviewWords, setReviewWords] = useState<ReviewWord[]>([]);
+  useEffect(() => {
+    fetch("/api/pronunciation-review")
+      .then((res) => res.json())
+      .then((data: { words: ReviewWord[] }) => setReviewWords(data.words ?? []))
+      .catch(() => {});
+  }, []);
+  const inReviewList = reviewWords.find((w) => w.word.toLowerCase() === word.trim().toLowerCase());
+
+  async function handleAddToReviewList() {
+    const target = word.trim();
+    if (!target) return;
+    const res = await fetch("/api/pronunciation-review", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ word: target }),
+    });
+    if (!res.ok) return;
+    const data: { word: ReviewWord } = await res.json();
+    setReviewWords((prev) => [...prev, data.word]);
+  }
+
+  async function handleSelectReviewWord(w: string) {
+    setWord(w);
+    handleTryAgain();
+  }
+
+  async function handleRemoveReviewWord(id: number) {
+    setReviewWords((prev) => prev.filter((w) => w.id !== id));
+    await fetch("/api/pronunciation-review", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+  }
+
+  async function handleMarkPracticed() {
+    if (!inReviewList) return;
+    const res = await fetch("/api/pronunciation-review", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: inReviewList.id }),
+    });
+    if (!res.ok) return;
+    const data: { word: ReviewWord } = await res.json();
+    setReviewWords((prev) => prev.map((w) => (w.id === data.word.id ? data.word : w)));
+  }
 
   const audioUrl = useMemo(
     () => (recordedBlob ? URL.createObjectURL(recordedBlob) : null),
@@ -133,6 +186,7 @@ export function PronunciationTrainer() {
   }
 
   return (
+    <div className="flex flex-col gap-6">
     <div className="flex flex-col gap-6 rounded-2xl border border-hairline bg-surface p-8 shadow-sm">
       <div>
         <label htmlFor="pronunciation-word" className="text-sm font-semibold text-ink">
@@ -185,6 +239,18 @@ export function PronunciationTrainer() {
             </ul>
           )}
         </div>
+
+        {word.trim() && !inReviewList && (
+          <button
+            onClick={handleAddToReviewList}
+            className="mt-2 text-xs font-semibold text-brass-text hover:underline"
+          >
+            + Add to review list
+          </button>
+        )}
+        {inReviewList && (
+          <p className="mt-2 text-xs font-semibold text-ink-muted">✓ In your review list</p>
+        )}
       </div>
 
       <div className="flex flex-col items-center gap-4 border-t border-hairline pt-6">
@@ -259,12 +325,28 @@ export function PronunciationTrainer() {
           )}
           <p className="text-sm leading-relaxed text-ink">{feedback.text}</p>
 
+          {inReviewList && (
+            <button
+              onClick={handleMarkPracticed}
+              className="self-start rounded-lg bg-surface px-4 py-2 text-xs font-semibold text-ink transition-colors hover:bg-hairline"
+            >
+              ✓ Mark practiced — next in {REVIEW_INTERVAL_DAYS[Math.min(inReviewList.stage + 1, REVIEW_INTERVAL_DAYS.length - 1)]} days
+            </button>
+          )}
+
           <FollowUpChat
             context={`I practiced saying the word/phrase "${word.trim()}" out loud and asked for pronunciation feedback.`}
             initialAnswer={feedback.text}
           />
         </div>
       )}
+    </div>
+
+    <PronunciationReviewList
+      words={reviewWords}
+      onSelect={handleSelectReviewWord}
+      onRemove={handleRemoveReviewWord}
+    />
     </div>
   );
 }

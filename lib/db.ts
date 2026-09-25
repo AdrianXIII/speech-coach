@@ -149,6 +149,19 @@ function ensureSchema(sql: ReturnType<typeof postgres>): Promise<void> {
           ADD CONSTRAINT comprehension_news_cache_topic_language_slot_key UNIQUE (topic, language, slot);
       EXCEPTION WHEN duplicate_object OR duplicate_table THEN NULL;
       END $$;
+
+      CREATE TABLE IF NOT EXISTS pronunciation_review_words (
+        id SERIAL PRIMARY KEY,
+        word TEXT NOT NULL,
+        added_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+        last_practiced_at TIMESTAMPTZ,
+        practice_count INTEGER NOT NULL DEFAULT 0,
+        stage INTEGER NOT NULL DEFAULT 0,
+        next_review_at TIMESTAMPTZ NOT NULL DEFAULT now()
+      );
+
+      CREATE UNIQUE INDEX IF NOT EXISTS pronunciation_review_words_word_lower_idx
+        ON pronunciation_review_words (lower(word));
     `).then(() => undefined);
   }
   return schemaReady;
