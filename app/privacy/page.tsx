@@ -1,0 +1,100 @@
+import { PageHeader } from "@/components/PageHeader";
+
+// English-only, unlike the rest of this app — a legal document deserves one
+// carefully-reviewed authoritative version rather than an AI translation
+// into four more languages with no legal review of the result.
+const TITLE = {
+  en: "Privacy Policy",
+  de: "Privacy Policy",
+  fr: "Privacy Policy",
+  es: "Privacy Policy",
+  sv: "Privacy Policy",
+};
+
+const SUBTITLE = {
+  en: "Last updated: [DATE]",
+  de: "Last updated: [DATE]",
+  fr: "Last updated: [DATE]",
+  es: "Last updated: [DATE]",
+  sv: "Last updated: [DATE]",
+};
+
+/**
+ * TODO before launch: replace every [BRACKETED] placeholder below with real
+ * details — this app's developer needs to supply the legal entity name and
+ * address, the governing jurisdiction, and a support email; none of those
+ * are guessed here. Required for App Store Connect's privacy-policy-URL
+ * field and for Sign-in-with-Apple/RevenueCat compliance, and because this
+ * app records audio and serves EU users (de/fr/es/sv), so GDPR disclosure
+ * obligations apply regardless of where the developer is based.
+ */
+export default function PrivacyPage() {
+  return (
+    <div className="min-h-screen bg-paper px-4 py-12 sm:px-8">
+      <div className="mx-auto flex max-w-2xl flex-col gap-8">
+        <PageHeader title={TITLE} subtitle={SUBTITLE} />
+
+        <div className="flex flex-col gap-6 rounded-2xl border border-hairline bg-surface p-6 text-sm leading-relaxed text-ink shadow-sm sm:p-8">
+          <p>
+            MasterSpeak (&ldquo;we&rdquo;, &ldquo;us&rdquo;) is operated by [LEGAL ENTITY NAME], [ADDRESS]. This
+            policy explains what data MasterSpeak collects, why, and how you can control it. Questions or requests
+            go to [SUPPORT EMAIL].
+          </p>
+
+          <section>
+            <h2 className="mb-2 font-display text-base font-semibold">Account information</h2>
+            <p>
+              When you sign in, we store your email address and, if you sign in with Apple, the identifier Apple
+              provides us — never your Apple password. We use this only to identify your account and to send
+              sign-in links and essential service email.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="mb-2 font-display text-base font-semibold">Voice recordings</h2>
+            <p>
+              MasterSpeak&rsquo;s trainers ask you to record short samples of your speech. Each recording is sent to
+              Google&rsquo;s Gemini API for transcription and feedback and is not permanently stored by MasterSpeak
+              itself once that response comes back. Written feedback, scores, and the specific words you choose to
+              keep in your Pronunciation review list are saved to your account so your progress carries across
+              sessions and devices.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="mb-2 font-display text-base font-semibold">Third parties we use</h2>
+            <ul className="list-disc space-y-1 pl-5">
+              <li><strong>Google Gemini</strong> — transcribes and analyzes your recordings and text.</li>
+              <li><strong>Vercel and Neon</strong> — host the app and its database.</li>
+              <li><strong>Resend</strong> — delivers sign-in emails.</li>
+              <li><strong>Apple and RevenueCat</strong> — process subscription payments; MasterSpeak never sees your card details.</li>
+            </ul>
+            <p className="mt-2">We do not sell your data, and we do not run advertising or ad-tracking of any kind.</p>
+          </section>
+
+          <section>
+            <h2 className="mb-2 font-display text-base font-semibold">Your rights</h2>
+            <p>
+              You can ask us to access, export, or delete your account and its data at any time by emailing
+              [SUPPORT EMAIL]. If you are in the European Economic Area, you have the rights described under the
+              GDPR, including the right to lodge a complaint with your local data protection authority.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="mb-2 font-display text-base font-semibold">Children</h2>
+            <p>MasterSpeak is not directed at children under 16 and we do not knowingly collect their data.</p>
+          </section>
+
+          <section>
+            <h2 className="mb-2 font-display text-base font-semibold">Changes</h2>
+            <p>
+              We&rsquo;ll update the date at the top of this page whenever this policy changes, and, for a material
+              change, tell you by email.
+            </p>
+          </section>
+        </div>
+      </div>
+    </div>
+  );
+}

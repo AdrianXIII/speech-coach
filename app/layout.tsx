@@ -4,6 +4,7 @@ import { NavBar } from "@/components/NavBar";
 import { LanguageProvider } from "@/components/LanguageProvider";
 import { AuthSessionProvider } from "@/components/AuthSessionProvider";
 import { RevenueCatInit } from "@/components/RevenueCatInit";
+import { Footer } from "@/components/Footer";
 import "./globals.css";
 
 const sourceSerif = Source_Serif_4({
@@ -61,6 +62,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <RevenueCatInit />
             <NavBar />
             {children}
+            <Footer />
           </LanguageProvider>
         </AuthSessionProvider>
       </body>
