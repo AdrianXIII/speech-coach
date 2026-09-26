@@ -1,5 +1,6 @@
 import { SpeedReadingTrainer } from "@/components/SpeedReadingTrainer";
 import { PageHeader } from "@/components/PageHeader";
+import { requireAccess } from "@/lib/requireUser";
 
 const TITLE = {
   en: "Speed Reading",
@@ -17,7 +18,9 @@ const SUBTITLE = {
   sv: "Klistra in en text, välj en nivå och ett språk, och träna dig på att läsa snabbare utan att förlora förståelsen.",
 };
 
-export default function SpeedReadingPage() {
+export default async function SpeedReadingPage() {
+  await requireAccess();
+
   return (
     <div className="min-h-screen bg-paper px-4 py-12 sm:px-8">
       <div className="mx-auto flex max-w-3xl flex-col gap-8">

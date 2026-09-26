@@ -12,6 +12,7 @@
     "@capacitor/cli": "^8.5.2",
     "@capacitor/core": "^8.5.2",
     "@capacitor/ios": "^8.5.2",
+    "@revenuecat/purchases-capacitor": "^13.6.1",
     "cmu-pronouncing-dictionary": "^3.0.0",
     "double-metaphone": "^2.0.1",
     "jose": "^6.2.12",

@@ -1,5 +1,6 @@
 import { ContrastiveStressTrainer } from "@/components/ContrastiveStressTrainer";
 import { PageHeader } from "@/components/PageHeader";
+import { requireAccess } from "@/lib/requireUser";
 
 const TITLE = {
   en: "Contrastive Stress",
@@ -17,7 +18,9 @@ const SUBTITLE = {
   sv: "Samma mening, olika betoning — öva på att lägga betoningen på rätt ord för att ändra betydelsen. Tillgängligt på engelska, tyska, franska, spanska och svenska.",
 };
 
-export default function EmphasisPage() {
+export default async function EmphasisPage() {
+  await requireAccess();
+
   return (
     <div className="min-h-screen bg-paper px-4 py-12 sm:px-8">
       <div className="mx-auto flex max-w-3xl flex-col gap-8">

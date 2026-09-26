@@ -26,8 +26,12 @@ export async function hasAccess(user: { id: number; trialEndsAt: string }): Prom
     if (!sub) return false;
     return sub.status === "active" && !!sub.current_period_end && sub.current_period_end.getTime() > Date.now();
   } catch (err) {
-    // Degrade to "no access" rather than crash — same posture as every
-    // other lib/*.ts DB function in this app (see lib/pronunciationReview.ts).
+    // Let Next.js's own internal control-flow signals propagate (see the
+    // matching guard in lib/requireUser.ts's requireUser() for why) —
+    // degrade to "no access" only for an actual DB/query error, same
+    // posture as every other lib/*.ts DB function in this app (see
+    // lib/pronunciationReview.ts).
+    if (err && typeof err === "object" && "digest" in err) throw err;
     console.error("hasAccess failed:", err instanceof Error ? err.message : err);
     return false;
   }

@@ -1,5 +1,6 @@
 import { CollocationTrainer } from "@/components/CollocationTrainer";
 import { PageHeader } from "@/components/PageHeader";
+import { requireAccess } from "@/lib/requireUser";
 
 const TITLE = {
   en: "Elite Phrasing",
@@ -17,7 +18,9 @@ const SUBTITLE = {
   sv: "Välj den korrekt uppgraderade professionella frasen och använd den sedan högt i en mening — för chefer, politiker och jurister.",
 };
 
-export default function CollocationsPage() {
+export default async function CollocationsPage() {
+  await requireAccess();
+
   return (
     <div className="min-h-screen bg-paper px-4 py-12 sm:px-8">
       <div className="mx-auto flex max-w-3xl flex-col gap-8">

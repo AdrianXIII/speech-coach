@@ -1,5 +1,6 @@
 import { SpeechRecorder } from "@/components/SpeechRecorder";
 import { PageHeader } from "@/components/PageHeader";
+import { requireAccess } from "@/lib/requireUser";
 
 const TITLE = {
   en: "AI Public Speaking Coach",
@@ -17,7 +18,9 @@ const SUBTITLE = {
   sv: "Spela in ett kort tal och få direkt feedback på tempo, utfyllnadsord och framförande — eller byt till scenövning med video, publik och teleprompter.",
 };
 
-export default function RecordPage() {
+export default async function RecordPage() {
+  await requireAccess();
+
   return (
     <div className="min-h-screen bg-paper px-4 py-12 sm:px-8">
       <div className="mx-auto flex max-w-3xl flex-col gap-8">

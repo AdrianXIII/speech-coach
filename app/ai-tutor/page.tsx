@@ -1,5 +1,6 @@
 import { AITutor } from "@/components/AITutor";
 import { PageHeader } from "@/components/PageHeader";
+import { requireAccess } from "@/lib/requireUser";
 
 const TITLE = {
   en: "AI Tutor",
@@ -17,7 +18,9 @@ const SUBTITLE = {
   sv: "En personlig coach inom affärer, politik och juridik: den lär ut kärnbegreppen, utmanar dig med ett verkligt fall eller aktuella nyheter, och bedömer dina kunskaper, ditt språk och uttal.",
 };
 
-export default function AITutorPage() {
+export default async function AITutorPage() {
+  await requireAccess();
+
   return (
     <div className="min-h-screen bg-paper px-4 py-12 sm:px-8">
       <div className="mx-auto flex max-w-3xl flex-col gap-8">

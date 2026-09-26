@@ -1,5 +1,6 @@
 import { ComprehensionTrainer } from "@/components/ComprehensionTrainer";
 import { PageHeader } from "@/components/PageHeader";
+import { requireAccess } from "@/lib/requireUser";
 
 const TITLE = {
   en: "Listening & Summary",
@@ -17,7 +18,9 @@ const SUBTITLE = {
   sv: "Lyssna på ett kort professionellt avsnitt och sammanfatta det sedan högt med egna ord — bedöms utifrån innehåll, ordförråd och struktur.",
 };
 
-export default function ComprehensionPage() {
+export default async function ComprehensionPage() {
+  await requireAccess();
+
   return (
     <div className="min-h-screen bg-paper px-4 py-12 sm:px-8">
       <div className="mx-auto flex max-w-3xl flex-col gap-8">

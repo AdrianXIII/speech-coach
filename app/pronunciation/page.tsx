@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { PronunciationTrainer } from "@/components/PronunciationTrainer";
 import { PageHeader } from "@/components/PageHeader";
+import { requireAccess } from "@/lib/requireUser";
 
 const TITLE = {
   en: "Pronunciation Trainer",
@@ -18,7 +19,9 @@ const SUBTITLE = {
   sv: "Lyssna på ett ord, spela in dig själv när du säger det och få AI-feedback på hur nära ett infött uttal du är.",
 };
 
-export default function PronunciationPage() {
+export default async function PronunciationPage() {
+  await requireAccess();
+
   return (
     <div className="min-h-screen bg-paper px-4 py-12 sm:px-8">
       <div className="mx-auto flex max-w-3xl flex-col gap-8">

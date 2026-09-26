@@ -33,10 +33,16 @@ export async function requireUser(): Promise<CurrentUser | null> {
     if (!u) return null;
     return { id: u.id, email: u.email, isAdmin: u.is_admin, trialEndsAt: u.trial_ends_at.toISOString() };
   } catch (err) {
-    // Same degrade-don't-throw posture as every other lib/*.ts file that
-    // touches the database (see lib/pronunciationReview.ts) — a DB hiccup
-    // here must not crash every single page load; it just means "treat
-    // this request as signed out."
+    // Next.js's own internal control-flow signals (a build-time "this route
+    // needs headers() so it can't be static" bailout, a redirect() thrown
+    // from further down the call stack, etc.) carry a `digest` string and
+    // MUST propagate — swallowing one here would break static-generation
+    // detection or silently eat a redirect. Only an actual DB/query error
+    // (no digest) should degrade to "treat this request as signed out",
+    // same posture as every other lib/*.ts file that touches the database
+    // (see lib/pronunciationReview.ts) — a DB hiccup must not crash every
+    // single page load.
+    if (err && typeof err === "object" && "digest" in err) throw err;
     console.error("requireUser failed:", err instanceof Error ? err.message : err);
     return null;
   }
