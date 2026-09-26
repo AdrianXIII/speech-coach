@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { CaseProfession } from "@/lib/caseStudyContent";
 import { getDb, hasDatabase } from "@/lib/db";
+import { requireUser } from "@/lib/requireUser";
 
 interface FlagBody {
   profession?: CaseProfession;
@@ -46,11 +47,15 @@ export async function POST(req: NextRequest) {
   console.warn("[TUTOR CONTENT FLAG]", JSON.stringify(flag));
 
   if (hasDatabase()) {
+    // Attached when signed in, but this stays usable signed-out too — it's
+    // a low-stakes content report, not user data (see lib/db.ts's
+    // tutor_flags.user_id doc comment for why it's ON DELETE SET NULL).
+    const user = await requireUser();
     try {
       const sql = await getDb();
       await sql!`
-        INSERT INTO tutor_flags (profession, category, concept_id, concept_title, reason, note)
-        VALUES (${flag.profession}, ${flag.category}, ${flag.conceptId}, ${flag.conceptTitle}, ${flag.reason}, ${flag.note})
+        INSERT INTO tutor_flags (user_id, profession, category, concept_id, concept_title, reason, note)
+        VALUES (${user?.id ?? null}, ${flag.profession}, ${flag.category}, ${flag.conceptId}, ${flag.conceptTitle}, ${flag.reason}, ${flag.note})
       `;
     } catch (err) {
       // The console.warn above already captured it — a DB hiccup shouldn't fail the request.

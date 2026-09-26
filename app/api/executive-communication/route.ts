@@ -3,6 +3,7 @@ import { evaluateExecutiveComm } from "@/lib/executiveCommEngine";
 import { saveAttempt, listAttempts } from "@/lib/executiveCommHistory";
 import { geminiErrorResponse } from "@/lib/gemini";
 import { hasDatabase } from "@/lib/db";
+import { requireUser } from "@/lib/requireUser";
 import { execModelsForLanguage } from "@/lib/structureModels";
 import { scenariosForLanguage, RECOMMENDED_SECONDS } from "@/lib/executiveCommScenarios";
 import { getLanguage, LANGUAGES, type LanguageCode } from "@/lib/languages";
@@ -10,12 +11,16 @@ import { getLanguage, LANGUAGES, type LanguageCode } from "@/lib/languages";
 const MAX_CUSTOM_PROMPT_CHARS = 600;
 const ALLOWED_SECONDS = [30, 60, 90];
 
-/** GET /api/executive-communication — recent attempt scores for the progress panel. */
+/** GET /api/executive-communication — recent attempt scores for the signed-in account's progress panel. */
 export async function GET() {
   if (!hasDatabase()) {
     return NextResponse.json({ attempts: [], databaseConfigured: false });
   }
-  const attempts = await listAttempts();
+  const user = await requireUser();
+  if (!user) {
+    return NextResponse.json({ error: "Sign in required." }, { status: 401 });
+  }
+  const attempts = await listAttempts(user.id);
   return NextResponse.json({ attempts, databaseConfigured: true });
 }
 
@@ -27,6 +32,11 @@ export async function GET() {
  * real situation, length-capped).
  */
 export async function POST(req: NextRequest) {
+  const user = await requireUser();
+  if (!user) {
+    return NextResponse.json({ error: "Sign in required." }, { status: 401 });
+  }
+
   let formData: FormData;
   try {
     formData = await req.formData();
@@ -92,7 +102,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (!result.mocked) {
-      await saveAttempt({
+      await saveAttempt(user.id, {
         scenarioId: resolvedScenarioId,
         category,
         modelId,

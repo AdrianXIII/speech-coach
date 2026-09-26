@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { LANGUAGES } from "@/lib/languages";
 import { useLanguage } from "@/components/LanguageProvider";
+import { UserMenu } from "@/components/UserMenu";
 
 /**
  * Just the app title (linking home) and the language picker — no menu, no
@@ -36,6 +37,7 @@ export function NavBar() {
               {l.name}
             </button>
           ))}
+          <UserMenu />
         </div>
       </div>
     </nav>

@@ -24,15 +24,21 @@ function toReviewWord(row: any): ReviewWord {
  * lib/comprehensionNews.ts's cache functions, so a broken database
  * connection degrades this one feature instead of breaking the whole
  * Pronunciation trainer for every visitor.
+ *
+ * Every query is scoped to `userId` (the caller's own account, from
+ * lib/requireUser.ts) — including the mutating ones, not just the reads:
+ * `markReviewWordPracticed`/`removeReviewWord` add `AND user_id = $userId`
+ * to their own `UPDATE`/`DELETE`, not just an initial ownership check, so
+ * one account can't mutate another's row by guessing a numeric id (IDOR).
  */
-export async function listReviewWords(language: string): Promise<ReviewWord[]> {
+export async function listReviewWords(userId: number, language: string): Promise<ReviewWord[]> {
   if (!hasDatabase()) return [];
   try {
     const sql = await getDb();
     const rows = await sql!`
       SELECT id, word, added_at, last_practiced_at, practice_count, stage, next_review_at
       FROM pronunciation_review_words
-      WHERE language = ${language}
+      WHERE user_id = ${userId} AND language = ${language}
       ORDER BY next_review_at ASC
     `;
     return rows.map(toReviewWord);
@@ -42,14 +48,14 @@ export async function listReviewWords(language: string): Promise<ReviewWord[]> {
   }
 }
 
-export async function addReviewWord(word: string, language: string): Promise<ReviewWord | null> {
+export async function addReviewWord(userId: number, word: string, language: string): Promise<ReviewWord | null> {
   if (!hasDatabase()) return null;
   try {
     const sql = await getDb();
     const inserted = await sql!`
-      INSERT INTO pronunciation_review_words (word, language)
-      VALUES (${word}, ${language})
-      ON CONFLICT (language, lower(word)) DO NOTHING
+      INSERT INTO pronunciation_review_words (user_id, word, language)
+      VALUES (${userId}, ${word}, ${language})
+      ON CONFLICT (user_id, language, lower(word)) DO NOTHING
       RETURNING id, word, added_at, last_practiced_at, practice_count, stage, next_review_at
     `;
     if (inserted[0]) return toReviewWord(inserted[0]);
@@ -59,7 +65,7 @@ export async function addReviewWord(word: string, language: string): Promise<Rev
     const existing = await sql!`
       SELECT id, word, added_at, last_practiced_at, practice_count, stage, next_review_at
       FROM pronunciation_review_words
-      WHERE language = ${language} AND lower(word) = lower(${word})
+      WHERE user_id = ${userId} AND language = ${language} AND lower(word) = lower(${word})
     `;
     return existing[0] ? toReviewWord(existing[0]) : null;
   } catch (err) {
@@ -68,11 +74,11 @@ export async function addReviewWord(word: string, language: string): Promise<Rev
   }
 }
 
-export async function markReviewWordPracticed(id: number): Promise<ReviewWord | null> {
+export async function markReviewWordPracticed(userId: number, id: number): Promise<ReviewWord | null> {
   if (!hasDatabase()) return null;
   try {
     const sql = await getDb();
-    const rows = await sql!`SELECT stage FROM pronunciation_review_words WHERE id = ${id}`;
+    const rows = await sql!`SELECT stage FROM pronunciation_review_words WHERE id = ${id} AND user_id = ${userId}`;
     if (!rows[0]) return null;
 
     const nextStage = Math.min(rows[0].stage + 1, REVIEW_INTERVAL_DAYS.length - 1);
@@ -83,7 +89,7 @@ export async function markReviewWordPracticed(id: number): Promise<ReviewWord | 
           practice_count = practice_count + 1,
           last_practiced_at = now(),
           next_review_at = now() + (${intervalDays} || ' days')::interval
-      WHERE id = ${id}
+      WHERE id = ${id} AND user_id = ${userId}
       RETURNING id, word, added_at, last_practiced_at, practice_count, stage, next_review_at
     `;
     return updated[0] ? toReviewWord(updated[0]) : null;
@@ -93,11 +99,11 @@ export async function markReviewWordPracticed(id: number): Promise<ReviewWord | 
   }
 }
 
-export async function removeReviewWord(id: number): Promise<boolean> {
+export async function removeReviewWord(userId: number, id: number): Promise<boolean> {
   if (!hasDatabase()) return false;
   try {
     const sql = await getDb();
-    await sql!`DELETE FROM pronunciation_review_words WHERE id = ${id}`;
+    await sql!`DELETE FROM pronunciation_review_words WHERE id = ${id} AND user_id = ${userId}`;
     return true;
   } catch (err) {
     console.error(`pronunciation_review_words remove failed (id ${id}):`, err instanceof Error ? err.message : err);

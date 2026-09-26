@@ -179,6 +179,87 @@ function ensureSchema(sql: ReturnType<typeof postgres>): Promise<void> {
         scores JSONB NOT NULL,
         created_at TIMESTAMPTZ NOT NULL DEFAULT now()
       );
+
+      -- Accounts (lib/auth.ts's hand-rolled Auth.js Adapter). trial_ends_at is
+      -- stored explicitly rather than computed from created_at + a constant,
+      -- so one account's trial can be manually extended later without a code
+      -- change. is_admin gates the two internal review routes that used to be
+      -- fully unauthenticated (app/api/tutor/flags, .../approved-export).
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        email TEXT UNIQUE,
+        email_verified TIMESTAMPTZ,
+        name TEXT,
+        image TEXT,
+        is_admin BOOLEAN NOT NULL DEFAULT false,
+        trial_ends_at TIMESTAMPTZ NOT NULL DEFAULT (now() + interval '7 days'),
+        created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+      );
+
+      -- One row per linked sign-in method (Apple OAuth today, room for more
+      -- later) — Auth.js's standard Adapter shape.
+      CREATE TABLE IF NOT EXISTS accounts (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        type TEXT NOT NULL,
+        provider TEXT NOT NULL,
+        provider_account_id TEXT NOT NULL,
+        refresh_token TEXT,
+        access_token TEXT,
+        expires_at BIGINT,
+        token_type TEXT,
+        scope TEXT,
+        id_token TEXT,
+        session_state TEXT,
+        UNIQUE (provider, provider_account_id)
+      );
+
+      -- Database sessions, not JWT: a paid subscription needs to be
+      -- revocable immediately (refund/chargeback/ban), which a JWT session
+      -- can't do without a DB-backed blocklist anyway.
+      CREATE TABLE IF NOT EXISTS sessions (
+        id SERIAL PRIMARY KEY,
+        session_token TEXT NOT NULL UNIQUE,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        expires TIMESTAMPTZ NOT NULL
+      );
+
+      -- Email magic-link tokens (Auth.js's Email provider).
+      CREATE TABLE IF NOT EXISTS verification_token (
+        identifier TEXT NOT NULL,
+        token TEXT NOT NULL,
+        expires TIMESTAMPTZ NOT NULL,
+        PRIMARY KEY (identifier, token)
+      );
+
+      -- Real per-person data that would otherwise collide once two accounts
+      -- use the app at once (see lib/pronunciationReview.ts,
+      -- lib/executiveCommHistory.ts). Pre-launch rows stay user_id IS NULL —
+      -- Postgres treats NULL as distinct in a unique index, so they simply
+      -- become invisible once every query filters WHERE user_id = $1; no
+      -- backfill needed, this was the developer's own solo test data.
+      ALTER TABLE pronunciation_review_words ADD COLUMN IF NOT EXISTS user_id INTEGER REFERENCES users(id) ON DELETE CASCADE;
+      ALTER TABLE exec_comm_attempts ADD COLUMN IF NOT EXISTS user_id INTEGER REFERENCES users(id) ON DELETE CASCADE;
+      -- Soft case: tutor_flags is a developer content-review tool, not
+      -- student-facing data, so ON DELETE SET NULL rather than CASCADE — a
+      -- deleted account's past flags stay around for review.
+      ALTER TABLE tutor_flags ADD COLUMN IF NOT EXISTS user_id INTEGER REFERENCES users(id) ON DELETE SET NULL;
+
+      -- Two people must be able to track the same word independently, so
+      -- uniqueness moves from (language, word) to (user_id, language, word).
+      DROP INDEX IF EXISTS pronunciation_review_words_lang_word_idx;
+      CREATE UNIQUE INDEX IF NOT EXISTS pronunciation_review_words_user_lang_word_idx
+        ON pronunciation_review_words (user_id, language, lower(word));
+
+      -- One active RevenueCat entitlement per account (lib/subscription.ts).
+      CREATE TABLE IF NOT EXISTS subscriptions (
+        user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+        rc_app_user_id TEXT NOT NULL,
+        product_id TEXT,
+        status TEXT NOT NULL,
+        current_period_end TIMESTAMPTZ,
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+      );
     `).then(() => undefined);
   }
   return schemaReady;
