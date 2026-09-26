@@ -5,6 +5,9 @@ import type { CaseProfession } from "@/lib/caseStudyContent";
 import type { CountryCode } from "@/lib/countryContext";
 import { getLanguage, type LanguageCode } from "@/lib/languages";
 
+// Parallel chunked translation normally finishes well under a minute; this is headroom for a slow Gemini response.
+export const maxDuration = 120;
+
 /**
  * POST /api/tutor/localize-teach
  * Looks up teaching content server-side (same lookup buildTeachingBrief
