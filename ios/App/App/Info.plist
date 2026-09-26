@@ -26,6 +26,10 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>MasterSpeak needs microphone access to record your speech so its AI coach can analyze your pronunciation, pacing, and clarity.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>MasterSpeak uses on-device speech recognition to transcribe your practice recordings for feedback.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
