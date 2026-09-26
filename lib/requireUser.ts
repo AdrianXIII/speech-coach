@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { getDb, hasDatabase } from "@/lib/db";
 import { hasAccess } from "@/lib/subscription";
@@ -59,5 +60,37 @@ export async function requireAccess(): Promise<CurrentUser> {
   const user = await requireUser();
   if (!user) redirect("/sign-in");
   if (!(await hasAccess(user))) redirect("/pricing");
+  return user;
+}
+
+/**
+ * The Route Handler equivalent of requireAccess() — every AI-calling API
+ * route calls this too, not just the page.tsx that fronts it, since a page
+ * redirect alone is trivially bypassed by calling the API directly (the
+ * Next.js auth guide's own "Route Handlers" section warns exactly against
+ * relying on a page-level check alone). Returns a ready-made error response
+ * to return as-is on failure, or the user on success — callers do
+ * `const gate = await requireApiAccess(); if (gate instanceof NextResponse) return gate;`
+ */
+/**
+ * Gates the developer-only content-review tools (app/api/tutor/flags,
+ * .../content-review/approved-export) — these used to be fully
+ * unauthenticated, fine for a solo-tester app but not once it's public.
+ * Admin, not subscription — an is_admin account never needs a trial or an
+ * IAP subscription to reach its own review tools.
+ */
+export async function requireAdmin(): Promise<CurrentUser | NextResponse> {
+  const user = await requireUser();
+  if (!user) return NextResponse.json({ error: "Sign in required." }, { status: 401 });
+  if (!user.isAdmin) return NextResponse.json({ error: "Forbidden." }, { status: 403 });
+  return user;
+}
+
+export async function requireApiAccess(): Promise<CurrentUser | NextResponse> {
+  const user = await requireUser();
+  if (!user) return NextResponse.json({ error: "Sign in required." }, { status: 401 });
+  if (!(await hasAccess(user))) {
+    return NextResponse.json({ error: "Subscription required.", pricingUrl: "/pricing" }, { status: 402 });
+  }
   return user;
 }

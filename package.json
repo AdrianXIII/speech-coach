@@ -13,6 +13,8 @@
     "@capacitor/core": "^8.5.2",
     "@capacitor/ios": "^8.5.2",
     "@revenuecat/purchases-capacitor": "^13.6.1",
+    "@upstash/ratelimit": "^2.2.0",
+    "@upstash/redis": "^1.39.0",
     "cmu-pronouncing-dictionary": "^3.0.0",
     "double-metaphone": "^2.0.1",
     "jose": "^6.2.12",

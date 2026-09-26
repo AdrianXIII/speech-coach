@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/requireUser";
 import { getDb, hasDatabase } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
+  const gate = await requireAdmin();
+  if (gate instanceof NextResponse) return gate;
+
   if (!hasDatabase()) return NextResponse.json({ error: "DATABASE_URL is not configured." }, { status: 503 });
   const body = await req.json().catch(() => null);
   if (!body?.reviewId || !body?.editorName || !body?.editedContent) {

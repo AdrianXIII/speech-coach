@@ -4,6 +4,7 @@ import { translateTeachingContent } from "@/lib/tutorTranslate";
 import type { CaseProfession } from "@/lib/caseStudyContent";
 import type { CountryCode } from "@/lib/countryContext";
 import { getLanguage, type LanguageCode } from "@/lib/languages";
+import { requireApiAccess } from "@/lib/requireUser";
 
 // Parallel chunked translation normally finishes well under a minute; this is headroom for a slow Gemini response.
 export const maxDuration = 120;
@@ -18,6 +19,9 @@ export const maxDuration = 120;
  * translation needed.
  */
 export async function POST(req: NextRequest) {
+  const gate = await requireApiAccess();
+  if (gate instanceof NextResponse) return gate;
+
   let body: { profession?: CaseProfession; category?: string; jurisdiction?: CountryCode; language?: LanguageCode };
   try {
     body = await req.json();

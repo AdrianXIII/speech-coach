@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/requireUser";
 import { getDb, hasDatabase } from "@/lib/db";
 import { resolveReviewableContent } from "@/lib/tutorContentReview";
 import {
@@ -12,6 +13,9 @@ import {
 import { saveContentSources } from "@/lib/tutorContentSources";
 
 export async function POST(req: NextRequest) {
+  const gate = await requireAdmin();
+  if (gate instanceof NextResponse) return gate;
+
   if (!hasDatabase()) return NextResponse.json({ error: "DATABASE_URL is not configured." }, { status: 503 });
   const body = await req.json().catch(() => null);
   const content = body?.contentKey ? await resolveReviewableContent(body.contentKey) : undefined;

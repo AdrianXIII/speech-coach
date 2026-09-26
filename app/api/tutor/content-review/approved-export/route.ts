@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 import { getDb, hasDatabase } from "@/lib/db";
+import { requireAdmin } from "@/lib/requireUser";
 
+/** Used to be fully unauthenticated — now admin-only, since it exports every approved content edit as a file download. */
 export async function GET() {
   if (!hasDatabase()) return NextResponse.json({ error: "DATABASE_URL is not configured." }, { status: 503 });
+  const gate = await requireAdmin();
+  if (gate instanceof NextResponse) return gate;
+
   const sql = await getDb();
   const rows = await sql!`
     select r.id, r.content_key, r.version, r.status, r.reviewer_summary,

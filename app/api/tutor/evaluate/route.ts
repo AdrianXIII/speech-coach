@@ -7,6 +7,11 @@ import type { TutorNewsItem } from "@/lib/tutorNews";
 import type { TutorProfile } from "@/lib/tutorProfile";
 import type { CountryCode } from "@/lib/countryContext";
 import { getLanguage, type LanguageCode } from "@/lib/languages";
+import { requireApiAccess } from "@/lib/requireUser";
+import { checkRateLimit } from "@/lib/rateLimit";
+
+const MAX_AUDIO_BYTES = 15 * 1024 * 1024;
+export const maxDuration = 60;
 
 /**
  * POST /api/tutor/evaluate
@@ -17,6 +22,13 @@ import { getLanguage, type LanguageCode } from "@/lib/languages";
  * pronunciation/summary feedback in one call.
  */
 export async function POST(req: NextRequest) {
+  const gate = await requireApiAccess();
+  if (gate instanceof NextResponse) return gate;
+
+  if (!(await checkRateLimit(String(gate.id)))) {
+    return NextResponse.json({ error: "Too many requests. Please slow down." }, { status: 429 });
+  }
+
   let formData: FormData;
   try {
     formData = await req.formData();
@@ -63,6 +75,10 @@ export async function POST(req: NextRequest) {
 
   if (!caseStudy && !newsItem) {
     return NextResponse.json({ error: "Provide either 'caseId' or 'newsItem'." }, { status: 400 });
+  }
+
+  if (audio instanceof Blob && audio.size > MAX_AUDIO_BYTES) {
+    return NextResponse.json({ error: "Recording too large." }, { status: 413 });
   }
 
   let audioPart: { base64: string; mimeType: string } | undefined;

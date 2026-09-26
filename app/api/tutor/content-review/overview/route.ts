@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/requireUser";
 import { getDb, hasDatabase } from "@/lib/db";
 
 /**
@@ -10,6 +11,9 @@ import { getDb, hasDatabase } from "@/lib/db";
  * through every category one at a time on /tutor-review.
  */
 export async function GET() {
+  const gate = await requireAdmin();
+  if (gate instanceof NextResponse) return gate;
+
   if (!hasDatabase()) return NextResponse.json({ rows: [], databaseConfigured: false });
   const sql = await getDb();
   const rows = await sql!`

@@ -5,6 +5,10 @@ import { generateTeachingPdf } from "@/lib/teachingPdf";
 import type { CaseProfession } from "@/lib/caseStudyContent";
 import type { CountryCode } from "@/lib/countryContext";
 import { getLanguage, type LanguageCode } from "@/lib/languages";
+import { requireApiAccess } from "@/lib/requireUser";
+
+// Same translation path as localize-teach, which needs the same headroom.
+export const maxDuration = 120;
 
 /**
  * GET /api/tutor/teaching-pdf?profession=...&category=...&jurisdiction=...&language=...
@@ -15,6 +19,9 @@ import { getLanguage, type LanguageCode } from "@/lib/languages";
  * section.
  */
 export async function GET(req: NextRequest) {
+  const gate = await requireApiAccess();
+  if (gate instanceof NextResponse) return gate;
+
   const params = req.nextUrl.searchParams;
   const profession = params.get("profession") as CaseProfession | null;
   const category = params.get("category");

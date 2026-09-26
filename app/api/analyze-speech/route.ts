@@ -3,7 +3,14 @@ import { analyzeSpeech } from "@/lib/analyzeSpeech";
 import { calculateOverallScore } from "@/lib/scoreSpeech";
 import { geminiErrorResponse } from "@/lib/gemini";
 import { toLanguageCode } from "@/lib/languages";
+import { requireApiAccess } from "@/lib/requireUser";
+import { checkRateLimit } from "@/lib/rateLimit";
 import type { AnalyzeSpeechResponse } from "@/types/speechAnalysis";
+
+// Comfortably above a few minutes of compressed browser-recorded audio;
+// guards against an oversized upload tying up a Gemini call unnecessarily.
+const MAX_AUDIO_BYTES = 15 * 1024 * 1024;
+export const maxDuration = 60;
 
 /**
  * POST /api/analyze-speech
@@ -17,6 +24,13 @@ import type { AnalyzeSpeechResponse } from "@/types/speechAnalysis";
  *   2. Analyze the transcript locally for pace (wpm) and filler-word usage.
  */
 export async function POST(req: NextRequest) {
+  const gate = await requireApiAccess();
+  if (gate instanceof NextResponse) return gate;
+
+  if (!(await checkRateLimit(String(gate.id)))) {
+    return NextResponse.json({ error: "Too many requests. Please slow down." }, { status: 429 });
+  }
+
   let formData: FormData;
   try {
     formData = await req.formData();
@@ -33,6 +47,9 @@ export async function POST(req: NextRequest) {
   }
   if (audio.size === 0) {
     return NextResponse.json({ error: "Uploaded audio file is empty." }, { status: 400 });
+  }
+  if (audio.size > MAX_AUDIO_BYTES) {
+    return NextResponse.json({ error: "Recording too large." }, { status: 413 });
   }
 
   try {

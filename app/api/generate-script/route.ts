@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { generateScript } from "@/lib/generateScript";
 import { geminiErrorResponse } from "@/lib/gemini";
 import { getLanguage, toLanguageCode } from "@/lib/languages";
+import { requireApiAccess } from "@/lib/requireUser";
+import { checkRateLimit } from "@/lib/rateLimit";
+
+const MAX_INPUT_CHARS = 4000;
 
 /**
  * POST /api/generate-script
@@ -10,6 +14,13 @@ import { getLanguage, toLanguageCode } from "@/lib/languages";
  * GEMINI_API_KEY isn't set).
  */
 export async function POST(req: NextRequest) {
+  const gate = await requireApiAccess();
+  if (gate instanceof NextResponse) return gate;
+
+  if (!(await checkRateLimit(String(gate.id)))) {
+    return NextResponse.json({ error: "Too many requests. Please slow down." }, { status: 429 });
+  }
+
   let body: { input?: string; language?: string };
   try {
     body = await req.json();
@@ -20,6 +31,9 @@ export async function POST(req: NextRequest) {
   const input = body.input?.trim();
   if (!input) {
     return NextResponse.json({ error: "Missing 'input' text." }, { status: 400 });
+  }
+  if (input.length > MAX_INPUT_CHARS) {
+    return NextResponse.json({ error: "Input is too long." }, { status: 413 });
   }
 
   try {

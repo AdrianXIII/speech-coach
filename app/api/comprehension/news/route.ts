@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fetchNewsPassage, fetchNewsPassageBySlot, listPoolEntries, NEWS_TOPICS, type NewsTopic } from "@/lib/comprehensionNews";
 import { getLanguage, type LanguageCode } from "@/lib/languages";
+import { requireApiAccess } from "@/lib/requireUser";
 
 /**
  * GET /api/comprehension/news?topic=Economy&language=en
@@ -19,6 +20,9 @@ import { getLanguage, type LanguageCode } from "@/lib/languages";
  * available or fails.
  */
 export async function GET(req: NextRequest) {
+  const gate = await requireApiAccess();
+  if (gate instanceof NextResponse) return gate;
+
   const topic = req.nextUrl.searchParams.get("topic") as NewsTopic | null;
   const language = (req.nextUrl.searchParams.get("language") as LanguageCode | null) ?? "en";
 

@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/requireUser";
 import { getDb, hasDatabase } from "@/lib/db";
 import { resolveReviewableContent, listReviewableTutorContent } from "@/lib/tutorContentReview";
 
 export async function GET(req: NextRequest) {
+  const gate = await requireAdmin();
+  if (gate instanceof NextResponse) return gate;
+
   const key = new URL(req.url).searchParams.get("contentKey");
   const content = key ? await resolveReviewableContent(key) : listReviewableTutorContent();
   if (!hasDatabase()) return NextResponse.json({ content, reviews: [], databaseConfigured: false });
@@ -29,6 +33,9 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  const gate = await requireAdmin();
+  if (gate instanceof NextResponse) return gate;
+
   if (!hasDatabase()) return NextResponse.json({ error: "DATABASE_URL is not configured." }, { status: 503 });
   const body = await req.json().catch(() => null);
   if (!body?.contentKey || !body?.agentName || !body?.scores || !body?.verdict) {

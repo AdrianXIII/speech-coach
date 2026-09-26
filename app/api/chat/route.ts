@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { continueChat, type ChatTurn } from "@/lib/chat";
 import { geminiErrorResponse } from "@/lib/gemini";
 import { getLanguage, toLanguageCode } from "@/lib/languages";
+import { requireApiAccess } from "@/lib/requireUser";
+import { checkRateLimit } from "@/lib/rateLimit";
+
+const MAX_TURNS = 40;
+const MAX_TURN_CHARS = 4000;
 
 /**
  * POST /api/chat
@@ -13,6 +18,13 @@ import { getLanguage, toLanguageCode } from "@/lib/languages";
  * set).
  */
 export async function POST(req: NextRequest) {
+  const gate = await requireApiAccess();
+  if (gate instanceof NextResponse) return gate;
+
+  if (!(await checkRateLimit(String(gate.id)))) {
+    return NextResponse.json({ error: "Too many requests. Please slow down." }, { status: 429 });
+  }
+
   let body: { history?: ChatTurn[]; language?: string };
   try {
     body = await req.json();
@@ -23,6 +35,9 @@ export async function POST(req: NextRequest) {
   const history = body.history;
   if (!Array.isArray(history) || history.length === 0) {
     return NextResponse.json({ error: "Missing 'history'." }, { status: 400 });
+  }
+  if (history.length > MAX_TURNS || history.some((turn) => (turn.text?.length ?? 0) > MAX_TURN_CHARS)) {
+    return NextResponse.json({ error: "Conversation is too long." }, { status: 413 });
   }
   const lastTurn = history[history.length - 1];
   if (lastTurn?.role !== "user" || !lastTurn.text?.trim()) {
