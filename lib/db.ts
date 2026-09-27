@@ -196,6 +196,10 @@ function ensureSchema(sql: ReturnType<typeof postgres>): Promise<void> {
         created_at TIMESTAMPTZ NOT NULL DEFAULT now()
       );
 
+      -- Email+password sign-in (lib/password.ts, the Credentials provider in
+      -- lib/auth.ts) — nullable because an Apple-only account never sets one.
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS password_hash TEXT;
+
       -- One row per linked sign-in method (Apple OAuth today, room for more
       -- later) — Auth.js's standard Adapter shape.
       CREATE TABLE IF NOT EXISTS accounts (

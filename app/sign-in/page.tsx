@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { signIn, getProviders } from "next-auth/react";
 import { PageHeader } from "@/components/PageHeader";
 import { useLanguage } from "@/components/LanguageProvider";
@@ -28,83 +29,126 @@ const T: Record<
     appleButton: string;
     orEmail: string;
     emailPlaceholder: string;
-    sendLink: string;
-    sending: string;
-    checkInbox: (email: string) => string;
-    error: string;
+    passwordPlaceholder: string;
+    signIn: string;
+    createAccount: string;
+    submitting: string;
+    toggleToCreate: string;
+    toggleToSignIn: string;
+    genericError: string;
+    invalidCredentials: string;
   }
 > = {
   en: {
     appleButton: "Continue with Apple",
-    orEmail: "or continue with email",
+    orEmail: "or with email",
     emailPlaceholder: "you@example.com",
-    sendLink: "Send sign-in link",
-    sending: "Sending…",
-    checkInbox: (email) => `Check ${email} for a sign-in link.`,
-    error: "Something went wrong. Please try again.",
+    passwordPlaceholder: "Password (min. 8 characters)",
+    signIn: "Sign in",
+    createAccount: "Create account",
+    submitting: "Please wait…",
+    toggleToCreate: "No account yet? Create one",
+    toggleToSignIn: "Already have an account? Sign in",
+    genericError: "Something went wrong. Please try again.",
+    invalidCredentials: "Wrong email or password.",
   },
   de: {
     appleButton: "Weiter mit Apple",
-    orEmail: "oder weiter per E-Mail",
+    orEmail: "oder per E-Mail",
     emailPlaceholder: "du@beispiel.de",
-    sendLink: "Anmeldelink senden",
-    sending: "Wird gesendet…",
-    checkInbox: (email) => `Schau in ${email} nach dem Anmeldelink.`,
-    error: "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+    passwordPlaceholder: "Passwort (mind. 8 Zeichen)",
+    signIn: "Anmelden",
+    createAccount: "Konto erstellen",
+    submitting: "Einen Moment…",
+    toggleToCreate: "Noch kein Konto? Jetzt erstellen",
+    toggleToSignIn: "Schon ein Konto? Anmelden",
+    genericError: "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+    invalidCredentials: "Falsche E-Mail oder falsches Passwort.",
   },
   fr: {
     appleButton: "Continuer avec Apple",
-    orEmail: "ou continuer par e-mail",
+    orEmail: "ou par e-mail",
     emailPlaceholder: "vous@exemple.fr",
-    sendLink: "Envoyer le lien de connexion",
-    sending: "Envoi…",
-    checkInbox: (email) => `Consultez ${email} pour le lien de connexion.`,
-    error: "Une erreur est survenue. Veuillez réessayer.",
+    passwordPlaceholder: "Mot de passe (8 caractères min.)",
+    signIn: "Se connecter",
+    createAccount: "Créer un compte",
+    submitting: "Un instant…",
+    toggleToCreate: "Pas encore de compte ? En créer un",
+    toggleToSignIn: "Déjà un compte ? Se connecter",
+    genericError: "Une erreur est survenue. Veuillez réessayer.",
+    invalidCredentials: "E-mail ou mot de passe incorrect.",
   },
   es: {
     appleButton: "Continuar con Apple",
-    orEmail: "o continuar por correo",
+    orEmail: "o con correo",
     emailPlaceholder: "tu@ejemplo.es",
-    sendLink: "Enviar enlace de acceso",
-    sending: "Enviando…",
-    checkInbox: (email) => `Revisa ${email} para ver el enlace de acceso.`,
-    error: "Algo salió mal. Inténtalo de nuevo.",
+    passwordPlaceholder: "Contraseña (mín. 8 caracteres)",
+    signIn: "Iniciar sesión",
+    createAccount: "Crear cuenta",
+    submitting: "Un momento…",
+    toggleToCreate: "¿Aún no tienes cuenta? Crea una",
+    toggleToSignIn: "¿Ya tienes cuenta? Inicia sesión",
+    genericError: "Algo salió mal. Inténtalo de nuevo.",
+    invalidCredentials: "Correo o contraseña incorrectos.",
   },
   sv: {
     appleButton: "Fortsätt med Apple",
-    orEmail: "eller fortsätt med e-post",
+    orEmail: "eller med e-post",
     emailPlaceholder: "du@exempel.se",
-    sendLink: "Skicka inloggningslänk",
-    sending: "Skickar…",
-    checkInbox: (email) => `Kolla ${email} efter en inloggningslänk.`,
-    error: "Något gick fel. Försök igen.",
+    passwordPlaceholder: "Lösenord (minst 8 tecken)",
+    signIn: "Logga in",
+    createAccount: "Skapa konto",
+    submitting: "Ett ögonblick…",
+    toggleToCreate: "Inget konto än? Skapa ett",
+    toggleToSignIn: "Redan ett konto? Logga in",
+    genericError: "Något gick fel. Försök igen.",
+    invalidCredentials: "Fel e-post eller lösenord.",
   },
 };
 
 export default function SignInPage() {
   const { language } = useLanguage();
   const t = T[language];
+  const router = useRouter();
+
+  const [mode, setMode] = useState<"signin" | "create">("signin");
   const [email, setEmail] = useState("");
-  const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
-  // Apple's provider is only registered server-side once its four env vars
-  // exist (see lib/auth.ts) — checking here instead of assuming it's always
-  // present avoids showing a button that would fail the OAuth handshake.
+  const [password, setPassword] = useState("");
+  const [state, setState] = useState<"idle" | "submitting" | "error">("idle");
+  const [error, setError] = useState<string | null>(null);
   const [appleAvailable, setAppleAvailable] = useState(false);
 
   useEffect(() => {
     getProviders().then((providers) => setAppleAvailable(!!providers?.apple));
   }, []);
 
-  async function handleEmailSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!email.trim()) return;
-    setState("sending");
-    try {
-      const result = await signIn("email", { email: email.trim(), redirect: false });
-      setState(result?.error ? "error" : "sent");
-    } catch {
-      setState("error");
+    setState("submitting");
+    setError(null);
+
+    if (mode === "create") {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim(), password }),
+      }).catch(() => null);
+      const data = await res?.json().catch(() => null);
+      if (!res?.ok) {
+        setState("error");
+        setError(data?.error ?? t.genericError);
+        return;
+      }
     }
+
+    const result = await signIn("credentials", { email: email.trim(), password, redirect: false });
+    if (result?.error) {
+      setState("error");
+      setError(t.invalidCredentials);
+      return;
+    }
+    router.push("/");
+    router.refresh();
   }
 
   return (
@@ -130,28 +174,43 @@ export default function SignInPage() {
             </>
           )}
 
-          {state === "sent" ? (
-            <p className="rounded-lg bg-surface-2 px-4 py-3 text-center text-sm text-ink">{t.checkInbox(email)}</p>
-          ) : (
-            <form onSubmit={handleEmailSubmit} className="flex flex-col gap-3">
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder={t.emailPlaceholder}
-                className="rounded-lg border border-hairline bg-surface px-4 py-3 text-sm text-ink outline-none focus:border-brass"
-              />
-              <button
-                type="submit"
-                disabled={state === "sending"}
-                className="rounded-lg border border-hairline bg-surface-2 px-4 py-3 text-sm font-semibold text-ink transition-colors hover:border-brass disabled:opacity-60"
-              >
-                {state === "sending" ? t.sending : t.sendLink}
-              </button>
-              {state === "error" && <p className="text-center text-xs text-red-600">{t.error}</p>}
-            </form>
-          )}
+          <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder={t.emailPlaceholder}
+              className="rounded-lg border border-hairline bg-surface px-4 py-3 text-sm text-ink outline-none focus:border-brass"
+            />
+            <input
+              type="password"
+              required
+              minLength={8}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder={t.passwordPlaceholder}
+              className="rounded-lg border border-hairline bg-surface px-4 py-3 text-sm text-ink outline-none focus:border-brass"
+            />
+            <button
+              type="submit"
+              disabled={state === "submitting"}
+              className="rounded-lg bg-navy px-4 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+            >
+              {state === "submitting" ? t.submitting : mode === "create" ? t.createAccount : t.signIn}
+            </button>
+            {error && <p className="text-center text-xs text-red-600">{error}</p>}
+          </form>
+
+          <button
+            onClick={() => {
+              setMode(mode === "signin" ? "create" : "signin");
+              setError(null);
+            }}
+            className="text-center text-xs font-semibold text-ink-muted hover:underline"
+          >
+            {mode === "signin" ? t.toggleToCreate : t.toggleToSignIn}
+          </button>
         </div>
       </div>
     </div>

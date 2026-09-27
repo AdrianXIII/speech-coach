@@ -1,10 +1,10 @@
 import NextAuth from "next-auth";
 import type { Adapter, AdapterAccount, AdapterSession, AdapterUser, VerificationToken } from "next-auth/adapters";
 import Apple from "next-auth/providers/apple";
-import type { EmailConfig } from "next-auth/providers/email";
+import Credentials from "next-auth/providers/credentials";
 import { SignJWT } from "jose";
-import { Resend } from "resend";
 import { getDb, hasDatabase } from "@/lib/db";
+import { verifyPassword } from "@/lib/password";
 
 /**
  * Auth.js v5, web-only (no native Capacitor auth plugin needed — the iOS
@@ -12,22 +12,35 @@ import { getDb, hasDatabase } from "@/lib/db";
  * origin directly per capacitor.config.ts, so cookies and an ordinary OAuth
  * redirect to appleid.apple.com work exactly like desktop Safari).
  *
- * Sign-in methods: Apple + email magic link, nothing else. Apple App Store
- * guideline 4.8 only requires offering Sign in with Apple once another
- * third-party/social login exists — this combination sidesteps that
- * requirement by construction rather than needing Google too.
+ * Sign-in methods: email + password (app/api/auth/register/route.ts handles
+ * account creation, lib/password.ts hashes) plus Apple, nothing else — no
+ * magic-link email, so no transactional-email provider (Resend etc.) is
+ * needed at all. Apple App Store guideline 4.8 only requires offering Sign
+ * in with Apple once another third-party/social login exists; email+
+ * password is this app's own credential, not a third-party social login, so
+ * it doesn't trigger that requirement.
  *
- * Session strategy: database, not JWT — a paid subscription needs immediate
- * revocation (refund/chargeback/ban), which a JWT session can't do without a
- * DB-backed blocklist anyway, and this app already accepts a DB round-trip
- * per request elsewhere (see lib/db.ts's hasDatabase()/getDb() pattern,
- * mirrored throughout this file).
+ * Session strategy: JWT, not database. Auth.js's Credentials provider only
+ * supports database sessions when at least one *other* provider is also
+ * registered (Apple's registration is conditional on its env vars being
+ * set — see hasAppleConfig below — so email+password could end up as the
+ * only provider, which database-strategy sessions don't support for
+ * Credentials at all). This trades away only the raw "invalidate the
+ * session cookie instantly" property — every subscription/admin check in
+ * this app (lib/subscription.ts's hasAccess(), lib/requireUser.ts's
+ * isAdmin) already re-queries Postgres fresh on every single request
+ * regardless of session strategy, so a ban or a cancelled subscription
+ * still takes effect on the very next request either way.
  *
  * No official Auth.js adapter exists for a bare `postgres` client (adapters
  * target Prisma/Drizzle/etc.) — the Adapter below is written directly
  * against lib/db.ts's existing client, following the same
  * "getDb() returns null until configured, callers degrade gracefully" idiom
- * as every other lib/*.ts file that touches the database.
+ * as every other lib/*.ts file that touches the database. Still needed
+ * under JWT sessions: Auth.js calls its user-management methods
+ * (createUser/getUserByAccount/linkAccount) for the Apple OAuth path
+ * regardless of session strategy — only the session-management methods
+ * (createSession/getSessionAndUser/...) go unused, harmlessly.
  */
 
 const row = <T>(rows: T[]): T | null => rows[0] ?? null;
@@ -240,42 +253,45 @@ const hasAppleConfig = !!(
   process.env.AUTH_APPLE_PRIVATE_KEY
 );
 
-const hasResendConfig = !!process.env.RESEND_API_KEY;
-
 /**
- * Custom Email provider (not the deprecated nodemailer-based default export)
- * so magic links send via Resend directly — same "managed service via one
- * env var" posture as GEMINI_API_KEY elsewhere in this app. Only called
- * when hasResendConfig is true (see the providers array below) — the
- * Resend constructor throws synchronously on a missing key, which would
- * otherwise crash every single auth() call, not just email sign-in.
+ * Verifies email+password against the users table directly — Credentials
+ * providers are never auto-persisted by Auth.js's adapter (unlike
+ * OAuth/Email providers), so this is the one place account lookup for this
+ * sign-in method happens. Account *creation* lives in
+ * app/api/auth/register/route.ts, not here — authorize() only ever verifies
+ * an existing row.
  */
-function resendEmailProvider(): EmailConfig {
-  const resend = new Resend(process.env.RESEND_API_KEY);
-  return {
-    id: "email",
-    type: "email",
-    name: "Email",
-    from: process.env.AUTH_EMAIL_FROM ?? "MasterSpeak <sign-in@mastertalk.app>",
-    maxAge: 24 * 60 * 60,
-    async sendVerificationRequest({ identifier, url }) {
-      await resend.emails.send({
-        from: process.env.AUTH_EMAIL_FROM ?? "MasterSpeak <sign-in@mastertalk.app>",
-        to: identifier,
-        subject: "Sign in to MasterSpeak",
-        text: `Sign in to MasterSpeak by clicking this link:\n${url}\n\nIf you didn't request this, you can ignore this email.`,
-        html: `<p>Sign in to MasterSpeak by clicking this link:</p><p><a href="${url}">${url}</a></p><p>If you didn't request this, you can ignore this email.</p>`,
-      });
+function credentialsProvider() {
+  return Credentials({
+    credentials: {
+      email: { label: "Email", type: "email" },
+      password: { label: "Password", type: "password" },
     },
-  };
+    async authorize(credentials) {
+      const email = typeof credentials?.email === "string" ? credentials.email.trim().toLowerCase() : "";
+      const password = typeof credentials?.password === "string" ? credentials.password : "";
+      if (!email || !password) return null;
+
+      const db = await getDb();
+      if (!db) return null;
+      const rows = await db<{ id: number; email: string; password_hash: string | null; name: string | null; image: string | null }[]>`
+        SELECT id, email, password_hash, name, image FROM users WHERE email = ${email}
+      `;
+      const u = rows[0];
+      if (!u?.password_hash) return null;
+      if (!(await verifyPassword(password, u.password_hash))) return null;
+
+      return { id: String(u.id), email: u.email, name: u.name ?? undefined, image: u.image ?? undefined };
+    },
+  });
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth(async () => ({
   adapter: hasDatabase() ? buildAdapter() : undefined,
-  session: { strategy: "database" },
+  session: { strategy: "jwt" },
   trustHost: true,
   providers: [
-    ...(hasResendConfig ? [resendEmailProvider()] : []),
+    credentialsProvider(),
     ...(hasAppleConfig
       ? [
           Apple({
@@ -287,12 +303,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth(async () => ({
   ],
   pages: { signIn: "/sign-in" },
   callbacks: {
-    async session({ session, user }) {
-      // Auth.js's default session callback only forwards a handful of
-      // AdapterUser fields — is_admin/trial_ends_at live on `users` but not
-      // on AdapterUser, so lib/requireUser.ts reads them with their own
-      // query keyed by this id rather than threading them through here.
-      if (session.user) session.user.id = user.id;
+    // JWT strategy: `user` is only present on the initial sign-in call (from
+    // authorize() or, for Apple, the adapter's getUserByAccount/createUser
+    // result) — carry its id into the token so it survives every later
+    // request. is_admin/trial_ends_at deliberately stay out of the token;
+    // lib/requireUser.ts reads them fresh from Postgres every request
+    // instead, so an admin grant or a trial change takes effect immediately
+    // rather than waiting for the token to expire/refresh.
+    async jwt({ token, user }) {
+      if (user?.id) token.sub = user.id;
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user && token.sub) session.user.id = token.sub;
       return session;
     },
   },
