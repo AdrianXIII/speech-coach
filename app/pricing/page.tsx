@@ -19,11 +19,11 @@ const TITLE: Record<LanguageCode, string> = {
 };
 
 const SUBTITLE: Record<LanguageCode, string> = {
-  en: "Your free trial has ended. Subscribe to keep practicing with every trainer and the AI Tutor.",
-  de: "Deine kostenlose Testphase ist beendet. Abonniere, um mit allen Trainern und dem KI-Tutor weiterzumachen.",
-  fr: "Votre essai gratuit est terminé. Abonnez-vous pour continuer avec tous les entraîneurs et le tuteur IA.",
-  es: "Tu prueba gratuita ha terminado. Suscríbete para seguir practicando con todos los entrenadores y el tutor de IA.",
-  sv: "Din kostnadsfria provperiod har tagit slut. Prenumerera för att fortsätta öva med alla tränare och AI-handledaren.",
+  en: "The free plan includes one session per trainer, per day, and 3 AI Tutor categories per profession. Subscribe for unlimited daily use and the full AI Tutor case library.",
+  de: "Der kostenlose Plan umfasst eine Sitzung pro Trainer und Tag sowie 3 KI-Tutor-Kategorien pro Berufsfeld. Abonniere für unbegrenzte tägliche Nutzung und die vollständige KI-Tutor-Fallbibliothek.",
+  fr: "Le plan gratuit inclut une session par entraîneur et par jour, ainsi que 3 catégories du Tuteur IA par domaine. Abonnez-vous pour un usage quotidien illimité et l'accès complet aux cas du Tuteur IA.",
+  es: "El plan gratuito incluye una sesión por entrenador al día y 3 categorías del Tutor de IA por profesión. Suscríbete para un uso diario ilimitado y la biblioteca completa de casos del Tutor de IA.",
+  sv: "Den kostnadsfria planen ger en session per tränare och dag, samt 3 AI-handledare-kategorier per yrke. Prenumerera för obegränsad daglig användning och hela AI-handledarens fallbibliotek.",
 };
 
 const T: Record<

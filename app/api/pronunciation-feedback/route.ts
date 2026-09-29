@@ -2,11 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { getPronunciationFeedback } from "@/lib/pronunciationFeedback";
 import { geminiErrorResponse } from "@/lib/gemini";
 import { getLanguage, toLanguageCode } from "@/lib/languages";
-import { requireApiAccess } from "@/lib/requireUser";
+import { requireApiUser } from "@/lib/requireUser";
 import { checkRateLimit } from "@/lib/rateLimit";
+import { isPremium } from "@/lib/subscription";
+import { canUseToday, markUsedToday } from "@/lib/usageLimitServer";
 
 const MAX_AUDIO_BYTES = 15 * 1024 * 1024;
 export const maxDuration = 60;
+const FEATURE = "pronunciation";
 
 /**
  * POST /api/pronunciation-feedback
@@ -15,11 +18,16 @@ export const maxDuration = 60;
  * pronunciation feedback (mocked if GEMINI_API_KEY isn't set).
  */
 export async function POST(req: NextRequest) {
-  const gate = await requireApiAccess();
+  const gate = await requireApiUser();
   if (gate instanceof NextResponse) return gate;
 
   if (!(await checkRateLimit(String(gate.id)))) {
     return NextResponse.json({ error: "Too many requests. Please slow down." }, { status: 429 });
+  }
+
+  const premium = await isPremium(gate.id);
+  if (!premium && !(await canUseToday(gate.id, FEATURE))) {
+    return NextResponse.json({ error: "Free daily use already used today.", upgradeUrl: "/pricing" }, { status: 402 });
   }
 
   let formData: FormData;
@@ -48,6 +56,7 @@ export async function POST(req: NextRequest) {
   try {
     const languageName = getLanguage(toLanguageCode(formData.get("language")?.toString())).name;
     const result = await getPronunciationFeedback(word, audio as File, languageName);
+    if (!premium && !result.mocked) await markUsedToday(gate.id, FEATURE);
     return NextResponse.json(result);
   } catch (err) {
     return geminiErrorResponse(err, "Pronunciation feedback failed.");

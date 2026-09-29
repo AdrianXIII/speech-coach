@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getCaseById } from "@/lib/caseStudyContent";
 import { translateCaseText } from "@/lib/tutorTranslate";
 import { getLanguage, type LanguageCode } from "@/lib/languages";
-import { requireApiAccess } from "@/lib/requireUser";
+import { requireApiUser } from "@/lib/requireUser";
 
 /**
  * POST /api/tutor/localize-case
@@ -14,7 +14,7 @@ import { requireApiAccess } from "@/lib/requireUser";
  * translated transcript against an English rubric just fine.
  */
 export async function POST(req: NextRequest) {
-  const gate = await requireApiAccess();
+  const gate = await requireApiUser();
   if (gate instanceof NextResponse) return gate;
 
   let body: { caseId?: string; language?: LanguageCode };

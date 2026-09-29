@@ -41,7 +41,7 @@ type VoiceIntent = "profession" | "category" | "teachNav" | "handoff" | null;
  * together. Domain logic lives in lib/tutorEngine.ts; this component only
  * orchestrates the session and the voice/TTS layer around it.
  */
-export function AITutor() {
+export function AITutor({ isPremium }: { isPremium: boolean }) {
   const { language } = useLanguage();
   const ui = tutorUI(language);
   const common = COMMON[language];
@@ -459,6 +459,7 @@ export function AITutor() {
           <CategoryPicker
             profession={profession}
             language={language}
+            isPremium={isPremium}
             onSelect={handleSelectCategory}
             onBack={() => setPhase("selectProfession")}
           />

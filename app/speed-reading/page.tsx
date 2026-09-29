@@ -1,6 +1,9 @@
 import { SpeedReadingTrainer } from "@/components/SpeedReadingTrainer";
 import { PageHeader } from "@/components/PageHeader";
-import { requireAccess } from "@/lib/requireUser";
+import { DailyLimitReached } from "@/components/DailyLimitReached";
+import { requireSignedIn } from "@/lib/requireUser";
+import { isPremium } from "@/lib/subscription";
+import { canUseToday, markUsedToday } from "@/lib/usageLimitServer";
 
 const TITLE = {
   en: "Speed Reading",
@@ -18,15 +21,23 @@ const SUBTITLE = {
   sv: "Klistra in en text, välj en nivå och ett språk, och träna dig på att läsa snabbare utan att förlora förståelsen.",
 };
 
+// No server action of its own to gate the daily limit at (see
+// lib/usageLimit.ts's doc comment) — checked and spent here, at page load,
+// instead.
+const FEATURE = "speedreading";
+
 export default async function SpeedReadingPage() {
-  await requireAccess();
+  const user = await requireSignedIn();
+  const premium = await isPremium(user.id);
+  const available = premium || (await canUseToday(user.id, FEATURE));
+  if (available && !premium) await markUsedToday(user.id, FEATURE);
 
   return (
     <div className="min-h-screen bg-paper px-4 py-12 sm:px-8">
       <div className="mx-auto flex max-w-3xl flex-col gap-8">
         <PageHeader title={TITLE} subtitle={SUBTITLE} />
 
-        <SpeedReadingTrainer />
+        {available ? <SpeedReadingTrainer /> : <DailyLimitReached />}
       </div>
     </div>
   );

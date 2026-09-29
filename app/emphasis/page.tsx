@@ -1,6 +1,9 @@
 import { ContrastiveStressTrainer } from "@/components/ContrastiveStressTrainer";
 import { PageHeader } from "@/components/PageHeader";
-import { requireAccess } from "@/lib/requireUser";
+import { DailyLimitReached } from "@/components/DailyLimitReached";
+import { requireSignedIn } from "@/lib/requireUser";
+import { isPremium } from "@/lib/subscription";
+import { canUseToday, markUsedToday } from "@/lib/usageLimitServer";
 
 const TITLE = {
   en: "Contrastive Stress",
@@ -18,15 +21,23 @@ const SUBTITLE = {
   sv: "Samma mening, olika betoning — öva på att lägga betoningen på rätt ord för att ändra betydelsen. Tillgängligt på engelska, tyska, franska, spanska och svenska.",
 };
 
+// No server action of its own to gate the daily limit at (see
+// lib/usageLimit.ts's doc comment) — checked and spent here, at page load,
+// instead.
+const FEATURE = "emphasis";
+
 export default async function EmphasisPage() {
-  await requireAccess();
+  const user = await requireSignedIn();
+  const premium = await isPremium(user.id);
+  const available = premium || (await canUseToday(user.id, FEATURE));
+  if (available && !premium) await markUsedToday(user.id, FEATURE);
 
   return (
     <div className="min-h-screen bg-paper px-4 py-12 sm:px-8">
       <div className="mx-auto flex max-w-3xl flex-col gap-8">
         <PageHeader title={TITLE} subtitle={SUBTITLE} />
 
-        <ContrastiveStressTrainer />
+        {available ? <ContrastiveStressTrainer /> : <DailyLimitReached />}
       </div>
     </div>
   );

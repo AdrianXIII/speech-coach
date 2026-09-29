@@ -5,7 +5,9 @@ import { generateTeachingPdf } from "@/lib/teachingPdf";
 import type { CaseProfession } from "@/lib/caseStudyContent";
 import type { CountryCode } from "@/lib/countryContext";
 import { getLanguage, type LanguageCode } from "@/lib/languages";
-import { requireApiAccess } from "@/lib/requireUser";
+import { requireApiUser } from "@/lib/requireUser";
+import { isPremium } from "@/lib/subscription";
+import { isFreeAiTutorCategory } from "@/lib/usageLimit";
 
 // Same translation path as localize-teach, which needs the same headroom.
 export const maxDuration = 120;
@@ -19,7 +21,7 @@ export const maxDuration = 120;
  * section.
  */
 export async function GET(req: NextRequest) {
-  const gate = await requireApiAccess();
+  const gate = await requireApiUser();
   if (gate instanceof NextResponse) return gate;
 
   const params = req.nextUrl.searchParams;
@@ -30,6 +32,10 @@ export async function GET(req: NextRequest) {
 
   if (!profession || !category) {
     return NextResponse.json({ error: "Missing 'profession' or 'category'." }, { status: 400 });
+  }
+
+  if (!(await isPremium(gate.id)) && !isFreeAiTutorCategory(profession, category)) {
+    return NextResponse.json({ error: "This category requires a subscription." }, { status: 402 });
   }
 
   const brief = buildTeachingBrief(profession, category, jurisdiction);

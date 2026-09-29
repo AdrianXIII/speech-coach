@@ -3,7 +3,7 @@ import { fetchTutorNews } from "@/lib/tutorNews";
 import type { CaseProfession } from "@/lib/caseStudyContent";
 import { getLanguage, type LanguageCode } from "@/lib/languages";
 import { COUNTRY_LABELS, type CountryCode } from "@/lib/countryContext";
-import { requireApiAccess } from "@/lib/requireUser";
+import { requireApiUser } from "@/lib/requireUser";
 
 /**
  * POST /api/tutor/news
@@ -16,7 +16,7 @@ import { requireApiAccess } from "@/lib/requireUser";
  * field in the request body, if the client still sends one, is ignored.
  */
 export async function POST(req: NextRequest) {
-  const gate = await requireApiAccess();
+  const gate = await requireApiUser();
   if (gate instanceof NextResponse) return gate;
 
   let body: {

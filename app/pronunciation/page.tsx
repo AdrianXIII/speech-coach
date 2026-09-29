@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { PronunciationTrainer } from "@/components/PronunciationTrainer";
 import { PageHeader } from "@/components/PageHeader";
-import { requireAccess } from "@/lib/requireUser";
+import { requireSignedIn } from "@/lib/requireUser";
 
 const TITLE = {
   en: "Pronunciation Trainer",
@@ -20,7 +20,7 @@ const SUBTITLE = {
 };
 
 export default async function PronunciationPage() {
-  await requireAccess();
+  await requireSignedIn();
 
   return (
     <div className="min-h-screen bg-paper px-4 py-12 sm:px-8">

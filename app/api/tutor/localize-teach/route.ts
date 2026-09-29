@@ -4,7 +4,9 @@ import { translateTeachingContent } from "@/lib/tutorTranslate";
 import type { CaseProfession } from "@/lib/caseStudyContent";
 import type { CountryCode } from "@/lib/countryContext";
 import { getLanguage, type LanguageCode } from "@/lib/languages";
-import { requireApiAccess } from "@/lib/requireUser";
+import { requireApiUser } from "@/lib/requireUser";
+import { isPremium } from "@/lib/subscription";
+import { isFreeAiTutorCategory } from "@/lib/usageLimit";
 
 // Parallel chunked translation normally finishes well under a minute; this is headroom for a slow Gemini response.
 export const maxDuration = 120;
@@ -19,7 +21,7 @@ export const maxDuration = 120;
  * translation needed.
  */
 export async function POST(req: NextRequest) {
-  const gate = await requireApiAccess();
+  const gate = await requireApiUser();
   if (gate instanceof NextResponse) return gate;
 
   let body: { profession?: CaseProfession; category?: string; jurisdiction?: CountryCode; language?: LanguageCode };
@@ -32,6 +34,13 @@ export async function POST(req: NextRequest) {
   const { profession, category, jurisdiction, language } = body;
   if (!profession || !category || !language) {
     return NextResponse.json({ error: "Missing 'profession', 'category', or 'language'." }, { status: 400 });
+  }
+
+  // Same category lock as /api/tutor/evaluate — a free account shouldn't
+  // get the full lesson content for a locked category, only the graded
+  // interaction was insufficient to protect the actual product value.
+  if (!(await isPremium(gate.id)) && !isFreeAiTutorCategory(profession, category)) {
+    return NextResponse.json({ error: "This category requires a subscription.", upgradeUrl: "/pricing" }, { status: 402 });
   }
 
   const brief = buildTeachingBrief(profession, category, jurisdiction);

@@ -14,7 +14,7 @@ import { Purchases } from "@revenuecat/purchases-capacitor";
  *
  * RevenueCat's Capacitor SDK only functions on a native platform (iOS/
  * Android) — it's a no-op in a desktop/mobile browser tab, which is fine:
- * hasAccess() in lib/subscription.ts is the real, server-side gate; this is
+ * isPremium() in lib/subscription.ts is the real, server-side gate; this is
  * just what lets a signed-in phone user actually complete a purchase.
  */
 export function RevenueCatInit() {

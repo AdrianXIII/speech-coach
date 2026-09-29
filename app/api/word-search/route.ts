@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { suggestWords } from "@/lib/wordSearch";
 import { suggestWordsAI } from "@/lib/wordAI";
 import { getLanguage, toLanguageCode } from "@/lib/languages";
-import { requireApiAccess } from "@/lib/requireUser";
+import { requireApiUser } from "@/lib/requireUser";
 
 const MAX_QUERY_CHARS = 60;
 
@@ -13,7 +13,7 @@ const MAX_QUERY_CHARS = 60;
  * de/fr/es/sv ask Gemini (cached per input — see lib/wordAI.ts).
  */
 export async function GET(req: NextRequest) {
-  const gate = await requireApiAccess();
+  const gate = await requireApiUser();
   if (gate instanceof NextResponse) return gate;
 
   const q = (req.nextUrl.searchParams.get("q") ?? "").slice(0, MAX_QUERY_CHARS);

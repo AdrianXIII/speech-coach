@@ -1,6 +1,6 @@
 import { SpeechRecorder } from "@/components/SpeechRecorder";
 import { PageHeader } from "@/components/PageHeader";
-import { requireAccess } from "@/lib/requireUser";
+import { requireSignedIn } from "@/lib/requireUser";
 
 const TITLE = {
   en: "AI Public Speaking Coach",
@@ -19,7 +19,7 @@ const SUBTITLE = {
 };
 
 export default async function RecordPage() {
-  await requireAccess();
+  await requireSignedIn();
 
   return (
     <div className="min-h-screen bg-paper px-4 py-12 sm:px-8">

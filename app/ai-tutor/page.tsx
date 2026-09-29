@@ -1,6 +1,7 @@
 import { AITutor } from "@/components/AITutor";
 import { PageHeader } from "@/components/PageHeader";
-import { requireAccess } from "@/lib/requireUser";
+import { requireSignedIn } from "@/lib/requireUser";
+import { isPremium } from "@/lib/subscription";
 
 const TITLE = {
   en: "AI Tutor",
@@ -19,14 +20,15 @@ const SUBTITLE = {
 };
 
 export default async function AITutorPage() {
-  await requireAccess();
+  const user = await requireSignedIn();
+  const premium = await isPremium(user.id);
 
   return (
     <div className="min-h-screen bg-paper px-4 py-12 sm:px-8">
       <div className="mx-auto flex max-w-3xl flex-col gap-8">
         <PageHeader title={TITLE} subtitle={SUBTITLE} />
 
-        <AITutor />
+        <AITutor isPremium={premium} />
       </div>
     </div>
   );

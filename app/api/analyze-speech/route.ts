@@ -3,9 +3,13 @@ import { analyzeSpeech } from "@/lib/analyzeSpeech";
 import { calculateOverallScore } from "@/lib/scoreSpeech";
 import { geminiErrorResponse } from "@/lib/gemini";
 import { toLanguageCode } from "@/lib/languages";
-import { requireApiAccess } from "@/lib/requireUser";
+import { requireApiUser } from "@/lib/requireUser";
 import { checkRateLimit } from "@/lib/rateLimit";
+import { isPremium } from "@/lib/subscription";
+import { canUseToday, markUsedToday } from "@/lib/usageLimitServer";
 import type { AnalyzeSpeechResponse } from "@/types/speechAnalysis";
+
+const FEATURE = "record";
 
 // Comfortably above a few minutes of compressed browser-recorded audio;
 // guards against an oversized upload tying up a Gemini call unnecessarily.
@@ -24,11 +28,16 @@ export const maxDuration = 60;
  *   2. Analyze the transcript locally for pace (wpm) and filler-word usage.
  */
 export async function POST(req: NextRequest) {
-  const gate = await requireApiAccess();
+  const gate = await requireApiUser();
   if (gate instanceof NextResponse) return gate;
 
   if (!(await checkRateLimit(String(gate.id)))) {
     return NextResponse.json({ error: "Too many requests. Please slow down." }, { status: 429 });
+  }
+
+  const premium = await isPremium(gate.id);
+  if (!premium && !(await canUseToday(gate.id, FEATURE))) {
+    return NextResponse.json({ error: "Free daily use already used today.", upgradeUrl: "/pricing" }, { status: 402 });
   }
 
   let formData: FormData;
@@ -71,6 +80,10 @@ export async function POST(req: NextRequest) {
       mispronouncedWords: analysis.mispronouncedWords,
       mocked: analysis.mocked,
     };
+
+    // Not mocked-only: a dev-mode mock response (no GEMINI_API_KEY) never
+    // reaches real users, so it shouldn't spend their one real free use.
+    if (!premium && !analysis.mocked) await markUsedToday(gate.id, FEATURE);
 
     return NextResponse.json(response);
   } catch (err) {

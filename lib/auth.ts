@@ -27,7 +27,7 @@ import { verifyPassword } from "@/lib/password";
  * only provider, which database-strategy sessions don't support for
  * Credentials at all). This trades away only the raw "invalidate the
  * session cookie instantly" property — every subscription/admin check in
- * this app (lib/subscription.ts's hasAccess(), lib/requireUser.ts's
+ * this app (lib/subscription.ts's isPremium(), lib/requireUser.ts's
  * isAdmin) already re-queries Postgres fresh on every single request
  * regardless of session strategy, so a ban or a cancelled subscription
  * still takes effect on the very next request either way.

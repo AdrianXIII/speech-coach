@@ -3,8 +3,10 @@ import { evaluateExecutiveComm } from "@/lib/executiveCommEngine";
 import { saveAttempt, listAttempts } from "@/lib/executiveCommHistory";
 import { geminiErrorResponse } from "@/lib/gemini";
 import { hasDatabase } from "@/lib/db";
-import { requireUser, requireApiAccess } from "@/lib/requireUser";
+import { requireUser, requireApiUser } from "@/lib/requireUser";
 import { checkRateLimit } from "@/lib/rateLimit";
+import { isPremium } from "@/lib/subscription";
+import { canUseToday, markUsedToday } from "@/lib/usageLimitServer";
 import { execModelsForLanguage } from "@/lib/structureModels";
 import { scenariosForLanguage, RECOMMENDED_SECONDS } from "@/lib/executiveCommScenarios";
 import { getLanguage, LANGUAGES, type LanguageCode } from "@/lib/languages";
@@ -13,6 +15,7 @@ const MAX_CUSTOM_PROMPT_CHARS = 600;
 const ALLOWED_SECONDS = [30, 60, 90];
 const MAX_AUDIO_BYTES = 15 * 1024 * 1024;
 export const maxDuration = 60;
+const FEATURE = "execcomm";
 
 /** GET /api/executive-communication — recent attempt scores for the signed-in account's progress panel. */
 export async function GET() {
@@ -35,12 +38,17 @@ export async function GET() {
  * real situation, length-capped).
  */
 export async function POST(req: NextRequest) {
-  const gate = await requireApiAccess();
+  const gate = await requireApiUser();
   if (gate instanceof NextResponse) return gate;
   const user = gate;
 
   if (!(await checkRateLimit(String(user.id)))) {
     return NextResponse.json({ error: "Too many requests. Please slow down." }, { status: 429 });
+  }
+
+  const premium = await isPremium(user.id);
+  if (!premium && !(await canUseToday(user.id, FEATURE))) {
+    return NextResponse.json({ error: "Free daily use already used today.", upgradeUrl: "/pricing" }, { status: 402 });
   }
 
   let formData: FormData;
@@ -119,6 +127,7 @@ export async function POST(req: NextRequest) {
         overallScore: result.overallScore,
         scores: result.scores,
       });
+      if (!premium) await markUsedToday(user.id, FEATURE);
     }
 
     return NextResponse.json(result);

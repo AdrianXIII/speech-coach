@@ -266,6 +266,19 @@ function ensureSchema(sql: ReturnType<typeof postgres>): Promise<void> {
         created_at TIMESTAMPTZ NOT NULL DEFAULT now()
       );
 
+      -- Free-tier daily usage (lib/usageLimit.ts) — one row per
+      -- (account, feature, calendar day) it actually used; existence alone
+      -- is the signal, no count needed since the limit is "once." Old rows
+      -- are simply never matched again once usage_date has passed — no
+      -- cleanup job required, though they could be pruned later.
+      CREATE TABLE IF NOT EXISTS daily_usage (
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        feature TEXT NOT NULL,
+        usage_date DATE NOT NULL,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+        PRIMARY KEY (user_id, feature, usage_date)
+      );
+
       -- One active RevenueCat entitlement per account (lib/subscription.ts).
       CREATE TABLE IF NOT EXISTS subscriptions (
         user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,

@@ -18,8 +18,8 @@ const T: Record<
     title: "Speak with confidence, in five languages.",
     subtitle:
       "MasterSpeak is an AI coach for public speaking, pronunciation, and professional communication — practice with your voice, get feedback in seconds.",
-    cta: "Start your free trial",
-    trialNote: "7 days free, then a simple monthly or annual subscription.",
+    cta: "Get started for free",
+    trialNote: "Free forever — one session per trainer daily. Upgrade anytime for unlimited access.",
     features: [
       { icon: "🎙️", title: "Record & Analyze", body: "Get instant feedback on pace, filler words, and delivery." },
       { icon: "🗣️", title: "Pronunciation", body: "Practice tricky words with AI feedback and spaced repetition." },
@@ -31,8 +31,8 @@ const T: Record<
     title: "Sprich selbstbewusst — in fünf Sprachen.",
     subtitle:
       "MasterSpeak ist ein KI-Coach für Redekunst, Aussprache und professionelle Kommunikation — übe mit deiner Stimme, erhalte Feedback in Sekunden.",
-    cta: "Kostenlose Testphase starten",
-    trialNote: "7 Tage kostenlos, danach ein einfaches Monats- oder Jahresabo.",
+    cta: "Kostenlos loslegen",
+    trialNote: "Für immer kostenlos — eine Sitzung pro Trainer täglich. Jederzeit upgraden für unbegrenzten Zugang.",
     features: [
       { icon: "🎙️", title: "Aufnahme & Analyse", body: "Sofortiges Feedback zu Tempo, Füllwörtern und Vortrag." },
       { icon: "🗣️", title: "Aussprache", body: "Übe schwierige Wörter mit KI-Feedback und Wiederholung." },
@@ -44,8 +44,8 @@ const T: Record<
     title: "Parlez avec confiance, en cinq langues.",
     subtitle:
       "MasterSpeak est un coach IA pour la prise de parole, la prononciation et la communication professionnelle — entraînez votre voix, recevez un retour en quelques secondes.",
-    cta: "Démarrer l'essai gratuit",
-    trialNote: "7 jours gratuits, puis un abonnement simple mensuel ou annuel.",
+    cta: "Commencer gratuitement",
+    trialNote: "Gratuit pour toujours — une session par entraîneur chaque jour. Passez à la version supérieure à tout moment pour un accès illimité.",
     features: [
       { icon: "🎙️", title: "Enregistrer et analyser", body: "Retour instantané sur le débit, les mots de remplissage et l'élocution." },
       { icon: "🗣️", title: "Prononciation", body: "Entraînez les mots difficiles avec un retour IA et la répétition espacée." },
@@ -57,8 +57,8 @@ const T: Record<
     title: "Habla con confianza, en cinco idiomas.",
     subtitle:
       "MasterSpeak es un coach de IA para oratoria, pronunciación y comunicación profesional — practica con tu voz y recibe comentarios en segundos.",
-    cta: "Empezar prueba gratuita",
-    trialNote: "7 días gratis, luego una suscripción sencilla mensual o anual.",
+    cta: "Empezar gratis",
+    trialNote: "Gratis para siempre — una sesión por entrenador al día. Mejora tu plan cuando quieras para acceso ilimitado.",
     features: [
       { icon: "🎙️", title: "Grabar y analizar", body: "Comentarios al instante sobre ritmo, muletillas y expresión." },
       { icon: "🗣️", title: "Pronunciación", body: "Practica palabras difíciles con comentarios de IA y repetición espaciada." },
@@ -70,8 +70,8 @@ const T: Record<
     title: "Tala med självförtroende, på fem språk.",
     subtitle:
       "MasterSpeak är en AI-coach för offentligt tal, uttal och professionell kommunikation — öva med din röst, få feedback på sekunder.",
-    cta: "Starta kostnadsfri provperiod",
-    trialNote: "7 dagar gratis, sedan en enkel månads- eller årsprenumeration.",
+    cta: "Kom igång gratis",
+    trialNote: "Gratis för alltid — en session per tränare varje dag. Uppgradera när som helst för obegränsad åtkomst.",
     features: [
       { icon: "🎙️", title: "Spela in & analysera", body: "Direkt feedback på tempo, utfyllnadsord och framförande." },
       { icon: "🗣️", title: "Uttal", body: "Öva svåra ord med AI-feedback och spaced repetition." },
@@ -82,10 +82,11 @@ const T: Record<
 };
 
 /**
- * Shown by app/page.tsx to anyone who isn't signed in, or whose trial has
- * ended without a subscription — a real pitch before asking for an account,
- * instead of the trainer picker (components/TrainerPicker.tsx) those
- * visitors can't actually use yet.
+ * Shown by app/page.tsx to anyone who isn't signed in yet — a real pitch
+ * before asking for an account, instead of the trainer picker
+ * (components/TrainerPicker.tsx). Once signed in, every account (free or
+ * paid) goes straight to the picker instead, since a free account already
+ * has real access (lib/usageLimit.ts's once-a-day free tier).
  */
 export function MarketingLanding({ ctaHref }: { ctaHref: string }) {
   const { language } = useLanguage();

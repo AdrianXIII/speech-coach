@@ -7,11 +7,15 @@ import type { TutorNewsItem } from "@/lib/tutorNews";
 import type { TutorProfile } from "@/lib/tutorProfile";
 import type { CountryCode } from "@/lib/countryContext";
 import { getLanguage, type LanguageCode } from "@/lib/languages";
-import { requireApiAccess } from "@/lib/requireUser";
+import { requireApiUser } from "@/lib/requireUser";
 import { checkRateLimit } from "@/lib/rateLimit";
+import { isPremium } from "@/lib/subscription";
+import { canUseToday, markUsedToday } from "@/lib/usageLimitServer";
+import { isFreeAiTutorCategory } from "@/lib/usageLimit";
 
 const MAX_AUDIO_BYTES = 15 * 1024 * 1024;
 export const maxDuration = 60;
+const FEATURE = "aitutor";
 
 /**
  * POST /api/tutor/evaluate
@@ -22,7 +26,7 @@ export const maxDuration = 60;
  * pronunciation/summary feedback in one call.
  */
 export async function POST(req: NextRequest) {
-  const gate = await requireApiAccess();
+  const gate = await requireApiUser();
   if (gate instanceof NextResponse) return gate;
 
   if (!(await checkRateLimit(String(gate.id)))) {
@@ -48,6 +52,22 @@ export async function POST(req: NextRequest) {
 
   if (!profession || !category) {
     return NextResponse.json({ error: "Missing 'profession' or 'category'." }, { status: 400 });
+  }
+
+  const premium = await isPremium(gate.id);
+  if (!premium) {
+    // Category lock never trusts the client — someone could otherwise call
+    // this route directly for a locked category even if the UI (see
+    // components/shared/CategoryPicker.tsx) never lets them pick it.
+    if (!isFreeAiTutorCategory(profession, category)) {
+      return NextResponse.json(
+        { error: "This category requires a subscription.", upgradeUrl: "/pricing" },
+        { status: 402 },
+      );
+    }
+    if (!(await canUseToday(gate.id, FEATURE))) {
+      return NextResponse.json({ error: "Free daily use already used today.", upgradeUrl: "/pricing" }, { status: 402 });
+    }
   }
 
   const caseStudy = caseId ? getCaseById(caseId) : null;
@@ -100,6 +120,7 @@ export async function POST(req: NextRequest) {
       jurisdiction,
       languageName: language ? getLanguage(language).name : undefined,
     });
+    if (!premium && !result.mocked) await markUsedToday(gate.id, FEATURE);
     return NextResponse.json(result);
   } catch (err) {
     return geminiErrorResponse(err, "Tutor evaluation failed.");

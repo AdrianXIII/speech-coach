@@ -4,7 +4,7 @@ import { getDb, hasDatabase } from "@/lib/db";
 /**
  * POST /api/webhooks/revenuecat
  * The only place subscription entitlement is ever written — every gated
- * request (see lib/subscription.ts's hasAccess()) reads the `subscriptions`
+ * request (see lib/subscription.ts's isPremium()) reads the `subscriptions`
  * row this writes, never RevenueCat's API directly, and never trusts a
  * client-side purchase claim.
  *
