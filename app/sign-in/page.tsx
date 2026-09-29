@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { signIn, getProviders } from "next-auth/react";
 import { PageHeader } from "@/components/PageHeader";
 import { useLanguage } from "@/components/LanguageProvider";
@@ -23,10 +24,6 @@ const SUBTITLE: Record<LanguageCode, string> = {
   sv: "Ett konto håller dina framsteg, repetitionslistor och prenumeration med dig på alla enheter.",
 };
 
-// Same placeholder convention as app/privacy/page.tsx and app/terms/page.tsx
-// — replace with a real support address once one exists.
-const SUPPORT_EMAIL = "[SUPPORT EMAIL]";
-
 const T: Record<
   LanguageCode,
   {
@@ -42,7 +39,6 @@ const T: Record<
     genericError: string;
     invalidCredentials: string;
     forgotPassword: string;
-    forgotPasswordHelp: (email: string) => string;
   }
 > = {
   en: {
@@ -58,7 +54,6 @@ const T: Record<
     genericError: "Something went wrong. Please try again.",
     invalidCredentials: "Wrong email or password.",
     forgotPassword: "Forgot password?",
-    forgotPasswordHelp: (email) => `To reset your password, contact us at ${email} from the email address on your account.`,
   },
   de: {
     appleButton: "Weiter mit Apple",
@@ -73,7 +68,6 @@ const T: Record<
     genericError: "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
     invalidCredentials: "Falsche E-Mail oder falsches Passwort.",
     forgotPassword: "Passwort vergessen?",
-    forgotPasswordHelp: (email) => `Um dein Passwort zurückzusetzen, kontaktiere uns unter ${email} von der E-Mail-Adresse deines Kontos aus.`,
   },
   fr: {
     appleButton: "Continuer avec Apple",
@@ -88,7 +82,6 @@ const T: Record<
     genericError: "Une erreur est survenue. Veuillez réessayer.",
     invalidCredentials: "E-mail ou mot de passe incorrect.",
     forgotPassword: "Mot de passe oublié ?",
-    forgotPasswordHelp: (email) => `Pour réinitialiser votre mot de passe, contactez-nous à ${email} depuis l'adresse e-mail de votre compte.`,
   },
   es: {
     appleButton: "Continuar con Apple",
@@ -103,7 +96,6 @@ const T: Record<
     genericError: "Algo salió mal. Inténtalo de nuevo.",
     invalidCredentials: "Correo o contraseña incorrectos.",
     forgotPassword: "¿Olvidaste tu contraseña?",
-    forgotPasswordHelp: (email) => `Para restablecer tu contraseña, contáctanos en ${email} desde el correo de tu cuenta.`,
   },
   sv: {
     appleButton: "Fortsätt med Apple",
@@ -118,7 +110,6 @@ const T: Record<
     genericError: "Något gick fel. Försök igen.",
     invalidCredentials: "Fel e-post eller lösenord.",
     forgotPassword: "Glömt lösenordet?",
-    forgotPasswordHelp: (email) => `Kontakta oss på ${email} från kontots mejladress för att återställa lösenordet.`,
   },
 };
 
@@ -133,7 +124,6 @@ export default function SignInPage() {
   const [state, setState] = useState<"idle" | "submitting" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
   const [appleAvailable, setAppleAvailable] = useState(false);
-  const [showForgotHelp, setShowForgotHelp] = useState(false);
 
   useEffect(() => {
     getProviders().then((providers) => setAppleAvailable(!!providers?.apple));
@@ -220,26 +210,15 @@ export default function SignInPage() {
           </form>
 
           {mode === "signin" && (
-            <div className="flex flex-col items-center gap-2">
-              <button
-                onClick={() => setShowForgotHelp((v) => !v)}
-                className="text-center text-xs font-semibold text-ink-muted hover:underline"
-              >
-                {t.forgotPassword}
-              </button>
-              {showForgotHelp && (
-                <p className="rounded-lg bg-surface-2 px-4 py-3 text-center text-xs text-ink-muted">
-                  {t.forgotPasswordHelp(SUPPORT_EMAIL)}
-                </p>
-              )}
-            </div>
+            <Link href="/forgot-password" className="text-center text-xs font-semibold text-ink-muted hover:underline">
+              {t.forgotPassword}
+            </Link>
           )}
 
           <button
             onClick={() => {
               setMode(mode === "signin" ? "create" : "signin");
               setError(null);
-              setShowForgotHelp(false);
             }}
             className="text-center text-xs font-semibold text-ink-muted hover:underline"
           >

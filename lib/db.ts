@@ -255,6 +255,17 @@ function ensureSchema(sql: ReturnType<typeof postgres>): Promise<void> {
       CREATE UNIQUE INDEX IF NOT EXISTS pronunciation_review_words_user_lang_word_idx
         ON pronunciation_review_words (user_id, language, lower(word));
 
+      -- Password-reset links (lib/passwordReset.ts, sent via Resend — see
+      -- lib/email.ts). A dedicated table rather than reusing the Auth.js
+      -- adapter's verification_token (that one's hashing/lookup conventions
+      -- are Auth.js-internal; this stays simple and explicit).
+      CREATE TABLE IF NOT EXISTS password_reset_tokens (
+        token TEXT PRIMARY KEY,
+        email TEXT NOT NULL,
+        expires TIMESTAMPTZ NOT NULL,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+      );
+
       -- One active RevenueCat entitlement per account (lib/subscription.ts).
       CREATE TABLE IF NOT EXISTS subscriptions (
         user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
