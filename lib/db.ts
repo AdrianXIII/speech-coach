@@ -30,7 +30,20 @@ function getClient() {
   return client;
 }
 
-/** Creates the review tables if they don't exist yet. */
+/**
+ * Creates the review tables if they don't exist yet.
+ *
+ * If this fails, `schemaReady` is reset to null (see the .catch below)
+ * rather than left holding the rejected promise — caching a *failure* here
+ * would permanently wedge every later call on this same warm serverless
+ * instance (a plain `if (!schemaReady)` check treats a rejected promise as
+ * "already have a result," so it would never retry, silently hiding every
+ * new table from every request that instance ever serves again, even after
+ * whatever caused the failure — a transient connection hiccup, say — has
+ * long since cleared up). Retrying is safe and cheap: almost every
+ * statement below is CREATE TABLE IF NOT EXISTS / ADD COLUMN IF NOT EXISTS,
+ * so a retry after a partial failure just re-confirms what already exists.
+ */
 function ensureSchema(sql: ReturnType<typeof postgres>): Promise<void> {
   if (!schemaReady) {
     // sql.unsafe uses the simple query protocol, which (unlike a tagged-template
@@ -288,7 +301,12 @@ function ensureSchema(sql: ReturnType<typeof postgres>): Promise<void> {
         current_period_end TIMESTAMPTZ,
         updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
       );
-    `).then(() => undefined);
+    `)
+      .then(() => undefined)
+      .catch((err) => {
+        schemaReady = null;
+        throw err;
+      });
   }
   return schemaReady;
 }
