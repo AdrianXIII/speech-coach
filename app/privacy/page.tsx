@@ -44,9 +44,10 @@ export default function PrivacyPage() {
           <section>
             <h2 className="mb-2 font-display text-base font-semibold">Account information</h2>
             <p>
-              When you sign in, we store your email address and, if you sign in with Apple, the identifier Apple
-              provides us — never your Apple password. We use this only to identify your account and to send
-              sign-in links and essential service email.
+              When you create an account, we store your email address and a securely hashed version of your
+              password — we never store or can see your actual password. If you sign in with Apple instead, we
+              store the identifier Apple provides us, never your Apple password. We use this only to identify your
+              account and to send essential service email.
             </p>
           </section>
 
@@ -65,8 +66,7 @@ export default function PrivacyPage() {
             <h2 className="mb-2 font-display text-base font-semibold">Third parties we use</h2>
             <ul className="list-disc space-y-1 pl-5">
               <li><strong>Google Gemini</strong> — transcribes and analyzes your recordings and text.</li>
-              <li><strong>Vercel and Neon</strong> — host the app and its database.</li>
-              <li><strong>Resend</strong> — delivers sign-in emails.</li>
+              <li><strong>Vercel and Supabase</strong> — host the app and its database.</li>
               <li><strong>Apple and RevenueCat</strong> — process subscription payments; MasterSpeak never sees your card details.</li>
             </ul>
             <p className="mt-2">We do not sell your data, and we do not run advertising or ad-tracking of any kind.</p>
