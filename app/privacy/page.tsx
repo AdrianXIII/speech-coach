@@ -12,22 +12,13 @@ const TITLE = {
 };
 
 const SUBTITLE = {
-  en: "Last updated: [DATE]",
-  de: "Last updated: [DATE]",
-  fr: "Last updated: [DATE]",
-  es: "Last updated: [DATE]",
-  sv: "Last updated: [DATE]",
+  en: "Last updated: October 2, 2026",
+  de: "Last updated: October 2, 2026",
+  fr: "Last updated: October 2, 2026",
+  es: "Last updated: October 2, 2026",
+  sv: "Last updated: October 2, 2026",
 };
 
-/**
- * TODO before launch: replace every [BRACKETED] placeholder below with real
- * details — this app's developer needs to supply the legal entity name and
- * address, the governing jurisdiction, and a support email; none of those
- * are guessed here. Required for App Store Connect's privacy-policy-URL
- * field and for Sign-in-with-Apple/RevenueCat compliance, and because this
- * app records audio and serves EU users (de/fr/es/sv), so GDPR disclosure
- * obligations apply regardless of where the developer is based.
- */
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-paper px-4 py-12 sm:px-8">
@@ -36,9 +27,9 @@ export default function PrivacyPage() {
 
         <div className="flex flex-col gap-6 rounded-2xl border border-hairline bg-surface p-6 text-sm leading-relaxed text-ink shadow-sm sm:p-8">
           <p>
-            MasterSpeak (&ldquo;we&rdquo;, &ldquo;us&rdquo;) is operated by [LEGAL ENTITY NAME], [ADDRESS]. This
+            MasterSpeak (&ldquo;we&rdquo;, &ldquo;us&rdquo;) is operated by Kosal Tech, based in Kosovo. This
             policy explains what data MasterSpeak collects, why, and how you can control it. Questions or requests
-            go to [SUPPORT EMAIL].
+            go to <a href="mailto:kosaltech2025@gmail.com" className="underline">kosaltech2025@gmail.com</a>.
           </p>
 
           <section>
@@ -76,8 +67,9 @@ export default function PrivacyPage() {
             <h2 className="mb-2 font-display text-base font-semibold">Your rights</h2>
             <p>
               You can ask us to access, export, or delete your account and its data at any time by emailing
-              [SUPPORT EMAIL]. If you are in the European Economic Area, you have the rights described under the
-              GDPR, including the right to lodge a complaint with your local data protection authority.
+              <a href="mailto:kosaltech2025@gmail.com" className="underline"> kosaltech2025@gmail.com</a>. If you are
+              in the European Economic Area, you have the rights described under the GDPR, including the right to
+              lodge a complaint with your local data protection authority.
             </p>
           </section>
 

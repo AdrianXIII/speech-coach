@@ -44,7 +44,7 @@ Primary: Education
 Secondary: Productivity
 
 ## Support URL
-https://speech-coach-beta.vercel.app/privacy (or a dedicated support page/email once [SUPPORT EMAIL] from app/privacy/page.tsx is finalized)
+https://speech-coach-beta.vercel.app/privacy (support email: kosaltech2025@gmail.com)
 
 ## Marketing URL
 https://speech-coach-beta.vercel.app/
@@ -53,7 +53,7 @@ https://speech-coach-beta.vercel.app/
 https://speech-coach-beta.vercel.app/privacy
 
 ## Copyright
-[YEAR] [LEGAL ENTITY NAME] (same placeholder as app/privacy/page.tsx and app/terms/page.tsx — fill in together)
+2026 Kosal Tech
 
 ## Age rating questionnaire
 No objectionable content of any kind (violence, mature themes, gambling, etc.) — answer "None" to every category. Expected result: 4+.

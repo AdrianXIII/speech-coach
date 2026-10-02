@@ -10,17 +10,17 @@ const TITLE = {
 };
 
 const SUBTITLE = {
-  en: "Last updated: [DATE]",
-  de: "Last updated: [DATE]",
-  fr: "Last updated: [DATE]",
-  es: "Last updated: [DATE]",
-  sv: "Last updated: [DATE]",
+  en: "Last updated: October 2, 2026",
+  de: "Last updated: October 2, 2026",
+  fr: "Last updated: October 2, 2026",
+  es: "Last updated: October 2, 2026",
+  sv: "Last updated: October 2, 2026",
 };
 
 /**
- * TODO before launch: same [BRACKETED] placeholders as app/privacy/page.tsx
- * need real values — this is a plain, honest draft to review with a lawyer
- * before publishing, not a substitute for one.
+ * This is a plain, honest draft modeled on the same developer's other app
+ * (Memory Atlas, operated by the same entity, Kosal Tech) — worth a lawyer's
+ * review before publishing, not a substitute for one.
  */
 export default function TermsPage() {
   return (
@@ -30,8 +30,9 @@ export default function TermsPage() {
 
         <div className="flex flex-col gap-6 rounded-2xl border border-hairline bg-surface p-6 text-sm leading-relaxed text-ink shadow-sm sm:p-8">
           <p>
-            These terms govern your use of MasterSpeak, operated by [LEGAL ENTITY NAME]. By creating an account you
-            agree to them. Questions go to [SUPPORT EMAIL].
+            These terms govern your use of MasterSpeak, operated by Kosal Tech, based in Kosovo. By creating an
+            account you agree to them. Questions go to{" "}
+            <a href="mailto:kosaltech2025@gmail.com" className="underline">kosaltech2025@gmail.com</a>.
           </p>
 
           <section>
@@ -53,11 +54,13 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="mb-2 font-display text-base font-semibold">Free trial and subscription</h2>
+            <h2 className="mb-2 font-display text-base font-semibold">Free use and subscription</h2>
             <p>
-              New accounts get a free trial period. After it ends, continued use requires an active subscription,
-              purchased and managed entirely through Apple&rsquo;s App Store — refunds, billing disputes, and
-              cancellation all go through Apple, not MasterSpeak directly, per Apple&rsquo;s own policies.
+              Every account can use each trainer once per day for free, permanently, and AI Tutor includes 3 starter
+              categories per profession at no cost. Unlimited daily use and the full AI Tutor case library require an
+              active annual subscription, purchased and managed entirely through Apple&rsquo;s App Store — refunds,
+              billing disputes, and cancellation all go through Apple, not MasterSpeak directly, per Apple&rsquo;s own
+              policies.
             </p>
           </section>
 
@@ -74,14 +77,14 @@ export default function TermsPage() {
             <p>
               MasterSpeak is provided &ldquo;as is&rdquo;. AI-generated feedback and content can be incomplete or
               wrong, and we don&rsquo;t guarantee the service will be uninterrupted or error-free. To the extent
-              permitted by [JURISDICTION] law, we aren&rsquo;t liable for indirect or consequential damages arising
+              permitted by Kosovo law, we aren&rsquo;t liable for indirect or consequential damages arising
               from your use of MasterSpeak.
             </p>
           </section>
 
           <section>
             <h2 className="mb-2 font-display text-base font-semibold">Governing law</h2>
-            <p>These terms are governed by the laws of [JURISDICTION].</p>
+            <p>These terms are governed by the laws of Kosovo.</p>
           </section>
 
           <section>
