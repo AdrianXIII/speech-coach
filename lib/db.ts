@@ -301,6 +301,19 @@ function ensureSchema(sql: ReturnType<typeof postgres>): Promise<void> {
         current_period_end TIMESTAMPTZ,
         updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
       );
+
+      -- Sliding-window rate limiting (lib/rateLimit.ts), keyed by account id
+      -- — Postgres instead of a separate Redis service, since this app
+      -- already has a working database connection and the volume here is
+      -- small. One row per request within the current window; checkRateLimit()
+      -- prunes a key's own expired rows on each call rather than needing a
+      -- separate cleanup job.
+      CREATE TABLE IF NOT EXISTS rate_limit_events (
+        id SERIAL PRIMARY KEY,
+        key TEXT NOT NULL,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+      );
+      CREATE INDEX IF NOT EXISTS rate_limit_events_key_created_idx ON rate_limit_events (key, created_at);
     `)
       .then(() => undefined)
       .catch((err) => {
