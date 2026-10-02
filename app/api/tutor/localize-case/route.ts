@@ -3,6 +3,7 @@ import { getCaseById } from "@/lib/caseStudyContent";
 import { translateCaseText } from "@/lib/tutorTranslate";
 import { getLanguage, type LanguageCode } from "@/lib/languages";
 import { requireApiUser } from "@/lib/requireUser";
+import { checkRateLimit } from "@/lib/rateLimit";
 
 /**
  * POST /api/tutor/localize-case
@@ -16,6 +17,13 @@ import { requireApiUser } from "@/lib/requireUser";
 export async function POST(req: NextRequest) {
   const gate = await requireApiUser();
   if (gate instanceof NextResponse) return gate;
+
+  // Own key prefix so this shares no budget with the other Gemini-calling
+  // routes — a student browsing AI Tutor cases shouldn't burn the same
+  // bucket that gates analyze-speech/pronunciation-feedback/etc.
+  if (!(await checkRateLimit(`tutor-localize-case:${gate.id}`))) {
+    return NextResponse.json({ error: "Too many requests. Please slow down." }, { status: 429 });
+  }
 
   let body: { caseId?: string; language?: LanguageCode };
   try {

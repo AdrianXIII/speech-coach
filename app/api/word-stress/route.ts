@@ -3,6 +3,7 @@ import { getWordStress } from "@/lib/wordStress";
 import { getWordStressAI } from "@/lib/wordAI";
 import { getLanguage, toLanguageCode } from "@/lib/languages";
 import { requireApiUser } from "@/lib/requireUser";
+import { checkRateLimit, LIGHT_WINDOW_MS, LIGHT_MAX_PER_WINDOW } from "@/lib/rateLimit";
 
 /**
  * GET /api/word-stress?word=development&lang=en
@@ -14,6 +15,10 @@ import { requireApiUser } from "@/lib/requireUser";
 export async function GET(req: NextRequest) {
   const gate = await requireApiUser();
   if (gate instanceof NextResponse) return gate;
+
+  if (!(await checkRateLimit(`word-stress:${gate.id}`, { windowMs: LIGHT_WINDOW_MS, max: LIGHT_MAX_PER_WINDOW }))) {
+    return NextResponse.json({ error: "Too many requests. Please slow down." }, { status: 429 });
+  }
 
   const word = req.nextUrl.searchParams.get("word")?.trim();
   if (!word) {

@@ -4,6 +4,7 @@ import type { CaseProfession } from "@/lib/caseStudyContent";
 import { getLanguage, type LanguageCode } from "@/lib/languages";
 import { COUNTRY_LABELS, type CountryCode } from "@/lib/countryContext";
 import { requireApiUser } from "@/lib/requireUser";
+import { checkRateLimit } from "@/lib/rateLimit";
 
 /**
  * POST /api/tutor/news
@@ -18,6 +19,10 @@ import { requireApiUser } from "@/lib/requireUser";
 export async function POST(req: NextRequest) {
   const gate = await requireApiUser();
   if (gate instanceof NextResponse) return gate;
+
+  if (!(await checkRateLimit(`tutor-news:${gate.id}`))) {
+    return NextResponse.json({ error: "Too many requests. Please slow down." }, { status: 429 });
+  }
 
   let body: {
     profession?: CaseProfession;

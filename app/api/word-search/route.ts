@@ -3,6 +3,7 @@ import { suggestWords } from "@/lib/wordSearch";
 import { suggestWordsAI } from "@/lib/wordAI";
 import { getLanguage, toLanguageCode } from "@/lib/languages";
 import { requireApiUser } from "@/lib/requireUser";
+import { checkRateLimit, LIGHT_WINDOW_MS, LIGHT_MAX_PER_WINDOW } from "@/lib/rateLimit";
 
 const MAX_QUERY_CHARS = 60;
 
@@ -15,6 +16,13 @@ const MAX_QUERY_CHARS = 60;
 export async function GET(req: NextRequest) {
   const gate = await requireApiUser();
   if (gate instanceof NextResponse) return gate;
+
+  // Light tier, own key prefix: this fires on near-every keystroke (a
+  // debounced autocomplete), so it needs a far looser budget than — and a
+  // separate bucket from — the one-deliberate-action routes.
+  if (!(await checkRateLimit(`word-search:${gate.id}`, { windowMs: LIGHT_WINDOW_MS, max: LIGHT_MAX_PER_WINDOW }))) {
+    return NextResponse.json({ error: "Too many requests. Please slow down." }, { status: 429 });
+  }
 
   const q = (req.nextUrl.searchParams.get("q") ?? "").slice(0, MAX_QUERY_CHARS);
   const lang = toLanguageCode(req.nextUrl.searchParams.get("lang"));
