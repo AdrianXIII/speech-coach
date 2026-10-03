@@ -54,6 +54,12 @@ export const CASE_CATEGORIES: Record<CaseProfession, string[]> = {
     "Civil Litigation",
     "Criminal Law",
     "Constitutional & Regulatory",
+    "Torts & Civil Liability",
+    "Administrative Law",
+    "Property Law",
+    "Labor & Employment Law",
+    "Family Law",
+    "Tax Law",
   ],
   politics: [
     "Foreign Policy & Diplomacy",
@@ -61,6 +67,12 @@ export const CASE_CATEGORIES: Record<CaseProfession, string[]> = {
     "Crisis Response",
     "Campaign Strategy",
     "Legislative Negotiation",
+    "Public Administration & Governance",
+    "Economic & Fiscal Policy",
+    "International & Regional Institutions",
+    "Political Communication & Media",
+    "Electoral Systems & Law",
+    "Local & Regional Government",
   ],
 };
 

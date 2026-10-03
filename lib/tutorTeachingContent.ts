@@ -11,6 +11,18 @@ import { POLITICS_ES } from "@/lib/teaching/politics-es";
 import { POLITICS_FR } from "@/lib/teaching/politics-fr";
 import { POLITICS_SE } from "@/lib/teaching/politics-se";
 import { POLITICS_US } from "@/lib/teaching/politics-us";
+import { LAW_TORTS_CIVIL_LIABILITY_TEACHING } from "@/lib/teaching/law-torts-civil-liability";
+import { LAW_ADMINISTRATIVE_LAW_TEACHING } from "@/lib/teaching/law-administrative-law";
+import { LAW_PROPERTY_LAW_TEACHING } from "@/lib/teaching/law-property-law";
+import { LAW_LABOR_EMPLOYMENT_TEACHING } from "@/lib/teaching/law-labor-employment";
+import { LAW_FAMILY_LAW_TEACHING } from "@/lib/teaching/law-family-law";
+import { LAW_TAX_LAW_TEACHING } from "@/lib/teaching/law-tax-law";
+import { POLITICS_PUBLIC_ADMINISTRATION_TEACHING } from "@/lib/teaching/politics-public-administration";
+import { POLITICS_ECONOMIC_FISCAL_POLICY_TEACHING } from "@/lib/teaching/politics-economic-fiscal-policy";
+import { POLITICS_INTERNATIONAL_INSTITUTIONS_TEACHING } from "@/lib/teaching/politics-international-institutions";
+import { POLITICS_COMMUNICATION_MEDIA_TEACHING } from "@/lib/teaching/politics-communication-media";
+import { POLITICS_ELECTORAL_SYSTEMS_TEACHING } from "@/lib/teaching/politics-electoral-systems";
+import { POLITICS_LOCAL_REGIONAL_GOVERNMENT_TEACHING } from "@/lib/teaching/politics-local-regional-government";
 
 /**
  * The AI Tutor's deep-dive teaching content — the "what you need to know
@@ -26,8 +38,8 @@ import { POLITICS_US } from "@/lib/teaching/politics-us";
  * wrote it (a specific Claude/Gemini call), and `generatedAt` says when —
  * both there so you can tell stale content from fresh.
  *
- * COVERAGE: all 28 profession/category combinations are hand-authored here
- * (18 Business, 5 Law, 5 Politics) — getTeachingContent() should never
+ * COVERAGE: all 40 profession/category combinations are hand-authored here
+ * (18 Business, 11 Law, 11 Politics) — getTeachingContent() should never
  * return null for an existing CASE_CATEGORIES entry. If a new category is
  * ever added to caseStudyContent.ts, it'll fall back gracefully to the
  * plain Fundamentals checklist until content is added for it here (or via
@@ -36,11 +48,12 @@ import { POLITICS_US } from "@/lib/teaching/politics-us";
  *
  * COUNTRY (Law and Politics): unlike Business, legal and political content
  * are country-bound — see lib/legalJurisdiction.ts and lib/politicalSystem.ts
- * for why. As of 2026-09-10, every country the app's language picker maps to
+ * for why. As of 2026-10-03, every country the app's language picker maps to
  * is hand-authored for both Law and Politics — US (default, no suffix),
- * Germany, France, Spain, and Sweden (40 country-specific entries on top of
- * the 28 US/base ones) — so selecting any supported language and opening
- * Law or Politics shows real, country-specific content, not a US fallback.
+ * Germany, France, Spain, and Sweden (88 country-specific entries across the
+ * 22 Law/Politics categories, on top of the 22 US/base ones) — so selecting
+ * any supported language and opening Law or Politics shows real,
+ * country-specific content, not a US fallback.
  * The US entries default without a country suffix. A country-specific
  * entry (e.g. German contract law, or German federal politics) gets keyed
  * `<profession>/<category>/<country>` and takes priority over the US
@@ -114,6 +127,18 @@ const COUNTRY_BOUND_CONTENT: Record<string, TeachingContent> = {
   ...POLITICS_FR,
   ...POLITICS_SE,
   ...POLITICS_US,
+  ...LAW_TORTS_CIVIL_LIABILITY_TEACHING,
+  ...LAW_ADMINISTRATIVE_LAW_TEACHING,
+  ...LAW_PROPERTY_LAW_TEACHING,
+  ...LAW_LABOR_EMPLOYMENT_TEACHING,
+  ...LAW_FAMILY_LAW_TEACHING,
+  ...LAW_TAX_LAW_TEACHING,
+  ...POLITICS_PUBLIC_ADMINISTRATION_TEACHING,
+  ...POLITICS_ECONOMIC_FISCAL_POLICY_TEACHING,
+  ...POLITICS_INTERNATIONAL_INSTITUTIONS_TEACHING,
+  ...POLITICS_COMMUNICATION_MEDIA_TEACHING,
+  ...POLITICS_ELECTORAL_SYSTEMS_TEACHING,
+  ...POLITICS_LOCAL_REGIONAL_GOVERNMENT_TEACHING,
 };
 
 /**
