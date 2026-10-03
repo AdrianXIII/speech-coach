@@ -23,6 +23,10 @@ import { POLITICS_INTERNATIONAL_INSTITUTIONS_TEACHING } from "@/lib/teaching/pol
 import { POLITICS_COMMUNICATION_MEDIA_TEACHING } from "@/lib/teaching/politics-communication-media";
 import { POLITICS_ELECTORAL_SYSTEMS_TEACHING } from "@/lib/teaching/politics-electoral-systems";
 import { POLITICS_LOCAL_REGIONAL_GOVERNMENT_TEACHING } from "@/lib/teaching/politics-local-regional-government";
+import { LAW_INTELLECTUAL_PROPERTY_TEACHING } from "@/lib/teaching/law-intellectual-property";
+import { LAW_PUBLIC_INTERNATIONAL_LAW_TEACHING } from "@/lib/teaching/law-public-international-law";
+import { LAW_SOCIAL_SECURITY_WELFARE_TEACHING } from "@/lib/teaching/law-social-security-welfare";
+import { LAW_BUSINESS_ASSOCIATIONS_TEACHING } from "@/lib/teaching/law-business-associations";
 
 /**
  * The AI Tutor's deep-dive teaching content — the "what you need to know
@@ -38,8 +42,8 @@ import { POLITICS_LOCAL_REGIONAL_GOVERNMENT_TEACHING } from "@/lib/teaching/poli
  * wrote it (a specific Claude/Gemini call), and `generatedAt` says when —
  * both there so you can tell stale content from fresh.
  *
- * COVERAGE: all 40 profession/category combinations are hand-authored here
- * (18 Business, 11 Law, 11 Politics) — getTeachingContent() should never
+ * COVERAGE: all 44 profession/category combinations are hand-authored here
+ * (18 Business, 15 Law, 11 Politics) — getTeachingContent() should never
  * return null for an existing CASE_CATEGORIES entry. If a new category is
  * ever added to caseStudyContent.ts, it'll fall back gracefully to the
  * plain Fundamentals checklist until content is added for it here (or via
@@ -50,8 +54,8 @@ import { POLITICS_LOCAL_REGIONAL_GOVERNMENT_TEACHING } from "@/lib/teaching/poli
  * are country-bound — see lib/legalJurisdiction.ts and lib/politicalSystem.ts
  * for why. As of 2026-10-03, every country the app's language picker maps to
  * is hand-authored for both Law and Politics — US (default, no suffix),
- * Germany, France, Spain, and Sweden (88 country-specific entries across the
- * 22 Law/Politics categories, on top of the 22 US/base ones) — so selecting
+ * Germany, France, Spain, and Sweden (104 country-specific entries across the
+ * 26 Law/Politics categories, on top of the 26 US/base ones) — so selecting
  * any supported language and opening Law or Politics shows real,
  * country-specific content, not a US fallback.
  * The US entries default without a country suffix. A country-specific
@@ -139,6 +143,10 @@ const COUNTRY_BOUND_CONTENT: Record<string, TeachingContent> = {
   ...POLITICS_COMMUNICATION_MEDIA_TEACHING,
   ...POLITICS_ELECTORAL_SYSTEMS_TEACHING,
   ...POLITICS_LOCAL_REGIONAL_GOVERNMENT_TEACHING,
+  ...LAW_INTELLECTUAL_PROPERTY_TEACHING,
+  ...LAW_PUBLIC_INTERNATIONAL_LAW_TEACHING,
+  ...LAW_SOCIAL_SECURITY_WELFARE_TEACHING,
+  ...LAW_BUSINESS_ASSOCIATIONS_TEACHING,
 };
 
 /**

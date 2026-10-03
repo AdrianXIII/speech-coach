@@ -60,6 +60,10 @@ export const CASE_CATEGORIES: Record<CaseProfession, string[]> = {
     "Labor & Employment Law",
     "Family Law",
     "Tax Law",
+    "Intellectual Property Law",
+    "Public International Law",
+    "Social Security & Welfare Law",
+    "Business Associations",
   ],
   politics: [
     "Foreign Policy & Diplomacy",
