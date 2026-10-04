@@ -20,7 +20,8 @@ import { matchSpokenLabel } from "@/lib/voiceMatch";
 import { resolveTeachNavCommand, resolveHandoffCommand } from "@/lib/tutorVoiceCommands";
 import { categoryLabel, categoryLabels } from "@/lib/categoryLabels";
 import { tutorStrings, tutorUI } from "@/lib/tutorUIStrings";
-import { COMMON } from "@/lib/commonStrings";
+import { COMMON, apiErrorMessage } from "@/lib/commonStrings";
+import { DailyLimitReached } from "@/components/DailyLimitReached";
 import { ProfessionPicker, PROFESSION_LABELS, professionLabel } from "@/components/shared/ProfessionPicker";
 import { CategoryPicker } from "@/components/shared/CategoryPicker";
 import { TutorProfileEditor } from "@/components/TutorProfileEditor";
@@ -81,6 +82,9 @@ export function AITutor({ isPremium }: { isPremium: boolean }) {
 
   const [feedback, setFeedback] = useState<TutorFeedback | null>(null);
   const [evalError, setEvalError] = useState<string | null>(null);
+  // 402 "already used today's free category" specifically — shown as the
+  // same upgrade card the other trainers use, not just a plain error line.
+  const [dailyLimitHit, setDailyLimitHit] = useState(false);
   const [isFinalizing, setIsFinalizing] = useState(false);
   const [lastTranscript, setLastTranscript] = useState("");
 
@@ -113,6 +117,7 @@ export function AITutor({ isPremium }: { isPremium: boolean }) {
     setLastTranscript(transcript);
     setPhase("evaluating");
     setEvalError(null);
+    setDailyLimitHit(false);
 
     const formData = new FormData();
     formData.append("profession", profession!);
@@ -135,11 +140,17 @@ export function AITutor({ isPremium }: { isPremium: boolean }) {
       .then(async (res) => {
         if (!res.ok) {
           const body = await res.json().catch(() => null);
-          throw new Error(body?.error || common.requestFailed(res.status));
+          if (res.status === 402 && !(body?.error ?? "").toLowerCase().includes("subscription")) {
+            setDailyLimitHit(true);
+            setPhase("challenge");
+            return null;
+          }
+          throw new Error(apiErrorMessage(res.status, body?.error, language));
         }
         return res.json() as Promise<TutorFeedback>;
       })
       .then((result) => {
+        if (!result) return;
         setFeedback(result);
         setPhase("feedback");
       })
@@ -563,6 +574,7 @@ export function AITutor({ isPremium }: { isPremium: boolean }) {
           transcript={recognition.transcript}
           canSpeak={recognition.isSupported}
           evalError={evalError}
+          dailyLimitHit={dailyLimitHit}
           onStart={handleStartRecording}
           onStop={handleStopRecording}
           onNewChallenge={handleNewChallenge}
@@ -1190,6 +1202,7 @@ function ChallengeStep({
   transcript,
   canSpeak,
   evalError,
+  dailyLimitHit,
   onStart,
   onStop,
   onNewChallenge,
@@ -1207,6 +1220,7 @@ function ChallengeStep({
   transcript: string;
   canSpeak: boolean;
   evalError: string | null;
+  dailyLimitHit: boolean;
   onStart: () => void;
   onStop: () => void;
   onNewChallenge: () => void;
@@ -1251,8 +1265,12 @@ function ChallengeStep({
         </div>
       )}
 
-      {evalError && (
-        <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{evalError}</p>
+      {dailyLimitHit ? (
+        <DailyLimitReached />
+      ) : (
+        evalError && (
+          <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{evalError}</p>
+        )
       )}
 
       {phase === "challenge" && (

@@ -18,6 +18,7 @@ import {
 import { frameworkLesson } from "@/lib/executiveCommLessons";
 import type { ExecCommAttempt, ExecCommResult } from "@/lib/executiveCommTypes";
 import { useLanguage } from "@/components/LanguageProvider";
+import { apiErrorMessage } from "@/lib/commonStrings";
 import { PhaseBar } from "@/components/PhaseBar";
 import { ExecutiveCommunicationResults } from "@/components/ExecutiveCommunicationResults";
 import type { LanguageCode } from "@/lib/languages";
@@ -391,7 +392,7 @@ export function ExecutiveCommunicationTrainer() {
       const res = await fetch("/api/executive-communication", { method: "POST", body: formData });
       if (!res.ok) {
         const body = await res.json().catch(() => null);
-        throw new Error(body?.error || t.submitError);
+        throw new Error(apiErrorMessage(res.status, body?.error, language));
       }
       const data: ExecCommResult = await res.json();
       setResults(data);

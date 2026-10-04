@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { FollowUpChat } from "@/components/FollowUpChat";
 import { useLanguage } from "@/components/LanguageProvider";
-import { COMMON } from "@/lib/commonStrings";
+import { COMMON, apiErrorMessage } from "@/lib/commonStrings";
 import type { LanguageCode } from "@/lib/languages";
 
 const T: Record<
@@ -84,7 +84,7 @@ export function ScriptAssistant({ onScriptReady }: ScriptAssistantProps) {
       });
       if (!res.ok) {
         const body = await res.json().catch(() => null);
-        throw new Error(body?.error || common.requestFailed(res.status));
+        throw new Error(apiErrorMessage(res.status, body?.error, language));
       }
       const data: { script: string; mocked: boolean } = await res.json();
       setScript(data.script);

@@ -9,7 +9,7 @@ import { ScriptAssistant } from "@/components/ScriptAssistant";
 import { DashboardResults } from "@/components/DashboardResults";
 import type { AnalyzeSpeechResponse } from "@/types/speechAnalysis";
 import { useLanguage } from "@/components/LanguageProvider";
-import { COMMON } from "@/lib/commonStrings";
+import { COMMON, apiErrorMessage } from "@/lib/commonStrings";
 import type { LanguageCode } from "@/lib/languages";
 
 type Mode = "simple" | "stage";
@@ -193,7 +193,7 @@ export function SpeechRecorder() {
       const res = await fetch("/api/analyze-speech", { method: "POST", body: formData });
       if (!res.ok) {
         const body = await res.json().catch(() => null);
-        throw new Error(body?.error || common.requestFailed(res.status));
+        throw new Error(apiErrorMessage(res.status, body?.error, language));
       }
 
       const result: AnalyzeSpeechResponse = await res.json();

@@ -1,6 +1,9 @@
 import { SpeechRecorder } from "@/components/SpeechRecorder";
 import { PageHeader } from "@/components/PageHeader";
+import { DailyLimitReached } from "@/components/DailyLimitReached";
 import { requireSignedIn } from "@/lib/requireUser";
+import { isPremium } from "@/lib/subscription";
+import { canUseToday } from "@/lib/usageLimitServer";
 
 const TITLE = {
   en: "AI Public Speaking Coach",
@@ -18,14 +21,23 @@ const SUBTITLE = {
   sv: "Spela in ett kort tal och få direkt feedback på tempo, utfyllnadsord och framförande — eller byt till scenövning med video, publik och teleprompter.",
 };
 
+// Unlike collocations/contrastive-stress/speed-reading/improv (which have no
+// server action of their own to gate at, so they mark usage at page load —
+// see lib/usageLimitServer.ts's doc comment), /api/analyze-speech already
+// gates and marks the once-a-day use itself, right before the actual Gemini
+// call. canUseToday() here is read-only (no markUsedToday call) — it only
+// decides whether to show the trainer or the paywall card; the API route
+// remains the single place a use actually gets spent.
 export default async function RecordPage() {
-  await requireSignedIn();
+  const user = await requireSignedIn();
+  const premium = await isPremium(user.id);
+  const available = premium || (await canUseToday(user.id, "record"));
 
   return (
     <div className="min-h-screen bg-paper px-4 py-12 sm:px-8">
       <div className="mx-auto flex max-w-3xl flex-col gap-8">
         <PageHeader title={TITLE} subtitle={SUBTITLE} />
-        <SpeechRecorder />
+        {available ? <SpeechRecorder /> : <DailyLimitReached />}
       </div>
     </div>
   );

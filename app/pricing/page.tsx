@@ -29,61 +29,69 @@ const SUBTITLE: Record<LanguageCode, string> = {
 const T: Record<
   LanguageCode,
   {
-    perMonth: string;
     subscribe: string;
     purchasing: string;
     restore: string;
+    manage: string;
     webNotice: string;
     loadFailed: string;
     purchaseFailed: string;
+    renewalNotice: string;
   }
 > = {
   en: {
-    perMonth: "/mo",
     subscribe: "Subscribe",
     purchasing: "Processing…",
     restore: "Restore purchases",
+    manage: "Manage subscription",
     webNotice: "Subscriptions are managed through the MasterSpeak iOS app — open it on your iPhone to subscribe.",
     loadFailed: "Couldn't load subscription options. Please try again shortly.",
     purchaseFailed: "Purchase didn't go through. Please try again.",
+    renewalNotice: "Billed annually. Your subscription automatically renews each year unless cancelled at least 24 hours before the end of the current period. Manage or cancel anytime in your Apple ID subscription settings.",
   },
   de: {
-    perMonth: "/Monat",
     subscribe: "Abonnieren",
     purchasing: "Wird verarbeitet…",
     restore: "Käufe wiederherstellen",
+    manage: "Abo verwalten",
     webNotice: "Abos werden über die MasterSpeak-iOS-App verwaltet — öffne sie auf deinem iPhone, um zu abonnieren.",
     loadFailed: "Abo-Optionen konnten nicht geladen werden. Bitte versuche es gleich noch einmal.",
     purchaseFailed: "Der Kauf ist fehlgeschlagen. Bitte versuche es erneut.",
+    renewalNotice: "Jährliche Abrechnung. Dein Abo verlängert sich automatisch jedes Jahr, sofern du nicht mindestens 24 Stunden vor Ablauf des aktuellen Zeitraums kündigst. Verwalte oder kündige jederzeit in deinen Apple-ID-Aboeinstellungen.",
   },
   fr: {
-    perMonth: "/mois",
     subscribe: "S'abonner",
     purchasing: "Traitement…",
     restore: "Restaurer les achats",
+    manage: "Gérer l'abonnement",
     webNotice: "Les abonnements sont gérés via l'application iOS MasterSpeak — ouvrez-la sur votre iPhone pour vous abonner.",
     loadFailed: "Impossible de charger les options d'abonnement. Réessayez bientôt.",
     purchaseFailed: "L'achat n'a pas abouti. Veuillez réessayer.",
+    renewalNotice: "Facturation annuelle. Votre abonnement se renouvelle automatiquement chaque année, sauf annulation au moins 24 heures avant la fin de la période en cours. Gérez ou annulez à tout moment dans les réglages d'abonnement de votre identifiant Apple.",
   },
   es: {
-    perMonth: "/mes",
     subscribe: "Suscribirse",
     purchasing: "Procesando…",
     restore: "Restaurar compras",
+    manage: "Gestionar suscripción",
     webNotice: "Las suscripciones se gestionan desde la app de iOS de MasterSpeak: ábrela en tu iPhone para suscribirte.",
     loadFailed: "No se pudieron cargar las opciones de suscripción. Inténtalo de nuevo en breve.",
     purchaseFailed: "La compra no se completó. Inténtalo de nuevo.",
+    renewalNotice: "Facturación anual. Tu suscripción se renueva automáticamente cada año salvo que la canceles al menos 24 horas antes de que finalice el periodo actual. Gestiona o cancela cuando quieras en los ajustes de suscripción de tu ID de Apple.",
   },
   sv: {
-    perMonth: "/mån",
     subscribe: "Prenumerera",
     purchasing: "Bearbetar…",
     restore: "Återställ köp",
+    manage: "Hantera prenumeration",
     webNotice: "Prenumerationer hanteras via MasterSpeak-appen för iOS — öppna den på din iPhone för att prenumerera.",
     loadFailed: "Kunde inte hämta prenumerationsalternativ. Försök igen om en stund.",
     purchaseFailed: "Köpet gick inte igenom. Försök igen.",
+    renewalNotice: "Årlig fakturering. Din prenumeration förnyas automatiskt varje år om du inte säger upp den minst 24 timmar innan innevarande period löper ut. Hantera eller säg upp när som helst i dina Apple-ID-prenumerationsinställningar.",
   },
 };
+
+const MANAGE_SUBSCRIPTIONS_URL = "https://apps.apple.com/account/subscriptions";
 
 export default function PricingPage() {
   const { language } = useLanguage();
@@ -154,9 +162,18 @@ export default function PricingPage() {
                   </span>
                 </button>
               ))}
+              <p className="text-center text-xs leading-relaxed text-ink-muted">{t.renewalNotice}</p>
               <button onClick={handleRestore} className="text-center text-xs font-semibold text-ink-muted hover:underline">
                 {t.restore}
               </button>
+              <a
+                href={MANAGE_SUBSCRIPTIONS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-center text-xs font-semibold text-ink-muted hover:underline"
+              >
+                {t.manage}
+              </a>
             </>
           )}
         </div>

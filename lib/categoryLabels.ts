@@ -1,7 +1,7 @@
 import type { LanguageCode } from "@/lib/languages";
 
 /**
- * Display translations for the 28 category names — the underlying English
+ * Display translations for the 44 category names — the underlying English
  * strings stay the canonical keys everywhere else (CASE_CATEGORIES, content
  * keys in tutorTeachingContent.ts, etc.) so nothing about data lookups
  * changes; this is purely what's shown/spoken to the user. English is a
@@ -118,6 +118,51 @@ const CATEGORY_LABELS: Record<string, Partial<Record<LanguageCode, string>>> = {
     es: "Derecho constitucional y regulatorio",
     sv: "Konstitutionell rätt & reglering",
   },
+  "Torts & Civil Liability": {
+    de: "Deliktsrecht & zivilrechtliche Haftung",
+    fr: "Responsabilité délictuelle et civile",
+    es: "Responsabilidad civil y extracontractual",
+    sv: "Skadeståndsrätt & civilrättsligt ansvar",
+  },
+  "Administrative Law": {
+    de: "Verwaltungsrecht",
+    fr: "Droit administratif",
+    es: "Derecho administrativo",
+    sv: "Förvaltningsrätt",
+  },
+  "Property Law": { de: "Sachenrecht", fr: "Droit des biens", es: "Derecho de bienes", sv: "Sakrätt" },
+  "Labor & Employment Law": {
+    de: "Arbeitsrecht",
+    fr: "Droit du travail",
+    es: "Derecho laboral",
+    sv: "Arbetsrätt",
+  },
+  "Family Law": { de: "Familienrecht", fr: "Droit de la famille", es: "Derecho de familia", sv: "Familjerätt" },
+  "Tax Law": { de: "Steuerrecht", fr: "Droit fiscal", es: "Derecho tributario", sv: "Skatterätt" },
+  "Intellectual Property Law": {
+    de: "Recht des geistigen Eigentums",
+    fr: "Propriété intellectuelle",
+    es: "Propiedad intelectual",
+    sv: "Immaterialrätt",
+  },
+  "Public International Law": {
+    de: "Völkerrecht",
+    fr: "Droit international public",
+    es: "Derecho internacional público",
+    sv: "Folkrätt",
+  },
+  "Social Security & Welfare Law": {
+    de: "Sozialrecht",
+    fr: "Droit de la sécurité sociale",
+    es: "Derecho de la seguridad social",
+    sv: "Socialförsäkringsrätt",
+  },
+  "Business Associations": {
+    de: "Gesellschaftsrecht (Gründung & Rechtsform)",
+    fr: "Droit des sociétés (constitution)",
+    es: "Derecho de sociedades (constitución)",
+    sv: "Associationsrätt",
+  },
   // Politics
   "Foreign Policy & Diplomacy": {
     de: "Außenpolitik & Diplomatie",
@@ -148,6 +193,42 @@ const CATEGORY_LABELS: Record<string, Partial<Record<LanguageCode, string>>> = {
     fr: "Négociation législative",
     es: "Negociación legislativa",
     sv: "Lagstiftningsförhandling",
+  },
+  "Public Administration & Governance": {
+    de: "Öffentliche Verwaltung & Governance",
+    fr: "Administration publique et gouvernance",
+    es: "Administración pública y gobernanza",
+    sv: "Offentlig förvaltning & styrning",
+  },
+  "Economic & Fiscal Policy": {
+    de: "Wirtschafts- & Finanzpolitik",
+    fr: "Politique économique et budgétaire",
+    es: "Política económica y fiscal",
+    sv: "Ekonomisk politik & finanspolitik",
+  },
+  "International & Regional Institutions": {
+    de: "Internationale & regionale Institutionen",
+    fr: "Institutions internationales et régionales",
+    es: "Instituciones internacionales y regionales",
+    sv: "Internationella & regionala institutioner",
+  },
+  "Political Communication & Media": {
+    de: "Politische Kommunikation & Medien",
+    fr: "Communication politique et médias",
+    es: "Comunicación política y medios",
+    sv: "Politisk kommunikation & media",
+  },
+  "Electoral Systems & Law": {
+    de: "Wahlsysteme & Wahlrecht",
+    fr: "Systèmes électoraux et droit électoral",
+    es: "Sistemas electorales y derecho electoral",
+    sv: "Valsystem & vallagstiftning",
+  },
+  "Local & Regional Government": {
+    de: "Kommunal- & Regionalregierung",
+    fr: "Collectivités locales et régionales",
+    es: "Gobierno local y regional",
+    sv: "Lokal & regional förvaltning",
   },
 };
 

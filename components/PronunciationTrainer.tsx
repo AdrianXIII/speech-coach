@@ -9,7 +9,7 @@ import { StressMeter } from "@/components/StressMeter";
 import { PronunciationReviewList } from "@/components/PronunciationReviewList";
 import { REVIEW_INTERVAL_DAYS, type ReviewWord } from "@/lib/pronunciationReviewSchedule";
 import { useLanguage } from "@/components/LanguageProvider";
-import { COMMON } from "@/lib/commonStrings";
+import { COMMON, apiErrorMessage } from "@/lib/commonStrings";
 import { getLanguage, type LanguageCode } from "@/lib/languages";
 
 interface FeedbackState {
@@ -292,7 +292,7 @@ export function PronunciationTrainer() {
       const res = await fetch("/api/pronunciation-feedback", { method: "POST", body: formData });
       if (!res.ok) {
         const body = await res.json().catch(() => null);
-        throw new Error(body?.error || common.requestFailed(res.status));
+        throw new Error(apiErrorMessage(res.status, body?.error, language));
       }
 
       const data: { feedback: string; mocked: boolean } = await res.json();

@@ -1,7 +1,10 @@
 import { Suspense } from "react";
 import { PronunciationTrainer } from "@/components/PronunciationTrainer";
 import { PageHeader } from "@/components/PageHeader";
+import { DailyLimitReached } from "@/components/DailyLimitReached";
 import { requireSignedIn } from "@/lib/requireUser";
+import { isPremium } from "@/lib/subscription";
+import { canUseToday } from "@/lib/usageLimitServer";
 
 const TITLE = {
   en: "Pronunciation Trainer",
@@ -19,18 +22,29 @@ const SUBTITLE = {
   sv: "Lyssna på ett ord, spela in dig själv när du säger det och få AI-feedback på hur nära ett infött uttal du är.",
 };
 
+// Read-only check — /api/pronunciation-feedback itself still gates and
+// marks the once-a-day use, right before the actual Gemini call. This only
+// decides whether to show the trainer (word lookup, review list, and AI
+// feedback together — "one session per trainer, per day" per the pricing
+// page) or the paywall card.
 export default async function PronunciationPage() {
-  await requireSignedIn();
+  const user = await requireSignedIn();
+  const premium = await isPremium(user.id);
+  const available = premium || (await canUseToday(user.id, "pronunciation"));
 
   return (
     <div className="min-h-screen bg-paper px-4 py-12 sm:px-8">
       <div className="mx-auto flex max-w-3xl flex-col gap-8">
         <PageHeader title={TITLE} subtitle={SUBTITLE} />
 
-        {/* useSearchParams (for a "Practice this word" deep link) requires a Suspense boundary. */}
-        <Suspense fallback={null}>
-          <PronunciationTrainer />
-        </Suspense>
+        {available ? (
+          // useSearchParams (for a "Practice this word" deep link) requires a Suspense boundary.
+          <Suspense fallback={null}>
+            <PronunciationTrainer />
+          </Suspense>
+        ) : (
+          <DailyLimitReached />
+        )}
       </div>
     </div>
   );

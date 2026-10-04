@@ -3,7 +3,7 @@
 import { useState } from "react";
 import type { ChatTurn } from "@/lib/chat";
 import { useLanguage } from "@/components/LanguageProvider";
-import { COMMON } from "@/lib/commonStrings";
+import { COMMON, apiErrorMessage } from "@/lib/commonStrings";
 import type { LanguageCode } from "@/lib/languages";
 
 const T: Record<LanguageCode, { heading: string; placeholder: string; ask: string }> = {
@@ -61,7 +61,7 @@ export function FollowUpChat({ context, initialAnswer }: FollowUpChatProps) {
       });
       if (!res.ok) {
         const body = await res.json().catch(() => null);
-        throw new Error(body?.error || common.requestFailed(res.status));
+        throw new Error(apiErrorMessage(res.status, body?.error, language));
       }
       const data: { reply: string } = await res.json();
       setMessages((prev) => [...prev, { role: "model", text: data.reply }]);

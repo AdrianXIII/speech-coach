@@ -93,7 +93,8 @@ function ResetPasswordForm() {
 
     if (!res?.ok) {
       setState("error");
-      setError(data?.error ?? t.genericError);
+      const m = (data?.error ?? "").toLowerCase();
+      setError(m.includes("invalid") || m.includes("expired") ? t.invalidLink : t.genericError);
       return;
     }
 

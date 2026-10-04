@@ -39,6 +39,9 @@ const T: Record<
     genericError: string;
     invalidCredentials: string;
     forgotPassword: string;
+    invalidEmail: string;
+    accountExists: string;
+    tooManyAccounts: string;
   }
 > = {
   en: {
@@ -54,6 +57,9 @@ const T: Record<
     genericError: "Something went wrong. Please try again.",
     invalidCredentials: "Wrong email or password.",
     forgotPassword: "Forgot password?",
+    invalidEmail: "Enter a valid email address.",
+    accountExists: "An account with this email already exists — sign in instead.",
+    tooManyAccounts: "Too many accounts created from this network. Please try again later.",
   },
   de: {
     appleButton: "Weiter mit Apple",
@@ -68,6 +74,9 @@ const T: Record<
     genericError: "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
     invalidCredentials: "Falsche E-Mail oder falsches Passwort.",
     forgotPassword: "Passwort vergessen?",
+    invalidEmail: "Gib eine gültige E-Mail-Adresse ein.",
+    accountExists: "Für diese E-Mail existiert bereits ein Konto — melde dich stattdessen an.",
+    tooManyAccounts: "Zu viele Konten aus diesem Netzwerk erstellt. Bitte versuche es später erneut.",
   },
   fr: {
     appleButton: "Continuer avec Apple",
@@ -82,6 +91,9 @@ const T: Record<
     genericError: "Une erreur est survenue. Veuillez réessayer.",
     invalidCredentials: "E-mail ou mot de passe incorrect.",
     forgotPassword: "Mot de passe oublié ?",
+    invalidEmail: "Saisissez une adresse e-mail valide.",
+    accountExists: "Un compte existe déjà avec cet e-mail — connectez-vous plutôt.",
+    tooManyAccounts: "Trop de comptes créés depuis ce réseau. Veuillez réessayer plus tard.",
   },
   es: {
     appleButton: "Continuar con Apple",
@@ -96,6 +108,9 @@ const T: Record<
     genericError: "Algo salió mal. Inténtalo de nuevo.",
     invalidCredentials: "Correo o contraseña incorrectos.",
     forgotPassword: "¿Olvidaste tu contraseña?",
+    invalidEmail: "Introduce una dirección de correo válida.",
+    accountExists: "Ya existe una cuenta con este correo — inicia sesión en su lugar.",
+    tooManyAccounts: "Se han creado demasiadas cuentas desde esta red. Inténtalo de nuevo más tarde.",
   },
   sv: {
     appleButton: "Fortsätt med Apple",
@@ -110,8 +125,20 @@ const T: Record<
     genericError: "Något gick fel. Försök igen.",
     invalidCredentials: "Fel e-post eller lösenord.",
     forgotPassword: "Glömt lösenordet?",
+    invalidEmail: "Ange en giltig e-postadress.",
+    accountExists: "Det finns redan ett konto med den här e-postadressen — logga in istället.",
+    tooManyAccounts: "För många konton har skapats från det här nätverket. Försök igen senare.",
   },
 };
+
+/** Maps register's known 400/409/429 messages to a localized string — never shows the raw English server message. */
+function registerErrorMessage(serverMessage: string | undefined, t: (typeof T)["en"]): string {
+  const m = (serverMessage ?? "").toLowerCase();
+  if (m.includes("already exists")) return t.accountExists;
+  if (m.includes("valid email")) return t.invalidEmail;
+  if (m.includes("too many accounts")) return t.tooManyAccounts;
+  return t.genericError;
+}
 
 export default function SignInPage() {
   const { language } = useLanguage();
@@ -143,7 +170,7 @@ export default function SignInPage() {
       const data = await res?.json().catch(() => null);
       if (!res?.ok) {
         setState("error");
-        setError(data?.error ?? t.genericError);
+        setError(registerErrorMessage(data?.error, t));
         return;
       }
     }
