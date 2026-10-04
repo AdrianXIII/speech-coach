@@ -14,6 +14,13 @@ import { canUseToday, markUsedToday } from "@/lib/usageLimitServer";
 import { isFreeAiTutorCategory } from "@/lib/usageLimit";
 
 const MAX_AUDIO_BYTES = 15 * 1024 * 1024;
+// A spoken answer transcribed to text — generous for several minutes of
+// speech, tight enough to stop an arbitrarily large string reaching Gemini.
+const MAX_TRANSCRIPT_CHARS = 8000;
+// newsItem/profile are structured JSON the client itself generated a few
+// steps earlier in the same session (not free-form user input), so this is
+// a sanity ceiling against a malformed/oversized payload, not a UX limit.
+const MAX_JSON_FIELD_CHARS = 20000;
 export const maxDuration = 60;
 const FEATURE = "aitutor";
 
@@ -42,10 +49,10 @@ export async function POST(req: NextRequest) {
 
   const profession = formData.get("profession")?.toString() as CaseProfession | undefined;
   const category = formData.get("category")?.toString();
-  const transcript = formData.get("transcript")?.toString() ?? "";
+  const transcript = (formData.get("transcript")?.toString() ?? "").slice(0, MAX_TRANSCRIPT_CHARS);
   const caseId = formData.get("caseId")?.toString();
-  const newsItemRaw = formData.get("newsItem")?.toString();
-  const profileRaw = formData.get("profile")?.toString();
+  const newsItemRaw = formData.get("newsItem")?.toString().slice(0, MAX_JSON_FIELD_CHARS);
+  const profileRaw = formData.get("profile")?.toString().slice(0, MAX_JSON_FIELD_CHARS);
   const jurisdiction = formData.get("jurisdiction")?.toString() as CountryCode | undefined;
   const language = formData.get("language")?.toString() as LanguageCode | undefined;
   const audio = formData.get("audio");

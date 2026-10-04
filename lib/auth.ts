@@ -5,6 +5,7 @@ import Credentials from "next-auth/providers/credentials";
 import { SignJWT } from "jose";
 import { getDb, hasDatabase } from "@/lib/db";
 import { verifyPassword } from "@/lib/password";
+import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
 
 /**
  * Auth.js v5, web-only (no native Capacitor auth plugin needed — the iOS
@@ -261,13 +262,27 @@ const hasAppleConfig = !!(
  * app/api/auth/register/route.ts, not here — authorize() only ever verifies
  * an existing row.
  */
+// IP-keyed, not email-keyed — blunts a script hammering one known email
+// without locking out a real person who just mistyped their own password a
+// few times from one IP. 10 attempts/15 min is generous for a human,
+// tight enough to make scripted credential-stuffing impractical; scrypt's
+// own cost (lib/password.ts) adds a second layer of friction underneath.
+const MAX_SIGNIN_ATTEMPTS_PER_WINDOW = 10;
+const SIGNIN_WINDOW_MS = 15 * 60 * 1000;
+
 function credentialsProvider() {
   return Credentials({
     credentials: {
       email: { label: "Email", type: "email" },
       password: { label: "Password", type: "password" },
     },
-    async authorize(credentials) {
+    async authorize(credentials, request) {
+      const allowed = await checkRateLimit(`signin:${getClientIp(request)}`, {
+        windowMs: SIGNIN_WINDOW_MS,
+        max: MAX_SIGNIN_ATTEMPTS_PER_WINDOW,
+      });
+      if (!allowed) return null;
+
       const email = typeof credentials?.email === "string" ? credentials.email.trim().toLowerCase() : "";
       const password = typeof credentials?.password === "string" ? credentials.password : "";
       if (!email || !password) return null;

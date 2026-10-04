@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import type { CaseProfession } from "@/lib/caseStudyContent";
 import { getDb, hasDatabase } from "@/lib/db";
 import { requireUser } from "@/lib/requireUser";
+import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
+
+const MAX_FIELD_CHARS = 200;
+const MAX_NOTE_CHARS = 2000;
 
 interface FlagBody {
   profession?: CaseProfession;
@@ -23,6 +27,13 @@ interface FlagBody {
  * visible in-app on the reporting device either way.
  */
 export async function POST(req: NextRequest) {
+  // IP-keyed, not user-keyed — this route stays usable signed-out (see the
+  // doc comment above), so there's no account id to key on for an anonymous
+  // caller either way.
+  if (!(await checkRateLimit(`tutor-flag:${getClientIp(req)}`))) {
+    return NextResponse.json({ error: "Too many requests. Please slow down." }, { status: 429 });
+  }
+
   let body: FlagBody;
   try {
     body = await req.json();
@@ -36,11 +47,11 @@ export async function POST(req: NextRequest) {
 
   const flag = {
     profession: body.profession,
-    category: body.category,
-    conceptId: body.conceptId ?? null,
-    conceptTitle: body.conceptTitle ?? null,
+    category: body.category.slice(0, MAX_FIELD_CHARS),
+    conceptId: body.conceptId?.slice(0, MAX_FIELD_CHARS) ?? null,
+    conceptTitle: body.conceptTitle?.slice(0, MAX_FIELD_CHARS) ?? null,
     reason: body.reason ?? "other",
-    note: body.note ?? "",
+    note: (body.note ?? "").slice(0, MAX_NOTE_CHARS),
     at: new Date().toISOString(),
   };
 

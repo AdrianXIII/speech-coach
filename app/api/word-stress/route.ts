@@ -5,6 +5,8 @@ import { getLanguage, toLanguageCode } from "@/lib/languages";
 import { requireApiUser } from "@/lib/requireUser";
 import { checkRateLimit, LIGHT_WINDOW_MS, LIGHT_MAX_PER_WINDOW } from "@/lib/rateLimit";
 
+const MAX_WORD_CHARS = 60;
+
 /**
  * GET /api/word-stress?word=development&lang=en
  * A word's syllables and expected stress position. English is a pure local
@@ -20,7 +22,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Too many requests. Please slow down." }, { status: 429 });
   }
 
-  const word = req.nextUrl.searchParams.get("word")?.trim();
+  const word = req.nextUrl.searchParams.get("word")?.trim().slice(0, MAX_WORD_CHARS);
   if (!word) {
     return NextResponse.json({ error: "Missing 'word' query param." }, { status: 400 });
   }

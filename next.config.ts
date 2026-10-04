@@ -20,6 +20,13 @@ const nextConfig: NextConfig = {
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "Permissions-Policy", value: "microphone=(self)" },
+          // No legitimate reason for this app to be framed by another site —
+          // DENY (not SAMEORIGIN) closes off clickjacking entirely.
+          { key: "X-Frame-Options", value: "DENY" },
+          // Vercel's edge adds HSTS for the production domain automatically,
+          // but setting it explicitly here means the guarantee holds
+          // regardless of hosting provider.
+          { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
         ],
       },
     ];

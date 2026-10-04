@@ -2,12 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { hasDatabase } from "@/lib/db";
 import { toLanguageCode } from "@/lib/languages";
 import { requireUser } from "@/lib/requireUser";
+import { checkRateLimit, LIGHT_WINDOW_MS, LIGHT_MAX_PER_WINDOW } from "@/lib/rateLimit";
 import {
   listReviewWords,
   addReviewWord,
   markReviewWordPracticed,
   removeReviewWord,
 } from "@/lib/pronunciationReview";
+
+const MAX_WORD_CHARS = 100;
 
 /**
  * GET /api/pronunciation-review
@@ -39,8 +42,11 @@ export async function POST(req: NextRequest) {
   if (!user) {
     return NextResponse.json({ error: "Sign in required." }, { status: 401 });
   }
+  if (!(await checkRateLimit(`pronunciation-review:${user.id}`, { windowMs: LIGHT_WINDOW_MS, max: LIGHT_MAX_PER_WINDOW }))) {
+    return NextResponse.json({ error: "Too many requests. Please slow down." }, { status: 429 });
+  }
   const body = await req.json().catch(() => null);
-  const word = typeof body?.word === "string" ? body.word.trim() : "";
+  const word = typeof body?.word === "string" ? body.word.trim().slice(0, MAX_WORD_CHARS) : "";
   if (!word) {
     return NextResponse.json({ error: "Missing 'word'." }, { status: 400 });
   }
@@ -60,6 +66,9 @@ export async function PATCH(req: NextRequest) {
   const user = await requireUser();
   if (!user) {
     return NextResponse.json({ error: "Sign in required." }, { status: 401 });
+  }
+  if (!(await checkRateLimit(`pronunciation-review:${user.id}`, { windowMs: LIGHT_WINDOW_MS, max: LIGHT_MAX_PER_WINDOW }))) {
+    return NextResponse.json({ error: "Too many requests. Please slow down." }, { status: 429 });
   }
   const body = await req.json().catch(() => null);
   const id = typeof body?.id === "number" ? body.id : null;
@@ -82,6 +91,9 @@ export async function DELETE(req: NextRequest) {
   const user = await requireUser();
   if (!user) {
     return NextResponse.json({ error: "Sign in required." }, { status: 401 });
+  }
+  if (!(await checkRateLimit(`pronunciation-review:${user.id}`, { windowMs: LIGHT_WINDOW_MS, max: LIGHT_MAX_PER_WINDOW }))) {
+    return NextResponse.json({ error: "Too many requests. Please slow down." }, { status: 429 });
   }
   const body = await req.json().catch(() => null);
   const id = typeof body?.id === "number" ? body.id : null;

@@ -2,13 +2,21 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb, hasDatabase } from "@/lib/db";
 import { consumeResetToken } from "@/lib/passwordReset";
 import { hashPassword, MAX_PASSWORD_LENGTH } from "@/lib/password";
+import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
 
 const MIN_PASSWORD_LENGTH = 8;
+// Same budget as forgot-password, which this route always follows — a
+// legitimate user hits this at most a couple of times per reset attempt.
+const MAX_PER_WINDOW = 5;
+const WINDOW_MS = 15 * 60 * 1000;
 
 /** POST /api/auth/reset-password — body { token, password }. Consumes the token and sets a new password. */
 export async function POST(req: NextRequest) {
   if (!hasDatabase()) {
     return NextResponse.json({ error: "No database connected." }, { status: 503 });
+  }
+  if (!(await checkRateLimit(`reset-password:${getClientIp(req)}`, { windowMs: WINDOW_MS, max: MAX_PER_WINDOW }))) {
+    return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
   }
 
   const body = await req.json().catch(() => null);

@@ -8,6 +8,7 @@ import { isPremium } from "@/lib/subscription";
 import { canUseToday, markUsedToday } from "@/lib/usageLimitServer";
 
 const MAX_AUDIO_BYTES = 15 * 1024 * 1024;
+const MAX_WORD_CHARS = 100;
 export const maxDuration = 60;
 const FEATURE = "pronunciation";
 
@@ -38,7 +39,7 @@ export async function POST(req: NextRequest) {
   }
 
   const audio = formData.get("audio");
-  const word = formData.get("word")?.toString().trim();
+  const word = formData.get("word")?.toString().trim().slice(0, MAX_WORD_CHARS);
 
   if (!audio || !(audio instanceof Blob)) {
     return NextResponse.json({ error: "Missing 'audio' file in form data." }, { status: 400 });

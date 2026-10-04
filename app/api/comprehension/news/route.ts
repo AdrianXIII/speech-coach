@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { fetchNewsPassage, fetchNewsPassageBySlot, listPoolEntries, NEWS_TOPICS, type NewsTopic } from "@/lib/comprehensionNews";
 import { getLanguage, type LanguageCode } from "@/lib/languages";
 import { requireApiUser } from "@/lib/requireUser";
+import { checkRateLimit, LIGHT_WINDOW_MS, LIGHT_MAX_PER_WINDOW } from "@/lib/rateLimit";
 
 /**
  * GET /api/comprehension/news?topic=Economy&language=en
@@ -22,6 +23,14 @@ import { requireApiUser } from "@/lib/requireUser";
 export async function GET(req: NextRequest) {
   const gate = await requireApiUser();
   if (gate instanceof NextResponse) return gate;
+
+  // Light tier: most calls here are cheap reads (listing cached headlines, a
+  // specific cached slot) — only an empty pool actually falls through to a
+  // Gemini generation call (see fetchNewsPassage) — so this needs a browsing-
+  // friendly budget, not the tight one-deliberate-action tier.
+  if (!(await checkRateLimit(`comprehension-news:${gate.id}`, { windowMs: LIGHT_WINDOW_MS, max: LIGHT_MAX_PER_WINDOW }))) {
+    return NextResponse.json({ error: "Too many requests. Please slow down." }, { status: 429 });
+  }
 
   const topic = req.nextUrl.searchParams.get("topic") as NewsTopic | null;
   const language = (req.nextUrl.searchParams.get("language") as LanguageCode | null) ?? "en";

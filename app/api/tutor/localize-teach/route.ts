@@ -5,6 +5,7 @@ import type { CaseProfession } from "@/lib/caseStudyContent";
 import type { CountryCode } from "@/lib/countryContext";
 import { getLanguage, type LanguageCode } from "@/lib/languages";
 import { requireApiUser } from "@/lib/requireUser";
+import { checkRateLimit } from "@/lib/rateLimit";
 import { isPremium } from "@/lib/subscription";
 import { isFreeAiTutorCategory } from "@/lib/usageLimit";
 
@@ -23,6 +24,10 @@ export const maxDuration = 120;
 export async function POST(req: NextRequest) {
   const gate = await requireApiUser();
   if (gate instanceof NextResponse) return gate;
+
+  if (!(await checkRateLimit(`tutor-localize-teach:${gate.id}`))) {
+    return NextResponse.json({ error: "Too many requests. Please slow down." }, { status: 429 });
+  }
 
   let body: { profession?: CaseProfession; category?: string; jurisdiction?: CountryCode; language?: LanguageCode };
   try {

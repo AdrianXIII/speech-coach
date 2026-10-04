@@ -1,5 +1,13 @@
+import { timingSafeEqual } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { getDb, hasDatabase } from "@/lib/db";
+
+/** Constant-time string comparison — avoids leaking the secret's length/prefix via response-time differences. */
+function secretsMatch(a: string, b: string): boolean {
+  const bufA = Buffer.from(a);
+  const bufB = Buffer.from(b);
+  return bufA.length === bufB.length && timingSafeEqual(bufA, bufB);
+}
 
 /**
  * POST /api/webhooks/revenuecat
@@ -36,7 +44,7 @@ export async function POST(req: NextRequest) {
     // app, rather than 500ing every webhook delivery RevenueCat retries.
     return NextResponse.json({ ok: true, configured: false });
   }
-  if (req.headers.get("Authorization") !== `Bearer ${expected}`) {
+  if (!secretsMatch(req.headers.get("Authorization") ?? "", `Bearer ${expected}`)) {
     return NextResponse.json({ error: "Invalid webhook secret." }, { status: 401 });
   }
   if (!hasDatabase()) {

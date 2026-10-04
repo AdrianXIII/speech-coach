@@ -1,4 +1,3 @@
-import type { NextRequest } from "next/server";
 import { getDb, hasDatabase } from "@/lib/db";
 
 /**
@@ -64,12 +63,14 @@ export async function checkRateLimit(
 
 /**
  * Best-effort caller IP for the handful of routes that must be rate-limited
- * before a session exists (registration, forgot-password) — Vercel sets
- * x-forwarded-for on every request reaching a Route Handler. Falls back to
- * a constant key when absent (local dev without a proxy in front) rather
+ * before a session exists (registration, forgot-password, sign-in) —
+ * Vercel sets x-forwarded-for on every request reaching a Route Handler (or
+ * the plain Request Auth.js's Credentials authorize() receives). Falls back
+ * to a constant key when absent (local dev without a proxy in front) rather
  * than throwing; worst case that degrades to one shared bucket, not a
- * crash.
+ * crash. Takes a plain `Request` (not `NextRequest`) since `authorize()`
+ * only gets the former — a `NextRequest` satisfies this too.
  */
-export function getClientIp(req: NextRequest): string {
+export function getClientIp(req: Request): string {
   return req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
 }
