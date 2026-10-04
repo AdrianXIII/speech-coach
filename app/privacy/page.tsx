@@ -59,15 +59,36 @@ export default function PrivacyPage() {
               <li><strong>Google Gemini</strong> — transcribes and analyzes your recordings and text.</li>
               <li><strong>Vercel and Supabase</strong> — host the app and its database.</li>
               <li><strong>Apple and RevenueCat</strong> — process subscription payments; MasterSpeak never sees your card details.</li>
+              <li><strong>Resend</strong> — delivers the password-reset email when you request one.</li>
             </ul>
             <p className="mt-2">We do not sell your data, and we do not run advertising or ad-tracking of any kind.</p>
           </section>
 
           <section>
+            <h2 className="mb-2 font-display text-base font-semibold">Why we process your data</h2>
+            <p>
+              We process your account data to perform our contract with you — creating your account and providing
+              the trainers you sign up to use. Subscription data is processed to fulfil the subscription you
+              purchase. We don&rsquo;t rely on consent-based marketing or ad profiling for any of this.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="mb-2 font-display text-base font-semibold">How long we keep it</h2>
+            <p>
+              We keep your account data for as long as your account exists. You can delete your account at any
+              time, instantly and permanently, from Account Settings inside the app — this removes your account and
+              everything tied to it (progress, review lists, and subscription records) immediately, not on some
+              later schedule.
+            </p>
+          </section>
+
+          <section>
             <h2 className="mb-2 font-display text-base font-semibold">Your rights</h2>
             <p>
-              You can ask us to access, export, or delete your account and its data at any time by emailing
-              <a href="mailto:kosaltech2025@gmail.com" className="underline"> kosaltech2025@gmail.com</a>. If you are
+              You can delete your account yourself at any time in Account Settings, or ask us to access, export, or
+              delete it on your behalf by emailing{" "}
+              <a href="mailto:kosaltech2025@gmail.com" className="underline">kosaltech2025@gmail.com</a>. If you are
               in the European Economic Area, you have the rights described under the GDPR, including the right to
               lodge a complaint with your local data protection authority.
             </p>

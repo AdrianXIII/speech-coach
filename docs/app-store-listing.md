@@ -64,6 +64,8 @@ Matches app/privacy/page.tsx's actual data flow — declare:
 - **User Content** (audio recordings, submitted as part of a trainer session) — linked to identity, used for App Functionality. Not used for tracking.
 - **Identifiers** (Apple's Sign-in-with-Apple relay identifier, if used) — linked to identity, used for App Functionality.
 - **Purchases** (subscription status) — linked to identity, used for App Functionality, handled by Apple/RevenueCat.
+- **Product Interaction** (which trainer/feature was used, once per day per feature — the `daily_usage` table) — linked to identity, used for App Functionality (enforcing the free-tier daily limit). Not used for tracking.
+- **Diagnostics / Other Data** (IP address, held briefly in `rate_limit_events` purely to throttle abusive request volume) — not linked to identity beyond the request itself, used for App Functionality, short retention.
 - No data used for third-party advertising or tracking (confirmed: no ad SDK anywhere in this codebase).
 
 ## What's New (first submission)

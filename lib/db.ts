@@ -193,11 +193,16 @@ function ensureSchema(sql: ReturnType<typeof postgres>): Promise<void> {
         created_at TIMESTAMPTZ NOT NULL DEFAULT now()
       );
 
-      -- Accounts (lib/auth.ts's hand-rolled Auth.js Adapter). trial_ends_at is
-      -- stored explicitly rather than computed from created_at + a constant,
-      -- so one account's trial can be manually extended later without a code
-      -- change. is_admin gates the two internal review routes that used to be
-      -- fully unauthenticated (app/api/tutor/flags, .../approved-export).
+      -- Accounts (lib/auth.ts's hand-rolled Auth.js Adapter). is_admin gates
+      -- the two internal review routes that used to be fully unauthenticated
+      -- (app/api/tutor/flags, .../approved-export). No trial_ends_at —
+      -- the free tier is permanent (lib/usageLimit.ts's once-a-day limit),
+      -- not a time-boxed trial; a trial_ends_at column shipped in an
+      -- earlier iteration of the pricing model but was never read by
+      -- lib/subscription.ts's isPremium(). Dropped from fresh installs here;
+      -- an already-deployed database still has the column until it's
+      -- manually dropped (ALTER TABLE users DROP COLUMN trial_ends_at) --
+      -- harmless to leave in place, just dead.
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         email TEXT UNIQUE,
@@ -205,7 +210,6 @@ function ensureSchema(sql: ReturnType<typeof postgres>): Promise<void> {
         name TEXT,
         image TEXT,
         is_admin BOOLEAN NOT NULL DEFAULT false,
-        trial_ends_at TIMESTAMPTZ NOT NULL DEFAULT (now() + interval '7 days'),
         created_at TIMESTAMPTZ NOT NULL DEFAULT now()
       );
 
@@ -231,9 +235,13 @@ function ensureSchema(sql: ReturnType<typeof postgres>): Promise<void> {
         UNIQUE (provider, provider_account_id)
       );
 
-      -- Database sessions, not JWT: a paid subscription needs to be
-      -- revocable immediately (refund/chargeback/ban), which a JWT session
-      -- can't do without a DB-backed blocklist anyway.
+      -- Auth.js's adapter still needs this table's shape even though actual
+      -- sessions use the JWT strategy (lib/auth.ts) — Credentials-provider
+      -- sign-ins can't use database sessions at all unless another
+      -- non-Credentials provider is also registered (see lib/auth.ts's own
+      -- doc comment). isPremium()/isAdmin re-query Postgres fresh on every
+      -- request regardless, so a ban or cancelled subscription still takes
+      -- effect on the next request either way, JWT or not.
       CREATE TABLE IF NOT EXISTS sessions (
         id SERIAL PRIMARY KEY,
         session_token TEXT NOT NULL UNIQUE,

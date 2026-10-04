@@ -49,7 +49,18 @@ export default function TermsPage() {
             <p>
               You&rsquo;re responsible for keeping access to your own account, and for the accuracy of anything you
               submit. Don&rsquo;t use MasterSpeak to upload content you don&rsquo;t have the right to share, or to
-              try to abuse, overload, or reverse-engineer the service.
+              try to abuse, overload, or reverse-engineer the service. You can delete your account at any time from
+              Account Settings inside the app.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="mb-2 font-display text-base font-semibold">Your content</h2>
+            <p>
+              You keep ownership of the audio and text you submit. By submitting it, you grant MasterSpeak a license
+              to process it — including sending it to Google&rsquo;s Gemini API — solely to provide feedback and the
+              rest of the service back to you. We don&rsquo;t use your content to train AI models, and we don&rsquo;t
+              sell it or share it for advertising.
             </p>
           </section>
 
