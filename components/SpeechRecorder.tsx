@@ -261,7 +261,7 @@ export function SpeechRecorder() {
             {isRecording ? t.recording : hasRecording ? t.complete : t.pressToStart}
           </p>
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-sm text-red-600">{common.micAccessDenied}</p>}
 
           {playbackUrl && !isRecording && (
             <div className="flex w-full flex-col items-center gap-4">
@@ -319,7 +319,7 @@ export function SpeechRecorder() {
                 )}
               </div>
 
-              {error && <p className="text-sm text-red-600">{error}</p>}
+              {error && <p className="text-sm text-red-600">{common.micAccessDenied}</p>}
 
               <div className="flex justify-center gap-3">
                 {!isRecording && !hasRecording && (

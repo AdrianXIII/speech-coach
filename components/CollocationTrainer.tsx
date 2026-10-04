@@ -208,7 +208,7 @@ export function CollocationTrainer() {
   const [selectedOption, setSelectedOption] = useState<CollocationOption | null>(null);
   const [results, setResults] = useState<ChallengeResult[]>([]);
 
-  const { recordedBlob, start: startRecorder, stop: stopRecorder, reset: resetRecorder } =
+  const { recordedBlob, start: startRecorder, stop: stopRecorder, reset: resetRecorder, error: micError } =
     useMediaRecorder(false);
   const recognition = useSpeechRecognition(getLanguage(usedLanguage).speechLang);
   const [isFinalizingSpeech, setIsFinalizingSpeech] = useState(false);
@@ -349,6 +349,12 @@ export function CollocationTrainer() {
 
   return (
     <div className="flex flex-col gap-6 rounded-2xl border border-hairline bg-surface p-8 shadow-sm">
+      {micError && (
+        <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {COMMON[language].micAccessDenied}
+        </div>
+      )}
+
       <div className="flex flex-wrap items-center gap-2">
         <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{t.profile}</p>
         <div className="flex flex-wrap gap-1.5">

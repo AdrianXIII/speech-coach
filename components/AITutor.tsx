@@ -102,7 +102,7 @@ export function AITutor({ isPremium }: { isPremium: boolean }) {
   const playback = useSpeechPlayback(speechLang);
   const voiceNav = useSpeechRecognition(speechLang, 1500);
 
-  const { recordedBlob, audioBlob, start: startRecorder, stop: stopRecorder, reset: resetRecorder } =
+  const { recordedBlob, audioBlob, start: startRecorder, stop: stopRecorder, reset: resetRecorder, error: micError } =
     useMediaRecorder(false);
   const recognition = useSpeechRecognition(speechLang);
 
@@ -449,6 +449,12 @@ export function AITutor({ isPremium }: { isPremium: boolean }) {
       {!recognition.isSupported && (
         <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
           {ui.browserUnsupported}
+        </div>
+      )}
+
+      {micError && (
+        <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {common.micAccessDenied}
         </div>
       )}
 

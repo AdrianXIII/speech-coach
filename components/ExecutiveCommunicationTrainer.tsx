@@ -18,7 +18,7 @@ import {
 import { frameworkLesson } from "@/lib/executiveCommLessons";
 import type { ExecCommAttempt, ExecCommResult } from "@/lib/executiveCommTypes";
 import { useLanguage } from "@/components/LanguageProvider";
-import { apiErrorMessage } from "@/lib/commonStrings";
+import { COMMON, apiErrorMessage } from "@/lib/commonStrings";
 import { PhaseBar } from "@/components/PhaseBar";
 import { ExecutiveCommunicationResults } from "@/components/ExecutiveCommunicationResults";
 import type { LanguageCode } from "@/lib/languages";
@@ -578,7 +578,7 @@ export function ExecutiveCommunicationTrainer() {
             className="w-full rounded-lg border border-hairline px-3 py-2 text-sm text-ink placeholder:text-ink-muted focus:border-brass focus:outline-none"
           />
           <PhaseBar model={scaledModel} activeIndex={-1} elapsedSeconds={0} />
-          {recordError && <p className="text-center text-sm text-red-600">{recordError}</p>}
+          {recordError && <p className="text-center text-sm text-red-600">{COMMON[language].micAccessDenied}</p>}
           <button
             onClick={beginSpeaking}
             className="self-center rounded-lg bg-navy px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800"
@@ -619,7 +619,7 @@ export function ExecutiveCommunicationTrainer() {
 
             {recordError && (
               <div className="flex flex-col items-center gap-3">
-                <p className="text-sm text-red-600">{recordError}</p>
+                <p className="text-sm text-red-600">{COMMON[language].micAccessDenied}</p>
                 <button
                   onClick={beginSpeaking}
                   className="rounded-lg bg-navy px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800"

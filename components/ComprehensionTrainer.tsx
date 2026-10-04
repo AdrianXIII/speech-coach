@@ -333,7 +333,7 @@ export function ComprehensionTrainer() {
     }
   }
 
-  const { recordedBlob, start: startRecorder, stop: stopRecorder, reset: resetRecorder } =
+  const { recordedBlob, start: startRecorder, stop: stopRecorder, reset: resetRecorder, error: micError } =
     useMediaRecorder(false);
   const recognition = useSpeechRecognition(getLanguage(language).speechLang);
 
@@ -481,6 +481,12 @@ export function ComprehensionTrainer() {
       {!recognition.isSupported && (
         <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
           {t.noSpeechSupport}
+        </div>
+      )}
+
+      {micError && (
+        <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {COMMON[language].micAccessDenied}
         </div>
       )}
 

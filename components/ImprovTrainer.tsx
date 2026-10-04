@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMediaRecorder } from "@/hooks/useMediaRecorder";
+import { COMMON } from "@/lib/commonStrings";
 import { formatDuration } from "@/lib/audio";
 import { randomImprovWord } from "@/lib/improvWords";
 import {
@@ -255,7 +256,7 @@ export function ImprovTrainer() {
             </>
           )}
 
-          {recordError && <p className="text-sm text-red-600">{recordError}</p>}
+          {recordError && <p className="text-sm text-red-600">{COMMON[language].micAccessDenied}</p>}
 
           {showLive && (
             <button

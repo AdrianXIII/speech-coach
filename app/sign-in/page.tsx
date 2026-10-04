@@ -215,6 +215,7 @@ export default function SignInPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder={t.emailPlaceholder}
+              aria-label={t.emailPlaceholder}
               className="rounded-lg border border-hairline bg-surface px-4 py-3 text-sm text-ink outline-none focus:border-brass"
             />
             <input
@@ -223,6 +224,7 @@ export default function SignInPage() {
               minLength={8}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              aria-label={t.passwordPlaceholder}
               placeholder={t.passwordPlaceholder}
               className="rounded-lg border border-hairline bg-surface px-4 py-3 text-sm text-ink outline-none focus:border-brass"
             />

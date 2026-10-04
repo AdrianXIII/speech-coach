@@ -126,6 +126,7 @@ function ResetPasswordForm() {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         placeholder={t.passwordPlaceholder}
+        aria-label={t.passwordPlaceholder}
         className="rounded-lg border border-hairline bg-surface px-4 py-3 text-sm text-ink outline-none focus:border-brass"
       />
       <button

@@ -19,6 +19,7 @@ export const COMMON: Record<
     rateLimited: string;
     quotaExceeded: string;
     recordingTooLarge: string;
+    micAccessDenied: string;
   }
 > = {
   en: {
@@ -32,6 +33,7 @@ export const COMMON: Record<
     rateLimited: "Too many requests — please slow down and try again shortly.",
     quotaExceeded: "Our AI coach is at capacity right now. Please try again in a few minutes.",
     recordingTooLarge: "That recording is too large. Try a shorter take.",
+    micAccessDenied: "Couldn't access your microphone. Check your browser or system permissions and try again.",
   },
   de: {
     somethingWentWrong: "Etwas ist schiefgelaufen.",
@@ -44,6 +46,7 @@ export const COMMON: Record<
     rateLimited: "Zu viele Anfragen — bitte warte kurz und versuche es erneut.",
     quotaExceeded: "Unser KI-Coach ist gerade ausgelastet. Bitte versuche es in ein paar Minuten erneut.",
     recordingTooLarge: "Diese Aufnahme ist zu groß. Versuche eine kürzere Aufnahme.",
+    micAccessDenied: "Zugriff auf dein Mikrofon nicht möglich. Prüfe deine Browser- oder Systemberechtigungen und versuche es erneut.",
   },
   fr: {
     somethingWentWrong: "Une erreur est survenue.",
@@ -56,6 +59,7 @@ export const COMMON: Record<
     rateLimited: "Trop de requêtes — veuillez patienter un instant et réessayer.",
     quotaExceeded: "Notre coach IA est actuellement saturé. Veuillez réessayer dans quelques minutes.",
     recordingTooLarge: "Cet enregistrement est trop volumineux. Essayez un enregistrement plus court.",
+    micAccessDenied: "Impossible d'accéder à votre microphone. Vérifiez les autorisations de votre navigateur ou système et réessayez.",
   },
   es: {
     somethingWentWrong: "Algo salió mal.",
@@ -68,6 +72,7 @@ export const COMMON: Record<
     rateLimited: "Demasiadas solicitudes — espera un momento e inténtalo de nuevo.",
     quotaExceeded: "Nuestro coach de IA está saturado en este momento. Inténtalo de nuevo en unos minutos.",
     recordingTooLarge: "Esa grabación es demasiado grande. Prueba con una toma más corta.",
+    micAccessDenied: "No se pudo acceder a tu micrófono. Revisa los permisos del navegador o del sistema e inténtalo de nuevo.",
   },
   sv: {
     somethingWentWrong: "Något gick fel.",
@@ -80,6 +85,7 @@ export const COMMON: Record<
     rateLimited: "För många förfrågningar — vänta en stund och försök igen.",
     quotaExceeded: "Vår AI-coach är fullbelastad just nu. Försök igen om några minuter.",
     recordingTooLarge: "Den inspelningen är för stor. Försök med en kortare inspelning.",
+    micAccessDenied: "Kunde inte komma åt mikrofonen. Kontrollera webbläsarens eller systemets behörigheter och försök igen.",
   },
 };
 

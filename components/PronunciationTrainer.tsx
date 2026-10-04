@@ -391,7 +391,7 @@ export function PronunciationTrainer() {
             {!word.trim() ? t.typeFirst : isRecording ? t.recording : recordedBlob ? t.complete : t.pressToRecord}
           </p>
 
-          {recordError && <p className="text-sm text-red-600">{recordError}</p>}
+          {recordError && <p className="text-sm text-red-600">{common.micAccessDenied}</p>}
 
           {audioUrl && !isRecording && (
             <div className="flex w-full flex-col items-center gap-4">

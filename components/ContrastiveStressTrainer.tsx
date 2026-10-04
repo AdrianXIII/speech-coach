@@ -216,7 +216,7 @@ export function ContrastiveStressTrainer() {
         <p className="mt-1 text-xs text-ink-muted">{variant.meaning}</p>
       </div>
 
-      {recordError && <p className="text-sm text-red-600">{recordError}</p>}
+      {recordError && <p className="text-sm text-red-600">{COMMON[language].micAccessDenied}</p>}
 
       {showSetup && (
         <button
