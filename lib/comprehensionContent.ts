@@ -154,6 +154,48 @@ const PASSAGES_BY_LANGUAGE: Record<LanguageCode, ComprehensionPassage[]> = {
         "ergänzen statt ersetzen", "Arbeiter umgeschult",
       ],
     },
+    {
+      id: "startup-finanzierung",
+      topic: "Wirtschaft",
+      title: "Startup-Finanzierung",
+      text: "Das junge Startup sicherte sich nach monatelangen Verhandlungen mit potenziellen Investoren eine beträchtliche Finanzierungsrunde. Anstatt ein schnelles, unkontrolliertes Wachstum anzustreben, entschieden sich die Gründer für eine maßvolle Wachstumsstrategie, die nachhaltige Umsätze über reine Größe stellte. Dieser Ansatz überzeugte Investoren, die gegenüber Startups, die Bewertung über Tragfähigkeit stellten, zunehmend skeptisch geworden waren. Die Mittel werden vor allem in Forschung und Entwicklung sowie in strategische Neueinstellungen im Vertrieb und in der Technik fließen. Branchenbeobachter meinen, dass dieser disziplinierte Ansatz das Unternehmen gegenüber Wettbewerbern, die ihr Kapital in untragbarem Tempo verbrauchen, begünstigen könnte.",
+      advancedTerms: [
+        "beträchtliche Finanzierungsrunde", "unkontrolliertes Wachstum", "maßvolle Wachstumsstrategie",
+        "nachhaltige Umsätze", "Bewertung", "Tragfähigkeit", "disziplinierte Ansatz", "untragbarem Tempo",
+      ],
+      keyPoints: [
+        "Finanzierungsrunde gesichert", "maßvolle Wachstumsstrategie", "nachhaltige Umsätze",
+        "Forschung und Entwicklung", "strategische Neueinstellungen", "disziplinierter Ansatz",
+      ],
+    },
+    {
+      id: "krisenmanagement",
+      topic: "Führung",
+      title: "Krisenmanagement",
+      text: "Nach einem öffentlich bekannt gewordenen Produktrückruf stand die Geschäftsführerin unter wachsendem Druck, die Sorgen von Kunden und Aktionären zu adressieren. Anstatt den Ernst der Lage herunterzuspielen, entschied sie sich, das Versagen offen einzuräumen und einen konkreten Plan zur Behebung vorzulegen. Diese Transparenz war zunächst riskant, stärkte aber letztlich das öffentliche Vertrauen und begrenzte den langfristigen Reputationsschaden. Intern überarbeitete das Unternehmen seine Qualitätssicherungsprozesse grundlegend, um ähnliche Vorfälle künftig zu verhindern. Branchenexperten bezeichneten diese Reaktion später als Lehrbuchbeispiel für wirksame Krisenkommunikation unter intensiver öffentlicher Beobachtung.",
+      advancedTerms: [
+        "wachsendem Druck", "herunterzuspielen", "offen einzuräumen", "Behebung",
+        "Transparenz", "Reputationsschaden", "Qualitätssicherungsprozesse", "Krisenkommunikation",
+      ],
+      keyPoints: [
+        "Produktrückruf", "Geschäftsführerin räumte Versagen ein", "Plan zur Behebung",
+        "öffentliches Vertrauen", "Qualitätssicherung überarbeitet", "Krisenkommunikation",
+      ],
+    },
+    {
+      id: "cybersicherheitsvorfall",
+      topic: "Technologie",
+      title: "Cybersicherheitsvorfall",
+      text: "Das Unternehmen gab bekannt, dass Hacker eine zuvor unbekannte Schwachstelle ausgenutzt und über mehrere Wochen hinweg sensible Kundendaten kompromittiert hatten, bevor der Angriff entdeckt wurde. Daraufhin bemühte sich die Organisation fieberhaft, den Vorfall einzudämmen, betroffene Nutzer zu informieren und die gesetzlich vorgeschriebenen Behörden zu benachrichtigen. Cybersicherheitsexperten kritisierten das Unternehmen für unzureichende Überwachungssysteme, die es dem Eindringling ermöglichten, so lange unentdeckt zu bleiben. Als Reaktion sagte das Unternehmen erhebliche Investitionen in die Infrastruktur zur Bedrohungserkennung zu und versprach künftig mehr Transparenz bei derartigen Vorfällen.",
+      advancedTerms: [
+        "ausgenutzt", "Schwachstelle", "kompromittiert", "eindämmen",
+        "Behörden", "unzureichende Überwachungssysteme", "Bedrohungserkennung", "Transparenz",
+      ],
+      keyPoints: [
+        "Hacker nutzten Schwachstelle aus", "Kundendaten kompromittiert", "Nutzer und Behörden informiert",
+        "unzureichende Überwachung kritisiert", "Investition in Bedrohungserkennung",
+      ],
+    },
   ],
   fr: [
     {
@@ -196,6 +238,48 @@ const PASSAGES_BY_LANGUAGE: Record<LanguageCode, ComprehensionPassage[]> = {
       keyPoints: [
         "intégration de l'IA dans la fabrication", "employés craignaient l'obsolescence",
         "augmenter plutôt que remplacer", "travailleurs reconvertis",
+      ],
+    },
+    {
+      id: "financement-startup",
+      topic: "Économie",
+      title: "Financement de startup",
+      text: "La jeune startup a obtenu un tour de financement substantiel auprès d'investisseurs en capital-risque après plusieurs mois de négociations. Plutôt que de viser une expansion rapide et incontrôlée, les fondateurs ont opté pour une stratégie de croissance mesurée, privilégiant des revenus durables plutôt qu'une simple échelle. Cette approche a rassuré des investisseurs devenus méfiants envers les startups qui privilégiaient la valorisation au détriment de la viabilité. Les fonds seront principalement consacrés à la recherche et au développement, ainsi qu'à des recrutements stratégiques dans l'ingénierie et les ventes. Les observateurs du secteur estiment que cette approche disciplinée pourrait avantager l'entreprise face à des concurrents qui dépensent leur capital à un rythme insoutenable.",
+      advancedTerms: [
+        "tour de financement", "capital-risque", "expansion incontrôlée", "stratégie de croissance mesurée",
+        "revenus durables", "valorisation", "viabilité", "approche disciplinée",
+      ],
+      keyPoints: [
+        "tour de financement obtenu", "stratégie de croissance mesurée", "revenus durables",
+        "recherche et développement", "recrutements stratégiques", "approche disciplinée",
+      ],
+    },
+    {
+      id: "gestion-crise",
+      topic: "Leadership",
+      title: "Gestion de crise",
+      text: "À la suite d'un rappel de produit largement médiatisé, la directrice générale a dû faire face à une pression croissante de la part des clients et des actionnaires. Plutôt que de minimiser la gravité de la situation, elle a choisi de reconnaître franchement l'échec et de présenter un plan concret de remédiation. Cette transparence, bien que risquée au départ, a finalement renforcé la confiance du public et limité les dommages durables à la réputation de l'entreprise. En interne, l'entreprise a entièrement révisé ses processus d'assurance qualité afin d'éviter que des incidents similaires ne se reproduisent. Les experts du secteur ont par la suite cité cette réponse comme un exemple classique de communication de crise efficace sous une forte pression médiatique.",
+      advancedTerms: [
+        "pression croissante", "minimiser", "franchement", "remédiation",
+        "transparence", "dommages durables", "assurance qualité", "communication de crise",
+      ],
+      keyPoints: [
+        "rappel de produit", "directrice a reconnu l'échec", "plan de remédiation",
+        "confiance du public", "assurance qualité révisée", "communication de crise",
+      ],
+    },
+    {
+      id: "faille-cybersecurite",
+      topic: "Technologie",
+      title: "Faille de cybersécurité",
+      text: "L'entreprise a révélé que des pirates informatiques avaient exploité une vulnérabilité jusqu'alors inconnue, compromettant des données sensibles de clients pendant plusieurs semaines avant d'être détectés. Dans la foulée, l'organisation s'est empressée de contenir la brèche, d'informer les utilisateurs concernés et de notifier les autorités réglementaires comme l'exige la loi. Des experts en cybersécurité ont critiqué l'entreprise pour ses systèmes de surveillance insuffisants, qui ont permis à l'intrusion de passer inaperçue aussi longtemps. En réponse, l'entreprise s'est engagée à investir massivement dans son infrastructure de détection des menaces et a promis davantage de transparence concernant de futurs incidents.",
+      advancedTerms: [
+        "exploité", "vulnérabilité", "compromettant", "contenir",
+        "autorités réglementaires", "surveillance insuffisants", "détection des menaces", "transparence",
+      ],
+      keyPoints: [
+        "pirates ont exploité une vulnérabilité", "données clients compromises", "utilisateurs et autorités informés",
+        "surveillance insuffisante critiquée", "investissement dans la détection des menaces",
       ],
     },
   ],
@@ -242,6 +326,48 @@ const PASSAGES_BY_LANGUAGE: Record<LanguageCode, ComprehensionPassage[]> = {
         "aumentar en lugar de reemplazar", "trabajadores reentrenados",
       ],
     },
+    {
+      id: "financiacion-startups",
+      topic: "Economía",
+      title: "Financiación de startups",
+      text: "La joven startup aseguró una ronda sustancial de capital de riesgo tras varios meses de negociaciones con posibles inversores. En lugar de buscar una expansión rápida y descontrolada, los fundadores optaron por una estrategia de crecimiento mesurado, priorizando ingresos sostenibles sobre la mera escala. Este enfoque tranquilizó a inversores que se habían vuelto recelosos de las startups que priorizaban la valoración sobre la viabilidad. Los fondos se destinarán principalmente a investigación y desarrollo, junto con contrataciones estratégicas en ingeniería y ventas. Observadores del sector sugieren que este enfoque disciplinado podría posicionar favorablemente a la empresa frente a competidores que agotan su capital a un ritmo insostenible.",
+      advancedTerms: [
+        "ronda sustancial", "capital de riesgo", "expansión descontrolada", "estrategia de crecimiento mesurado",
+        "ingresos sostenibles", "valoración", "viabilidad", "enfoque disciplinado",
+      ],
+      keyPoints: [
+        "ronda de capital de riesgo asegurada", "estrategia de crecimiento mesurado", "ingresos sostenibles",
+        "investigación y desarrollo", "contrataciones estratégicas", "enfoque disciplinado",
+      ],
+    },
+    {
+      id: "gestion-crisis",
+      topic: "Liderazgo",
+      title: "Gestión de crisis",
+      text: "Tras un retiro de producto ampliamente publicitado, la directora ejecutiva se enfrentó a una presión creciente para abordar las preocupaciones de clientes y accionistas. En lugar de minimizar la gravedad de la situación, optó por reconocer el fallo con franqueza y presentar un plan concreto de subsanación. Esta transparencia, aunque arriesgada en un principio, terminó reforzando la confianza pública y mitigando el daño reputacional a largo plazo. Internamente, la empresa reformó por completo sus procesos de control de calidad para evitar incidentes similares. Expertos del sector citaron posteriormente esta respuesta como un ejemplo de manual de comunicación de crisis eficaz bajo un intenso escrutinio.",
+      advancedTerms: [
+        "presión creciente", "minimizar", "con franqueza", "subsanación",
+        "transparencia", "daño reputacional", "control de calidad", "comunicación de crisis",
+      ],
+      keyPoints: [
+        "retiro de producto", "directora reconoció el fallo", "plan de subsanación",
+        "confianza pública", "control de calidad reformado", "comunicación de crisis",
+      ],
+    },
+    {
+      id: "brecha-ciberseguridad",
+      topic: "Tecnología",
+      title: "Brecha de ciberseguridad",
+      text: "La empresa reveló que unos hackers habían explotado una vulnerabilidad previamente desconocida, comprometiendo datos sensibles de clientes durante varias semanas antes de ser detectados. Tras el hecho, la organización se apresuró a contener la brecha, notificar a los usuarios afectados y a las autoridades reguladoras según exige la ley. Expertos en ciberseguridad criticaron a la empresa por sus sistemas de monitoreo inadecuados, que permitieron que la intrusión pasara desapercibida durante tanto tiempo. En respuesta, la empresa se comprometió a realizar una inversión sustancial en infraestructura de detección de amenazas y prometió mayor transparencia ante futuros incidentes.",
+      advancedTerms: [
+        "explotado", "vulnerabilidad", "comprometiendo", "contener",
+        "autoridades reguladoras", "monitoreo inadecuados", "detección de amenazas", "transparencia",
+      ],
+      keyPoints: [
+        "hackers explotaron una vulnerabilidad", "datos de clientes comprometidos", "usuarios y autoridades notificados",
+        "monitoreo inadecuado criticado", "inversión en detección de amenazas",
+      ],
+    },
   ],
   sv: [
     {
@@ -284,6 +410,48 @@ const PASSAGES_BY_LANGUAGE: Record<LanguageCode, ComprehensionPassage[]> = {
       keyPoints: [
         "AI-integration i tillverkning", "medarbetare fruktade överflödighet",
         "förstärka istället för ersätta", "arbetare omskolades",
+      ],
+    },
+    {
+      id: "startup-finansiering",
+      topic: "Ekonomi",
+      title: "Startup-finansiering",
+      text: "Den unga startupen säkrade en betydande finansieringsrunda från riskkapitalister efter månader av förhandlingar med tänkbara investerare. I stället för att eftersträva snabb, okontrollerad expansion valde grundarna en måttfull tillväxtstrategi som prioriterade hållbara intäkter framför ren skala. Detta tillvägagångssätt lugnade investerare som blivit alltmer skeptiska till startups som prioriterade värdering framför livskraft. Kapitalet kommer främst att gå till forskning och utveckling samt strategiska nyanställningar inom teknik och försäljning. Branschbedömare menar att detta disciplinerade angreppssätt kan ge företaget ett försprång gentemot konkurrenter som förbrukar sitt kapital i en ohållbar takt.",
+      advancedTerms: [
+        "betydande finansieringsrunda", "riskkapitalister", "okontrollerad expansion", "måttfull tillväxtstrategi",
+        "hållbara intäkter", "värdering", "livskraft", "disciplinerade angreppssätt",
+      ],
+      keyPoints: [
+        "finansieringsrunda säkrad", "måttfull tillväxtstrategi", "hållbara intäkter",
+        "forskning och utveckling", "strategiska nyanställningar", "disciplinerat angreppssätt",
+      ],
+    },
+    {
+      id: "krishantering",
+      topic: "Ledarskap",
+      title: "Krishantering",
+      text: "Efter en mycket uppmärksammad produktåterkallelse ställdes vd:n inför ett växande tryck att bemöta kunders och aktieägares oro. Snarare än att tona ner situationens allvar valde hon att öppet erkänna misstaget och presentera en konkret plan för att åtgärda det. Denna öppenhet var inledningsvis riskabel men stärkte i slutändan allmänhetens förtroende och begränsade den långsiktiga skadan på varumärket. Internt gjorde företaget en genomgripande översyn av sina kvalitetssäkringsprocesser för att förhindra liknande incidenter i framtiden. Branschexperter lyfte senare fram denna respons som ett skolboksexempel på effektiv kriskommunikation under intensiv granskning.",
+      advancedTerms: [
+        "växande tryck", "tona ner", "öppet erkänna", "åtgärda",
+        "öppenhet", "skadan på varumärket", "kvalitetssäkringsprocesser", "kriskommunikation",
+      ],
+      keyPoints: [
+        "produktåterkallelse", "vd erkände misstaget", "plan för att åtgärda",
+        "allmänhetens förtroende", "kvalitetssäkring sågs över", "kriskommunikation",
+      ],
+    },
+    {
+      id: "cybersakerhetsincident",
+      topic: "Teknik",
+      title: "Cybersäkerhetsincident",
+      text: "Företaget avslöjade att hackare hade utnyttjat en tidigare okänd säkerhetslucka och kommit åt känslig kunddata under flera veckor innan intrånget upptäcktes. Därefter arbetade organisationen febrilt för att begränsa intrånget, informera berörda användare och underrätta tillsynsmyndigheter i enlighet med lagen. Cybersäkerhetsexperter kritiserade företaget för bristfälliga övervakningssystem som gjorde att intrånget kunde pågå oupptäckt så länge. Som svar åtog sig företaget att göra en betydande investering i infrastruktur för hotdetektering och utlovade större öppenhet kring framtida incidenter.",
+      advancedTerms: [
+        "utnyttjat", "säkerhetslucka", "kommit åt", "begränsa",
+        "tillsynsmyndigheter", "bristfälliga övervakningssystem", "hotdetektering", "öppenhet",
+      ],
+      keyPoints: [
+        "hackare utnyttjade en säkerhetslucka", "kunddata komprometterad", "användare och myndigheter informerades",
+        "bristfällig övervakning kritiserades", "investering i hotdetektering",
       ],
     },
   ],
