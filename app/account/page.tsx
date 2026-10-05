@@ -1,6 +1,7 @@
 import { PageHeader } from "@/components/PageHeader";
 import { AccountSettings } from "@/components/AccountSettings";
 import { requireSignedIn } from "@/lib/requireUser";
+import { isPremium } from "@/lib/subscription";
 
 const TITLE = {
   en: "Account",
@@ -20,12 +21,13 @@ const SUBTITLE = {
 
 export default async function AccountPage() {
   const user = await requireSignedIn();
+  const premium = await isPremium(user.id);
 
   return (
     <div className="min-h-screen bg-paper px-4 py-12 sm:px-8">
       <div className="mx-auto flex max-w-md flex-col gap-8">
         <PageHeader title={TITLE} subtitle={SUBTITLE} />
-        <AccountSettings email={user.email} />
+        <AccountSettings email={user.email} premium={premium} />
       </div>
     </div>
   );
