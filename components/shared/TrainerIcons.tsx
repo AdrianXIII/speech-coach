@@ -5,7 +5,7 @@
  * existing card grid keeps its emoji icons untouched; this isn't a
  * app-wide icon swap, just the two new surfaces that needed one.
  */
-export type IconName = "home" | "chart" | "person" | "mic" | "book";
+export type IconName = "home" | "chart" | "person" | "mic" | "book" | "target" | "briefcase" | "chat" | "clock";
 
 const PATHS: Record<IconName, React.ReactNode> = {
   home: (
@@ -39,6 +39,28 @@ const PATHS: Record<IconName, React.ReactNode> = {
     <>
       <path d="M4 5.5A2.5 2.5 0 016.5 3H12v18H6.5A2.5 2.5 0 014 18.5v-13z" />
       <path d="M20 5.5A2.5 2.5 0 0017.5 3H12v18h5.5a2.5 2.5 0 002.5-2.5v-13z" />
+    </>
+  ),
+  target: (
+    <>
+      <circle cx="12" cy="12" r="8" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="12" cy="12" r="0.5" />
+    </>
+  ),
+  briefcase: (
+    <>
+      <rect x="3" y="7" width="18" height="13" rx="2" />
+      <path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2" />
+    </>
+  ),
+  chat: (
+    <path d="M4 4h16v12H8l-4 4V4z" />
+  ),
+  clock: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3 2" />
     </>
   ),
 };
