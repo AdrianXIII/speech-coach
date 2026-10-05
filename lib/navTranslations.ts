@@ -21,8 +21,10 @@ export interface NavGroup {
  *   delivery (or spontaneous fluency under a time limit for Improv).
  * - Micro-drills: short, targeted single-utterance exercises, each
  *   isolating one specific verbal skill (pronunciation, stress, phrasing).
- * - Receptive skills: the only features about *taking in* language quickly
- *   (reading/listening) rather than producing it.
+ * - Receptive skills: features about *taking in* language quickly (listening)
+ *   rather than producing it — Speed Reading (the reading half) was removed
+ *   2026-10-05 and archived at archive/speed-reading-app/, leaving just
+ *   Comprehension here for now.
  * - Professional practice: domain case work (Business/Law/Politics) —
  *   AI Tutor now also covers the old Case Studies flow directly (its Teach
  *   step has a "skip the lesson, practice a case now" shortcut), so that's
@@ -172,24 +174,6 @@ export const NAV_GROUPS: NavGroup[] = [
       sv: "Receptiv förmåga",
     },
     links: [
-      {
-        href: "/speed-reading",
-        icon: "📖",
-        labels: {
-          en: "Speed Reading",
-          de: "Schnelllesen",
-          fr: "Lecture rapide",
-          es: "Lectura rápida",
-          sv: "Snabbläsning",
-        },
-        descriptions: {
-          en: "Read passages faster while keeping full comprehension.",
-          de: "Lies Texte schneller und behalte das volle Verständnis.",
-          fr: "Lisez des textes plus vite tout en gardant une pleine compréhension.",
-          es: "Lee textos más rápido sin perder la comprensión.",
-          sv: "Läs texter snabbare och behåll full förståelse.",
-        },
-      },
       {
         href: "/comprehension",
         icon: "🎧",

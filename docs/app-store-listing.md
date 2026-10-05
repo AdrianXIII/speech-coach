@@ -32,7 +32,7 @@ Sixty-second deliberate-practice drills for the high-stakes moments — a tough 
 ELITE PHRASING
 Upgrade a plain sentence into the refined word combinations polished speakers reach for, then use it out loud in a sentence of your own.
 
-Plus Comprehension & Summary (listen to real news, summarize it back), Contrastive Stress, Speed Reading, and Improv — all in five languages, all designed around a few focused minutes at a time.
+Plus Comprehension & Summary (listen to real news, summarize it back), Contrastive Stress, and Improv — all in five languages, all designed around a few focused minutes at a time.
 
 MasterSpeak is free to use: every trainer gives you one full session a day, and AI Tutor includes 3 starter categories in each profession. Subscribe for $64.99/year for unlimited daily use and the complete AI Tutor case library — managed entirely through your Apple ID.
 

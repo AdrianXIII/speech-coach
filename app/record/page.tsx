@@ -21,7 +21,7 @@ const SUBTITLE = {
   sv: "Spela in ett kort tal och få direkt feedback på tempo, utfyllnadsord och framförande — eller byt till scenövning med video, publik och teleprompter.",
 };
 
-// Unlike collocations/contrastive-stress/speed-reading/improv (which have no
+// Unlike collocations/contrastive-stress/improv (which have no
 // server action of their own to gate at, so they mark usage at page load —
 // see lib/usageLimitServer.ts's doc comment), /api/analyze-speech already
 // gates and marks the once-a-day use itself, right before the actual Gemini

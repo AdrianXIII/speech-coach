@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Extracted feature, preserved as source for a possible future
+    // standalone app — not compiled or linted as part of this one
+    // (see archive/speed-reading-app/README.md).
+    "archive/**",
   ]),
 ]);
 

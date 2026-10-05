@@ -34,9 +34,9 @@ const T: Record<LanguageCode, { title: string; body: string; cta: string }> = {
 
 /**
  * Shown instead of a trainer once its once-a-day free use is spent (see
- * lib/usageLimit.ts). Used both by the 4 fully client-side trainers (whose
+ * lib/usageLimit.ts). Used both by the 3 fully client-side trainers (whose
  * page.tsx checks canUseToday() itself, since they have no server action of
- * their own to gate — collocations, emphasis, speed-reading, improv) and by
+ * their own to gate — collocations, emphasis, improv) and by
  * the API-gated trainers' own components when their route responds 402.
  */
 export function DailyLimitReached() {

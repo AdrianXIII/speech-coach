@@ -16,8 +16,8 @@ see `lib/navTranslations.ts`'s `NAV_GROUPS`:
 - **Micro-Drills** — Pronunciation, Contrastive Stress, Elite Phrasing:
   short, single-utterance exercises, each isolating one specific verbal
   skill.
-- **Receptive Skills** — Speed Reading, Listening & Summary: the only
-  features about taking in language quickly, rather than producing it.
+- **Receptive Skills** — Listening & Summary: features about taking in
+  language quickly, rather than producing it.
 - **Professional Practice** — AI Tutor: domain case work, graded on content
   knowledge rather than delivery.
 
@@ -33,12 +33,11 @@ evaluation is a strict superset — same grading plus pronunciation feedback).
 One global language switch lives in the nav bar (next to "Speech Coach"),
 not a separate control per feature. Picking English, German, French,
 Spanish, or Swedish there translates everything inside each multi-language
-trainer (Improv, Contrastive Stress, Listening & Summary, Elite Phrasing,
-Speed Reading) — not just the practice content, but every label, button,
-instruction, and generated message: page titles/subtitles (`components/
-PageHeader.tsx`), profile pills, round/status labels, quiz questions
-generated on the fly from pasted text (`lib/readingComprehension.ts`), and
-locally-generated feedback strings (`lib/languageRichness.ts`). The nav
+trainer (Improv, Contrastive Stress, Listening & Summary, Elite Phrasing) —
+not just the practice content, but every label, button, instruction, and
+generated message: page titles/subtitles (`components/PageHeader.tsx`),
+profile pills, round/status labels, and locally-generated feedback strings
+(`lib/languageRichness.ts`). The nav
 labels and language state are implemented once in
 `components/LanguageProvider.tsx` (React context + one localStorage key)
 rather than each trainer managing its own. Record & Analyze and
@@ -124,21 +123,6 @@ technique as the Pronunciation Trainer's stress check, just applied to
 words instead of syllables) shows which word
 actually came out strongest. No AI call, no cost.
 
-**Speed Reading** (`/speed-reading`)
-Works with pasted text in any of the 5 supported languages — pick which
-one you're pasting so the local comprehension quiz can tell real words
-from filler in that language. An RSVP (rapid serial visual presentation)
-reader flashes it word-by-word (level 1), 1–2 words at a time (level 2), or
-3–4-word chunks (level 3, 500+ wpm) with a fixed focus marker so your eyes
-don't have to move. Every ~150 words a quick recall question pauses the
-flow and nudges the speed up or down depending on whether you catch it.
-When you stop (or the text ends), a short comprehension quiz checks whether
-you actually absorbed what you read, and shows WPM next to comprehension %
-so a higher speed can be told apart from just skimming. Chunking, the
-recall checks, and the quiz are all generated straight from the pasted
-text — word-order and word-presence questions, no AI call. Session history
-lives in your browser (localStorage) so repeat attempts are comparable.
-
 **Listening & Summary** (`/comprehension`)
 Multi-language (English, German, French, Spanish, Swedish). Aimed at
 professionals polishing a second language for work: hear a short
@@ -153,6 +137,11 @@ terminology you echoed, use of professional connectives ("consequently",
 call — this is deliberately the free-first version of the idea; an
 LLM-generated "here's how to phrase that more like a native speaker" rewrite
 is the natural next step if the free scoring turns out not to be enough.
+
+*(Speed Reading, an RSVP reading-pace trainer, was removed from the live app
+on 2026-10-05 — its source is preserved intact at
+`archive/speed-reading-app/` as a starting point for a possible standalone
+app, not deleted.)*
 
 **Elite Phrasing** (`/collocations`)
 Targets *collocation* specifically — the "feels right" pairing of verbs,
@@ -302,7 +291,6 @@ app/
   pronunciation/page.tsx          Pronunciation Trainer page
   improv/page.tsx                 60-Second Improv page
   emphasis/page.tsx               Contrastive Stress page (multi-language)
-  speed-reading/page.tsx          Snabbläsning (RSVP speed reading) page
   comprehension/page.tsx          Listening & Summary page
   collocations/page.tsx           Elite Phrasing page
   ai-tutor/page.tsx                AI Tutor page (Business/Law/Politics)
@@ -327,7 +315,6 @@ components/
   StressMeter.tsx                  Instant local per-syllable loudness/pitch stress check (no AI call)
   ImprovTrainer.tsx                60-second word + structure-model improv drill with phase timer
   ContrastiveStressTrainer.tsx     Contrastive stress drill, 5 languages (local per-word stress check, no AI call)
-  SpeedReadingTrainer.tsx          RSVP speed reader: leveled chunking, recall checks, comprehension quiz
   ComprehensionTrainer.tsx         Listen (TTS) -> spoken summary (Web Speech API) -> local richness scoring
   CollocationTrainer.tsx           Upgrade-the-phrase quiz + spoken collocation-usage check
   AITutor.tsx                      Voice-driven profession/category picker -> teach -> challenge -> evaluate
@@ -344,7 +331,6 @@ lib/
   pronunciationFeedback.ts, fillerWords.ts, chat.ts, wordStress.ts,
   audioStress.ts, improvWords.ts, structureModels.ts, contrastiveStress.ts,
   languages.ts,
-  speedReadingLevels.ts, readingComprehension.ts, readingHistory.ts,
   comprehensionContent.ts, languageRichness.ts, collocationContent.ts,
   collocationCheck.ts, caseStudyContent.ts, caseStudyFundamentals.ts,
   caseStudyProgress.ts,

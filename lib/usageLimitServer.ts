@@ -12,9 +12,9 @@ import { getDb } from "@/lib/db";
  * represents one real attempt (a graded submission, a fetched passage) —
  * see each feature's own API route — not at page load, so a free user can
  * browse a trainer's page freely and only spends their day's use when they
- * actually do the thing. The four fully client-side trainers (no server
- * action to hook into: collocations, contrastive stress, speed reading,
- * improv) are the exception — their own page.tsx gates at page load instead,
+ * actually do the thing. The three fully client-side trainers (no server
+ * action to hook into: collocations, contrastive stress, improv) are the
+ * exception — their own page.tsx gates at page load instead,
  * the only server touchpoint available for them.
  */
 
