@@ -24,10 +24,17 @@ const TABS: { href: string; labelKey: keyof (typeof T)["en"]; icon: IconName }[]
 /**
  * Persistent bottom tab bar (Direction E from the mobile-UI design review)
  * — only rendered when signed in, so marketing/auth pages are unaffected.
+ * Also only rendered below the `md` breakpoint (~768px): this is a
+ * phone-width pattern (authored and only ever tested at 390px), not
+ * something designed for iPad or desktop browser widths — on those,
+ * components/UserMenu.tsx's top-nav Progress/Account links are the real
+ * path instead. (iPad mini's 744px portrait width sits just under this
+ * breakpoint, so it's one real device that still sees the bar — a known,
+ * minor edge case, not treated as a bug worth a device-specific check for.)
  * Renders two things together: the fixed bar itself, and an in-flow spacer
  * of the same height so Footer/page content below it isn't hidden behind
- * it — both gated by the same signed-in check so nothing shifts on
- * sign-out. Mounted once in app/layout.tsx, after {children}.
+ * it — both gated by the same conditions so nothing shifts unexpectedly.
+ * Mounted once in app/layout.tsx, after {children}.
  */
 export function TabBar() {
   const { status } = useSession();
@@ -39,8 +46,8 @@ export function TabBar() {
 
   return (
     <>
-      <div className="h-[calc(64px+env(safe-area-inset-bottom))]" aria-hidden="true" />
-      <nav className="fixed inset-x-0 bottom-0 z-40 flex items-start justify-around border-t border-hairline bg-surface px-2 pb-[env(safe-area-inset-bottom)] pt-2.5">
+      <div className="h-[calc(64px+env(safe-area-inset-bottom))] md:hidden" aria-hidden="true" />
+      <nav className="fixed inset-x-0 bottom-0 z-40 flex items-start justify-around border-t border-hairline bg-surface px-2 pb-[env(safe-area-inset-bottom)] pt-2.5 md:hidden">
         {TABS.map((tab) => {
           const active = tab.href === "/" ? pathname === "/" : pathname.startsWith(tab.href);
           return (
