@@ -4,8 +4,8 @@
   "description": "AI-powered public speaking coaching for professionals who want domain knowledge and confident communication.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0b1220",
-  "theme_color": "#0b1220",
+  "background_color": "#faf9f6",
+  "theme_color": "#10233f",
   "orientation": "portrait",
   "icons": [
     {

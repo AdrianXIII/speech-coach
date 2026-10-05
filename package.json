@@ -12,6 +12,8 @@
     "@capacitor/cli": "^8.5.2",
     "@capacitor/core": "^8.5.2",
     "@capacitor/ios": "^8.5.2",
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.4",
     "@revenuecat/purchases-capacitor": "^13.6.1",
     "cmu-pronouncing-dictionary": "^3.0.0",
     "double-metaphone": "^2.0.1",

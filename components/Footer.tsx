@@ -9,7 +9,7 @@ import Link from "next/link";
  */
 export function Footer() {
   return (
-    <footer className="border-t border-hairline px-4 py-6 text-center text-xs text-ink-muted sm:px-8">
+    <footer className="border-t border-hairline px-4 py-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] text-center text-xs text-ink-muted sm:px-8">
       <Link href="/privacy" className="hover:underline">
         Privacy Policy
       </Link>
