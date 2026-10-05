@@ -7,6 +7,7 @@ import { requireApiUser } from "@/lib/requireUser";
 import { checkRateLimit } from "@/lib/rateLimit";
 import { isPremium } from "@/lib/subscription";
 import { canUseToday, markUsedToday } from "@/lib/usageLimitServer";
+import { logActivity } from "@/lib/trainerActivity";
 import type { AnalyzeSpeechResponse } from "@/types/speechAnalysis";
 
 const FEATURE = "record";
@@ -84,6 +85,11 @@ export async function POST(req: NextRequest) {
     // Not mocked-only: a dev-mode mock response (no GEMINI_API_KEY) never
     // reaches real users, so it shouldn't spend their one real free use.
     if (!premium && !analysis.mocked) await markUsedToday(gate.id, FEATURE);
+    // Unlike markUsedToday above, this logs for every account, premium
+    // included — see lib/trainerActivity.ts for why that split matters.
+    if (!analysis.mocked) {
+      await logActivity(gate.id, FEATURE, { durationSeconds, score: response.overallScore });
+    }
 
     return NextResponse.json(response);
   } catch (err) {

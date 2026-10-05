@@ -6,6 +6,7 @@ import { requireApiUser } from "@/lib/requireUser";
 import { checkRateLimit } from "@/lib/rateLimit";
 import { isPremium } from "@/lib/subscription";
 import { canUseToday, markUsedToday } from "@/lib/usageLimitServer";
+import { logActivity } from "@/lib/trainerActivity";
 
 const MAX_AUDIO_BYTES = 15 * 1024 * 1024;
 const MAX_WORD_CHARS = 100;
@@ -58,6 +59,7 @@ export async function POST(req: NextRequest) {
     const languageName = getLanguage(toLanguageCode(formData.get("language")?.toString())).name;
     const result = await getPronunciationFeedback(word, audio as File, languageName);
     if (!premium && !result.mocked) await markUsedToday(gate.id, FEATURE);
+    if (!result.mocked) await logActivity(gate.id, FEATURE);
     return NextResponse.json(result);
   } catch (err) {
     return geminiErrorResponse(err, "Pronunciation feedback failed.");

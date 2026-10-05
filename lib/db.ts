@@ -322,6 +322,24 @@ function ensureSchema(sql: ReturnType<typeof postgres>): Promise<void> {
         created_at TIMESTAMPTZ NOT NULL DEFAULT now()
       );
       CREATE INDEX IF NOT EXISTS rate_limit_events_key_created_idx ON rate_limit_events (key, created_at);
+
+      -- One row per completed trainer session, written for every account —
+      -- free AND premium (unlike daily_usage, which only ever gets written
+      -- for free-tier accounts as a side effect of gating the daily limit,
+      -- so it's blind for every paying subscriber). Backs the Progress
+      -- screen's streak/minutes/avg-score stats (lib/trainerActivity.ts).
+      -- duration_seconds/score are nullable: logged when a trainer actually
+      -- has them, omitted otherwise — a bare "a session happened" row still
+      -- counts for streak/session-count purposes.
+      CREATE TABLE IF NOT EXISTS trainer_activity (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        feature TEXT NOT NULL,
+        duration_seconds INTEGER,
+        score INTEGER,
+        occurred_at TIMESTAMPTZ NOT NULL DEFAULT now()
+      );
+      CREATE INDEX IF NOT EXISTS trainer_activity_user_occurred_idx ON trainer_activity (user_id, occurred_at);
     `)
       .then(() => undefined)
       .catch((err) => {

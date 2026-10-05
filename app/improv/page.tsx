@@ -4,6 +4,7 @@ import { DailyLimitReached } from "@/components/DailyLimitReached";
 import { requireSignedIn } from "@/lib/requireUser";
 import { isPremium } from "@/lib/subscription";
 import { canUseToday, markUsedToday } from "@/lib/usageLimitServer";
+import { logActivity } from "@/lib/trainerActivity";
 
 const TITLE = {
   en: "60-Second Improv",
@@ -31,6 +32,7 @@ export default async function ImprovPage() {
   const premium = await isPremium(user.id);
   const available = premium || (await canUseToday(user.id, FEATURE));
   if (available && !premium) await markUsedToday(user.id, FEATURE);
+  if (available) await logActivity(user.id, FEATURE);
 
   return (
     <div className="min-h-screen bg-paper px-4 py-12 sm:px-8">

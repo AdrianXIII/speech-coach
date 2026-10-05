@@ -11,6 +11,7 @@ import { requireApiUser } from "@/lib/requireUser";
 import { checkRateLimit } from "@/lib/rateLimit";
 import { isPremium } from "@/lib/subscription";
 import { canUseToday, markUsedToday } from "@/lib/usageLimitServer";
+import { logActivity } from "@/lib/trainerActivity";
 import { isFreeAiTutorCategory } from "@/lib/usageLimit";
 
 const MAX_AUDIO_BYTES = 15 * 1024 * 1024;
@@ -128,6 +129,9 @@ export async function POST(req: NextRequest) {
       languageName: language ? getLanguage(language).name : undefined,
     });
     if (!premium && !result.mocked) await markUsedToday(gate.id, FEATURE);
+    // TutorFeedback has no numeric score (knowledge/language/pronunciation
+    // are qualitative) — log a bare session, still counts for streak/goal.
+    if (!result.mocked) await logActivity(gate.id, FEATURE);
     return NextResponse.json(result);
   } catch (err) {
     return geminiErrorResponse(err, "Tutor evaluation failed.");

@@ -7,6 +7,7 @@ import { requireUser, requireApiUser } from "@/lib/requireUser";
 import { checkRateLimit } from "@/lib/rateLimit";
 import { isPremium } from "@/lib/subscription";
 import { canUseToday, markUsedToday } from "@/lib/usageLimitServer";
+import { logActivity } from "@/lib/trainerActivity";
 import { execModelsForLanguage } from "@/lib/structureModels";
 import { scenariosForLanguage, RECOMMENDED_SECONDS } from "@/lib/executiveCommScenarios";
 import { getLanguage, LANGUAGES, type LanguageCode } from "@/lib/languages";
@@ -128,6 +129,9 @@ export async function POST(req: NextRequest) {
         scores: result.scores,
       });
       if (!premium) await markUsedToday(user.id, FEATURE);
+      // durationSeconds uses the drill's target length as a proxy — actual
+      // elapsed time isn't sent to the server today.
+      await logActivity(user.id, FEATURE, { durationSeconds: targetSeconds, score: result.overallScore });
     }
 
     return NextResponse.json(result);
