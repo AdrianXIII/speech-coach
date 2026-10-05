@@ -23,6 +23,13 @@
   --color-hairline: #d7dce2;
   --color-good: #2f6b4f;
   --color-bad: #a5352e;
+  /* Coral-to-amber accent — added for the tab bar + Progress screen
+     (Direction E from the mobile-UI design review). Additive on top of
+     the navy/brass identity, not a replacement for it: used sparingly
+     (an active tab, the progress ring, small icon badges), never as a
+     full-screen wash. */
+  --color-accent-start: #ff6b4a;
+  --color-accent-end: #ffb648;
 }
 
 @theme inline {
@@ -41,6 +48,8 @@
   --color-hairline: var(--color-hairline);
   --color-good: var(--color-good);
   --color-bad: var(--color-bad);
+  --color-accent-start: var(--color-accent-start);
+  --color-accent-end: var(--color-accent-end);
   --font-display: var(--font-display);
   --font-body: var(--font-body);
 }

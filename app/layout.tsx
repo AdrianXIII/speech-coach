@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Source_Serif_4, Source_Sans_3 } from "next/font/google";
 import { NavBar } from "@/components/NavBar";
+import { TabBar } from "@/components/TabBar";
 import { LanguageProvider } from "@/components/LanguageProvider";
 import { AuthSessionProvider } from "@/components/AuthSessionProvider";
 import { RevenueCatInit } from "@/components/RevenueCatInit";
@@ -62,6 +63,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <RevenueCatInit />
             <NavBar />
             {children}
+            <TabBar />
             <Footer />
           </LanguageProvider>
         </AuthSessionProvider>
