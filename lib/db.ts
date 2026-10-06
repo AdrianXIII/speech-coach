@@ -340,6 +340,17 @@ function ensureSchema(sql: ReturnType<typeof postgres>): Promise<void> {
         occurred_at TIMESTAMPTZ NOT NULL DEFAULT now()
       );
       CREATE INDEX IF NOT EXISTS trainer_activity_user_occurred_idx ON trainer_activity (user_id, occurred_at);
+
+      -- Cached neural TTS audio (lib/tts.ts), keyed by a hash of voice+text so
+      -- identical (voice, text) pairs — the normal case for AI Tutor's static
+      -- prompts/lessons and Comprehension's pooled passages — are synthesized
+      -- only once, system-wide, regardless of which user triggers it.
+      CREATE TABLE IF NOT EXISTS tts_cache (
+        cache_key TEXT PRIMARY KEY,
+        audio_data BYTEA NOT NULL,
+        content_type TEXT NOT NULL DEFAULT 'audio/mpeg',
+        created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+      );
     `)
       .then(() => undefined)
       .catch((err) => {

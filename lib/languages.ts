@@ -5,6 +5,13 @@ export interface Language {
   name: string;
   /** BCP-47 tag for the browser's TTS/STT APIs. */
   speechLang: string;
+  /**
+   * Google Cloud Text-to-Speech Neural2 voice name (lib/tts.ts). Best-effort
+   * defaults — verify against the current voice catalog in the Google Cloud
+   * Console, especially sv-SE, which has historically had narrower Neural2
+   * coverage than the other four languages here.
+   */
+  ttsVoice: string;
 }
 
 /**
@@ -17,11 +24,11 @@ export interface Language {
  * words, pitch-accent/tone instead of stress) and isn't in this list yet.
  */
 export const LANGUAGES: Language[] = [
-  { code: "en", name: "English", speechLang: "en-US" },
-  { code: "de", name: "Deutsch", speechLang: "de-DE" },
-  { code: "fr", name: "Français", speechLang: "fr-FR" },
-  { code: "es", name: "Español", speechLang: "es-ES" },
-  { code: "sv", name: "Svenska", speechLang: "sv-SE" },
+  { code: "en", name: "English", speechLang: "en-US", ttsVoice: "en-US-Neural2-F" },
+  { code: "de", name: "Deutsch", speechLang: "de-DE", ttsVoice: "de-DE-Neural2-F" },
+  { code: "fr", name: "Français", speechLang: "fr-FR", ttsVoice: "fr-FR-Neural2-A" },
+  { code: "es", name: "Español", speechLang: "es-ES", ttsVoice: "es-ES-Neural2-A" },
+  { code: "sv", name: "Svenska", speechLang: "sv-SE", ttsVoice: "sv-SE-Wavenet-A" },
 ];
 
 export function getLanguage(code: LanguageCode): Language {
