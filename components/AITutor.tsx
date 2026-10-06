@@ -102,7 +102,7 @@ export function AITutor({ isPremium }: { isPremium: boolean }) {
   // Separate from `tts`: only the teach step's reading needs a playback bar
   // (pause/resume, skip ±10s); every other prompt in this file (profession/
   // category prompts, etc.) stays on the simpler fire-and-forget `tts`.
-  const playback = useSpeechPlayback(speechLang);
+  const playback = useSpeechPlayback(language);
   const voiceNav = useSpeechRecognition(speechLang, 1500);
 
   const { recordedBlob, audioBlob, start: startRecorder, stop: stopRecorder, reset: resetRecorder, error: micError } =

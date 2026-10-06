@@ -345,12 +345,22 @@ function ensureSchema(sql: ReturnType<typeof postgres>): Promise<void> {
       -- identical (voice, text) pairs — the normal case for AI Tutor's static
       -- prompts/lessons and Comprehension's pooled passages — are synthesized
       -- only once, system-wide, regardless of which user triggers it.
+      -- timepoints is nullable: only AI Tutor's Teach step requests
+      -- word-boundary timing (synthesizeSpeechWithTimepoints) for its
+      -- playback-bar highlighting; every other cacheable call site leaves it
+      -- null. Stored as a JSON-encoded TEXT column (a plain number[]),
+      -- serialized/parsed entirely in lib/tts.ts — there's no need for
+      -- Postgres-side JSON querying here, so this avoids relying on the
+      -- postgres driver's own jsonb-encoding behavior for a value this
+      -- app never needs to query by shape.
       CREATE TABLE IF NOT EXISTS tts_cache (
         cache_key TEXT PRIMARY KEY,
         audio_data BYTEA NOT NULL,
         content_type TEXT NOT NULL DEFAULT 'audio/mpeg',
+        timepoints TEXT,
         created_at TIMESTAMPTZ NOT NULL DEFAULT now()
       );
+      ALTER TABLE tts_cache ADD COLUMN IF NOT EXISTS timepoints TEXT;
     `)
       .then(() => undefined)
       .catch((err) => {
