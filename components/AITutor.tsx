@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useMediaRecorder } from "@/hooks/useMediaRecorder";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
-import { useSpeechSynthesis } from "@/hooks/useSpeechSynthesis";
+import { useNeuralSpeech } from "@/hooks/useNeuralSpeech";
 import { useSpeechPlayback } from "@/hooks/useSpeechPlayback";
 import { PlaybackBar } from "@/components/PlaybackBar";
 import { CASE_CATEGORIES, type CaseProfession, type CaseStudy } from "@/lib/caseStudyContent";
@@ -95,7 +95,10 @@ export function AITutor({ isPremium }: { isPremium: boolean }) {
   const [voiceIntent, setVoiceIntent] = useState<VoiceIntent>(null);
   const [voiceNotice, setVoiceNotice] = useState<string | null>(null);
   const speechLang = getLanguage(language).speechLang;
-  const tts = useSpeechSynthesis(speechLang);
+  // Static per-category/profession prompts, identical for every user who
+  // ever hits this step — cacheable: true, so lib/tts.ts's tts_cache only
+  // ever synthesizes each one once, system-wide.
+  const tts = useNeuralSpeech(language, { cacheable: true });
   // Separate from `tts`: only the teach step's reading needs a playback bar
   // (pause/resume, skip ±10s); every other prompt in this file (profession/
   // category prompts, etc.) stays on the simpler fire-and-forget `tts`.

@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
+import { useNeuralSpeech } from "@/hooks/useNeuralSpeech";
 import { COMMON } from "@/lib/commonStrings";
-import { getLanguage, type LanguageCode } from "@/lib/languages";
+import type { LanguageCode } from "@/lib/languages";
 
 const T: Record<
   LanguageCode,
@@ -68,7 +69,8 @@ export function IdealVersionCard({ transcript }: IdealVersionCardProps) {
   const [mocked, setMocked] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isSpeaking, setIsSpeaking] = useState(false);
+  // Gemini-generated per request — not cacheable, unlike AI Tutor's static prompts.
+  const tts = useNeuralSpeech(language, { cacheable: false });
 
   async function handleGenerate() {
     setIsGenerating(true);
@@ -91,19 +93,12 @@ export function IdealVersionCard({ transcript }: IdealVersionCardProps) {
   }
 
   function handleListen() {
-    if (!idealVersion || typeof window === "undefined" || !window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(idealVersion);
-    utterance.lang = getLanguage(language).speechLang;
-    utterance.rate = 0.95;
-    utterance.onstart = () => setIsSpeaking(true);
-    utterance.onend = () => setIsSpeaking(false);
-    window.speechSynthesis.speak(utterance);
+    if (!idealVersion) return;
+    tts.speak(idealVersion);
   }
 
   function handleStop() {
-    window.speechSynthesis?.cancel();
-    setIsSpeaking(false);
+    tts.cancel();
   }
 
   return (
@@ -135,10 +130,10 @@ export function IdealVersionCard({ transcript }: IdealVersionCardProps) {
           )}
           <p className="whitespace-pre-wrap text-sm leading-relaxed text-ink">{idealVersion}</p>
           <button
-            onClick={isSpeaking ? handleStop : handleListen}
+            onClick={tts.isSpeaking ? handleStop : handleListen}
             className="self-start rounded-lg bg-navy px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-navy-800"
           >
-            {isSpeaking ? t.stop : t.listen}
+            {tts.isSpeaking ? t.stop : t.listen}
           </button>
         </div>
       )}

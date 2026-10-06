@@ -9,6 +9,7 @@ import { StressMeter } from "@/components/StressMeter";
 import { PronunciationReviewList } from "@/components/PronunciationReviewList";
 import { REVIEW_INTERVAL_DAYS, type ReviewWord } from "@/lib/pronunciationReviewSchedule";
 import { useLanguage } from "@/components/LanguageProvider";
+import { useNeuralSpeech } from "@/hooks/useNeuralSpeech";
 import { COMMON, apiErrorMessage } from "@/lib/commonStrings";
 import { getLanguage, type LanguageCode } from "@/lib/languages";
 
@@ -132,6 +133,8 @@ const T: Record<
 export function PronunciationTrainer() {
   const { language } = useLanguage();
   const t = T[language];
+  // A typed word, unique per attempt — not cacheable.
+  const tts = useNeuralSpeech(language, { cacheable: false });
   const common = COMMON[language];
 
   // Lets a "Practice this word" link (e.g. from a Record & Analyze result)
@@ -256,12 +259,8 @@ export function PronunciationTrainer() {
   }, [isRecording]);
 
   function handleListen() {
-    if (!word.trim() || typeof window === "undefined" || !window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(word.trim());
-    utterance.lang = getLanguage(language).speechLang;
-    utterance.rate = 0.9;
-    window.speechSynthesis.speak(utterance);
+    if (!word.trim()) return;
+    tts.speak(word.trim());
   }
 
   function handleStart() {

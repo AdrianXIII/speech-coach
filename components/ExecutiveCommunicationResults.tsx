@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { SCORE_KEYS, type ExecCommAttempt, type ExecCommResult, type ScoreKey } from "@/lib/executiveCommTypes";
 import type { StructureModel } from "@/lib/structureModels";
 import { useLanguage } from "@/components/LanguageProvider";
-import { getLanguage, type LanguageCode } from "@/lib/languages";
+import { useNeuralSpeech } from "@/hooks/useNeuralSpeech";
+import type { LanguageCode } from "@/lib/languages";
 
 const T: Record<LanguageCode, {
   mockBanner: string;
@@ -230,22 +230,15 @@ export function ExecutiveCommunicationResults({
 }: ExecutiveCommunicationResultsProps) {
   const { language } = useLanguage();
   const t = T[language];
-  const [isSpeaking, setIsSpeaking] = useState(false);
+  // Gemini-generated feedback text, unique per attempt — not cacheable.
+  const tts = useNeuralSpeech(language, { cacheable: false });
 
   function handleListen() {
-    if (typeof window === "undefined" || !window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(results.strongRewrite);
-    utterance.lang = getLanguage(language).speechLang;
-    utterance.rate = 0.95;
-    utterance.onstart = () => setIsSpeaking(true);
-    utterance.onend = () => setIsSpeaking(false);
-    window.speechSynthesis.speak(utterance);
+    tts.speak(results.strongRewrite);
   }
 
   function handleStop() {
-    window.speechSynthesis?.cancel();
-    setIsSpeaking(false);
+    tts.cancel();
   }
 
   const notes: Record<ScoreKey, string> = {
@@ -363,10 +356,10 @@ export function ExecutiveCommunicationResults({
         <div className="mt-4 flex flex-col gap-3 rounded-lg border border-hairline bg-surface-2 p-4">
           <p className="whitespace-pre-wrap text-sm leading-relaxed text-ink">{results.strongRewrite}</p>
           <button
-            onClick={isSpeaking ? handleStop : handleListen}
+            onClick={tts.isSpeaking ? handleStop : handleListen}
             className="self-start rounded-lg bg-navy px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-navy-800"
           >
-            {isSpeaking ? t.stop : t.listen}
+            {tts.isSpeaking ? t.stop : t.listen}
           </button>
         </div>
       </div>

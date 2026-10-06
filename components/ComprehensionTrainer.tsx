@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMediaRecorder } from "@/hooks/useMediaRecorder";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
+import { useNeuralSpeech } from "@/hooks/useNeuralSpeech";
 import { randomPassage, NEWS_TOPICS, type ComprehensionPassage, type NewsTopic } from "@/lib/comprehensionContent";
 import { analyzeRichness, type RichnessScore } from "@/lib/languageRichness";
 import { getLanguage, type LanguageCode } from "@/lib/languages";
@@ -230,6 +231,9 @@ function pickTopic(exclude?: NewsTopic): NewsTopic {
 export function ComprehensionTrainer() {
   const { language } = useLanguage();
   const t = T[language];
+  // Gemini-generated but pooled/cached server-side and reused across every
+  // user until refreshed (lib/comprehensionNews.ts) — cacheable: true.
+  const tts = useNeuralSpeech(language, { cacheable: true });
   const [passage, setPassage] = useState<DisplayPassage | null>(null);
   const [activeTopic, setActiveTopic] = useState<NewsTopic | null>(null);
   const [poolList, setPoolList] = useState<{ slot: number; title: string }[]>([]);
@@ -342,7 +346,7 @@ export function ComprehensionTrainer() {
   // Also bails back to "setup" in case the switch happens mid-exercise —
   // a passage/transcript in the old language shouldn't carry over.
   useEffect(() => {
-    window.speechSynthesis.cancel();
+    tts.cancel();
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setPhase("setup");
     loadTopicList(pickTopic());
@@ -359,8 +363,9 @@ export function ComprehensionTrainer() {
   useEffect(() => {
     return () => {
       if (listenSafetyTimeoutRef.current) clearTimeout(listenSafetyTimeoutRef.current);
-      window.speechSynthesis.cancel();
+      tts.cancel();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const audioUrl = useMemo(
@@ -405,7 +410,6 @@ export function ComprehensionTrainer() {
 
   function handleListen() {
     if (!passage) return;
-    window.speechSynthesis.cancel();
     if (listenSafetyTimeoutRef.current) clearTimeout(listenSafetyTimeoutRef.current);
 
     let settled = false;
@@ -417,23 +421,21 @@ export function ComprehensionTrainer() {
       setPhase("ready");
     };
 
-    const utterance = new SpeechSynthesisUtterance(passage.text);
-    utterance.lang = getLanguage(language).speechLang;
-    utterance.rate = 0.95;
-    utterance.onend = finishListening;
-    // A missing/failed voice (some browsers/OSes ship with none) must not
-    // leave the exercise stuck on "Listening…" forever with no way out.
-    utterance.onerror = finishListening;
-
     setPhase("listening");
-    window.speechSynthesis.speak(utterance);
+    // finishListening also covers a failed/missing voice (onError) — the
+    // exercise must never get stuck on "Listening…" with no way out.
+    tts.speak(passage.text, finishListening);
 
+    // Backstop in case neither the neural-audio nor Web Speech fallback
+    // path ever fires an end/error event (a stalled network fetch, a
+    // browser quirk) — same safety margin as before, estimated from a
+    // typical 130wpm reading pace.
     const estimatedMs = (passage.text.split(/\s+/).length / 130) * 60_000;
     listenSafetyTimeoutRef.current = setTimeout(finishListening, estimatedMs + 6000);
   }
 
   function handleSkipListening() {
-    window.speechSynthesis.cancel();
+    tts.cancel();
     if (listenSafetyTimeoutRef.current) clearTimeout(listenSafetyTimeoutRef.current);
     audioEndTimeRef.current = performance.now();
     setPhase("ready");
