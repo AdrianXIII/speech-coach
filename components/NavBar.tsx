@@ -15,8 +15,8 @@ import { UserMenu } from "@/components/UserMenu";
 function LogoMark({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 512 512" className={className} fill="none" stroke="currentColor" strokeWidth="50" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M 150,110 C 180,160 170,200 195,225 C 210,240 225,242 225,256 C 225,270 200,272 190,285 C 175,305 185,340 160,402" />
-      <path d="M 255,256 Q 275,256 285,220 T 315,290 T 345,190 T 375,310 T 405,256 L 425,256" />
+      <path d="M 120,110 C 150,160 140,200 165,225 C 180,240 195,242 195,256 C 195,270 170,272 160,285 C 145,305 155,340 130,402" />
+      <path d="M 285,256 Q 305,256 315,220 T 345,290 T 375,190 T 405,310 T 435,256 L 455,256" />
     </svg>
   );
 }
