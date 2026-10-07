@@ -14,7 +14,7 @@ import { UserMenu } from "@/components/UserMenu";
 /** The app icon's sound-wave mark (public/icon.svg), inlined so it tints via currentColor instead of carrying its own fixed gradient. */
 function LogoMark({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 512 512" className={className} fill="none" stroke="currentColor" strokeWidth="34" strokeLinecap="round" strokeLinejoin="round">
+    <svg viewBox="0 0 512 512" className={className} fill="none" stroke="currentColor" strokeWidth="50" strokeLinecap="round" strokeLinejoin="round">
       <path d="M 150,110 C 180,160 170,200 195,225 C 210,240 225,242 225,256 C 225,270 200,272 190,285 C 175,305 185,340 160,402" />
       <path d="M 255,256 Q 275,256 285,220 T 315,290 T 345,190 T 375,310 T 405,256 L 425,256" />
     </svg>
@@ -31,7 +31,7 @@ export function NavBar() {
           href="/"
           className="flex items-center gap-2 font-display text-base font-semibold tracking-wide text-cream transition-opacity hover:opacity-80"
         >
-          <LogoMark className="h-5 w-5 flex-none text-brass" />
+          <LogoMark className="h-7 w-7 flex-none text-brass-soft" />
           MasterSpeak
         </Link>
         <div className="flex flex-wrap items-center gap-2">
