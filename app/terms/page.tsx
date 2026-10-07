@@ -10,11 +10,11 @@ const TITLE = {
 };
 
 const SUBTITLE = {
-  en: "Last updated: October 2, 2026",
-  de: "Last updated: October 2, 2026",
-  fr: "Last updated: October 2, 2026",
-  es: "Last updated: October 2, 2026",
-  sv: "Last updated: October 2, 2026",
+  en: "Last updated: October 7, 2026",
+  de: "Last updated: October 7, 2026",
+  fr: "Last updated: October 7, 2026",
+  es: "Last updated: October 7, 2026",
+  sv: "Last updated: October 7, 2026",
 };
 
 /**
@@ -58,9 +58,10 @@ export default function TermsPage() {
             <h2 className="mb-2 font-display text-base font-semibold">Your content</h2>
             <p>
               You keep ownership of the audio and text you submit. By submitting it, you grant MasterSpeak a license
-              to process it — including sending it to Google&rsquo;s Gemini API — solely to provide feedback and the
-              rest of the service back to you. We don&rsquo;t use your content to train AI models, and we don&rsquo;t
-              sell it or share it for advertising.
+              to process it — including sending it to Google&rsquo;s Gemini API, and, where you ask MasterSpeak to
+              read text aloud, Google&rsquo;s Cloud Text-to-Speech API — solely to provide feedback and the rest of
+              the service back to you. We don&rsquo;t use your content to train AI models, and we don&rsquo;t sell it
+              or share it for advertising.
             </p>
           </section>
 

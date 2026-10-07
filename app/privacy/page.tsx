@@ -12,11 +12,11 @@ const TITLE = {
 };
 
 const SUBTITLE = {
-  en: "Last updated: October 2, 2026",
-  de: "Last updated: October 2, 2026",
-  fr: "Last updated: October 2, 2026",
-  es: "Last updated: October 2, 2026",
-  sv: "Last updated: October 2, 2026",
+  en: "Last updated: October 7, 2026",
+  de: "Last updated: October 7, 2026",
+  fr: "Last updated: October 7, 2026",
+  es: "Last updated: October 7, 2026",
+  sv: "Last updated: October 7, 2026",
 };
 
 export default function PrivacyPage() {
@@ -54,9 +54,21 @@ export default function PrivacyPage() {
           </section>
 
           <section>
+            <h2 className="mb-2 font-display text-base font-semibold">Text-to-speech audio</h2>
+            <p>
+              When MasterSpeak reads text aloud to you — a prompt, a lesson, a word you type, or AI-generated
+              feedback — that text is sent to Google&rsquo;s Cloud Text-to-Speech API to generate the spoken audio.
+              Audio generated from fixed, non-personal lesson content is cached and reused across users; audio
+              generated from anything you personally typed or that was generated specifically for you is not
+              cached or reused.
+            </p>
+          </section>
+
+          <section>
             <h2 className="mb-2 font-display text-base font-semibold">Third parties we use</h2>
             <ul className="list-disc space-y-1 pl-5">
               <li><strong>Google Gemini</strong> — transcribes and analyzes your recordings and text.</li>
+              <li><strong>Google Cloud Text-to-Speech</strong> — converts text to spoken audio within the app.</li>
               <li><strong>Vercel and Supabase</strong> — host the app and its database.</li>
               <li><strong>Apple and RevenueCat</strong> — process subscription payments; MasterSpeak never sees your card details.</li>
               <li><strong>Resend</strong> — delivers the password-reset email when you request one.</li>
