@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getWordStress } from "@/lib/wordStress";
 import { getWordStressAI } from "@/lib/wordAI";
 import { getLanguage, toLanguageCode } from "@/lib/languages";
-import { requireApiUser } from "@/lib/requireUser";
+import { requireApiPremium } from "@/lib/requireUser";
 import { checkRateLimit, LIGHT_WINDOW_MS, LIGHT_MAX_PER_WINDOW } from "@/lib/rateLimit";
 
 const MAX_WORD_CHARS = 60;
@@ -15,7 +15,7 @@ const MAX_WORD_CHARS = 60;
  * the client falls back to the AI feedback flow in that case.
  */
 export async function GET(req: NextRequest) {
-  const gate = await requireApiUser();
+  const gate = await requireApiPremium();
   if (gate instanceof NextResponse) return gate;
 
   if (!(await checkRateLimit(`word-stress:${gate.id}`, { windowMs: LIGHT_WINDOW_MS, max: LIGHT_MAX_PER_WINDOW }))) {

@@ -20,11 +20,11 @@ const TITLE: Record<LanguageCode, string> = {
 };
 
 const SUBTITLE: Record<LanguageCode, string> = {
-  en: "The free plan includes one session per trainer, per day, and 3 AI Tutor categories per profession. Subscribe for unlimited daily use and the full AI Tutor case library.",
-  de: "Der kostenlose Plan umfasst eine Sitzung pro Trainer und Tag sowie 3 KI-Tutor-Kategorien pro Berufsfeld. Abonniere für unbegrenzte tägliche Nutzung und die vollständige KI-Tutor-Fallbibliothek.",
-  fr: "Le plan gratuit inclut une session par entraîneur et par jour, ainsi que 3 catégories du Tuteur IA par domaine. Abonnez-vous pour un usage quotidien illimité et l'accès complet aux cas du Tuteur IA.",
-  es: "El plan gratuito incluye una sesión por entrenador al día y 3 categorías del Tutor de IA por profesión. Suscríbete para un uso diario ilimitado y la biblioteca completa de casos del Tutor de IA.",
-  sv: "Den kostnadsfria planen ger en session per tränare och dag, samt 3 AI-handledare-kategorier per yrke. Prenumerera för obegränsad daglig användning och hela AI-handledarens fallbibliotek.",
+  en: "MasterSpeak Premium gives you full access to every trainer and the complete AI Tutor library. New subscribers start with a 2-week free trial.",
+  de: "MasterSpeak Premium gibt dir vollen Zugriff auf alle Trainer und die komplette KI-Tutor-Bibliothek. Neue Abonnenten starten mit einem 2-wöchigen kostenlosen Testzeitraum.",
+  fr: "MasterSpeak Premium vous donne un accès complet à tous les entraîneurs et à toute la bibliothèque du Tuteur IA. Les nouveaux abonnés commencent par un essai gratuit de 2 semaines.",
+  es: "MasterSpeak Premium te da acceso completo a todos los entrenadores y a toda la biblioteca del Tutor de IA. Los nuevos suscriptores empiezan con una prueba gratuita de 2 semanas.",
+  sv: "MasterSpeak Premium ger dig full tillgång till alla tränare och hela AI-handledarens bibliotek. Nya prenumeranter börjar med 2 veckors gratis provperiod.",
 };
 
 const T: Record<
@@ -45,6 +45,9 @@ const T: Record<
     terms: string;
     privacy: string;
     units: Record<string, [string, string]>;
+    activating: string;
+    activationPending: string;
+    nothingToRestore: string;
   }
 > = {
   en: {
@@ -63,6 +66,9 @@ const T: Record<
     terms: "Terms of Use (EULA)",
     privacy: "Privacy Policy",
     units: {DAY:["day","days"],WEEK:["week","weeks"],MONTH:["month","months"],YEAR:["year","years"]},
+    activating: "Activating your access…",
+    activationPending: "Purchase received. Your access is being activated — this can take up to a minute. Please reopen the app shortly.",
+    nothingToRestore: "No active subscription was found for this Apple ID.",
   },
   de: {
     subscribe: "Abonnieren",
@@ -80,6 +86,9 @@ const T: Record<
     terms: "Nutzungsbedingungen (EULA)",
     privacy: "Datenschutzerklärung",
     units: {DAY:["Tag","Tage"],WEEK:["Woche","Wochen"],MONTH:["Monat","Monate"],YEAR:["Jahr","Jahre"]},
+    activating: "Zugang wird aktiviert…",
+    activationPending: "Kauf erhalten. Dein Zugang wird aktiviert — das kann bis zu einer Minute dauern. Bitte öffne die App gleich erneut.",
+    nothingToRestore: "Für diese Apple-ID wurde kein aktives Abo gefunden.",
   },
   fr: {
     subscribe: "S'abonner",
@@ -97,6 +106,9 @@ const T: Record<
     terms: "Conditions d'utilisation (CLUF)",
     privacy: "Politique de confidentialité",
     units: {DAY:["jour","jours"],WEEK:["semaine","semaines"],MONTH:["mois","mois"],YEAR:["an","ans"]},
+    activating: "Activation de votre accès…",
+    activationPending: "Achat reçu. Votre accès est en cours d'activation — cela peut prendre jusqu'à une minute. Rouvrez l'application dans un instant.",
+    nothingToRestore: "Aucun abonnement actif n'a été trouvé pour cet identifiant Apple.",
   },
   es: {
     subscribe: "Suscribirse",
@@ -114,6 +126,9 @@ const T: Record<
     terms: "Términos de uso (EULA)",
     privacy: "Política de privacidad",
     units: {DAY:["día","días"],WEEK:["semana","semanas"],MONTH:["mes","meses"],YEAR:["año","años"]},
+    activating: "Activando tu acceso…",
+    activationPending: "Compra recibida. Tu acceso se está activando; puede tardar hasta un minuto. Vuelve a abrir la app en un momento.",
+    nothingToRestore: "No se encontró ninguna suscripción activa para este ID de Apple.",
   },
   sv: {
     subscribe: "Prenumerera",
@@ -131,6 +146,9 @@ const T: Record<
     terms: "Användarvillkor (EULA)",
     privacy: "Integritetspolicy",
     units: {DAY:["dag","dagar"],WEEK:["vecka","veckor"],MONTH:["månad","månader"],YEAR:["år","år"]},
+    activating: "Aktiverar din åtkomst…",
+    activationPending: "Köpet är mottaget. Din åtkomst aktiveras — det kan ta upp till en minut. Öppna appen igen om en stund.",
+    nothingToRestore: "Ingen aktiv prenumeration hittades för detta Apple-ID.",
   },
 };
 
@@ -138,6 +156,26 @@ const T: Record<
 function formatPeriod(units: Record<string, [string, string]>, n: number, unit: string): string {
   const [one, many] = units[unit.toUpperCase()] ?? units.DAY;
   return `${n} ${n === 1 ? one : many}`;
+}
+
+/**
+ * Hard paywall: access opens only once RevenueCat's webhook has written the
+ * subscription server-side (app/api/webhooks/revenuecat/route.ts), usually a
+ * few seconds after the App Store sheet closes. Polls until then, so the
+ * user isn't bounced straight back to this page by requirePremium().
+ */
+async function waitForPremium(timeoutMs = 30_000): Promise<boolean> {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    try {
+      const res = await fetch("/api/subscription/status", { cache: "no-store" });
+      if (res.ok && (await res.json()).premium) return true;
+    } catch {
+      // Network blip — keep polling until the deadline.
+    }
+    await new Promise((r) => setTimeout(r, 2000));
+  }
+  return false;
 }
 
 const MANAGE_SUBSCRIPTIONS_URL = "https://apps.apple.com/account/subscriptions";
@@ -152,6 +190,17 @@ export default function PricingPage() {
   const [packages, setPackages] = useState<PurchasesPackage[] | null>(null);
   const [error, setError] = useState(false);
   const [purchasingId, setPurchasingId] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+
+  async function unlock(): Promise<boolean> {
+    if (await waitForPremium()) {
+      router.replace("/");
+      router.refresh();
+      return true;
+    }
+    setNotice(t.activationPending);
+    return false;
+  }
 
   useEffect(() => {
     if (!isNative) return;
@@ -164,7 +213,8 @@ export default function PricingPage() {
     setPurchasingId(pkg.identifier);
     try {
       await Purchases.purchasePackage({ aPackage: pkg });
-      router.push("/");
+      setNotice(t.activating);
+      await unlock();
     } catch (err) {
       // RevenueCat rejects with { userCancelled: true } on a plain cancel — not a real failure.
       if (!(err && typeof err === "object" && "userCancelled" in err && (err as { userCancelled?: boolean }).userCancelled)) {
@@ -177,8 +227,13 @@ export default function PricingPage() {
 
   async function handleRestore() {
     try {
-      await Purchases.restorePurchases();
-      router.push("/");
+      const { customerInfo } = await Purchases.restorePurchases();
+      if (Object.keys(customerInfo.entitlements.active).length === 0) {
+        setNotice(t.nothingToRestore);
+        return;
+      }
+      setNotice(t.activating);
+      await unlock();
     } catch {
       setError(true);
     }
@@ -225,6 +280,7 @@ export default function PricingPage() {
                   </span>
                 </button>
               ))}
+              {notice && <p className="text-center text-sm font-semibold text-ink">{notice}</p>}
               <p className="text-center text-xs leading-relaxed text-ink-muted">
                 {t.renewalNotice}
                 {packages.some((p) => p.product.introPrice?.price === 0) && <> {t.trialNotice}</>}

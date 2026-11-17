@@ -1,7 +1,7 @@
 import { ComprehensionTrainer } from "@/components/ComprehensionTrainer";
 import { PageHeader } from "@/components/PageHeader";
 import { DailyLimitReached } from "@/components/DailyLimitReached";
-import { requireSignedIn } from "@/lib/requireUser";
+import { requirePremium } from "@/lib/requireUser";
 import { isPremium } from "@/lib/subscription";
 import { canUseToday, markUsedToday } from "@/lib/usageLimitServer";
 import { logActivity } from "@/lib/trainerActivity";
@@ -31,7 +31,7 @@ const SUBTITLE = {
 const FEATURE = "comprehension";
 
 export default async function ComprehensionPage() {
-  const user = await requireSignedIn();
+  const user = await requirePremium();
   const premium = await isPremium(user.id);
   const available = premium || (await canUseToday(user.id, FEATURE));
   if (available && !premium) await markUsedToday(user.id, FEATURE);

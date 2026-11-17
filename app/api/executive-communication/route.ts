@@ -3,7 +3,7 @@ import { evaluateExecutiveComm } from "@/lib/executiveCommEngine";
 import { saveAttempt, listAttempts } from "@/lib/executiveCommHistory";
 import { geminiErrorResponse } from "@/lib/gemini";
 import { hasDatabase } from "@/lib/db";
-import { requireUser, requireApiUser } from "@/lib/requireUser";
+import { requireUser, requireApiPremium } from "@/lib/requireUser";
 import { checkRateLimit } from "@/lib/rateLimit";
 import { isPremium } from "@/lib/subscription";
 import { canUseToday, markUsedToday } from "@/lib/usageLimitServer";
@@ -39,7 +39,7 @@ export async function GET() {
  * real situation, length-capped).
  */
 export async function POST(req: NextRequest) {
-  const gate = await requireApiUser();
+  const gate = await requireApiPremium();
   if (gate instanceof NextResponse) return gate;
   const user = gate;
 

@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { PronunciationTrainer } from "@/components/PronunciationTrainer";
 import { PageHeader } from "@/components/PageHeader";
 import { DailyLimitReached } from "@/components/DailyLimitReached";
-import { requireSignedIn } from "@/lib/requireUser";
+import { requirePremium } from "@/lib/requireUser";
 import { isPremium } from "@/lib/subscription";
 import { canUseToday } from "@/lib/usageLimitServer";
 
@@ -28,7 +28,7 @@ const SUBTITLE = {
 // feedback together — "one session per trainer, per day" per the pricing
 // page) or the paywall card.
 export default async function PronunciationPage() {
-  const user = await requireSignedIn();
+  const user = await requirePremium();
   const premium = await isPremium(user.id);
   const available = premium || (await canUseToday(user.id, "pronunciation"));
 

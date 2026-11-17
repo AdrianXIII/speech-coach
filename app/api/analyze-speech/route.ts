@@ -3,7 +3,7 @@ import { analyzeSpeech } from "@/lib/analyzeSpeech";
 import { calculateOverallScore } from "@/lib/scoreSpeech";
 import { geminiErrorResponse } from "@/lib/gemini";
 import { toLanguageCode } from "@/lib/languages";
-import { requireApiUser } from "@/lib/requireUser";
+import { requireApiPremium } from "@/lib/requireUser";
 import { checkRateLimit } from "@/lib/rateLimit";
 import { isPremium } from "@/lib/subscription";
 import { canUseToday, markUsedToday } from "@/lib/usageLimitServer";
@@ -29,7 +29,7 @@ export const maxDuration = 60;
  *   2. Analyze the transcript locally for pace (wpm) and filler-word usage.
  */
 export async function POST(req: NextRequest) {
-  const gate = await requireApiUser();
+  const gate = await requireApiPremium();
   if (gate instanceof NextResponse) return gate;
 
   if (!(await checkRateLimit(String(gate.id)))) {

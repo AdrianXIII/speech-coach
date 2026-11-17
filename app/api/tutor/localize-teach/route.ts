@@ -4,7 +4,7 @@ import { translateTeachingContent } from "@/lib/tutorTranslate";
 import type { CaseProfession } from "@/lib/caseStudyContent";
 import type { CountryCode } from "@/lib/countryContext";
 import { getLanguage, type LanguageCode } from "@/lib/languages";
-import { requireApiUser } from "@/lib/requireUser";
+import { requireApiPremium } from "@/lib/requireUser";
 import { checkRateLimit } from "@/lib/rateLimit";
 import { isPremium } from "@/lib/subscription";
 import { isFreeAiTutorCategory } from "@/lib/usageLimit";
@@ -22,7 +22,7 @@ export const maxDuration = 120;
  * translation needed.
  */
 export async function POST(req: NextRequest) {
-  const gate = await requireApiUser();
+  const gate = await requireApiPremium();
   if (gate instanceof NextResponse) return gate;
 
   if (!(await checkRateLimit(`tutor-localize-teach:${gate.id}`))) {

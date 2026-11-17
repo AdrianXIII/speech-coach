@@ -3,7 +3,7 @@ import { fetchTutorNews } from "@/lib/tutorNews";
 import type { CaseProfession } from "@/lib/caseStudyContent";
 import { getLanguage, type LanguageCode } from "@/lib/languages";
 import { COUNTRY_LABELS, type CountryCode } from "@/lib/countryContext";
-import { requireApiUser } from "@/lib/requireUser";
+import { requireApiPremium } from "@/lib/requireUser";
 import { checkRateLimit } from "@/lib/rateLimit";
 
 /**
@@ -17,7 +17,7 @@ import { checkRateLimit } from "@/lib/rateLimit";
  * field in the request body, if the client still sends one, is ignored.
  */
 export async function POST(req: NextRequest) {
-  const gate = await requireApiUser();
+  const gate = await requireApiPremium();
   if (gate instanceof NextResponse) return gate;
 
   if (!(await checkRateLimit(`tutor-news:${gate.id}`))) {

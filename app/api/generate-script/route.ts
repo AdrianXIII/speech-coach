@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { generateScript } from "@/lib/generateScript";
 import { geminiErrorResponse } from "@/lib/gemini";
 import { getLanguage, toLanguageCode } from "@/lib/languages";
-import { requireApiUser } from "@/lib/requireUser";
+import { requireApiPremium } from "@/lib/requireUser";
 import { checkRateLimit } from "@/lib/rateLimit";
 
 const MAX_INPUT_CHARS = 4000;
@@ -14,7 +14,7 @@ const MAX_INPUT_CHARS = 4000;
  * GEMINI_API_KEY isn't set).
  */
 export async function POST(req: NextRequest) {
-  const gate = await requireApiUser();
+  const gate = await requireApiPremium();
   if (gate instanceof NextResponse) return gate;
 
   if (!(await checkRateLimit(String(gate.id)))) {

@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { getDb, hasDatabase } from "@/lib/db";
+import { isPremium } from "@/lib/subscription";
 
 export interface CurrentUser {
   id: number;
@@ -78,6 +79,33 @@ export async function requireSignedIn(): Promise<CurrentUser> {
 export async function requireApiUser(): Promise<CurrentUser | NextResponse> {
   const user = await requireUser();
   if (!user) return NextResponse.json({ error: "Sign in required." }, { status: 401 });
+  return user;
+}
+
+/**
+ * Hard paywall: every trainer page calls this instead of requireSignedIn().
+ * There is no free tier — access requires an active subscription, which
+ * includes Apple's 2-week free trial (RevenueCat reports the trial as an
+ * active INITIAL_PURCHASE, see app/api/webhooks/revenuecat/route.ts). When
+ * the trial or subscription lapses, every trainer redirects to /pricing.
+ * Admin accounts bypass it so the owner can always reach the app.
+ * /account, /pricing, /terms and /privacy stay reachable without it —
+ * Apple requires account deletion and the subscription terms to be
+ * available to non-subscribers.
+ */
+export async function requirePremium(): Promise<CurrentUser> {
+  const user = await requireSignedIn();
+  if (!user.isAdmin && !(await isPremium(user.id))) redirect("/pricing");
+  return user;
+}
+
+/** Route Handler equivalent of requirePremium() — 402 instead of a redirect. */
+export async function requireApiPremium(): Promise<CurrentUser | NextResponse> {
+  const user = await requireUser();
+  if (!user) return NextResponse.json({ error: "Sign in required." }, { status: 401 });
+  if (!user.isAdmin && !(await isPremium(user.id))) {
+    return NextResponse.json({ error: "Subscription required.", upgradeUrl: "/pricing" }, { status: 402 });
+  }
   return user;
 }
 

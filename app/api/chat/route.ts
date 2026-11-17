@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { continueChat, type ChatTurn } from "@/lib/chat";
 import { geminiErrorResponse } from "@/lib/gemini";
 import { getLanguage, toLanguageCode } from "@/lib/languages";
-import { requireApiUser } from "@/lib/requireUser";
+import { requireApiPremium } from "@/lib/requireUser";
 import { checkRateLimit } from "@/lib/rateLimit";
 
 const MAX_TURNS = 40;
@@ -18,7 +18,7 @@ const MAX_TURN_CHARS = 4000;
  * set).
  */
 export async function POST(req: NextRequest) {
-  const gate = await requireApiUser();
+  const gate = await requireApiPremium();
   if (gate instanceof NextResponse) return gate;
 
   if (!(await checkRateLimit(String(gate.id)))) {

@@ -12,8 +12,8 @@ const T = {
   title: "Speak with confidence, in five languages.",
   subtitle:
     "MasterSpeak is an AI coach for public speaking, pronunciation, and professional communication — practice with your voice, get feedback in seconds.",
-  cta: "Get started for free",
-  trialNote: "Free forever — one session per trainer daily. Try Premium free for 2 weeks for unlimited access.",
+  cta: "Start your free trial",
+  trialNote: "Try MasterSpeak Premium free for 2 weeks — then a yearly subscription. Cancel anytime.",
   features: [
     { icon: "🎙️", title: "Record & Analyze", body: "Get instant feedback on pace, filler words, and delivery." },
     { icon: "🗣️", title: "Pronunciation", body: "Practice tricky words with AI feedback and spaced repetition." },
@@ -25,9 +25,8 @@ const T = {
 /**
  * Shown by app/page.tsx to anyone who isn't signed in yet — a real pitch
  * before asking for an account, instead of the trainer picker
- * (components/TrainerPicker.tsx). Once signed in, every account (free or
- * paid) goes straight to the picker instead, since a free account already
- * has real access (lib/usageLimit.ts's once-a-day free tier).
+ * (components/TrainerPicker.tsx). Once signed in, a subscriber (or trial
+ * user) goes to the picker; anyone else is sent to /pricing (hard paywall).
  */
 export function MarketingLanding({ ctaHref }: { ctaHref: string }) {
   const t = T;

@@ -10,11 +10,11 @@ const TITLE = {
 };
 
 const SUBTITLE = {
-  en: "Last updated: October 7, 2026",
-  de: "Last updated: October 7, 2026",
-  fr: "Last updated: October 7, 2026",
-  es: "Last updated: October 7, 2026",
-  sv: "Last updated: October 7, 2026",
+  en: "Last updated: November 17, 2026",
+  de: "Last updated: November 17, 2026",
+  fr: "Last updated: November 17, 2026",
+  es: "Last updated: November 17, 2026",
+  sv: "Last updated: November 17, 2026",
 };
 
 /**
@@ -66,13 +66,15 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="mb-2 font-display text-base font-semibold">Free use and subscription</h2>
+            <h2 className="mb-2 font-display text-base font-semibold">Subscription and free trial</h2>
             <p>
-              Every account can use each trainer once per day for free, permanently, and AI Tutor includes 3 starter
-              categories per profession at no cost. Unlimited daily use and the full AI Tutor case library require an
-              active annual subscription, purchased and managed entirely through Apple&rsquo;s App Store — refunds,
-              billing disputes, and cancellation all go through Apple, not MasterSpeak directly, per Apple&rsquo;s own
-              policies.
+              Using MasterSpeak requires an active MasterSpeak Premium subscription — an auto-renewable subscription with
+              a duration of 1 year. New subscribers get a 2-week free trial; when it ends, the yearly price is charged to
+              the Apple ID unless the subscription is cancelled at least 24 hours before the trial ends. The subscription
+              then renews automatically each year unless cancelled at least 24 hours before the end of the current
+              period. When the trial or subscription ends, access to the trainers ends too. Subscriptions are purchased
+              and managed entirely through Apple&rsquo;s App Store — refunds, billing disputes, and cancellation all go
+              through Apple, not MasterSpeak directly, per Apple&rsquo;s own policies.
             </p>
           </section>
 

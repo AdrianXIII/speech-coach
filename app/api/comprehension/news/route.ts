@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fetchNewsPassage, fetchNewsPassageBySlot, listPoolEntries, NEWS_TOPICS, type NewsTopic } from "@/lib/comprehensionNews";
 import { getLanguage, type LanguageCode } from "@/lib/languages";
-import { requireApiUser } from "@/lib/requireUser";
+import { requireApiPremium } from "@/lib/requireUser";
 import { checkRateLimit, LIGHT_WINDOW_MS, LIGHT_MAX_PER_WINDOW } from "@/lib/rateLimit";
 
 /**
@@ -21,7 +21,7 @@ import { checkRateLimit, LIGHT_WINDOW_MS, LIGHT_MAX_PER_WINDOW } from "@/lib/rat
  * available or fails.
  */
 export async function GET(req: NextRequest) {
-  const gate = await requireApiUser();
+  const gate = await requireApiPremium();
   if (gate instanceof NextResponse) return gate;
 
   // Light tier: most calls here are cheap reads (listing cached headlines, a

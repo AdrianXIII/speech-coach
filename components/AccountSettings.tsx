@@ -33,7 +33,7 @@ const T: Record<
   en: {
     emailLabel: "Signed in as",
     planLabel: "Plan",
-    freePlan: "Free",
+    freePlan: "No active subscription",
     premiumPlan: "Premium",
     manageSubscription: "Manage subscription",
     seeSubscriptionOptions: "See subscription options",
@@ -49,7 +49,7 @@ const T: Record<
   de: {
     emailLabel: "Angemeldet als",
     planLabel: "Plan",
-    freePlan: "Kostenlos",
+    freePlan: "Kein aktives Abo",
     premiumPlan: "Premium",
     manageSubscription: "Abo verwalten",
     seeSubscriptionOptions: "Abo-Optionen ansehen",
@@ -65,7 +65,7 @@ const T: Record<
   fr: {
     emailLabel: "Connecté en tant que",
     planLabel: "Forfait",
-    freePlan: "Gratuit",
+    freePlan: "Aucun abonnement actif",
     premiumPlan: "Premium",
     manageSubscription: "Gérer l'abonnement",
     seeSubscriptionOptions: "Voir les abonnements",
@@ -81,7 +81,7 @@ const T: Record<
   es: {
     emailLabel: "Sesión iniciada como",
     planLabel: "Plan",
-    freePlan: "Gratis",
+    freePlan: "Sin suscripción activa",
     premiumPlan: "Premium",
     manageSubscription: "Gestionar suscripción",
     seeSubscriptionOptions: "Ver opciones de suscripción",
@@ -97,7 +97,7 @@ const T: Record<
   sv: {
     emailLabel: "Inloggad som",
     planLabel: "Plan",
-    freePlan: "Gratis",
+    freePlan: "Ingen aktiv prenumeration",
     premiumPlan: "Premium",
     manageSubscription: "Hantera prenumeration",
     seeSubscriptionOptions: "Se prenumerationsalternativ",

@@ -1,7 +1,7 @@
 import { ExecutiveCommunicationTrainer } from "@/components/ExecutiveCommunicationTrainer";
 import { PageHeader } from "@/components/PageHeader";
 import { DailyLimitReached } from "@/components/DailyLimitReached";
-import { requireSignedIn } from "@/lib/requireUser";
+import { requirePremium } from "@/lib/requireUser";
 import { isPremium } from "@/lib/subscription";
 import { canUseToday } from "@/lib/usageLimitServer";
 
@@ -24,7 +24,7 @@ const SUBTITLE = {
 // Read-only check — /api/executive-communication's POST still gates and
 // marks the once-a-day use itself, right before the actual Gemini call.
 export default async function ExecutiveCommunicationPage() {
-  const user = await requireSignedIn();
+  const user = await requirePremium();
   const premium = await isPremium(user.id);
   const available = premium || (await canUseToday(user.id, "execcomm"));
 

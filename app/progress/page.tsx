@@ -1,6 +1,6 @@
 import { PageHeader } from "@/components/PageHeader";
 import { ProgressScreen } from "@/components/ProgressScreen";
-import { requireSignedIn } from "@/lib/requireUser";
+import { requirePremium } from "@/lib/requireUser";
 import { getProgressSummary } from "@/lib/trainerActivity";
 import { canUseToday } from "@/lib/usageLimitServer";
 import { NAV_LINKS, type NavLink } from "@/lib/navTranslations";
@@ -36,7 +36,7 @@ const DAILY_FEATURE_BY_HREF: Record<string, string> = {
 };
 
 export default async function ProgressPage() {
-  const user = await requireSignedIn();
+  const user = await requirePremium();
   const summary = await getProgressSummary(user.id);
 
   const eligible = NAV_LINKS.filter((link) => DAILY_FEATURE_BY_HREF[link.href]);

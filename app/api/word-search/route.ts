@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { suggestWords } from "@/lib/wordSearch";
 import { suggestWordsAI } from "@/lib/wordAI";
 import { getLanguage, toLanguageCode } from "@/lib/languages";
-import { requireApiUser } from "@/lib/requireUser";
+import { requireApiPremium } from "@/lib/requireUser";
 import { checkRateLimit, LIGHT_WINDOW_MS, LIGHT_MAX_PER_WINDOW } from "@/lib/rateLimit";
 
 const MAX_QUERY_CHARS = 60;
@@ -14,7 +14,7 @@ const MAX_QUERY_CHARS = 60;
  * de/fr/es/sv ask Gemini (cached per input — see lib/wordAI.ts).
  */
 export async function GET(req: NextRequest) {
-  const gate = await requireApiUser();
+  const gate = await requireApiPremium();
   if (gate instanceof NextResponse) return gate;
 
   // Light tier, own key prefix: this fires on near-every keystroke (a

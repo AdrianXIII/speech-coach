@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getCaseById } from "@/lib/caseStudyContent";
 import { translateCaseText } from "@/lib/tutorTranslate";
 import { getLanguage, type LanguageCode } from "@/lib/languages";
-import { requireApiUser } from "@/lib/requireUser";
+import { requireApiPremium } from "@/lib/requireUser";
 import { checkRateLimit } from "@/lib/rateLimit";
 
 /**
@@ -15,7 +15,7 @@ import { checkRateLimit } from "@/lib/rateLimit";
  * translated transcript against an English rubric just fine.
  */
 export async function POST(req: NextRequest) {
-  const gate = await requireApiUser();
+  const gate = await requireApiPremium();
   if (gate instanceof NextResponse) return gate;
 
   // Own key prefix so this shares no budget with the other Gemini-calling

@@ -1,6 +1,6 @@
 import { AITutor } from "@/components/AITutor";
 import { PageHeader } from "@/components/PageHeader";
-import { requireSignedIn } from "@/lib/requireUser";
+import { requirePremium } from "@/lib/requireUser";
 import { isPremium } from "@/lib/subscription";
 
 const TITLE = {
@@ -20,7 +20,7 @@ const SUBTITLE = {
 };
 
 export default async function AITutorPage() {
-  const user = await requireSignedIn();
+  const user = await requirePremium();
   const premium = await isPremium(user.id);
 
   return (

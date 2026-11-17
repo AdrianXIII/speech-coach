@@ -1,7 +1,7 @@
 import { SpeechRecorder } from "@/components/SpeechRecorder";
 import { PageHeader } from "@/components/PageHeader";
 import { DailyLimitReached } from "@/components/DailyLimitReached";
-import { requireSignedIn } from "@/lib/requireUser";
+import { requirePremium } from "@/lib/requireUser";
 import { isPremium } from "@/lib/subscription";
 import { canUseToday } from "@/lib/usageLimitServer";
 
@@ -29,7 +29,7 @@ const SUBTITLE = {
 // decides whether to show the trainer or the paywall card; the API route
 // remains the single place a use actually gets spent.
 export default async function RecordPage() {
-  const user = await requireSignedIn();
+  const user = await requirePremium();
   const premium = await isPremium(user.id);
   const available = premium || (await canUseToday(user.id, "record"));
 

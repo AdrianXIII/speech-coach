@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCachedOrSynthesize } from "@/lib/tts";
 import { getLanguage, toLanguageCode } from "@/lib/languages";
-import { requireApiUser } from "@/lib/requireUser";
+import { requireApiPremium } from "@/lib/requireUser";
 import { checkRateLimit, LIGHT_WINDOW_MS, LIGHT_MAX_PER_WINDOW } from "@/lib/rateLimit";
 
 const MAX_TEXT_CHARS = 2000;
@@ -24,7 +24,7 @@ const MAX_TEXT_CHARS = 2000;
  * multi-second Gemini call.
  */
 export async function POST(req: NextRequest) {
-  const gate = await requireApiUser();
+  const gate = await requireApiPremium();
   if (gate instanceof NextResponse) return gate;
 
   if (!(await checkRateLimit(`tts:${gate.id}`, { windowMs: LIGHT_WINDOW_MS, max: LIGHT_MAX_PER_WINDOW }))) {
