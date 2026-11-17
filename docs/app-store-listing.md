@@ -34,7 +34,7 @@ Upgrade a plain sentence into the refined word combinations polished speakers re
 
 Plus Comprehension & Summary (listen to real news, summarize it back), Contrastive Stress, and Improv — all in five languages, all designed around a few focused minutes at a time.
 
-MasterSpeak Premium unlocks every trainer and the complete AI Tutor library. Start with a 2-week free trial, then 499 kr/year (or local equivalent) — managed entirely through your Apple ID.
+MasterSpeak Premium unlocks every trainer and the complete AI Tutor library. Start with a 2-week free trial, then $49.99/year (or local equivalent) — managed entirely through your Apple ID.
 
 SUBSCRIPTION
 MasterSpeak Premium is an auto-renewable subscription with a duration of 1 year. New subscribers get a 2-week free trial; after that the yearly price is charged to your Apple ID unless you cancel at least 24 hours before the trial or current period ends. Manage or cancel anytime in your App Store account settings.
