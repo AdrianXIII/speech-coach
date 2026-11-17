@@ -34,7 +34,17 @@ Upgrade a plain sentence into the refined word combinations polished speakers re
 
 Plus Comprehension & Summary (listen to real news, summarize it back), Contrastive Stress, and Improv — all in five languages, all designed around a few focused minutes at a time.
 
-MasterSpeak is free to use: every trainer gives you one full session a day, and AI Tutor includes 3 starter categories in each profession. Subscribe for $64.99/year for unlimited daily use and the complete AI Tutor case library — managed entirely through your Apple ID.
+MasterSpeak is free to use: every trainer gives you one full session a day, and AI Tutor includes 3 starter categories in each profession. Subscribe to MasterSpeak Premium (2 weeks free, then 499 kr/year) for unlimited daily use and the complete AI Tutor case library — managed entirely through your Apple ID.
+
+SUBSCRIPTION
+MasterSpeak Premium is an auto-renewable subscription with a duration of 1 year. New subscribers get a 2-week free trial; after that the yearly price is charged to your Apple ID unless you cancel at least 24 hours before the trial or current period ends. Manage or cancel anytime in your App Store account settings.
+
+Terms of Use (EULA): https://speech-coach-beta.vercel.app/terms
+Apple Standard EULA: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Privacy Policy: https://speech-coach-beta.vercel.app/privacy
+
+> App Review 2026-11-14 (Guideline 3.1.2(c)): the SUBSCRIPTION block above, with the
+> Terms of Use link, must be in the Description of EVERY localization (en, de, fr, es, sv).
 
 ## Keywords (100 characters max, comma-separated, no spaces)
 public speaking,pronunciation,AI coach,language learning,communication,accent,speech,presentation

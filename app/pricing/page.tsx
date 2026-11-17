@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Capacitor } from "@capacitor/core";
@@ -37,6 +38,13 @@ const T: Record<
     loadFailed: string;
     purchaseFailed: string;
     renewalNotice: string;
+    trialNotice: string;
+    perYear: string;
+    duration: string;
+    free: (period: string) => string;
+    terms: string;
+    privacy: string;
+    units: Record<string, [string, string]>;
   }
 > = {
   en: {
@@ -48,6 +56,13 @@ const T: Record<
     loadFailed: "Couldn't load subscription options. Please try again shortly.",
     purchaseFailed: "Purchase didn't go through. Please try again.",
     renewalNotice: "Billed annually. Your subscription automatically renews each year unless cancelled at least 24 hours before the end of the current period. Manage or cancel anytime in your Apple ID subscription settings.",
+    trialNotice: "Start a free trial and payment is charged to your Apple ID when it ends — unless you cancel at least 24 hours before the trial ends.",
+    perYear: "/ year",
+    duration: "1-year subscription, auto-renewing",
+    free: (p) => `${p} free, then`,
+    terms: "Terms of Use (EULA)",
+    privacy: "Privacy Policy",
+    units: {DAY:["day","days"],WEEK:["week","weeks"],MONTH:["month","months"],YEAR:["year","years"]},
   },
   de: {
     subscribe: "Abonnieren",
@@ -58,6 +73,13 @@ const T: Record<
     loadFailed: "Abo-Optionen konnten nicht geladen werden. Bitte versuche es gleich noch einmal.",
     purchaseFailed: "Der Kauf ist fehlgeschlagen. Bitte versuche es erneut.",
     renewalNotice: "Jährliche Abrechnung. Dein Abo verlängert sich automatisch jedes Jahr, sofern du nicht mindestens 24 Stunden vor Ablauf des aktuellen Zeitraums kündigst. Verwalte oder kündige jederzeit in deinen Apple-ID-Aboeinstellungen.",
+    trialNotice: "Beim Start eines kostenlosen Testzeitraums wird die Zahlung an dessen Ende über deine Apple-ID abgerechnet — es sei denn, du kündigst mindestens 24 Stunden vor Ende des Testzeitraums.",
+    perYear: "/ Jahr",
+    duration: "Abo mit 1 Jahr Laufzeit, automatische Verlängerung",
+    free: (p) => `${p} kostenlos, danach`,
+    terms: "Nutzungsbedingungen (EULA)",
+    privacy: "Datenschutzerklärung",
+    units: {DAY:["Tag","Tage"],WEEK:["Woche","Wochen"],MONTH:["Monat","Monate"],YEAR:["Jahr","Jahre"]},
   },
   fr: {
     subscribe: "S'abonner",
@@ -68,6 +90,13 @@ const T: Record<
     loadFailed: "Impossible de charger les options d'abonnement. Réessayez bientôt.",
     purchaseFailed: "L'achat n'a pas abouti. Veuillez réessayer.",
     renewalNotice: "Facturation annuelle. Votre abonnement se renouvelle automatiquement chaque année, sauf annulation au moins 24 heures avant la fin de la période en cours. Gérez ou annulez à tout moment dans les réglages d'abonnement de votre identifiant Apple.",
+    trialNotice: "Si vous commencez un essai gratuit, le paiement est prélevé sur votre identifiant Apple à la fin de l'essai — sauf annulation au moins 24 heures avant la fin de l'essai.",
+    perYear: "/ an",
+    duration: "Abonnement d'un an, renouvellement automatique",
+    free: (p) => `${p} d'essai gratuit, puis`,
+    terms: "Conditions d'utilisation (CLUF)",
+    privacy: "Politique de confidentialité",
+    units: {DAY:["jour","jours"],WEEK:["semaine","semaines"],MONTH:["mois","mois"],YEAR:["an","ans"]},
   },
   es: {
     subscribe: "Suscribirse",
@@ -78,6 +107,13 @@ const T: Record<
     loadFailed: "No se pudieron cargar las opciones de suscripción. Inténtalo de nuevo en breve.",
     purchaseFailed: "La compra no se completó. Inténtalo de nuevo.",
     renewalNotice: "Facturación anual. Tu suscripción se renueva automáticamente cada año salvo que la canceles al menos 24 horas antes de que finalice el periodo actual. Gestiona o cancela cuando quieras en los ajustes de suscripción de tu ID de Apple.",
+    trialNotice: "Si empiezas una prueba gratuita, el pago se carga a tu ID de Apple cuando termine, salvo que la canceles al menos 24 horas antes de que finalice.",
+    perYear: "/ año",
+    duration: "Suscripción de 1 año, renovación automática",
+    free: (p) => `${p} gratis, después`,
+    terms: "Términos de uso (EULA)",
+    privacy: "Política de privacidad",
+    units: {DAY:["día","días"],WEEK:["semana","semanas"],MONTH:["mes","meses"],YEAR:["año","años"]},
   },
   sv: {
     subscribe: "Prenumerera",
@@ -88,8 +124,21 @@ const T: Record<
     loadFailed: "Kunde inte hämta prenumerationsalternativ. Försök igen om en stund.",
     purchaseFailed: "Köpet gick inte igenom. Försök igen.",
     renewalNotice: "Årlig fakturering. Din prenumeration förnyas automatiskt varje år om du inte säger upp den minst 24 timmar innan innevarande period löper ut. Hantera eller säg upp när som helst i dina Apple-ID-prenumerationsinställningar.",
+    trialNotice: "Om du startar en gratis provperiod dras betalningen från ditt Apple-ID när den tar slut — om du inte säger upp den minst 24 timmar innan provperioden löper ut.",
+    perYear: "/ år",
+    duration: "Prenumeration på 1 år, förnyas automatiskt",
+    free: (p) => `${p} gratis, sedan`,
+    terms: "Användarvillkor (EULA)",
+    privacy: "Integritetspolicy",
+    units: {DAY:["dag","dagar"],WEEK:["vecka","veckor"],MONTH:["månad","månader"],YEAR:["år","år"]},
   },
 };
+
+/** e.g. "2 weeks" from the App Store intro offer (1 WEEK × 2). */
+function formatPeriod(units: Record<string, [string, string]>, n: number, unit: string): string {
+  const [one, many] = units[unit.toUpperCase()] ?? units.DAY;
+  return `${n} ${n === 1 ? one : many}`;
+}
 
 const MANAGE_SUBSCRIPTIONS_URL = "https://apps.apple.com/account/subscriptions";
 
@@ -156,13 +205,30 @@ export default function PricingPage() {
                   disabled={purchasingId !== null || status !== "authenticated"}
                   className="flex items-center justify-between rounded-lg border border-hairline bg-surface-2 px-4 py-3 text-left transition-colors hover:border-brass disabled:opacity-60"
                 >
-                  <span className="text-sm font-semibold text-ink">{pkg.product.title || pkg.identifier}</span>
-                  <span className="text-sm font-semibold text-brass-text">
-                    {purchasingId === pkg.identifier ? t.purchasing : pkg.product.priceString}
+                  <span className="flex flex-col">
+                    <span className="text-sm font-semibold text-ink">{pkg.product.title || pkg.identifier}</span>
+                    <span className="text-xs text-ink-muted">{t.duration}</span>
+                  </span>
+                  <span className="text-right text-sm font-semibold text-brass-text">
+                    {purchasingId === pkg.identifier ? (
+                      t.purchasing
+                    ) : (
+                      <>
+                        {pkg.product.introPrice?.price === 0 && (
+                          <span className="block text-xs font-medium text-good">
+                            {t.free(formatPeriod(t.units, pkg.product.introPrice.periodNumberOfUnits, pkg.product.introPrice.periodUnit))}
+                          </span>
+                        )}
+                        {pkg.product.priceString} {t.perYear}
+                      </>
+                    )}
                   </span>
                 </button>
               ))}
-              <p className="text-center text-xs leading-relaxed text-ink-muted">{t.renewalNotice}</p>
+              <p className="text-center text-xs leading-relaxed text-ink-muted">
+                {t.renewalNotice}
+                {packages.some((p) => p.product.introPrice?.price === 0) && <> {t.trialNotice}</>}
+              </p>
               <button onClick={handleRestore} className="text-center text-xs font-semibold text-ink-muted hover:underline">
                 {t.restore}
               </button>
@@ -174,6 +240,14 @@ export default function PricingPage() {
               >
                 {t.manage}
               </a>
+              <div className="flex justify-center gap-4 text-xs font-semibold text-ink-muted">
+                <Link href="/terms" className="underline">
+                  {t.terms}
+                </Link>
+                <Link href="/privacy" className="underline">
+                  {t.privacy}
+                </Link>
+              </div>
             </>
           )}
         </div>

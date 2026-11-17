@@ -27,13 +27,29 @@ function secretsMatch(a: string, b: string): boolean {
  */
 
 const ACTIVE_EVENT_TYPES = new Set(["INITIAL_PURCHASE", "RENEWAL", "PRODUCT_CHANGE", "UNCANCELLATION"]);
-const INACTIVE_EVENT_TYPES = new Set(["CANCELLATION", "EXPIRATION", "BILLING_ISSUE"]);
+const INACTIVE_EVENT_TYPES = new Set(["EXPIRATION", "BILLING_ISSUE"]);
+
+/**
+ * CANCELLATION only means auto-renew was turned off — the user keeps access
+ * until expiration_at_ms (Apple requires this, and it's the common case for
+ * someone cancelling during the free trial). isPremium() already compares
+ * current_period_end against now, so the row stays "active" and simply runs
+ * out; the later EXPIRATION event marks it expired. A refund
+ * (cancel_reason CUSTOMER_SUPPORT) is the exception: access ends now.
+ */
+function statusFor(event: RevenueCatEvent): "active" | "expired" | null {
+  if (event.type === "CANCELLATION") {
+    return event.cancel_reason === "CUSTOMER_SUPPORT" ? "expired" : "active";
+  }
+  return ACTIVE_EVENT_TYPES.has(event.type) ? "active" : INACTIVE_EVENT_TYPES.has(event.type) ? "expired" : null;
+}
 
 interface RevenueCatEvent {
   type: string;
   app_user_id: string;
   product_id?: string;
   expiration_at_ms?: number;
+  cancel_reason?: string;
 }
 
 export async function POST(req: NextRequest) {
@@ -58,7 +74,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Missing or invalid event.app_user_id." }, { status: 400 });
   }
 
-  const status = ACTIVE_EVENT_TYPES.has(event.type) ? "active" : INACTIVE_EVENT_TYPES.has(event.type) ? "expired" : null;
+  const status = statusFor(event);
   if (!status) {
     // Other event types (TRANSFER, TEST, etc.) don't change entitlement — ack and ignore.
     return NextResponse.json({ ok: true, ignored: event.type });
