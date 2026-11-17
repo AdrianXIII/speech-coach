@@ -1,84 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { useLanguage } from "@/components/LanguageProvider";
-import type { LanguageCode } from "@/lib/languages";
 
-const T: Record<
-  LanguageCode,
-  {
-    title: string;
-    subtitle: string;
-    cta: string;
-    trialNote: string;
-    features: { icon: string; title: string; body: string }[];
-  }
-> = {
-  en: {
-    title: "Speak with confidence, in five languages.",
-    subtitle:
-      "MasterSpeak is an AI coach for public speaking, pronunciation, and professional communication — practice with your voice, get feedback in seconds.",
-    cta: "Get started for free",
-    trialNote: "Free forever — one session per trainer daily. Upgrade anytime for unlimited access.",
-    features: [
-      { icon: "🎙️", title: "Record & Analyze", body: "Get instant feedback on pace, filler words, and delivery." },
-      { icon: "🗣️", title: "Pronunciation", body: "Practice tricky words with AI feedback and spaced repetition." },
-      { icon: "🎓", title: "AI Tutor", body: "A personal coach across business, law, and politics — real cases, real news." },
-      { icon: "💼", title: "Executive Communication", body: "Sixty-second deliberate practice for the moments that matter." },
-    ],
-  },
-  de: {
-    title: "Sprich selbstbewusst — in fünf Sprachen.",
-    subtitle:
-      "MasterSpeak ist ein KI-Coach für Redekunst, Aussprache und professionelle Kommunikation — übe mit deiner Stimme, erhalte Feedback in Sekunden.",
-    cta: "Kostenlos loslegen",
-    trialNote: "Für immer kostenlos — eine Sitzung pro Trainer täglich. Jederzeit upgraden für unbegrenzten Zugang.",
-    features: [
-      { icon: "🎙️", title: "Aufnahme & Analyse", body: "Sofortiges Feedback zu Tempo, Füllwörtern und Vortrag." },
-      { icon: "🗣️", title: "Aussprache", body: "Übe schwierige Wörter mit KI-Feedback und Wiederholung." },
-      { icon: "🎓", title: "KI-Tutor", body: "Ein persönlicher Coach für Wirtschaft, Recht und Politik — echte Fälle, echte Nachrichten." },
-      { icon: "💼", title: "Executive Communication", body: "Sechzig Sekunden gezieltes Üben für die Momente, die zählen." },
-    ],
-  },
-  fr: {
-    title: "Parlez avec confiance, en cinq langues.",
-    subtitle:
-      "MasterSpeak est un coach IA pour la prise de parole, la prononciation et la communication professionnelle — entraînez votre voix, recevez un retour en quelques secondes.",
-    cta: "Commencer gratuitement",
-    trialNote: "Gratuit pour toujours — une session par entraîneur chaque jour. Passez à la version supérieure à tout moment pour un accès illimité.",
-    features: [
-      { icon: "🎙️", title: "Enregistrer et analyser", body: "Retour instantané sur le débit, les mots de remplissage et l'élocution." },
-      { icon: "🗣️", title: "Prononciation", body: "Entraînez les mots difficiles avec un retour IA et la répétition espacée." },
-      { icon: "🎓", title: "Tuteur IA", body: "Un coach personnel en affaires, droit et politique — cas réels, actualités réelles." },
-      { icon: "💼", title: "Communication exécutive", body: "Soixante secondes d'entraînement délibéré pour les moments qui comptent." },
-    ],
-  },
-  es: {
-    title: "Habla con confianza, en cinco idiomas.",
-    subtitle:
-      "MasterSpeak es un coach de IA para oratoria, pronunciación y comunicación profesional — practica con tu voz y recibe comentarios en segundos.",
-    cta: "Empezar gratis",
-    trialNote: "Gratis para siempre — una sesión por entrenador al día. Mejora tu plan cuando quieras para acceso ilimitado.",
-    features: [
-      { icon: "🎙️", title: "Grabar y analizar", body: "Comentarios al instante sobre ritmo, muletillas y expresión." },
-      { icon: "🗣️", title: "Pronunciación", body: "Practica palabras difíciles con comentarios de IA y repetición espaciada." },
-      { icon: "🎓", title: "Tutor de IA", body: "Un coach personal en negocios, derecho y política — casos reales, noticias reales." },
-      { icon: "💼", title: "Comunicación ejecutiva", body: "Sesenta segundos de práctica deliberada para los momentos que importan." },
-    ],
-  },
-  sv: {
-    title: "Tala med självförtroende, på fem språk.",
-    subtitle:
-      "MasterSpeak är en AI-coach för offentligt tal, uttal och professionell kommunikation — öva med din röst, få feedback på sekunder.",
-    cta: "Kom igång gratis",
-    trialNote: "Gratis för alltid — en session per tränare varje dag. Uppgradera när som helst för obegränsad åtkomst.",
-    features: [
-      { icon: "🎙️", title: "Spela in & analysera", body: "Direkt feedback på tempo, utfyllnadsord och framförande." },
-      { icon: "🗣️", title: "Uttal", body: "Öva svåra ord med AI-feedback och spaced repetition." },
-      { icon: "🎓", title: "AI-handledare", body: "En personlig coach inom affärer, juridik och politik — riktiga fall, aktuella nyheter." },
-      { icon: "💼", title: "Executive Communication", body: "Sextio sekunders medveten övning för stunderna som räknas." },
-    ],
-  },
+/**
+ * English only, regardless of the selected app language: the app's content
+ * is multilingual so people can practise other languages, but what the app
+ * *is* — this pitch, like the App Store listing, terms and privacy policy —
+ * is presented in English.
+ */
+const T = {
+  title: "Speak with confidence, in five languages.",
+  subtitle:
+    "MasterSpeak is an AI coach for public speaking, pronunciation, and professional communication — practice with your voice, get feedback in seconds.",
+  cta: "Get started for free",
+  trialNote: "Free forever — one session per trainer daily. Try Premium free for 2 weeks for unlimited access.",
+  features: [
+    { icon: "🎙️", title: "Record & Analyze", body: "Get instant feedback on pace, filler words, and delivery." },
+    { icon: "🗣️", title: "Pronunciation", body: "Practice tricky words with AI feedback and spaced repetition." },
+    { icon: "🎓", title: "AI Tutor", body: "A personal coach across business, law, and politics — real cases, real news." },
+    { icon: "💼", title: "Executive Communication", body: "Sixty-second deliberate practice for the moments that matter." },
+  ],
 };
 
 /**
@@ -89,11 +30,10 @@ const T: Record<
  * has real access (lib/usageLimit.ts's once-a-day free tier).
  */
 export function MarketingLanding({ ctaHref }: { ctaHref: string }) {
-  const { language } = useLanguage();
-  const t = T[language];
+  const t = T;
 
   return (
-    <div className="min-h-screen bg-paper px-4 py-12 sm:px-8">
+    <div lang="en" className="min-h-screen bg-paper px-4 py-12 sm:px-8">
       <div className="mx-auto flex max-w-3xl flex-col gap-10">
         <header className="text-center">
           <h1 className="font-display text-3xl font-semibold text-ink sm:text-4xl">{t.title}</h1>
