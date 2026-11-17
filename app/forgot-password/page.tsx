@@ -3,66 +3,25 @@
 import { useState } from "react";
 import Link from "next/link";
 import { PageHeader } from "@/components/PageHeader";
-import { useLanguage } from "@/components/LanguageProvider";
 import type { LanguageCode } from "@/lib/languages";
 
-const TITLE: Record<LanguageCode, string> = {
-  en: "Reset your password",
-  de: "Passwort zurücksetzen",
-  fr: "Réinitialiser votre mot de passe",
-  es: "Restablecer tu contraseña",
-  sv: "Återställ ditt lösenord",
-};
+// English only, like the rest of the sign-in flow (see app/sign-in/page.tsx).
+const english = (text: string): Record<LanguageCode, string> => ({ en: text, de: text, fr: text, es: text, sv: text });
 
-const SUBTITLE: Record<LanguageCode, string> = {
-  en: "Enter your account email and we'll send you a link to set a new password.",
-  de: "Gib die E-Mail-Adresse deines Kontos ein — wir senden dir einen Link zum Festlegen eines neuen Passworts.",
-  fr: "Indiquez l'e-mail de votre compte et nous vous enverrons un lien pour définir un nouveau mot de passe.",
-  es: "Introduce el correo de tu cuenta y te enviaremos un enlace para establecer una nueva contraseña.",
-  sv: "Ange kontots mejladress så skickar vi en länk för att sätta ett nytt lösenord.",
-};
+const TITLE = english("Reset your password");
 
-const T: Record<LanguageCode, { emailPlaceholder: string; send: string; sending: string; sent: string; backToSignIn: string }> = {
-  en: {
-    emailPlaceholder: "you@example.com",
-    send: "Send reset link",
-    sending: "Sending…",
-    sent: "If an account exists for that email, a reset link is on its way.",
-    backToSignIn: "Back to sign in",
-  },
-  de: {
-    emailPlaceholder: "du@beispiel.de",
-    send: "Link senden",
-    sending: "Wird gesendet…",
-    sent: "Falls ein Konto mit dieser E-Mail existiert, ist ein Link unterwegs.",
-    backToSignIn: "Zurück zur Anmeldung",
-  },
-  fr: {
-    emailPlaceholder: "vous@exemple.fr",
-    send: "Envoyer le lien",
-    sending: "Envoi…",
-    sent: "Si un compte existe avec cet e-mail, un lien est en route.",
-    backToSignIn: "Retour à la connexion",
-  },
-  es: {
-    emailPlaceholder: "tu@ejemplo.es",
-    send: "Enviar enlace",
-    sending: "Enviando…",
-    sent: "Si existe una cuenta con ese correo, un enlace está en camino.",
-    backToSignIn: "Volver a iniciar sesión",
-  },
-  sv: {
-    emailPlaceholder: "du@exempel.se",
-    send: "Skicka länk",
-    sending: "Skickar…",
-    sent: "Om ett konto finns för den mejladressen är en länk på väg.",
-    backToSignIn: "Tillbaka till inloggning",
-  },
+const SUBTITLE = english("Enter your account email and we'll send you a link to set a new password.");
+
+const T: { emailPlaceholder: string; send: string; sending: string; sent: string; backToSignIn: string } = {
+  emailPlaceholder: "you@example.com",
+  send: "Send reset link",
+  sending: "Sending…",
+  sent: "If an account exists for that email, a reset link is on its way.",
+  backToSignIn: "Back to sign in",
 };
 
 export default function ForgotPasswordPage() {
-  const { language } = useLanguage();
-  const t = T[language];
+  const t = T;
   const [email, setEmail] = useState("");
   const [state, setState] = useState<"idle" | "sending" | "sent">("idle");
 

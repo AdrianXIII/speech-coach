@@ -4,74 +4,26 @@ import { Suspense, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { PageHeader } from "@/components/PageHeader";
-import { useLanguage } from "@/components/LanguageProvider";
 import type { LanguageCode } from "@/lib/languages";
 
-const TITLE: Record<LanguageCode, string> = {
-  en: "Set a new password",
-  de: "Neues Passwort festlegen",
-  fr: "Définir un nouveau mot de passe",
-  es: "Establecer una nueva contraseña",
-  sv: "Ange ett nytt lösenord",
-};
+// English only, like the rest of the sign-in flow (see app/sign-in/page.tsx).
+const english = (text: string): Record<LanguageCode, string> => ({ en: text, de: text, fr: text, es: text, sv: text });
 
-const SUBTITLE: Record<LanguageCode, string> = {
-  en: "Choose a new password for your account.",
-  de: "Wähle ein neues Passwort für dein Konto.",
-  fr: "Choisissez un nouveau mot de passe pour votre compte.",
-  es: "Elige una nueva contraseña para tu cuenta.",
-  sv: "Välj ett nytt lösenord för ditt konto.",
-};
+const TITLE = english("Set a new password");
 
-const T: Record<
-  LanguageCode,
-  { passwordPlaceholder: string; submit: string; submitting: string; invalidLink: string; genericError: string; getNewLink: string }
-> = {
-  en: {
-    passwordPlaceholder: "New password (min. 8 characters)",
-    submit: "Set new password",
-    submitting: "Please wait…",
-    invalidLink: "This reset link is invalid or has expired.",
-    genericError: "Something went wrong. Please try again.",
-    getNewLink: "Request a new link",
-  },
-  de: {
-    passwordPlaceholder: "Neues Passwort (mind. 8 Zeichen)",
-    submit: "Neues Passwort speichern",
-    submitting: "Einen Moment…",
-    invalidLink: "Dieser Link ist ungültig oder abgelaufen.",
-    genericError: "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
-    getNewLink: "Neuen Link anfordern",
-  },
-  fr: {
-    passwordPlaceholder: "Nouveau mot de passe (8 caractères min.)",
-    submit: "Enregistrer le mot de passe",
-    submitting: "Un instant…",
-    invalidLink: "Ce lien est invalide ou a expiré.",
-    genericError: "Une erreur est survenue. Veuillez réessayer.",
-    getNewLink: "Demander un nouveau lien",
-  },
-  es: {
-    passwordPlaceholder: "Nueva contraseña (mín. 8 caracteres)",
-    submit: "Guardar contraseña",
-    submitting: "Un momento…",
-    invalidLink: "Este enlace no es válido o ha caducado.",
-    genericError: "Algo salió mal. Inténtalo de nuevo.",
-    getNewLink: "Solicitar un nuevo enlace",
-  },
-  sv: {
-    passwordPlaceholder: "Nytt lösenord (minst 8 tecken)",
-    submit: "Spara nytt lösenord",
-    submitting: "Ett ögonblick…",
-    invalidLink: "Länken är ogiltig eller har gått ut.",
-    genericError: "Något gick fel. Försök igen.",
-    getNewLink: "Begär en ny länk",
-  },
+const SUBTITLE = english("Choose a new password for your account.");
+
+const T: { passwordPlaceholder: string; submit: string; submitting: string; invalidLink: string; genericError: string; getNewLink: string } = {
+  passwordPlaceholder: "New password (min. 8 characters)",
+  submit: "Set new password",
+  submitting: "Please wait…",
+  invalidLink: "This reset link is invalid or has expired.",
+  genericError: "Something went wrong. Please try again.",
+  getNewLink: "Request a new link",
 };
 
 function ResetPasswordForm() {
-  const { language } = useLanguage();
-  const t = T[language];
+  const t = T;
   const router = useRouter();
   const token = useSearchParams().get("token") ?? "";
 

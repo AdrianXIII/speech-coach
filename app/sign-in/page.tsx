@@ -5,134 +5,55 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signIn, getProviders } from "next-auth/react";
 import { PageHeader } from "@/components/PageHeader";
-import { useLanguage } from "@/components/LanguageProvider";
 import type { LanguageCode } from "@/lib/languages";
 
-const TITLE: Record<LanguageCode, string> = {
-  en: "Sign in",
-  de: "Anmelden",
-  fr: "Se connecter",
-  es: "Iniciar sesión",
-  sv: "Logga in",
-};
+/**
+ * English only, regardless of the selected app language — sign-in is part of
+ * the introduction to the app, which (like the landing page, App Store
+ * listing, terms and privacy policy) is presented in English. The five app
+ * languages are for practising, inside the trainers.
+ */
+const english = (text: string): Record<LanguageCode, string> => ({ en: text, de: text, fr: text, es: text, sv: text });
 
-const SUBTITLE: Record<LanguageCode, string> = {
-  en: "One account keeps your progress, review lists, and subscription with you across devices.",
-  de: "Ein Konto bewahrt deinen Fortschritt, deine Wiederholungslisten und dein Abo geräteübergreifend.",
-  fr: "Un compte conserve votre progression, vos listes de révision et votre abonnement sur tous vos appareils.",
-  es: "Una cuenta conserva tu progreso, tus listas de repaso y tu suscripción en todos los dispositivos.",
-  sv: "Ett konto håller dina framsteg, repetitionslistor och prenumeration med dig på alla enheter.",
-};
+const TITLE = english("Sign in");
+const SUBTITLE = english("One account keeps your progress, review lists, and subscription with you across devices.");
 
-const T: Record<
-  LanguageCode,
-  {
-    appleButton: string;
-    orEmail: string;
-    emailPlaceholder: string;
-    passwordPlaceholder: string;
-    signIn: string;
-    createAccount: string;
-    submitting: string;
-    toggleToCreate: string;
-    toggleToSignIn: string;
-    genericError: string;
-    invalidCredentials: string;
-    forgotPassword: string;
-    invalidEmail: string;
-    accountExists: string;
-    tooManyAccounts: string;
-  }
-> = {
-  en: {
-    appleButton: "Continue with Apple",
-    orEmail: "or with email",
-    emailPlaceholder: "you@example.com",
-    passwordPlaceholder: "Password (min. 8 characters)",
-    signIn: "Sign in",
-    createAccount: "Create account",
-    submitting: "Please wait…",
-    toggleToCreate: "No account yet? Create one",
-    toggleToSignIn: "Already have an account? Sign in",
-    genericError: "Something went wrong. Please try again.",
-    invalidCredentials: "Wrong email or password.",
-    forgotPassword: "Forgot password?",
-    invalidEmail: "Enter a valid email address.",
-    accountExists: "An account with this email already exists — sign in instead.",
-    tooManyAccounts: "Too many accounts created from this network. Please try again later.",
-  },
-  de: {
-    appleButton: "Weiter mit Apple",
-    orEmail: "oder per E-Mail",
-    emailPlaceholder: "du@beispiel.de",
-    passwordPlaceholder: "Passwort (mind. 8 Zeichen)",
-    signIn: "Anmelden",
-    createAccount: "Konto erstellen",
-    submitting: "Einen Moment…",
-    toggleToCreate: "Noch kein Konto? Jetzt erstellen",
-    toggleToSignIn: "Schon ein Konto? Anmelden",
-    genericError: "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
-    invalidCredentials: "Falsche E-Mail oder falsches Passwort.",
-    forgotPassword: "Passwort vergessen?",
-    invalidEmail: "Gib eine gültige E-Mail-Adresse ein.",
-    accountExists: "Für diese E-Mail existiert bereits ein Konto — melde dich stattdessen an.",
-    tooManyAccounts: "Zu viele Konten aus diesem Netzwerk erstellt. Bitte versuche es später erneut.",
-  },
-  fr: {
-    appleButton: "Continuer avec Apple",
-    orEmail: "ou par e-mail",
-    emailPlaceholder: "vous@exemple.fr",
-    passwordPlaceholder: "Mot de passe (8 caractères min.)",
-    signIn: "Se connecter",
-    createAccount: "Créer un compte",
-    submitting: "Un instant…",
-    toggleToCreate: "Pas encore de compte ? En créer un",
-    toggleToSignIn: "Déjà un compte ? Se connecter",
-    genericError: "Une erreur est survenue. Veuillez réessayer.",
-    invalidCredentials: "E-mail ou mot de passe incorrect.",
-    forgotPassword: "Mot de passe oublié ?",
-    invalidEmail: "Saisissez une adresse e-mail valide.",
-    accountExists: "Un compte existe déjà avec cet e-mail — connectez-vous plutôt.",
-    tooManyAccounts: "Trop de comptes créés depuis ce réseau. Veuillez réessayer plus tard.",
-  },
-  es: {
-    appleButton: "Continuar con Apple",
-    orEmail: "o con correo",
-    emailPlaceholder: "tu@ejemplo.es",
-    passwordPlaceholder: "Contraseña (mín. 8 caracteres)",
-    signIn: "Iniciar sesión",
-    createAccount: "Crear cuenta",
-    submitting: "Un momento…",
-    toggleToCreate: "¿Aún no tienes cuenta? Crea una",
-    toggleToSignIn: "¿Ya tienes cuenta? Inicia sesión",
-    genericError: "Algo salió mal. Inténtalo de nuevo.",
-    invalidCredentials: "Correo o contraseña incorrectos.",
-    forgotPassword: "¿Olvidaste tu contraseña?",
-    invalidEmail: "Introduce una dirección de correo válida.",
-    accountExists: "Ya existe una cuenta con este correo — inicia sesión en su lugar.",
-    tooManyAccounts: "Se han creado demasiadas cuentas desde esta red. Inténtalo de nuevo más tarde.",
-  },
-  sv: {
-    appleButton: "Fortsätt med Apple",
-    orEmail: "eller med e-post",
-    emailPlaceholder: "du@exempel.se",
-    passwordPlaceholder: "Lösenord (minst 8 tecken)",
-    signIn: "Logga in",
-    createAccount: "Skapa konto",
-    submitting: "Ett ögonblick…",
-    toggleToCreate: "Inget konto än? Skapa ett",
-    toggleToSignIn: "Redan ett konto? Logga in",
-    genericError: "Något gick fel. Försök igen.",
-    invalidCredentials: "Fel e-post eller lösenord.",
-    forgotPassword: "Glömt lösenordet?",
-    invalidEmail: "Ange en giltig e-postadress.",
-    accountExists: "Det finns redan ett konto med den här e-postadressen — logga in istället.",
-    tooManyAccounts: "För många konton har skapats från det här nätverket. Försök igen senare.",
-  },
+const T: {
+  appleButton: string;
+  orEmail: string;
+  emailPlaceholder: string;
+  passwordPlaceholder: string;
+  signIn: string;
+  createAccount: string;
+  submitting: string;
+  toggleToCreate: string;
+  toggleToSignIn: string;
+  genericError: string;
+  invalidCredentials: string;
+  forgotPassword: string;
+  invalidEmail: string;
+  accountExists: string;
+  tooManyAccounts: string;
+} = {
+  appleButton: "Continue with Apple",
+  orEmail: "or with email",
+  emailPlaceholder: "you@example.com",
+  passwordPlaceholder: "Password (min. 8 characters)",
+  signIn: "Sign in",
+  createAccount: "Create account",
+  submitting: "Please wait…",
+  toggleToCreate: "No account yet? Create one",
+  toggleToSignIn: "Already have an account? Sign in",
+  genericError: "Something went wrong. Please try again.",
+  invalidCredentials: "Wrong email or password.",
+  forgotPassword: "Forgot password?",
+  invalidEmail: "Enter a valid email address.",
+  accountExists: "An account with this email already exists — sign in instead.",
+  tooManyAccounts: "Too many accounts created from this network. Please try again later.",
 };
 
 /** Maps register's known 400/409/429 messages to a localized string — never shows the raw English server message. */
-function registerErrorMessage(serverMessage: string | undefined, t: (typeof T)["en"]): string {
+function registerErrorMessage(serverMessage: string | undefined, t: typeof T): string {
   const m = (serverMessage ?? "").toLowerCase();
   if (m.includes("already exists")) return t.accountExists;
   if (m.includes("valid email")) return t.invalidEmail;
@@ -141,8 +62,7 @@ function registerErrorMessage(serverMessage: string | undefined, t: (typeof T)["
 }
 
 export default function SignInPage() {
-  const { language } = useLanguage();
-  const t = T[language];
+  const t = T;
   const router = useRouter();
 
   const [mode, setMode] = useState<"signin" | "create">("signin");
